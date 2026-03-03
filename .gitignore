@@ -1,0 +1,15 @@
+.vscode
+.idea
+HELP.md
+
+### Mac OS ###
+.DS_Store
+
+### Python ###
+*.pyc
+*__pycache__*
+.ipynb_checkpoints/
+
+### ML ###
+*.pkl
+*.keras
