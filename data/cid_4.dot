@@ -1,0 +1,31 @@
+digraph CID_4 {
+    label="Association of 1-Amino-2-propanol with Animals";
+    cid4 [label="1-Amino-2-propanol"]
+
+    subgraph cluster_mammals {
+        label="Mammals";
+        style=filled;
+        color=lightgrey;
+        "Bison"; "Wild boar"; "Buffalo"; "Deer"; "Rabbit"; "Horse"; "Domestic pig"; "Domestic goat"; "Beefalo";
+    }
+
+    subgraph cluster_birds {
+        label="Birds";
+        style=filled;
+        color=lightblue;
+        "Chicken"; "Mallard duck"; "Pheasant"; "Quail"; "Greylag goose"; "Velvet duck"; "Rock ptarmigan"; "Columbidae (Dove, Pigeon)";
+    }
+
+    cid4 -> "Bison";
+    cid4 -> "Wild boar";
+    cid4 -> "Buffalo";
+    cid4 -> "Chicken";
+    cid4 -> "Deer";
+    cid4 -> "Rabbit";
+    cid4 -> "Domestic pig";
+    cid4 -> "Quail";
+    cid4 -> "Velvet duck";
+    cid4 -> "Greylag goose";
+    cid4 -> "Rock ptarmigan";
+    cid4 -> "Columbidae (Dove, Pigeon)";
+}

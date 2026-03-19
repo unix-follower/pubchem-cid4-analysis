@@ -1,0 +1,271 @@
+{
+  "Record": {
+    "RecordType": "Pathway",
+    "RecordAccession": "SMP0002032",
+    "RecordTitle": "Glutathione Metabolism III",
+    "RecordExternalURL": "http://pathbank.org/view/SMP0002032",
+    "Section": [
+      {
+        "TOCHeading": "Identity",
+        "Description": "Information describing the identity of this pathway, including the data source and external identifier.",
+        "Section": [
+          {
+            "TOCHeading": "Source",
+            "Description": "Data source from which this pathway record was derived.",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 1,
+                "URL": "https://pathbank.org/",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "PathBank"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "External ID",
+            "Description": "The identifier used for this pathway by the external data source.",
+            "Information": [
+              {
+                "ReferenceNumber": 1,
+                "URL": "http://pathbank.org/view/SMP0002032",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "SMP0002032"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Pathway Information",
+        "Description": "General information about this pathway.",
+        "DisplayControls": {
+          "HideThisSection": true
+        },
+        "Section": [
+          {
+            "TOCHeading": "Taxonomic Scope",
+            "Description": "Indicates if the pathway is organism-specific or conserved.",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 1,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "organism_specific"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Taxonomy",
+            "Description": "Source organism of this pathway.",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 1,
+                "URL": "https://pubchem.ncbi.nlm.nih.gov/taxonomy/562",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "Escherichia coli"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Category",
+            "Description": "Descriptive category of this pathway (e.g., signaling, metabolic, disease).",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 1,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "Metabolic"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Create Date",
+            "Description": "Date when this pathway record was created. For more information on various dates for PubChem records, visit the PubChem Record Dates help page.",
+            "URL": "https://pubchem.ncbi.nlm.nih.gov/docs/record-dates",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "2019-05-30"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Modify Date",
+            "Description": "Date when this pathway record was last modified. For more information on various dates for PubChem records, visit the PubChem Record Dates help page.",
+            "URL": "https://pubchem.ncbi.nlm.nih.gov/docs/record-dates",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "2022-05-18"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Record Description",
+            "Description": "Textual summary about this pathway",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 1,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "The biosynthesis of glutathione starts with the introduction of L-glutamic acid through either  a glutamate:sodium symporter, glutamate / aspartate : H+ symporter GltP or a glutamate / aspartate ABC transporter. Once in the cytoplasm, L-glutamice acid reacts with L-cysteine through an ATP glutamate-cysteine ligase resulting in gamma-glutamylcysteine. This compound reacts which Glycine through an ATP driven glutathione synthetase thus catabolizing Glutathione. This compound is metabolized through a spontaneous reaction with an oxidized glutaredoxin resulting in a reduced glutaredoxin and an oxidized glutathione. This compound is reduced by a NADPH glutathione reductase resulting in a glutathione."
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Diagram",
+        "Description": "Schematic overview of this pathway.  Clicking this diagram directs to the corresponding pathway record in the data source.",
+        "Information": [
+          {
+            "ReferenceNumber": 3,
+            "URL": "http://pathbank.org/view/SMP0002032",
+            "Value": {
+              "ExternalDataURL": [
+                "https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/key/8180201_1"
+              ],
+              "MimeType": "image/svg+xml"
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Interactions",
+        "Description": "Specific interactions between biochemicals involved in this pathway.",
+        "Information": [
+          {
+            "ReferenceNumber": 1,
+            "Value": {
+              "ExternalTableName": "collection=pathwayreaction&view=concise_pathway"
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Chemicals",
+        "Description": "Chemicals involved in this pathway.",
+        "Information": [
+          {
+            "ReferenceNumber": 1,
+            "Value": {
+              "ExternalTableName": "pcget_pathway_chemical"
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Proteins",
+        "Description": "Proteins involved in this pathway.",
+        "Information": [
+          {
+            "ReferenceNumber": 1,
+            "Value": {
+              "ExternalTableName": "pcget_pathway_protein"
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Genes",
+        "Description": "Genes involved in this pathway.",
+        "Information": [
+          {
+            "ReferenceNumber": 1,
+            "Value": {
+              "ExternalTableName": "pcget_pathway_gene"
+            }
+          }
+        ]
+      }
+    ],
+    "Reference": [
+      {
+        "ReferenceNumber": 1,
+        "SourceName": "PathBank",
+        "SourceID": "SMP0002032",
+        "Description": "PathBank is an interactive, visual database containing more than 100 000 machine-readable pathways found in model organisms such as humans, mice, E. coli, yeast, and Arabidopsis thaliana.",
+        "URL": "http://pathbank.org/view/SMP0002032",
+        "LicenseNote": "PathBank is made available under the Open Database License (https://opendatacommons.org/licenses/odbl/1.0/).",
+        "LicenseURL": "http://pathbank.org/about"
+      },
+      {
+        "ReferenceNumber": 2,
+        "SourceName": "PubChem",
+        "SourceID": "PubChem",
+        "Description": "Data deposited in or computed by PubChem",
+        "URL": "https://pubchem.ncbi.nlm.nih.gov"
+      },
+      {
+        "ReferenceNumber": 3,
+        "SourceName": "PathBank",
+        "SourceID": "SMP0002032",
+        "Description": "PathBank is an interactive, visual database containing more than 100,000 machine-readable pathways found in model organisms such as humans, mice, E. coli, yeast, and Arabidopsis thaliana.",
+        "URL": "http://pathbank.org/view/SMP0002032",
+        "LicenseNote": "PathBank is made available under the Open Database License (https://opendatacommons.org/licenses/odbl/1.0/).",
+        "LicenseURL": "http://pathbank.org/about",
+        "ANID": 8180201
+      }
+    ]
+  }
+}

@@ -14,8 +14,7 @@ def write_image(sdf_file_path: str, out_dir: str):
 
 
 def main():
-    data_directory = env.get_data_dir()
-    work_directory = f"{data_directory}/pubchem/cid_4"
+    work_directory = env.get_data_dir()
 
     sdf_file_path = f"{work_directory}/Conformer3D_COMPOUND_CID_4.sdf"
     sdf_supplier = Chem.SDMolSupplier(sdf_file_path)
