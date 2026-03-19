@@ -1,0 +1,674 @@
+{
+  "Record": {
+    "RecordType": "AID",
+    "RecordNumber": 743069,
+    "RecordTitle": "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway",
+    "Section": [
+      {
+        "TOCHeading": "Record Description",
+        "Description": "Textual summary about this PubChem record",
+        "DisplayControls": {
+          "HideThisSection": true,
+          "MoveToTop": true
+        },
+        "Information": [
+          {
+            "ReferenceNumber": 1,
+            "Value": {
+              "StringWithMarkup": [
+                {
+                  "String": "This bioassay record (AID 743069) belongs to the assay project \"qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway: Summary\", which is associated with the summary AID 743078 and a total of 2 additional BioAssay records in PubChem.",
+                  "Markup": [
+                    {
+                      "Start": 64,
+                      "Length": 118,
+                      "Type": "Bold"
+                    },
+                    {
+                      "Start": 222,
+                      "Length": 10,
+                      "URL": "https://pubchem.ncbi.nlm.nih.gov/bioassay/743078"
+                    },
+                    {
+                      "Start": 248,
+                      "Length": 29,
+                      "URL": "#section=Same-Project-BioAssays"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Description",
+        "Description": "BioAssay description provided by the data depositor.",
+        "Information": [
+          {
+            "ReferenceNumber": 2,
+            "Value": {
+              "StringWithMarkup": [
+                {
+                  "String": "U.S. Tox21 Program"
+                },
+                {
+                  "String": ""
+                },
+                {
+                  "String": "National Center for Advancing Translational Sciences [NCATS]"
+                },
+                {
+                  "String": "NIH Chemical Genomics Center [NCGC]"
+                },
+                {
+                  "String": "U.S. Environmental Protection Agency [EPA]"
+                },
+                {
+                  "String": "National Institutes of Environmental Health Sciences [NIEHS]"
+                },
+                {
+                  "String": "National Toxicology Program [NTP]"
+                },
+                {
+                  "String": "U.S. Food and Drug Administration [FDA]"
+                },
+                {
+                  "String": ""
+                },
+                {
+                  "String": "Tox21 Assay Overview:"
+                },
+                {
+                  "String": ""
+                },
+                {
+                  "String": "Estrogen receptor (ER), a nuclear hormone receptor, plays an important role in development, metabolic homeostasis and reproduction. Two subtypes of ER, ER-alpha and ER-beta have similar expression patterns with some uniqueness in both types. Endocrine disrupting chemicals (EDCs) and their interactions with steroid hormone receptors like ER causes disruption of normal endocrine function. To identify the compounds that inhibit ER signaling, an ER-alpha-UAS-bla GripTiteTM cell line (Invitrogen, Carlsbad, CA, USA) containing a beta-lactamase reporter gene under the control of an Upstream Activator Sequence (UAS) stably integrated into HEK293 cells was used to screen the Tox21 10K compound library."
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Protocol",
+        "Description": "Bioassay protocol provided by the assay depositor.",
+        "Information": [
+          {
+            "ReferenceNumber": 2,
+            "Value": {
+              "StringWithMarkup": [
+                {
+                  "String": "Tox21 Assay Protocol Summary:"
+                },
+                {
+                  "String": ""
+                },
+                {
+                  "String": "ER-alpha-bla cells were cultured in assay medium containing 2% charcoal stripped FBS overnight in the culture flasks before the assay was performed. The cells were dispensed at 5,000 cells/5 uL of assay medium per well into black wall/clear-bottom 1536-well plates using a Multidrop Combi (ThermoFisher Scientific, Waltham, MA) dispenser. After the assay plates were incubated at a 37C and 5% CO2 for 4 hr, 23 nL of compounds dissolved in DMSO, positive controls or DMSO only was transferred to the assay plate by a Pintool station (Kalypsys, San Diego, CA), followed by addition of 1 uL of 17beta-estradiol in assay medium using a Flying Reagent Dispenser (Aurora Discovery, San Diego, CA). The plates were incubated at 37C and 5% CO2 for 18 hr. Then 1 uL of LiveBLAzerTM B/G FRET substrate was added using a Flying Reagent Dispenser, the plates were incubated at room temperature for 2 hours, and fluorescence intensity was measured by an Envision plate reader (PerkinElmer, Shelton, CT)."
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Comment",
+        "Description": "Comment provided by the assay depositor.",
+        "Information": [
+          {
+            "ReferenceNumber": 2,
+            "Value": {
+              "StringWithMarkup": [
+                {
+                  "String": "Disclaimer:"
+                },
+                {
+                  "String": ""
+                },
+                {
+                  "String": "Although all reasonable efforts have been made to ensure the accuracy and reliability of the data, caution should be exercised when interpreting the results as artifacts are possible from nonspecific effects such as assay signal interference. The curve fitting and activity calls presented here are based on the NCATS analysis methods. Alternative analysis methods and interpretations of the data are available at EPA (http://actor.epa.gov) and NTP (http://tools.niehs.nih.gov/cebs3/ui/)."
+                },
+                {
+                  "String": ""
+                },
+                {
+                  "String": "Compound Ranking:"
+                },
+                {
+                  "String": ""
+                },
+                {
+                  "String": "1. Compounds are first classified as having full titration curves, partial modulation, partial curve (weaker actives), single point activity (at highest concentration only), or inactive. See data field \"Curve Description\". For this assay, apparent inhibitors are ranked higher than compounds that showed apparent activation."
+                },
+                {
+                  "String": "2. For all inactive compounds, PUBCHEM_ACTIVITY_SCORE is 0. For all active compounds, a score range was given for each curve class type given above.  Active compounds have PUBCHEM_ACTIVITY_SCORE between 40 and 100.  Inconclusive compounds have PUBCHEM_ACTIVITY_SCORE between 1 and 39.  Fit_LogAC50 was used for determining relative score and was scaled to each curve class' score range."
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Result Definitions",
+        "Description": "Definition of allowed result types for this assay.  In essence, this section explains what each column in the Data Table for this assay means (e.g., the column name, unit used, data type (integer, float, string, etc.)).",
+        "Information": [
+          {
+            "ReferenceNumber": 2,
+            "Value": {
+              "ExternalTableName": "collection=pcget_bioassay_resultdefs&page_size=50"
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Data Table",
+        "Description": "Biological test results provided by the depositor. The definition of each column in the data table is given in the Result Definitions section. The column highlighted in bold (if any) indicates the active concentration (AC). Subset data for probe substances, active substances, inactive substances, substances with AC <= 1uM, or substances with AC <= 1nM is provided under certain tab (if any). The complete data or subset data can be downloaded via the \"Download\". Click the chemical structure or outcome column linking to the bioactivity summary page for each bioassay-substance pair. For convenience, chemical structures in the format of isomeric SMILES (Simplified Molecular Input Line Entry System) are provided in the table for download.",
+        "Information": [
+          {
+            "ReferenceNumber": 2,
+            "Name": "hasAll",
+            "Value": {
+              "Boolean": [
+                true
+              ]
+            }
+          },
+          {
+            "ReferenceNumber": 2,
+            "Name": "hasActive",
+            "Value": {
+              "Boolean": [
+                true
+              ]
+            }
+          },
+          {
+            "ReferenceNumber": 2,
+            "Name": "hasInactive",
+            "Value": {
+              "Boolean": [
+                true
+              ]
+            }
+          },
+          {
+            "ReferenceNumber": 2,
+            "Name": "hasMicroMolar",
+            "Value": {
+              "Boolean": [
+                true
+              ]
+            }
+          },
+          {
+            "ReferenceNumber": 2,
+            "Name": "hasNanoMolar",
+            "Value": {
+              "Boolean": [
+                true
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Target",
+        "Description": "Target information for this bioassay, provided by depositor.  In most assays, the target is a protein, gene, or nucleotide (e.g., DNA/RNA).  However, some assay targets are not proteins, genes, nor nucleotide, and they are listed as \"other targets\" in this section.",
+        "DisplayControls": {
+          "CreateTable": {
+            "FromInformationIn": "Subsections",
+            "NumberOfColumns": 2,
+            "ColumnContents": [
+              "Name",
+              "Value"
+            ]
+          }
+        },
+        "Section": [
+          {
+            "TOCHeading": "Protein Target",
+            "Description": "The protein target against which substances were tested in this bioassay.",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 3,
+                "URL": "https://pubchem.ncbi.nlm.nih.gov/protein/AEP43755.1",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "estrogen nuclear receptor alpha"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Encoding Gene",
+            "Description": "The gene that encodes the protein target of this assay.",
+            "Information": [
+              {
+                "ReferenceNumber": 3,
+                "URL": "https://pubchem.ncbi.nlm.nih.gov/gene/2099",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "ESR1"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "NCBI GeneID",
+            "Description": "Gene identifier used in the NCBI Gene database, which provides detailed information for known and predicted genes defined by nucleotide sequence or map position.",
+            "URL": "https://www.ncbi.nlm.nih.gov/gene",
+            "Information": [
+              {
+                "ReferenceNumber": 3,
+                "URL": "https://www.ncbi.nlm.nih.gov/gene/2099",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "2099"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Taxonomy",
+            "Description": "Taxon (or organism) of the gene or protein target(s).",
+            "Information": [
+              {
+                "ReferenceNumber": 3,
+                "URL": "https://pubchem.ncbi.nlm.nih.gov/taxonomy/9606",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "Homo sapiens (human)"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Related Targets",
+        "Description": "Targets with similar sequence to that of the protein target of this bioassay.  Only those targets tested in a bioassay record are included.",
+        "Information": [
+          {
+            "ReferenceNumber": 1,
+            "Value": {
+              "ExternalTableName": "pcget_bioassay_relatedtarget"
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Entrez Crosslinks",
+        "Description": "Cross-references to associated records in other Entrez databases such as PubMed, Gene, Protein, etc.",
+        "DisplayControls": {
+          "CreateTable": {
+            "FromInformationIn": "ThisSection",
+            "NumberOfColumns": 2,
+            "ColumnContents": [
+              "Name",
+              "Value"
+            ]
+          }
+        },
+        "Information": [
+          {
+            "ReferenceNumber": 1,
+            "Name": "PubMed Count",
+            "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?db=pcassay&cmd=Link&LinkName=pcassay_pubmed&from_uid=743069",
+            "Value": {
+              "Number": [
+                1
+              ]
+            }
+          },
+          {
+            "ReferenceNumber": 1,
+            "Name": "Gene Count",
+            "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?db=pcassay&cmd=Link&LinkName=pcassay_gene&from_uid=743069",
+            "Value": {
+              "Number": [
+                1
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Identity",
+        "Description": "Information describing the identity of this assay, including the assay name, data source, external identifier, deposit/modify dates and assay type.",
+        "Section": [
+          {
+            "TOCHeading": "BioAssay Name",
+            "Description": "The name (or title) of this BioAssay record, provided by the assay data depositor.",
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "qHTS assay to identify small molecule antagonists of the estrogen receptor alpha (ER-alpha) signaling pathway"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Source",
+            "Description": "Data contributor who submitted this assay record to PubChem.",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 1,
+                "URL": "http://www.ncgc.nih.gov",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "Tox21"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "External ID",
+            "Description": "The external identifier associated with this bioassay.",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "ERN433"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Project Category",
+            "Description": "The project category of this bioassay (e.g., Molecular Libraries Screening Center Network, Literature Extracted).",
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "Other"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "BioAssay Type",
+            "Description": "\"Primary Screening\" represents result from single concentration test; \"Confirmatory\" represents result from multiple concentration test; \"Summary\" represents the summary result of a bioassay project",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "Confirmatory"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Deposit Date",
+            "Description": "Date when the bioassay record was deposited by the data contributor. For more information on various dates for PubChem records, visit the PubChem Record Dates help page.",
+            "URL": "https://pubchem.ncbi.nlm.nih.gov/docs/record-dates",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Value": {
+                  "DateISO8601": [
+                    "2013-11-15"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Modify Date",
+            "Description": "Date when this bioassay record was modified by the data contributor.  A bioassay record may be modified multiple times.  For more information on various dates for PubChem records, visit the PubChem Record Dates help page.",
+            "URL": "https://pubchem.ncbi.nlm.nih.gov/docs/record-dates",
+            "DisplayControls": {
+              "CreateTable": {
+                "FromInformationIn": "ThisSection",
+                "NumberOfColumns": 2,
+                "ColumnContents": [
+                  "Name",
+                  "Value"
+                ]
+              },
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Name": "Version 1.1",
+                "URL": "https://pubchem.ncbi.nlm.nih.gov/bioassay/743069/version/1.1",
+                "Value": {
+                  "DateISO8601": [
+                    "2013-11-15"
+                  ]
+                }
+              },
+              {
+                "ReferenceNumber": 2,
+                "Name": "Version 2.1",
+                "URL": "https://pubchem.ncbi.nlm.nih.gov/bioassay/743069/version/2.1",
+                "Value": {
+                  "DateISO8601": [
+                    "2014-08-20"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Tested Substances",
+            "Description": "Substances tested in this bioassay.",
+            "DisplayControls": {
+              "HideThisSection": true,
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Name": "All Substances",
+                "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?db=pcassay&cmd=Link&LinkName=pcassay_pcsubstance&from_uid=743069",
+                "Value": {
+                  "Number": [
+                    10486
+                  ]
+                }
+              },
+              {
+                "ReferenceNumber": 1,
+                "Name": "Active Substances",
+                "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?db=pcassay&cmd=Link&LinkName=pcassay_pcsubstance_active&from_uid=743069",
+                "Value": {
+                  "Number": [
+                    433
+                  ]
+                }
+              },
+              {
+                "ReferenceNumber": 1,
+                "Name": "Inactive Substances",
+                "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?db=pcassay&cmd=Link&LinkName=pcassay_pcsubstance_inactive&from_uid=743069",
+                "Value": {
+                  "Number": [
+                    7996
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Tested Compounds",
+            "Description": "Compounds associated with the substances tested in this bioassay.",
+            "DisplayControls": {
+              "HideThisSection": true,
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Name": "All Compounds",
+                "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?db=pcassay&cmd=Link&LinkName=pcassay_pccompound&from_uid=743069",
+                "Value": {
+                  "Number": [
+                    8099
+                  ]
+                }
+              },
+              {
+                "ReferenceNumber": 1,
+                "Name": "Active Compounds",
+                "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?db=pcassay&cmd=Link&LinkName=pcassay_pccompound_active&from_uid=743069",
+                "Value": {
+                  "Number": [
+                    388
+                  ]
+                }
+              },
+              {
+                "ReferenceNumber": 1,
+                "Name": "Inactive Compounds",
+                "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?db=pcassay&cmd=Link&LinkName=pcassay_pccompound_inactive&from_uid=743069",
+                "Value": {
+                  "Number": [
+                    6398
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Version",
+            "Description": "Version number of this bioassay record.  By default, the most recent version of this record is displayed on this webpage.",
+            "DisplayControls": {
+              "HideThisSection": true,
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 2,
+                "Name": "Version",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "2.1"
+                    }
+                  ]
+                }
+              },
+              {
+                "ReferenceNumber": 2,
+                "Name": "All Versions",
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "1.1"
+                    },
+                    {
+                      "String": "2.1"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "TOCHeading": "Status",
+            "Description": "Status of this bioassay record (e.g., live, on hold, revoked).",
+            "DisplayControls": {
+              "MoveToTop": true
+            },
+            "Information": [
+              {
+                "ReferenceNumber": 1,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "Live"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "TOCHeading": "Same-Project BioAssays",
+        "Description": "Other BioAssay records resulting from the same project (e.g. a screening campaign) as this bioassay.",
+        "Information": [
+          {
+            "ReferenceNumber": 2,
+            "Value": {
+              "ExternalTableName": "pcget_bioassay_sameproject"
+            }
+          }
+        ]
+      }
+    ],
+    "Reference": [
+      {
+        "ReferenceNumber": 1,
+        "SourceName": "PubChem",
+        "SourceID": "PubChem",
+        "Description": "Data deposited in or computed by PubChem",
+        "URL": "https://pubchem.ncbi.nlm.nih.gov"
+      },
+      {
+        "ReferenceNumber": 2,
+        "SourceName": "Tox21",
+        "SourceID": "Tox21",
+        "Description": "The Toxicology in the 21st Century (Tox21) program aims to develop better toxicity assessment methods to quickly and efficiently test whether certain chemical compounds have the potential to disrupt processes in the human body that may lead to negative health effects.",
+        "URL": "https://tripod.nih.gov/tox/"
+      },
+      {
+        "ReferenceNumber": 3,
+        "SourceName": "Tox21",
+        "SourceID": "Target #1",
+        "Description": "Data deposited in or computed by PubChem",
+        "URL": "https://pubchem.ncbi.nlm.nih.gov"
+      }
+    ]
+  }
+}
