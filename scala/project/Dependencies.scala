@@ -1,0 +1,4 @@
+import sbt.*
+
+object Dependencies {
+}

@@ -1,0 +1,44 @@
+name: Build cid4-angular-ui
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+env:
+  ACTIONS_STEP_DEBUG: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: cid4-angular-ui/package.json
+        
+      - name: Install dependencies
+        shell: bash
+        working-directory: cid4-angular-ui
+        run: npm ci
+
+      - name: Check code formatting
+        shell: bash
+        working-directory: cid4-angular-ui
+        run: npm run check-format
+
+      - name: Run ESLint
+        shell: bash
+        working-directory: cid4-angular-ui
+        run: npm run lint
+
+      - name: Build cid4-angular-ui
+        shell: bash
+        working-directory: cid4-angular-ui
+        run: npm run build

@@ -1,0 +1,38 @@
+[
+	{
+		"oid": "155888",
+		"pmids": [],
+		"extid": "51674",
+		"doi": "10.1002/jhet.2706",
+		"articletitle": "One-pot Synthesis, Crystal structure, and Bioactivity of N-Phenoxyacetyl-2,4,5-trisubstituted-1,3-oxazolidines",
+		"articlejourname": "J. Heterocyclic Chem.",
+		"url": "https://doi.org/10.1002/jhet.2706",
+		"articlepubdate": "2017",
+		"sid": "386233732",
+		"cid": "4"
+	},
+	{
+		"oid": "155887",
+		"pmids": [],
+		"extid": "51674",
+		"doi": "10.1002/jhet.2139",
+		"articletitle": "Synthesis and Structure Elucidation of (R)-3-(2′-hydroxyprop-1-yl) adenine",
+		"articlejourname": "J. Heterocyclic Chem.",
+		"url": "https://doi.org/10.1002/jhet.2139",
+		"articlepubdate": "2016",
+		"sid": "386233732",
+		"cid": "4"
+	},
+	{
+		"oid": "155886",
+		"pmids": [24706407],
+		"extid": "51674",
+		"doi": "10.1002/chir.22315",
+		"articletitle": "Enantiopure O-Ethyl Phenylphosphonothioic Acid: A Solvating Agent for the Determination of Enantiomeric Excesses",
+		"articlejourname": "Chirality",
+		"url": "https://doi.org/10.1002/chir.22315",
+		"articlepubdate": "2014",
+		"sid": "386233732",
+		"cid": "4"
+	}
+]

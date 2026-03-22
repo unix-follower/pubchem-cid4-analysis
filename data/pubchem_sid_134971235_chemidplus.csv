@@ -1,0 +1,5 @@
+gid,Compound_CID,Substance_SID,sourceid,Organism,Test_Type,Route,Dose,Effect,Reference
+,4,134971235,0000078966,mammal (species unspecified),LD50,skin,&gt;1 gm/kg,,"Gigiena Truda i Professional'nye Zabolevaniya.  Labor Hygiene and Occupational Diseases., 30(7)(46), 1986"
+,4,134971235,0000078966,rat,LD50,oral,1715 mg/kg,"BEHAVIORAL: SOMNOLENCE (GENERAL DEPRESSED ACTIVITY); GASTROINTESTINAL: HYPERMOTILITY, DIARRHEA","Gigiena Truda i Professional'nye Zabolevaniya.  Labor Hygiene and Occupational Diseases., 30(7)(46), 1986"
+,4,134971235,0000078966,mouse,LDLo,intraperitoneal,250 mg/kg,BEHAVIORAL: EXCITEMENT,"Summary Tables of Biological Tests, National Research Council Chemical-Biological Coordination Center., 4(232), 1952"
+,4,134971235,0000078966,rabbit,LD50,skin,1640 uL/kg,,"Union Carbide Data Sheet., 5/21/1971"

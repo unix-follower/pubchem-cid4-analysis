@@ -1,0 +1,8 @@
+gid,cid,sid,pKa_Type,pKa,Temperature_[°C],Pressure,Solvent,remarks,Method,Citation,pKa_Type_Description
+,4,496124720,pKaH1,9.619,20,,,"(m), I=0.10 to 0.40","Method of Larsson and Adell (Z. Physik. Chem. 156, 352, 381 (1931))","B.A. Timimi and D.H. Everett. J. Chem. Soc., B 1968, 1380.",Dissociation constant of the first conjugate acid
+,4,496124720,pKaH1,8.541,60,,,"(m), I=0.10 to 0.40","Method of Larsson and Adell (Z. Physik. Chem. 156, 352, 381 (1931))","B.A. Timimi and D.H. Everett. J. Chem. Soc., B 1968, 1380.",Dissociation constant of the first conjugate acid
+,4,496124720,pKaH1,10.277,,,,"(m), I=0.10 to 0.40","Method of Larsson and Adell (Z. Physik. Chem. 156, 352, 381 (1931))","B.A. Timimi and D.H. Everett. J. Chem. Soc., B 1968, 1380.",Dissociation constant of the first conjugate acid
+,4,496124720,pKaH1,9.324,30,,,"(m), I=0.10 to 0.40","Method of Larsson and Adell (Z. Physik. Chem. 156, 352, 381 (1931))","B.A. Timimi and D.H. Everett. J. Chem. Soc., B 1968, 1380.",Dissociation constant of the first conjugate acid
+,4,496124720,pKaH1,9.046,40,,,"(m), I=0.10 to 0.40","Method of Larsson and Adell (Z. Physik. Chem. 156, 352, 381 (1931))","B.A. Timimi and D.H. Everett. J. Chem. Soc., B 1968, 1380.",Dissociation constant of the first conjugate acid
+,4,496124720,pKaH1,9.937,10,,,"(m), I=0.10 to 0.40","Method of Larsson and Adell (Z. Physik. Chem. 156, 352, 381 (1931))","B.A. Timimi and D.H. Everett. J. Chem. Soc., B 1968, 1380.",Dissociation constant of the first conjugate acid
+,4,496124720,pKaH1,8.787,50,,,"(m), I=0.10 to 0.40","Method of Larsson and Adell (Z. Physik. Chem. 156, 352, 381 (1931))","B.A. Timimi and D.H. Everett. J. Chem. Soc., B 1968, 1380.",Dissociation constant of the first conjugate acid

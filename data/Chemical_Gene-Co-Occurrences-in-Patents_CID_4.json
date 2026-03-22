@@ -1,0 +1,4643 @@
+{
+  "LinkDataSet": {
+    "LinkData": [
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "lipe"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "lipe",
+            "CooccurrenceScore": 14715,
+            "NPatentFamilies": 141,
+            "NPatents": 197,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "75473000",
+                "RelevanceScore": 168107,
+                "RepresentativePatent": "KR-102254208-B1",
+                "GrantDate": "2021-05-21",
+                "RepresentativePatentTitle": "Synthetic pseudo-ceramide complex derived from Jeju natural oil prepared by enzyme catalyst lipase and functional cosmetic raw material including the same"
+              },
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 92459,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "58046686",
+                "RelevanceScore": 73967,
+                "RepresentativePatent": "US-11680228-B2",
+                "GrantDate": "2023-06-20",
+                "RepresentativePatentTitle": "Amides of aliphatic polyamines and 12-hydroxyoctadecanoic acid and lipase stable thickener compositions",
+                "OtherPatent": [
+                  "EP-3420062-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 57428,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 51366,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:2.7.7.49"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "rna-directed dna polymerase",
+            "CooccurrenceScore": 10518,
+            "NPatentFamilies": 121,
+            "NPatents": 164,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 77799,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "72837938",
+                "RelevanceScore": 77799,
+                "RepresentativePatent": "US-12227719-B2",
+                "GrantDate": "2025-02-18",
+                "RepresentativePatentTitle": "Liquid concentrated surfactant compositions"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 43221,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "52456664",
+                "RelevanceScore": 33106,
+                "RepresentativePatent": "KR-102154003-B1",
+                "GrantDate": "2020-09-09",
+                "RepresentativePatentTitle": "Detergent for dishwasher"
+              },
+              {
+                "PatentFamilyId": "37431219",
+                "RelevanceScore": 30509,
+                "RepresentativePatent": "EP-1908848-B1",
+                "GrantDate": "2013-04-17",
+                "RepresentativePatentTitle": "Method for detection of gene",
+                "OtherPatent": [
+                  "JP-5003484-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.1.26.4"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "ribonuclease h",
+            "CooccurrenceScore": 10208,
+            "NPatentFamilies": 113,
+            "NPatents": 153,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 84123,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "72837938",
+                "RelevanceScore": 84123,
+                "RepresentativePatent": "US-12227719-B2",
+                "GrantDate": "2025-02-18",
+                "RepresentativePatentTitle": "Liquid concentrated surfactant compositions"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 46735,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "52456664",
+                "RelevanceScore": 35797,
+                "RepresentativePatent": "KR-102154003-B1",
+                "GrantDate": "2020-09-09",
+                "RepresentativePatentTitle": "Detergent for dishwasher"
+              },
+              {
+                "PatentFamilyId": "37882445",
+                "RelevanceScore": 24742,
+                "RepresentativePatent": "EP-1974214-B1",
+                "GrantDate": "2012-08-08",
+                "RepresentativePatentTitle": "Supports for assaying analytes and methods of making and using thereof"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "tyr"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "tyr",
+            "CooccurrenceScore": 9752,
+            "NPatentFamilies": 74,
+            "NPatents": 99,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "26007724",
+                "RelevanceScore": 221415,
+                "RepresentativePatent": "EP-1335696-B1",
+                "GrantDate": "2007-09-05",
+                "RepresentativePatentTitle": "Enzymatic colouring agents"
+              },
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 110707,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "26614150",
+                "RelevanceScore": 110707,
+                "RepresentativePatent": "JP-3814224-B2",
+                "GrantDate": "2006-08-23",
+                "RepresentativePatentTitle": "Composition for external use"
+              },
+              {
+                "PatentFamilyId": "80988350",
+                "RelevanceScore": 92256,
+                "RepresentativePatent": "KR-102397693-B1",
+                "GrantDate": "2022-05-16",
+                "RepresentativePatentTitle": "Method of manufacturing cosmetic composition including bamboo stem cell culture extract and cosmetic compostion manufactured by the method"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 68762,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "eln"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "eln",
+            "CooccurrenceScore": 9233,
+            "NPatentFamilies": 58,
+            "NPatents": 59,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "7767722",
+                "RelevanceScore": 104436,
+                "RepresentativePatent": "EP-0840593-B1",
+                "GrantDate": "2002-10-02",
+                "RepresentativePatentTitle": "Oxidation colorants for dyeing keratinic fibers, containing a special combination of alkalisation agents"
+              },
+              {
+                "PatentFamilyId": "37606824",
+                "RelevanceScore": 104436,
+                "RepresentativePatent": "EP-1962776-B1",
+                "GrantDate": "2012-08-08",
+                "RepresentativePatentTitle": "Hair bleaching composition"
+              },
+              {
+                "PatentFamilyId": "26614150",
+                "RelevanceScore": 104436,
+                "RepresentativePatent": "JP-3814224-B2",
+                "GrantDate": "2006-08-23",
+                "RepresentativePatentTitle": "Composition for external use"
+              },
+              {
+                "PatentFamilyId": "18943707",
+                "RelevanceScore": 104436,
+                "RepresentativePatent": "JP-4718704-B2",
+                "GrantDate": "2011-07-06",
+                "RepresentativePatentTitle": "Hair dyeing method"
+              },
+              {
+                "PatentFamilyId": "43310952",
+                "RelevanceScore": 104436,
+                "RepresentativePatent": "JP-5404152-B2",
+                "GrantDate": "2014-01-29",
+                "RepresentativePatentTitle": "Hair dyeing pretreatment composition and hair dyeing pretreatment method"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.11.1.7"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "peroxidase",
+            "CooccurrenceScore": 9189,
+            "NPatentFamilies": 117,
+            "NPatents": 166,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 84474,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "7767722",
+                "RelevanceScore": 84474,
+                "RepresentativePatent": "EP-0840593-B1",
+                "GrantDate": "2002-10-02",
+                "RepresentativePatentTitle": "Oxidation colorants for dyeing keratinic fibers, containing a special combination of alkalisation agents"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 52468,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 46930,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "26007724",
+                "RelevanceScore": 42237,
+                "RepresentativePatent": "EP-1335696-B1",
+                "GrantDate": "2007-09-05",
+                "RepresentativePatentTitle": "Enzymatic colouring agents"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.4"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "cellulase",
+            "CooccurrenceScore": 8462,
+            "NPatentFamilies": 92,
+            "NPatents": 119,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 102358,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "42179595",
+                "RelevanceScore": 102358,
+                "RepresentativePatent": "KR-101415995-B1",
+                "GrantDate": "2014-07-08",
+                "RepresentativePatentTitle": "Method for preparing green tea saponin, 21-O-angeloyltheasapogenol E3"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 63577,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 56866,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "54334172",
+                "RelevanceScore": 27664,
+                "RepresentativePatent": "US-10683472-B2",
+                "GrantDate": "2020-06-16",
+                "RepresentativePatentTitle": "Method of minimizing enzyme based aerosol mist using a pressure spray system",
+                "OtherPatent": [
+                  "US-10119101-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.10.3.2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "laccase",
+            "CooccurrenceScore": 8331,
+            "NPatentFamilies": 68,
+            "NPatents": 88,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "26007724",
+                "RelevanceScore": 255445,
+                "RepresentativePatent": "EP-1335696-B1",
+                "GrantDate": "2007-09-05",
+                "RepresentativePatentTitle": "Enzymatic colouring agents"
+              },
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 127723,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 79331,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 70957,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions"
+              },
+              {
+                "PatentFamilyId": "69468798",
+                "RelevanceScore": 31931,
+                "RepresentativePatent": "KR-102747431-B1",
+                "GrantDate": "2024-12-26",
+                "RepresentativePatentTitle": "Alkaline composition, method and use comprising at least three different alkaline agents for the treatment of keratin fibers"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.67"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "galacturan 1,4-alpha-galacturonidase",
+            "CooccurrenceScore": 7240,
+            "NPatentFamilies": 65,
+            "NPatents": 96,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 119768,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "42179595",
+                "RelevanceScore": 119768,
+                "RepresentativePatent": "KR-101415995-B1",
+                "GrantDate": "2014-07-08",
+                "RepresentativePatentTitle": "Method for preparing green tea saponin, 21-O-angeloyltheasapogenol E3"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 74390,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 66538,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "56084443",
+                "RelevanceScore": 25483,
+                "RepresentativePatent": "JP-6961659-B2",
+                "GrantDate": "2021-11-05",
+                "RepresentativePatentTitle": "Detergent composition containing surfactant and propoxylated glycerin",
+                "OtherPatent": [
+                  "JP-6640248-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.15"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "polygalacturonase",
+            "CooccurrenceScore": 7045,
+            "NPatentFamilies": 66,
+            "NPatents": 97,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 113410,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "42179595",
+                "RelevanceScore": 113410,
+                "RepresentativePatent": "KR-101415995-B1",
+                "GrantDate": "2014-07-08",
+                "RepresentativePatentTitle": "Method for preparing green tea saponin, 21-O-angeloyltheasapogenol E3"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 70441,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 63006,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "56084443",
+                "RelevanceScore": 24130,
+                "RepresentativePatent": "JP-6961659-B2",
+                "GrantDate": "2021-11-05",
+                "RepresentativePatentTitle": "Detergent composition containing surfactant and propoxylated glycerin",
+                "OtherPatent": [
+                  "JP-6640248-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.25"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "beta-mannosidase",
+            "CooccurrenceScore": 6945,
+            "NPatentFamilies": 65,
+            "NPatents": 89,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "72837938",
+                "RelevanceScore": 131733,
+                "RepresentativePatent": "US-12227719-B2",
+                "GrantDate": "2025-02-18",
+                "RepresentativePatentTitle": "Liquid concentrated surfactant compositions"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 81821,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 73185,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "56084443",
+                "RelevanceScore": 28028,
+                "RepresentativePatent": "JP-6961659-B2",
+                "GrantDate": "2021-11-05",
+                "RepresentativePatentTitle": "Detergent composition containing surfactant and propoxylated glycerin",
+                "OtherPatent": [
+                  "JP-6640248-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "77664453",
+                "RelevanceScore": 26884,
+                "RepresentativePatent": "KR-102710624-B1",
+                "GrantDate": "2024-09-30",
+                "RepresentativePatentTitle": "Solid granules used in detergents",
+                "OtherPatent": [
+                  "JP-7245932-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.1.1.74"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "cutinase",
+            "CooccurrenceScore": 6238,
+            "NPatentFamilies": 68,
+            "NPatents": 106,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 134882,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 83778,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 74935,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "51951533",
+                "RelevanceScore": 14661,
+                "RepresentativePatent": "US-10351802-B2",
+                "GrantDate": "2019-07-16",
+                "RepresentativePatentTitle": "Laundry detergents containing soil release polymers"
+              },
+              {
+                "PatentFamilyId": "51951532",
+                "RelevanceScore": 13488,
+                "RepresentativePatent": "US-10240107-B2",
+                "GrantDate": "2019-03-26",
+                "RepresentativePatentTitle": "Laundry detergents containing soil release polymers",
+                "OtherPatent": [
+                  "EP-3218461-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:4.2.2.2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "pectate lyase",
+            "CooccurrenceScore": 6231,
+            "NPatentFamilies": 58,
+            "NPatents": 78,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 148047,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 91955,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 82248,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions"
+              },
+              {
+                "PatentFamilyId": "51951533",
+                "RelevanceScore": 16092,
+                "RepresentativePatent": "US-10351802-B2",
+                "GrantDate": "2019-07-16",
+                "RepresentativePatentTitle": "Laundry detergents containing soil release polymers"
+              },
+              {
+                "PatentFamilyId": "51951532",
+                "RelevanceScore": 14805,
+                "RepresentativePatent": "US-10240107-B2",
+                "GrantDate": "2019-03-26",
+                "RepresentativePatentTitle": "Laundry detergents containing soil release polymers",
+                "OtherPatent": [
+                  "EP-3218461-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.4.22.2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "papain",
+            "CooccurrenceScore": 5803,
+            "NPatentFamilies": 25,
+            "NPatents": 34,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "80988350",
+                "RelevanceScore": 354599,
+                "RepresentativePatent": "KR-102397693-B1",
+                "GrantDate": "2022-05-16",
+                "RepresentativePatentTitle": "Method of manufacturing cosmetic composition including bamboo stem cell culture extract and cosmetic compostion manufactured by the method"
+              },
+              {
+                "PatentFamilyId": "26312520",
+                "RelevanceScore": 48354,
+                "RepresentativePatent": "EP-0913732-B1",
+                "GrantDate": "2003-07-02",
+                "RepresentativePatentTitle": "Processing of lithographic printing plate precursors"
+              },
+              {
+                "PatentFamilyId": "47785970",
+                "RelevanceScore": 24739,
+                "RepresentativePatent": "JP-5823202-B2",
+                "GrantDate": "2015-11-25",
+                "RepresentativePatentTitle": "Hair treatment agent and hair treatment method using the hair treatment agent"
+              },
+              {
+                "PatentFamilyId": "56076913",
+                "RelevanceScore": 22634,
+                "RepresentativePatent": "JP-6190796-B2",
+                "GrantDate": "2017-08-30",
+                "RepresentativePatentTitle": "Second hair treatment agent and hair treatment method using the second hair treatment agent"
+              },
+              {
+                "PatentFamilyId": "51454204",
+                "RelevanceScore": 14184,
+                "RepresentativePatent": "EP-3169367-B1",
+                "GrantDate": "2019-06-05",
+                "RepresentativePatentTitle": "Poly(beta-amino ester) conjugates for cartilage agent delivery and methods"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.1.1.20"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "tannase",
+            "CooccurrenceScore": 5561,
+            "NPatentFamilies": 50,
+            "NPatents": 72,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 150600,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 93540,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 83667,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "77664453",
+                "RelevanceScore": 10757,
+                "RepresentativePatent": "KR-102710624-B1",
+                "GrantDate": "2024-09-30",
+                "RepresentativePatentTitle": "Solid granules used in detergents",
+                "OtherPatent": [
+                  "JP-7245932-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "56084443",
+                "RelevanceScore": 8011,
+                "RepresentativePatent": "JP-6961659-B2",
+                "GrantDate": "2021-11-05",
+                "RepresentativePatentTitle": "Detergent composition containing surfactant and propoxylated glycerin",
+                "OtherPatent": [
+                  "JP-6640248-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.8"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "endo-1,4-beta-xylanase",
+            "CooccurrenceScore": 4638,
+            "NPatentFamilies": 55,
+            "NPatents": 78,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 120504,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 74847,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 66947,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "77664453",
+                "RelevanceScore": 8607,
+                "RepresentativePatent": "KR-102710624-B1",
+                "GrantDate": "2024-09-30",
+                "RepresentativePatentTitle": "Solid granules used in detergents",
+                "OtherPatent": [
+                  "JP-7245932-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "41130596",
+                "RelevanceScore": 8311,
+                "RepresentativePatent": "EP-2350249-B1",
+                "GrantDate": "2014-04-16",
+                "RepresentativePatentTitle": "Dishwasher detergent"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.103"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "keratan-sulfate endo-1,4-beta-galactosidase",
+            "CooccurrenceScore": 4445,
+            "NPatentFamilies": 20,
+            "NPatents": 27,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 167810,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 104230,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 93228,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "64049752",
+                "RelevanceScore": 5669,
+                "RepresentativePatent": "US-11104806-B2",
+                "GrantDate": "2021-08-31",
+                "RepresentativePatentTitle": "Triarylmethane leuco compounds and compositions comprising the same"
+              },
+              {
+                "PatentFamilyId": "47559752",
+                "RelevanceScore": 5448,
+                "RepresentativePatent": "EP-3369845-B1",
+                "GrantDate": "2020-03-25",
+                "RepresentativePatentTitle": "Active containing fibrous structures with multiple regions having differing densities"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:4.2.2.1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "hyaluronate lyase",
+            "CooccurrenceScore": 4043,
+            "NPatentFamilies": 49,
+            "NPatents": 64,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "73856291",
+                "RelevanceScore": 122000,
+                "RepresentativePatent": "US-11879110-B2",
+                "GrantDate": "2024-01-23",
+                "RepresentativePatentTitle": "Alkylbenzenesulfonate surfactants"
+              },
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 75776,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "61835153",
+                "RelevanceScore": 18769,
+                "RepresentativePatent": "JP-7337476-B2",
+                "GrantDate": "2023-09-04",
+                "RepresentativePatentTitle": "skin barrier function enhancer"
+              },
+              {
+                "PatentFamilyId": "23204537",
+                "RelevanceScore": 10893,
+                "RepresentativePatent": "EP-1416975-B1",
+                "GrantDate": "2005-01-26",
+                "RepresentativePatentTitle": "Disinfecting and cleansing system for contact lenses"
+              },
+              {
+                "PatentFamilyId": "77664453",
+                "RelevanceScore": 8714,
+                "RepresentativePatent": "KR-102710624-B1",
+                "GrantDate": "2024-09-30",
+                "RepresentativePatentTitle": "Solid granules used in detergents",
+                "OtherPatent": [
+                  "JP-7245932-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.4.21.4"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "trypsin",
+            "CooccurrenceScore": 3891,
+            "NPatentFamilies": 54,
+            "NPatents": 64,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 55824,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "26312520",
+                "RelevanceScore": 40853,
+                "RepresentativePatent": "EP-0913732-B1",
+                "GrantDate": "2003-07-02",
+                "RepresentativePatentTitle": "Processing of lithographic printing plate precursors"
+              },
+              {
+                "PatentFamilyId": "26357414",
+                "RelevanceScore": 22469,
+                "RepresentativePatent": "EP-0316967-B1",
+                "GrantDate": "1992-09-09",
+                "RepresentativePatentTitle": "Fluorine-containing nitroimidazole derivatives and radiosensitizer comprising the same"
+              },
+              {
+                "PatentFamilyId": "47785970",
+                "RelevanceScore": 20902,
+                "RepresentativePatent": "JP-5823202-B2",
+                "GrantDate": "2015-11-25",
+                "RepresentativePatentTitle": "Hair treatment agent and hair treatment method using the hair treatment agent"
+              },
+              {
+                "PatentFamilyId": "56076913",
+                "RelevanceScore": 19123,
+                "RepresentativePatent": "JP-6190796-B2",
+                "GrantDate": "2017-08-30",
+                "RepresentativePatentTitle": "Second hair treatment agent and hair treatment method using the second hair treatment agent"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.1.99.1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "choline dehydrogenase",
+            "CooccurrenceScore": 3753,
+            "NPatentFamilies": 27,
+            "NPatents": 39,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "13225497",
+                "RelevanceScore": 96037,
+                "RepresentativePatent": "EP-0122152-B1",
+                "GrantDate": "1989-03-22",
+                "RepresentativePatentTitle": "Enzymatic production of sphingophospholipid derivatives"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 85367,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "39529721",
+                "RelevanceScore": 64025,
+                "RepresentativePatent": "EP-2178492-B1",
+                "GrantDate": "2016-12-14",
+                "RepresentativePatentTitle": "Hair treatment agent comprising an acylamino acid derivative, a hydroxyalkylamine, and 2-(2-hydroxyethyl)-p-phenylenediamine"
+              },
+              {
+                "PatentFamilyId": "58347945",
+                "RelevanceScore": 9485,
+                "RepresentativePatent": "EP-3423555-B1",
+                "GrantDate": "2020-09-30",
+                "RepresentativePatentTitle": "Compositions containing anionic surfactant and a solvent comprising butanediol"
+              },
+              {
+                "PatentFamilyId": "58692062",
+                "RelevanceScore": 9146,
+                "RepresentativePatent": "EP-3374486-B2",
+                "GrantDate": "2023-04-05",
+                "RepresentativePatentTitle": "Cleaning compositions containing a branched alkyl sulfate surfactant and a short-chain nonionic surfactant",
+                "OtherPatent": [
+                  "EP-3374486-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.17"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "lysozyme",
+            "CooccurrenceScore": 3312,
+            "NPatentFamilies": 18,
+            "NPatents": 22,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "26614150",
+                "RelevanceScore": 103751,
+                "RepresentativePatent": "JP-3814224-B2",
+                "GrantDate": "2006-08-23",
+                "RepresentativePatentTitle": "Composition for external use"
+              },
+              {
+                "PatentFamilyId": "83279351",
+                "RelevanceScore": 103751,
+                "RepresentativePatent": "KR-102443181-B1",
+                "GrantDate": "2022-09-14",
+                "RepresentativePatentTitle": "High-functional, weakly acidic cleansing composition containing natural complex extracts"
+              },
+              {
+                "PatentFamilyId": "37882445",
+                "RelevanceScore": 30515,
+                "RepresentativePatent": "EP-1974214-B1",
+                "GrantDate": "2012-08-08",
+                "RepresentativePatentTitle": "Supports for assaying analytes and methods of making and using thereof"
+              },
+              {
+                "PatentFamilyId": "9492055",
+                "RelevanceScore": 25938,
+                "RepresentativePatent": "EP-0906430-B1",
+                "GrantDate": "2006-07-26",
+                "RepresentativePatentTitle": "Biosynthesis method enabling the preparation of o-phospho-l-threonine"
+              },
+              {
+                "PatentFamilyId": "41736123",
+                "RelevanceScore": 10375,
+                "RepresentativePatent": "JP-5072940-B2",
+                "GrantDate": "2012-11-14",
+                "RepresentativePatentTitle": "Oil-cleaning floor cleaning composition"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "pglyrp2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "pglyrp2",
+            "CooccurrenceScore": 3287,
+            "NPatentFamilies": 18,
+            "NPatents": 22,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "26614150",
+                "RelevanceScore": 102968,
+                "RepresentativePatent": "JP-3814224-B2",
+                "GrantDate": "2006-08-23",
+                "RepresentativePatentTitle": "Composition for external use"
+              },
+              {
+                "PatentFamilyId": "83279351",
+                "RelevanceScore": 102968,
+                "RepresentativePatent": "KR-102443181-B1",
+                "GrantDate": "2022-09-14",
+                "RepresentativePatentTitle": "High-functional, weakly acidic cleansing composition containing natural complex extracts"
+              },
+              {
+                "PatentFamilyId": "37882445",
+                "RelevanceScore": 30285,
+                "RepresentativePatent": "EP-1974214-B1",
+                "GrantDate": "2012-08-08",
+                "RepresentativePatentTitle": "Supports for assaying analytes and methods of making and using thereof"
+              },
+              {
+                "PatentFamilyId": "9492055",
+                "RelevanceScore": 25742,
+                "RepresentativePatent": "EP-0906430-B1",
+                "GrantDate": "2006-07-26",
+                "RepresentativePatentTitle": "Biosynthesis method enabling the preparation of o-phospho-l-threonine"
+              },
+              {
+                "PatentFamilyId": "41736123",
+                "RelevanceScore": 10297,
+                "RepresentativePatent": "JP-5072940-B2",
+                "GrantDate": "2012-11-14",
+                "RepresentativePatentTitle": "Oil-cleaning floor cleaning composition"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.3.3.5"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "bilirubin oxidase",
+            "CooccurrenceScore": 3271,
+            "NPatentFamilies": 2,
+            "NPatents": 2,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "26007724",
+                "RelevanceScore": 320749,
+                "RepresentativePatent": "EP-1335696-B1",
+                "GrantDate": "2007-09-05",
+                "RepresentativePatentTitle": "Enzymatic colouring agents"
+              },
+              {
+                "PatentFamilyId": "31972713",
+                "RelevanceScore": 6216,
+                "RepresentativePatent": "JP-4116620-B2",
+                "GrantDate": "2008-07-09",
+                "RepresentativePatentTitle": "Culture with phenol oxidase-like activity"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "uox"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "uox",
+            "CooccurrenceScore": 3170,
+            "NPatentFamilies": 7,
+            "NPatents": 9,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "14548264",
+                "RelevanceScore": 90115,
+                "RepresentativePatent": "EP-0875241-B1",
+                "GrantDate": "2004-12-01",
+                "RepresentativePatentTitle": "Aqueous cosmetic composition containing stably solubilized uric acid and water-soluble polymer and method for stably solubilizing uric acid in aqueous cosmetic composition",
+                "OtherPatent": [
+                  "JP-3439067-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "39529721",
+                "RelevanceScore": 60077,
+                "RepresentativePatent": "EP-2178492-B1",
+                "GrantDate": "2016-12-14",
+                "RepresentativePatentTitle": "Hair treatment agent comprising an acylamino acid derivative, a hydroxyalkylamine, and 2-(2-hydroxyethyl)-p-phenylenediamine"
+              },
+              {
+                "PatentFamilyId": "26149615",
+                "RelevanceScore": 55455,
+                "RepresentativePatent": "JP-3323109-B2",
+                "GrantDate": "2002-09-09",
+                "RepresentativePatentTitle": "Aqueous cosmetic composition containing stably solubilized uric acid and amphoteric surfactant and method for stably solubilizing uric acid in aqueous cosmetic composition",
+                "OtherPatent": [
+                  "EP-0987009-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "14237671",
+                "RelevanceScore": 47273,
+                "RepresentativePatent": "EP-1250913-B1",
+                "GrantDate": "2006-04-12",
+                "RepresentativePatentTitle": "One-pack type post-foamable oxidation hair-dye compositions"
+              },
+              {
+                "PatentFamilyId": "69468798",
+                "RelevanceScore": 36046,
+                "RepresentativePatent": "KR-102747431-B1",
+                "GrantDate": "2024-12-26",
+                "RepresentativePatentTitle": "Alkaline composition, method and use comprising at least three different alkaline agents for the treatment of keratin fibers"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.5.1.5"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "urease",
+            "CooccurrenceScore": 3155,
+            "NPatentFamilies": 13,
+            "NPatents": 18,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "53181501",
+                "RelevanceScore": 128363,
+                "RepresentativePatent": "KR-102359121-B1",
+                "GrantDate": "2022-02-07",
+                "RepresentativePatentTitle": "Nitrification inhibitors designed for urea and manure based fertilizers",
+                "OtherPatent": [
+                  "JP-6603217-B2",
+                  "EP-3073829-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "60787606",
+                "RelevanceScore": 40648,
+                "RepresentativePatent": "US-11795119-B2",
+                "GrantDate": "2023-10-24",
+                "RepresentativePatentTitle": "Stabilized DCD and/or alkyl thiophosphoric triamide solvent systems and use in agricultural applications",
+                "OtherPatent": [
+                  "US-10570068-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "50383965",
+                "RelevanceScore": 33874,
+                "RepresentativePatent": "US-10221108-B2",
+                "GrantDate": "2019-03-05",
+                "RepresentativePatentTitle": "Liquid formulations of urease inhibitors for fertilizers",
+                "OtherPatent": [
+                  "US-10329208-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "54480950",
+                "RelevanceScore": 20324,
+                "RepresentativePatent": "US-11097993-B2",
+                "GrantDate": "2021-08-24",
+                "RepresentativePatentTitle": "Efficiency of man-made and/or natural organic based animal manure fertilizers by liberating the bound nutrients (macro and micro) through the use of organic, non-aqueous liquid delivery formulations containing organic poly (organicacids) and/or their salts"
+              },
+              {
+                "PatentFamilyId": "57128705",
+                "RelevanceScore": 19669,
+                "RepresentativePatent": "US-10183897-B2",
+                "GrantDate": "2019-01-22",
+                "RepresentativePatentTitle": "Compositions and methods for reducing nitrogen volatilization of urea fertilizers"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.15.1.1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "superoxide dismutase",
+            "CooccurrenceScore": 3151,
+            "NPatentFamilies": 43,
+            "NPatents": 59,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 68861,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 61593,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "26576704",
+                "RelevanceScore": 25197,
+                "RepresentativePatent": "JP-3736405-B2",
+                "GrantDate": "2006-01-18",
+                "RepresentativePatentTitle": "Amino acid derivatives and antioxidants"
+              },
+              {
+                "PatentFamilyId": "52357378",
+                "RelevanceScore": 8941,
+                "RepresentativePatent": "JP-6178602-B2",
+                "GrantDate": "2017-08-09",
+                "RepresentativePatentTitle": "Composition containing p-coumaric acid"
+              },
+              {
+                "PatentFamilyId": "58347945",
+                "RelevanceScore": 6844,
+                "RepresentativePatent": "EP-3423555-B1",
+                "GrantDate": "2020-09-30",
+                "RepresentativePatentTitle": "Compositions containing anionic surfactant and a solvent comprising butanediol"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "slc27a2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "slc27a2",
+            "CooccurrenceScore": 2936,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 293479,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.4.21.1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "chymotrypsin",
+            "CooccurrenceScore": 2714,
+            "NPatentFamilies": 29,
+            "NPatents": 36,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 73608,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "22081851",
+                "RelevanceScore": 35376,
+                "RepresentativePatent": "EP-1310510-B1",
+                "GrantDate": "2007-07-11",
+                "RepresentativePatentTitle": "Topologically segregated, encoded solid phase libraries"
+              },
+              {
+                "PatentFamilyId": "27798985",
+                "RelevanceScore": 20433,
+                "RepresentativePatent": "EP-1348684-B1",
+                "GrantDate": "2006-03-08",
+                "RepresentativePatentTitle": "Method for synthesis of (2S)-indoline-2-carboxylic acid; and use in the synthesis of perindopril"
+              },
+              {
+                "PatentFamilyId": "28459642",
+                "RelevanceScore": 13780,
+                "RepresentativePatent": "EP-1354876-B1",
+                "GrantDate": "2005-04-27",
+                "RepresentativePatentTitle": "Method for synthesis of (2S,3aS,7aS)-perhydroindole-2-carboxylic acid and esters thereof; and use in the synthesis of perindopril"
+              },
+              {
+                "PatentFamilyId": "52686215",
+                "RelevanceScore": 12812,
+                "RepresentativePatent": "US-10988713-B2",
+                "GrantDate": "2021-04-27",
+                "RepresentativePatentTitle": "Composition containing peptidase and biosurfactant"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.1.4.4"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "phospholipase d",
+            "CooccurrenceScore": 2646,
+            "NPatentFamilies": 3,
+            "NPatents": 3,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "37751969",
+                "RelevanceScore": 100986,
+                "RepresentativePatent": "JP-4887674-B2",
+                "GrantDate": "2012-02-29",
+                "RepresentativePatentTitle": "Method for producing phospholipid composition"
+              },
+              {
+                "PatentFamilyId": "13225497",
+                "RelevanceScore": 94675,
+                "RepresentativePatent": "EP-0122152-B1",
+                "GrantDate": "1989-03-22",
+                "RepresentativePatentTitle": "Enzymatic production of sphingophospholipid derivatives"
+              },
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 68854,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.3"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "glucan 1,4-alpha-glucosidase",
+            "CooccurrenceScore": 2543,
+            "NPatentFamilies": 21,
+            "NPatents": 27,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "42179595",
+                "RelevanceScore": 114539,
+                "RepresentativePatent": "KR-101415995-B1",
+                "GrantDate": "2014-07-08",
+                "RepresentativePatentTitle": "Method for preparing green tea saponin, 21-O-angeloyltheasapogenol E3"
+              },
+              {
+                "PatentFamilyId": "64049742",
+                "RelevanceScore": 63633,
+                "RepresentativePatent": "US-10870819-B2",
+                "GrantDate": "2020-12-22",
+                "RepresentativePatentTitle": "Leuco colorants as bluing agents in laundry care compositions",
+                "OtherPatent": [
+                  "JP-7030963-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "31884323",
+                "RelevanceScore": 11013,
+                "RepresentativePatent": "KR-101165835-B1",
+                "GrantDate": "2012-07-16",
+                "RepresentativePatentTitle": "Anti Aging Composition"
+              },
+              {
+                "PatentFamilyId": "38730831",
+                "RelevanceScore": 8422,
+                "RepresentativePatent": "JP-5192750-B2",
+                "GrantDate": "2013-05-08",
+                "RepresentativePatentTitle": "Curable composition"
+              },
+              {
+                "PatentFamilyId": "51263346",
+                "RelevanceScore": 7177,
+                "RepresentativePatent": "US-10619174-B2",
+                "GrantDate": "2020-04-14",
+                "RepresentativePatentTitle": "Microorganism strains for the production of 2.3-butanediol"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "ins"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "ins",
+            "CooccurrenceScore": 2393,
+            "NPatentFamilies": 33,
+            "NPatents": 40,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "48947769",
+                "RelevanceScore": 68896,
+                "RepresentativePatent": "EP-2813515-B1",
+                "GrantDate": "2019-07-10",
+                "RepresentativePatentTitle": "Transdermally delivered hyaluronic acid-protein conjugate"
+              },
+              {
+                "PatentFamilyId": "48744323",
+                "RelevanceScore": 16169,
+                "RepresentativePatent": "EP-2814461-B1",
+                "GrantDate": "2019-07-24",
+                "RepresentativePatentTitle": "Injectable solution having a ph of 7 and including at least basal insulin, the pi of which is between 5.8 and 8.5, and a substituted co-poly(amino acid)"
+              },
+              {
+                "PatentFamilyId": "40718194",
+                "RelevanceScore": 12779,
+                "RepresentativePatent": "EP-2222220-B1",
+                "GrantDate": "2016-03-16",
+                "RepresentativePatentTitle": "Trimethylamine compounds as risk predictors of cardiovascular disease",
+                "OtherPatent": [
+                  "EP-3070477-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "35134380",
+                "RelevanceScore": 11004,
+                "RepresentativePatent": "JP-5144274-B2",
+                "GrantDate": "2013-02-13",
+                "RepresentativePatentTitle": "Use of lipoic acid-containing cyclodextrin complex"
+              },
+              {
+                "PatentFamilyId": "51454204",
+                "RelevanceScore": 10564,
+                "RepresentativePatent": "EP-3169367-B1",
+                "GrantDate": "2019-06-05",
+                "RepresentativePatentTitle": "Poly(beta-amino ester) conjugates for cartilage agent delivery and methods"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.4.24.21"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "astacin",
+            "CooccurrenceScore": 2162,
+            "NPatentFamilies": 3,
+            "NPatents": 5,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "6378409",
+                "RelevanceScore": 198225,
+                "RepresentativePatent": "EP-0392352-B1",
+                "GrantDate": "1994-09-21",
+                "RepresentativePatentTitle": "Aqueous dispersions of high energy radiation curable polyurethanes"
+              },
+              {
+                "PatentFamilyId": "7627070",
+                "RelevanceScore": 10218,
+                "RepresentativePatent": "EP-1248811-B1",
+                "GrantDate": "2005-08-03",
+                "RepresentativePatentTitle": "Carbodiimides with carboxyl or carboxylate groups",
+                "OtherPatent": [
+                  "JP-4959084-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "29285338",
+                "RelevanceScore": 7683,
+                "RepresentativePatent": "JP-4856726-B2",
+                "GrantDate": "2012-01-18",
+                "RepresentativePatentTitle": "Method for matte coating of a support",
+                "OtherPatent": [
+                  "EP-1506242-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "cxcl8"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "cxcl8",
+            "CooccurrenceScore": 2111,
+            "NPatentFamilies": 7,
+            "NPatents": 9,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "69182639",
+                "RelevanceScore": 191487,
+                "RepresentativePatent": "US-11573228-B2",
+                "GrantDate": "2023-02-07",
+                "RepresentativePatentTitle": "Biomarkers of neutrophil deregulation as diagnostic for gingivitis"
+              },
+              {
+                "PatentFamilyId": "25487094",
+                "RelevanceScore": 5984,
+                "RepresentativePatent": "EP-1428023-B1",
+                "GrantDate": "2008-08-27",
+                "RepresentativePatentTitle": "Methods for predicting drug sensitivity in patients afflicted with an inflammatory disease"
+              },
+              {
+                "PatentFamilyId": "62751601",
+                "RelevanceScore": 3174,
+                "RepresentativePatent": "KR-102615098-B1",
+                "GrantDate": "2023-12-18",
+                "RepresentativePatentTitle": "Cyclopropyl urea formyl peptide 2 receptor and formyl peptide 1 receptor agonist"
+              },
+              {
+                "PatentFamilyId": "36128376",
+                "RelevanceScore": 3139,
+                "RepresentativePatent": "EP-1831206-B1",
+                "GrantDate": "2011-08-24",
+                "RepresentativePatentTitle": "N-substituted benzimidazolyl c-kit inhibitors and combinatorial benzimidazole library"
+              },
+              {
+                "PatentFamilyId": "61073854",
+                "RelevanceScore": 3122,
+                "RepresentativePatent": "JP-7487264-B2",
+                "GrantDate": "2024-05-20",
+                "RepresentativePatentTitle": "Compositions Comprising 5-Cholestene-3,25-diol, 3-Sulfate (25HC3S) or a Pharmaceutically Acceptable Salt and at Least One Cyclic Oligosaccharide",
+                "OtherPatent": [
+                  "KR-102465046-B1",
+                  "KR-102593667-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.1.3.4"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "glucose oxidase",
+            "CooccurrenceScore": 2055,
+            "NPatentFamilies": 9,
+            "NPatents": 9,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "78083523",
+                "RelevanceScore": 107106,
+                "RepresentativePatent": "KR-102795483-B1",
+                "GrantDate": "2025-04-11",
+                "RepresentativePatentTitle": "Biocompatible membrane, method for manufacturing the same, and implantable biosensor"
+              },
+              {
+                "PatentFamilyId": "39529721",
+                "RelevanceScore": 44628,
+                "RepresentativePatent": "EP-2178492-B1",
+                "GrantDate": "2016-12-14",
+                "RepresentativePatentTitle": "Hair treatment agent comprising an acylamino acid derivative, a hydroxyalkylamine, and 2-(2-hydroxyethyl)-p-phenylenediamine"
+              },
+              {
+                "PatentFamilyId": "46641327",
+                "RelevanceScore": 19126,
+                "RepresentativePatent": "US-10072191-B2",
+                "GrantDate": "2018-09-11",
+                "RepresentativePatentTitle": "Composition, system and method for preventing formation of frozen water or for causing the same to melt"
+              },
+              {
+                "PatentFamilyId": "27554162",
+                "RelevanceScore": 12751,
+                "RepresentativePatent": "EP-1038939-B1",
+                "GrantDate": "2006-11-02",
+                "RepresentativePatentTitle": "Chemiluminescent reagents and chemiluminescence analysis methods with the use of the same"
+              },
+              {
+                "PatentFamilyId": "25237341",
+                "RelevanceScore": 6612,
+                "RepresentativePatent": "EP-0621880-B1",
+                "GrantDate": "1999-09-08",
+                "RepresentativePatentTitle": "Drug delivery system for the simultaneous delivery of drugs activatable by enzymes and light"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:2.7.7.7"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "dna-directed dna polymerase",
+            "CooccurrenceScore": 2040,
+            "NPatentFamilies": 15,
+            "NPatents": 25,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 42117,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              },
+              {
+                "PatentFamilyId": "37431219",
+                "RelevanceScore": 36336,
+                "RepresentativePatent": "EP-1908848-B1",
+                "GrantDate": "2013-04-17",
+                "RepresentativePatentTitle": "Method for detection of gene",
+                "OtherPatent": [
+                  "JP-5003484-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "37757509",
+                "RelevanceScore": 28956,
+                "RepresentativePatent": "JP-5155660-B2",
+                "GrantDate": "2013-03-06",
+                "RepresentativePatentTitle": "Method for producing cDNA and RNA strand",
+                "OtherPatent": [
+                  "EP-1930422-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "37935857",
+                "RelevanceScore": 27659,
+                "RepresentativePatent": "JP-4916689-B2",
+                "GrantDate": "2012-04-18",
+                "RepresentativePatentTitle": "DNA strand amplification method"
+              },
+              {
+                "PatentFamilyId": "37683244",
+                "RelevanceScore": 25738,
+                "RepresentativePatent": "JP-4922936-B2",
+                "GrantDate": "2012-04-25",
+                "RepresentativePatentTitle": "Bacteria detection method"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "manf"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "manf",
+            "CooccurrenceScore": 1968,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "37606824",
+                "RelevanceScore": 196693,
+                "RepresentativePatent": "EP-1962776-B1",
+                "GrantDate": "2012-08-08",
+                "RepresentativePatentTitle": "Hair bleaching composition"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "tac1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "tac1",
+            "CooccurrenceScore": 1722,
+            "NPatentFamilies": 5,
+            "NPatents": 7,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "53757070",
+                "RelevanceScore": 130929,
+                "RepresentativePatent": "EP-3100733-B1",
+                "GrantDate": "2018-12-12",
+                "RepresentativePatentTitle": "Emedastine-containing tape",
+                "OtherPatent": [
+                  "JP-6173491-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "27419332",
+                "RelevanceScore": 17228,
+                "RepresentativePatent": "EP-0228448-B1",
+                "GrantDate": "1991-08-28",
+                "RepresentativePatentTitle": "Use of biologically active copolymers for the manufacture of a medicament for stimulating the growth of an animal",
+                "OtherPatent": [
+                  "EP-0378246-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "11361452",
+                "RelevanceScore": 11903,
+                "RepresentativePatent": "EP-0550006-B1",
+                "GrantDate": "1999-09-08",
+                "RepresentativePatentTitle": "Use of N-acyl derivatives of aminoalcohols for the manufacture of a medicament for the treatment of pathologies involving mast cells"
+              },
+              {
+                "PatentFamilyId": "49883930",
+                "RelevanceScore": 6006,
+                "RepresentativePatent": "KR-102298409-B1",
+                "GrantDate": "2021-09-07",
+                "RepresentativePatentTitle": "Continuous polyamidation process-i"
+              },
+              {
+                "PatentFamilyId": "49883928",
+                "RelevanceScore": 6006,
+                "RepresentativePatent": "KR-102396141-B1",
+                "GrantDate": "2022-05-10",
+                "RepresentativePatentTitle": "Continuous polyamidation process-ii"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "cat"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "cat",
+            "CooccurrenceScore": 1708,
+            "NPatentFamilies": 32,
+            "NPatents": 38,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "22860073",
+                "RelevanceScore": 16944,
+                "RepresentativePatent": "EP-0706802-B1",
+                "GrantDate": "2004-03-24",
+                "RepresentativePatentTitle": "A method of preserving ophthalmic solutions and compositions therefor",
+                "OtherPatent": [
+                  "KR-100193585-B1",
+                  "JP-2915008-B2",
+                  "EP-0354186-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "93521435",
+                "RelevanceScore": 15061,
+                "RepresentativePatent": "JP-7614712-B2",
+                "GrantDate": "2025-01-16",
+                "RepresentativePatentTitle": "Hair dyeing method"
+              },
+              {
+                "PatentFamilyId": "25439550",
+                "RelevanceScore": 14654,
+                "RepresentativePatent": "EP-0265381-B1",
+                "GrantDate": "1991-05-29",
+                "RepresentativePatentTitle": "A method of disinfecting soft contact lenses with a stabilized hydrogen peroxide solution"
+              },
+              {
+                "PatentFamilyId": "21935963",
+                "RelevanceScore": 13902,
+                "RepresentativePatent": "JP-2642398-B2",
+                "GrantDate": "1997-08-20",
+                "RepresentativePatentTitle": "Stabilized hydrogen peroxide solution",
+                "OtherPatent": [
+                  "EP-0289463-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "76157648",
+                "RelevanceScore": 8888,
+                "RepresentativePatent": "KR-102254553-B1",
+                "GrantDate": "2021-05-21",
+                "RepresentativePatentTitle": "Lactobacillus paracasei HY7015 having hair growth promotion, and a composition for promoting hair growth containing there of as effective component"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:4.2.2.12"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "xanthan lyase",
+            "CooccurrenceScore": 1577,
+            "NPatentFamilies": 7,
+            "NPatents": 9,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 118990,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "41130596",
+                "RelevanceScore": 13212,
+                "RepresentativePatent": "EP-2350249-B1",
+                "GrantDate": "2014-04-16",
+                "RepresentativePatentTitle": "Dishwasher detergent"
+              },
+              {
+                "PatentFamilyId": "41803308",
+                "RelevanceScore": 5762,
+                "RepresentativePatent": "EP-2366010-B1",
+                "GrantDate": "2016-10-05",
+                "RepresentativePatentTitle": "Machine dishwashing detergent"
+              },
+              {
+                "PatentFamilyId": "41698522",
+                "RelevanceScore": 5762,
+                "RepresentativePatent": "EP-2366007-B1",
+                "GrantDate": "2018-08-08",
+                "RepresentativePatentTitle": "Dishwasher detergent"
+              },
+              {
+                "PatentFamilyId": "41667485",
+                "RelevanceScore": 5593,
+                "RepresentativePatent": "EP-2367920-B1",
+                "GrantDate": "2015-12-09",
+                "RepresentativePatentTitle": "Automatic dishwashing detergent composition"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "dap"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "dap",
+            "CooccurrenceScore": 1475,
+            "NPatentFamilies": 1,
+            "NPatents": 2,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "69415380",
+                "RelevanceScore": 147369,
+                "RepresentativePatent": "US-11304930-B2",
+                "GrantDate": "2022-04-19",
+                "RepresentativePatentTitle": "Ammonium salts of 3-(3,5-dibromo-4-hydroxybenzyliden)-5-indo-1,3-dihydroindol-2-one and uses thereof",
+                "OtherPatent": [
+                  "JP-7201273-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.35"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "hyaluronoglucosaminidase",
+            "CooccurrenceScore": 1447,
+            "NPatentFamilies": 10,
+            "NPatents": 12,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 104653,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "60570193",
+                "RelevanceScore": 4720,
+                "RepresentativePatent": "JP-6866478-B2",
+                "GrantDate": "2021-04-28",
+                "RepresentativePatentTitle": "Roy copolymer as a bluish agent in laundry care compositions"
+              },
+              {
+                "PatentFamilyId": "61226648",
+                "RelevanceScore": 4665,
+                "RepresentativePatent": "JP-7073362-B2",
+                "GrantDate": "2022-05-23",
+                "RepresentativePatentTitle": "Roy copolymer as a bluish agent in laundry care compositions"
+              },
+              {
+                "PatentFamilyId": "61249688",
+                "RelevanceScore": 4482,
+                "RepresentativePatent": "JP-7051838-B2",
+                "GrantDate": "2022-04-11",
+                "RepresentativePatentTitle": "Roy copolymer as a bluish agent in laundry care compositions"
+              },
+              {
+                "PatentFamilyId": "64110208",
+                "RelevanceScore": 4481,
+                "RepresentativePatent": "US-11053392-B2",
+                "GrantDate": "2021-07-06",
+                "RepresentativePatentTitle": "Leuco compounds, colorant compounds, and compositions containing the same"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.4.21.62"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "subtilisin",
+            "CooccurrenceScore": 1444,
+            "NPatentFamilies": 31,
+            "NPatents": 36,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "52456664",
+                "RelevanceScore": 13458,
+                "RepresentativePatent": "KR-102154003-B1",
+                "GrantDate": "2020-09-09",
+                "RepresentativePatentTitle": "Detergent for dishwasher"
+              },
+              {
+                "PatentFamilyId": "23204537",
+                "RelevanceScore": 11295,
+                "RepresentativePatent": "EP-1416975-B1",
+                "GrantDate": "2005-01-26",
+                "RepresentativePatentTitle": "Disinfecting and cleansing system for contact lenses"
+              },
+              {
+                "PatentFamilyId": "41130596",
+                "RelevanceScore": 8725,
+                "RepresentativePatent": "EP-2350249-B1",
+                "GrantDate": "2014-04-16",
+                "RepresentativePatentTitle": "Dishwasher detergent"
+              },
+              {
+                "PatentFamilyId": "19771451",
+                "RelevanceScore": 7355,
+                "RepresentativePatent": "EP-1283898-B1",
+                "GrantDate": "2006-05-10",
+                "RepresentativePatentTitle": "Process for the preparation of enantiomerically enriched esters and alcohols"
+              },
+              {
+                "PatentFamilyId": "22700646",
+                "RelevanceScore": 6801,
+                "RepresentativePatent": "JP-2931609-B2",
+                "GrantDate": "1999-08-09",
+                "RepresentativePatentTitle": "Therapeutic methods using catalytic antibodies"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "galns"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "galns",
+            "CooccurrenceScore": 1438,
+            "NPatentFamilies": 10,
+            "NPatents": 10,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 103496,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "60570193",
+                "RelevanceScore": 4667,
+                "RepresentativePatent": "JP-6866478-B2",
+                "GrantDate": "2021-04-28",
+                "RepresentativePatentTitle": "Roy copolymer as a bluish agent in laundry care compositions"
+              },
+              {
+                "PatentFamilyId": "61226648",
+                "RelevanceScore": 4613,
+                "RepresentativePatent": "JP-7073362-B2",
+                "GrantDate": "2022-05-23",
+                "RepresentativePatentTitle": "Roy copolymer as a bluish agent in laundry care compositions"
+              },
+              {
+                "PatentFamilyId": "64051753",
+                "RelevanceScore": 4578,
+                "RepresentativePatent": "JP-7059363-B2",
+                "GrantDate": "2022-04-25",
+                "RepresentativePatentTitle": "How to use leuco colorant as a bluish agent in laundry care compositions"
+              },
+              {
+                "PatentFamilyId": "64051752",
+                "RelevanceScore": 4553,
+                "RepresentativePatent": "JP-7030962-B2",
+                "GrantDate": "2022-03-07",
+                "RepresentativePatentTitle": "Laundry care composition and method for determining its deterioration"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "epo"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "epo",
+            "CooccurrenceScore": 1438,
+            "NPatentFamilies": 9,
+            "NPatents": 9,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "48947769",
+                "RelevanceScore": 96377,
+                "RepresentativePatent": "EP-2813515-B1",
+                "GrantDate": "2019-07-10",
+                "RepresentativePatentTitle": "Transdermally delivered hyaluronic acid-protein conjugate"
+              },
+              {
+                "PatentFamilyId": "51454204",
+                "RelevanceScore": 14778,
+                "RepresentativePatent": "EP-3169367-B1",
+                "GrantDate": "2019-06-05",
+                "RepresentativePatentTitle": "Poly(beta-amino ester) conjugates for cartilage agent delivery and methods"
+              },
+              {
+                "PatentFamilyId": "26748852",
+                "RelevanceScore": 8659,
+                "RepresentativePatent": "EP-0705279-B1",
+                "GrantDate": "2003-02-19",
+                "RepresentativePatentTitle": "Topologically segregated, encoded solid phase libraries"
+              },
+              {
+                "PatentFamilyId": "22081851",
+                "RelevanceScore": 8271,
+                "RepresentativePatent": "EP-1310510-B1",
+                "GrantDate": "2007-07-11",
+                "RepresentativePatentTitle": "Topologically segregated, encoded solid phase libraries"
+              },
+              {
+                "PatentFamilyId": "70001605",
+                "RelevanceScore": 4045,
+                "RepresentativePatent": "KR-102093235-B1",
+                "GrantDate": "2020-03-25",
+                "RepresentativePatentTitle": "Microneedles and methof of mamufacture"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "tf"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "tf",
+            "CooccurrenceScore": 1419,
+            "NPatentFamilies": 9,
+            "NPatents": 10,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47357200",
+                "RelevanceScore": 61210,
+                "RepresentativePatent": "JP-5971867-B2",
+                "GrantDate": "2016-08-17",
+                "RepresentativePatentTitle": "Gallium labeled drug"
+              },
+              {
+                "PatentFamilyId": "9900921",
+                "RelevanceScore": 24484,
+                "RepresentativePatent": "JP-4141831-B2",
+                "GrantDate": "2008-08-27",
+                "RepresentativePatentTitle": "Deodorant product"
+              },
+              {
+                "PatentFamilyId": "51454204",
+                "RelevanceScore": 14690,
+                "RepresentativePatent": "EP-3169367-B1",
+                "GrantDate": "2019-06-05",
+                "RepresentativePatentTitle": "Poly(beta-amino ester) conjugates for cartilage agent delivery and methods"
+              },
+              {
+                "PatentFamilyId": "10680097",
+                "RelevanceScore": 10594,
+                "RepresentativePatent": "JP-3169222-B2",
+                "GrantDate": "2001-05-21",
+                "RepresentativePatentTitle": "Novel linker for bioactive agents"
+              },
+              {
+                "PatentFamilyId": "41683287",
+                "RelevanceScore": 8222,
+                "RepresentativePatent": "JP-6013424-B2",
+                "GrantDate": "2016-10-25",
+                "RepresentativePatentTitle": "HPMA-docetaxel conjugate and use thereof"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "tnfsf10"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "tnfsf10",
+            "CooccurrenceScore": 1321,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "48947769",
+                "RelevanceScore": 131982,
+                "RepresentativePatent": "EP-2813515-B1",
+                "GrantDate": "2019-07-10",
+                "RepresentativePatentTitle": "Transdermally delivered hyaluronic acid-protein conjugate"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.78"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "mannan endo-1,4-beta-mannosidase",
+            "CooccurrenceScore": 1292,
+            "NPatentFamilies": 2,
+            "NPatents": 4,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 124424,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "79173585",
+                "RelevanceScore": 4694,
+                "RepresentativePatent": "US-12247184-B2",
+                "GrantDate": "2025-03-11",
+                "RepresentativePatentTitle": "Liquid detergent composition",
+                "OtherPatent": [
+                  "US-11834626-B1",
+                  "US-11512264-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "pga5"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "pga5",
+            "CooccurrenceScore": 1287,
+            "NPatentFamilies": 12,
+            "NPatents": 20,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "26312520",
+                "RelevanceScore": 49036,
+                "RepresentativePatent": "EP-0913732-B1",
+                "GrantDate": "2003-07-02",
+                "RepresentativePatentTitle": "Processing of lithographic printing plate precursors"
+              },
+              {
+                "PatentFamilyId": "51659008",
+                "RelevanceScore": 12259,
+                "RepresentativePatent": "EP-2968504-B1",
+                "GrantDate": "2019-12-18",
+                "RepresentativePatentTitle": "Compositions and methods for inducing apoptosis",
+                "OtherPatent": [
+                  "US-10251906-B2",
+                  "JP-6814824-B2",
+                  "KR-102384693-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "52456664",
+                "RelevanceScore": 11476,
+                "RepresentativePatent": "KR-102154003-B1",
+                "GrantDate": "2020-09-09",
+                "RepresentativePatentTitle": "Detergent for dishwasher"
+              },
+              {
+                "PatentFamilyId": "11909083",
+                "RelevanceScore": 10177,
+                "RepresentativePatent": "EP-0057837-B1",
+                "GrantDate": "1985-04-17",
+                "RepresentativePatentTitle": "Hair treatment compositions"
+              },
+              {
+                "PatentFamilyId": "55411124",
+                "RelevanceScore": 8700,
+                "RepresentativePatent": "US-10302632-B2",
+                "GrantDate": "2019-05-28",
+                "RepresentativePatentTitle": "Macromolecular conjugates for visualization and separation of proteins and cells",
+                "OtherPatent": [
+                  "EP-3245514-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "f9"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "f9",
+            "CooccurrenceScore": 1268,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "6380171",
+                "RelevanceScore": 126676,
+                "RepresentativePatent": "JP-2593951-B2",
+                "GrantDate": "1997-03-26",
+                "RepresentativePatentTitle": "Method for isolating blood coagulation factor IX"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "raf1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "raf1",
+            "CooccurrenceScore": 1184,
+            "NPatentFamilies": 1,
+            "NPatents": 2,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "69415380",
+                "RelevanceScore": 118278,
+                "RepresentativePatent": "US-11304930-B2",
+                "GrantDate": "2022-04-19",
+                "RepresentativePatentTitle": "Ammonium salts of 3-(3,5-dibromo-4-hydroxybenzyliden)-5-indo-1,3-dihydroindol-2-one and uses thereof",
+                "OtherPatent": [
+                  "JP-7201273-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "pcsk6"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "pcsk6",
+            "CooccurrenceScore": 1172,
+            "NPatentFamilies": 5,
+            "NPatents": 7,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 102121,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "66999821",
+                "RelevanceScore": 4216,
+                "RepresentativePatent": "US-11566206-B2",
+                "GrantDate": "2023-01-31",
+                "RepresentativePatentTitle": "Multi-component detergent comprising catechol metal complex"
+              },
+              {
+                "PatentFamilyId": "79173585",
+                "RelevanceScore": 3852,
+                "RepresentativePatent": "US-12247184-B2",
+                "GrantDate": "2025-03-11",
+                "RepresentativePatentTitle": "Liquid detergent composition",
+                "OtherPatent": [
+                  "US-11834626-B1",
+                  "US-11512264-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "40090426",
+                "RelevanceScore": 3685,
+                "RepresentativePatent": "KR-101520514-B1",
+                "GrantDate": "2015-05-18",
+                "RepresentativePatentTitle": "Detergents"
+              },
+              {
+                "PatentFamilyId": "38658320",
+                "RelevanceScore": 3226,
+                "RepresentativePatent": "EP-2091833-B1",
+                "GrantDate": "2012-09-19",
+                "RepresentativePatentTitle": "Closure comprising a self-opening closure flap"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:4.1.1.5"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "acetolactate decarboxylase",
+            "CooccurrenceScore": 1166,
+            "NPatentFamilies": 7,
+            "NPatents": 11,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "51263346",
+                "RelevanceScore": 63091,
+                "RepresentativePatent": "US-10619174-B2",
+                "GrantDate": "2020-04-14",
+                "RepresentativePatentTitle": "Microorganism strains for the production of 2.3-butanediol"
+              },
+              {
+                "PatentFamilyId": "38668305",
+                "RelevanceScore": 32109,
+                "RepresentativePatent": "EP-2010664-B1",
+                "GrantDate": "2014-11-05",
+                "RepresentativePatentTitle": "Fermentive production of four carbon alcohols"
+              },
+              {
+                "PatentFamilyId": "55631742",
+                "RelevanceScore": 5619,
+                "RepresentativePatent": "US-11098307-B2",
+                "GrantDate": "2021-08-24",
+                "RepresentativePatentTitle": "Compositions and methods for rapid and dynamic flux control using synthetic metabolic valves",
+                "OtherPatent": [
+                  "US-11142761-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "45811143",
+                "RelevanceScore": 5390,
+                "RepresentativePatent": "JP-6266707-B2",
+                "GrantDate": "2018-01-24",
+                "RepresentativePatentTitle": "Incorporation of a polynucleotide encoding a polypeptide that catalyzes the conversion of pyruvate to acetolactate",
+                "OtherPatent": [
+                  "JP-6008858-B2",
+                  "EP-2614138-B1",
+                  "EP-3269806-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "52133052",
+                "RelevanceScore": 5011,
+                "RepresentativePatent": "US-10308910-B2",
+                "GrantDate": "2019-06-04",
+                "RepresentativePatentTitle": "Partial adaption for butanol production"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "pknox2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "pknox2",
+            "CooccurrenceScore": 1110,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "53175199",
+                "RelevanceScore": 110909,
+                "RepresentativePatent": "US-10005979-B2",
+                "GrantDate": "2018-06-26",
+                "RepresentativePatentTitle": "Lubricant composition containing an antiwear agent"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.3.1.22"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "3-oxo-5-alpha-steroid 4-dehydrogenase (nadp(+))",
+            "CooccurrenceScore": 1094,
+            "NPatentFamilies": 4,
+            "NPatents": 4,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47112702",
+                "RelevanceScore": 64563,
+                "RepresentativePatent": "KR-101229762-B1",
+                "GrantDate": "2013-02-21",
+                "RepresentativePatentTitle": "External preparation for promoting hair growth and preventing hair loss"
+              },
+              {
+                "PatentFamilyId": "83598062",
+                "RelevanceScore": 24787,
+                "RepresentativePatent": "KR-102527381-B1",
+                "GrantDate": "2023-05-03",
+                "RepresentativePatentTitle": "Cosmetic composition for preventing hair loss or promoting hair growth with xanthohumol as the main ingredient"
+              },
+              {
+                "PatentFamilyId": "76157648",
+                "RelevanceScore": 11378,
+                "RepresentativePatent": "KR-102254553-B1",
+                "GrantDate": "2021-05-21",
+                "RepresentativePatentTitle": "Lactobacillus paracasei HY7015 having hair growth promotion, and a composition for promoting hair growth containing there of as effective component"
+              },
+              {
+                "PatentFamilyId": "43618771",
+                "RelevanceScore": 8569,
+                "RepresentativePatent": "EP-2608766-B1",
+                "GrantDate": "2015-01-07",
+                "RepresentativePatentTitle": "Process and kit for treating hair"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:2.2.1.6"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "acetolactate synthase",
+            "CooccurrenceScore": 1086,
+            "NPatentFamilies": 10,
+            "NPatents": 18,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "51263346",
+                "RelevanceScore": 42201,
+                "RepresentativePatent": "US-10619174-B2",
+                "GrantDate": "2020-04-14",
+                "RepresentativePatentTitle": "Microorganism strains for the production of 2.3-butanediol"
+              },
+              {
+                "PatentFamilyId": "38668305",
+                "RelevanceScore": 21477,
+                "RepresentativePatent": "EP-2010664-B1",
+                "GrantDate": "2014-11-05",
+                "RepresentativePatentTitle": "Fermentive production of four carbon alcohols"
+              },
+              {
+                "PatentFamilyId": "45811143",
+                "RelevanceScore": 17431,
+                "RepresentativePatent": "EP-2614138-B1",
+                "GrantDate": "2017-08-30",
+                "RepresentativePatentTitle": "Integration of a polynucleotide encoding a polypeptide that catalyzes pyruvate to acetolactate conversion",
+                "OtherPatent": [
+                  "EP-3269806-B1",
+                  "JP-6266707-B2",
+                  "JP-6008858-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "43502572",
+                "RelevanceScore": 5369,
+                "RepresentativePatent": "KR-101938020-B1",
+                "GrantDate": "2019-01-11",
+                "RepresentativePatentTitle": "Composition containing a pyripyropene insecticide and a base",
+                "OtherPatent": [
+                  "JP-5877202-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "40718644",
+                "RelevanceScore": 5275,
+                "RepresentativePatent": "EP-2387313-B1",
+                "GrantDate": "2014-04-09",
+                "RepresentativePatentTitle": "Use of 2-aryl-5-heterocyclyl-cyclohexane-l,3-dione compounds as insecticides and/or acaricides"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "txn"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "txn",
+            "CooccurrenceScore": 1079,
+            "NPatentFamilies": 13,
+            "NPatents": 16,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "7875371",
+                "RelevanceScore": 62095,
+                "RepresentativePatent": "EP-1100452-B1",
+                "GrantDate": "2003-10-15",
+                "RepresentativePatentTitle": "Cosmetic or dermatological water/oil emulsions containing nonionic surfactants and characterized by a silicone emulsifying agent content"
+              },
+              {
+                "PatentFamilyId": "33541878",
+                "RelevanceScore": 4851,
+                "RepresentativePatent": "EP-1295600-B1",
+                "GrantDate": "2006-04-05",
+                "RepresentativePatentTitle": "Medicament based on gestagens for dermal application comprising ascorbic acid and/or salts thereof"
+              },
+              {
+                "PatentFamilyId": "19163272",
+                "RelevanceScore": 4253,
+                "RepresentativePatent": "JP-4088436-B2",
+                "GrantDate": "2008-05-21",
+                "RepresentativePatentTitle": "Skin preparation"
+              },
+              {
+                "PatentFamilyId": "26005971",
+                "RelevanceScore": 4140,
+                "RepresentativePatent": "EP-1294353-B1",
+                "GrantDate": "2006-03-22",
+                "RepresentativePatentTitle": "Use of an (r)-enantiomer of lipoic acid in cosmetics and dermatologicals"
+              },
+              {
+                "PatentFamilyId": "26611944",
+                "RelevanceScore": 4140,
+                "RepresentativePatent": "JP-4637441-B2",
+                "GrantDate": "2011-02-23",
+                "RepresentativePatentTitle": "Skin composition containing ascorbic acid"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "htr2c"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "htr2c",
+            "CooccurrenceScore": 1059,
+            "NPatentFamilies": 1,
+            "NPatents": 2,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "38610060",
+                "RelevanceScore": 105767,
+                "RepresentativePatent": "JP-5199997-B2",
+                "GrantDate": "2013-05-15",
+                "RepresentativePatentTitle": "Process for preparing 8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine and related intermediates",
+                "OtherPatent": [
+                  "JP-5833535-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "cdh1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "cdh1",
+            "CooccurrenceScore": 1055,
+            "NPatentFamilies": 2,
+            "NPatents": 2,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "7707879",
+                "RelevanceScore": 68515,
+                "RepresentativePatent": "EP-1461375-B1",
+                "GrantDate": "2010-01-27",
+                "RepresentativePatentTitle": "Prestabilization of halogen-containing polymers"
+              },
+              {
+                "PatentFamilyId": "7666877",
+                "RelevanceScore": 36893,
+                "RepresentativePatent": "EP-1343838-B1",
+                "GrantDate": "2005-04-06",
+                "RepresentativePatentTitle": "Stabilizer system for stabilizing polymers that contain halogen"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.89"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "arabinogalactan endo-beta-1,4-galactanase",
+            "CooccurrenceScore": 1040,
+            "NPatentFamilies": 2,
+            "NPatents": 4,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76624246",
+                "RelevanceScore": 100119,
+                "RepresentativePatent": "US-11807829-B2",
+                "GrantDate": "2023-11-07",
+                "RepresentativePatentTitle": "Detergent compositions containing a branched surfactant"
+              },
+              {
+                "PatentFamilyId": "79173585",
+                "RelevanceScore": 3777,
+                "RepresentativePatent": "US-12247184-B2",
+                "GrantDate": "2025-03-11",
+                "RepresentativePatentTitle": "Liquid detergent composition",
+                "OtherPatent": [
+                  "US-11834626-B1",
+                  "US-11512264-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:4.3.1.7"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "ethanolamine ammonia-lyase",
+            "CooccurrenceScore": 1018,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 101731,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.13.12.4"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "lactate 2-monooxygenase",
+            "CooccurrenceScore": 1018,
+            "NPatentFamilies": 2,
+            "NPatents": 2,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "39529721",
+                "RelevanceScore": 63579,
+                "RepresentativePatent": "EP-2178492-B1",
+                "GrantDate": "2016-12-14",
+                "RepresentativePatentTitle": "Hair treatment agent comprising an acylamino acid derivative, a hydroxyalkylamine, and 2-(2-hydroxyethyl)-p-phenylenediamine"
+              },
+              {
+                "PatentFamilyId": "78083523",
+                "RelevanceScore": 38148,
+                "RepresentativePatent": "KR-102795483-B1",
+                "GrantDate": "2025-04-11",
+                "RepresentativePatentTitle": "Biocompatible membrane, method for manufacturing the same, and implantable biosensor"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "agmat"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "agmat",
+            "CooccurrenceScore": 1008,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 100686,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "lyst"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "lyst",
+            "CooccurrenceScore": 958,
+            "NPatentFamilies": 6,
+            "NPatents": 7,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "75787109",
+                "RelevanceScore": 47710,
+                "RepresentativePatent": "US-12156933-B2",
+                "GrantDate": "2024-12-03",
+                "RepresentativePatentTitle": "Substance for dyeing keratin fibers, containing specific nonionic emulsifiers, pigments and aminosilicones"
+              },
+              {
+                "PatentFamilyId": "71078520",
+                "RelevanceScore": 27703,
+                "RepresentativePatent": "US-11826586-B2",
+                "GrantDate": "2023-11-28",
+                "RepresentativePatentTitle": "Method for dyeing keratin material, comprising the use of an organic C1-C6-alkoxy-silane and an alkalising agent"
+              },
+              {
+                "PatentFamilyId": "67587761",
+                "RelevanceScore": 6005,
+                "RepresentativePatent": "US-11564876-B2",
+                "GrantDate": "2023-01-31",
+                "RepresentativePatentTitle": "Method for dyeing keratinous material, comprising the use of an organosilicon compound, a silicone polymer and a dyeing compound"
+              },
+              {
+                "PatentFamilyId": "71092486",
+                "RelevanceScore": 4907,
+                "RepresentativePatent": "US-11766395-B2",
+                "GrantDate": "2023-09-26",
+                "RepresentativePatentTitle": "Product for dyeing keratinous material, containing aminosilicones and pigments in specific weight relations",
+                "OtherPatent": [
+                  "JP-7557482-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "76159422",
+                "RelevanceScore": 4798,
+                "RepresentativePatent": "US-12186421-B2",
+                "GrantDate": "2025-01-07",
+                "RepresentativePatentTitle": "Agent for dyeing keratinuos fibres, containing pigments and C2-C30 alkyl methicones"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "gclc"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "gclc",
+            "CooccurrenceScore": 957,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "90039837",
+                "RelevanceScore": 95566,
+                "RepresentativePatent": "JP-7520397-B2",
+                "GrantDate": "2024-07-23",
+                "RepresentativePatentTitle": "Stem cell culture supernatant and its manufacturing method"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "csf2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "csf2",
+            "CooccurrenceScore": 954,
+            "NPatentFamilies": 10,
+            "NPatents": 11,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "69182639",
+                "RelevanceScore": 43098,
+                "RepresentativePatent": "US-11573228-B2",
+                "GrantDate": "2023-02-07",
+                "RepresentativePatentTitle": "Biomarkers of neutrophil deregulation as diagnostic for gingivitis"
+              },
+              {
+                "PatentFamilyId": "51454204",
+                "RelevanceScore": 13791,
+                "RepresentativePatent": "EP-3169367-B1",
+                "GrantDate": "2019-06-05",
+                "RepresentativePatentTitle": "Poly(beta-amino ester) conjugates for cartilage agent delivery and methods"
+              },
+              {
+                "PatentFamilyId": "41683287",
+                "RelevanceScore": 7719,
+                "RepresentativePatent": "JP-6013424-B2",
+                "GrantDate": "2016-10-25",
+                "RepresentativePatentTitle": "HPMA-docetaxel conjugate and use thereof"
+              },
+              {
+                "PatentFamilyId": "51625444",
+                "RelevanceScore": 6989,
+                "RepresentativePatent": "US-10544183-B2",
+                "GrantDate": "2020-01-28",
+                "RepresentativePatentTitle": "Uridine nucleoside derivatives, compositions and methods of use",
+                "OtherPatent": [
+                  "JP-6591957-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "43855047",
+                "RelevanceScore": 6231,
+                "RepresentativePatent": "JP-5749273-B2",
+                "GrantDate": "2015-07-15",
+                "RepresentativePatentTitle": "Polymer systems for anticancer drug delivery"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.1.1.27"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "l-lactate dehydrogenase",
+            "CooccurrenceScore": 925,
+            "NPatentFamilies": 7,
+            "NPatents": 17,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 54053,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              },
+              {
+                "PatentFamilyId": "59786189",
+                "RelevanceScore": 18437,
+                "RepresentativePatent": "US-10941424-B2",
+                "GrantDate": "2021-03-09",
+                "RepresentativePatentTitle": "Microorganisms and methods for the co-production of ethylene glycol and three carbon compounds",
+                "OtherPatent": [
+                  "JP-7050691-B2",
+                  "US-10774347-B2",
+                  "US-10774348-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "34544137",
+                "RelevanceScore": 7078,
+                "RepresentativePatent": "EP-1688491-B1",
+                "GrantDate": "2010-09-15",
+                "RepresentativePatentTitle": "Novel plasmids and utilization thereof"
+              },
+              {
+                "PatentFamilyId": "55631742",
+                "RelevanceScore": 4955,
+                "RepresentativePatent": "US-11098307-B2",
+                "GrantDate": "2021-08-24",
+                "RepresentativePatentTitle": "Compositions and methods for rapid and dynamic flux control using synthetic metabolic valves",
+                "OtherPatent": [
+                  "US-11142761-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "45811143",
+                "RelevanceScore": 3565,
+                "RepresentativePatent": "JP-6266707-B2",
+                "GrantDate": "2018-01-24",
+                "RepresentativePatentTitle": "Incorporation of a polynucleotide encoding a polypeptide that catalyzes the conversion of pyruvate to acetolactate",
+                "OtherPatent": [
+                  "JP-6008858-B2",
+                  "EP-2614138-B1",
+                  "EP-3269806-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "tnf"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "tnf",
+            "CooccurrenceScore": 917,
+            "NPatentFamilies": 15,
+            "NPatents": 21,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "11368280",
+                "RelevanceScore": 21170,
+                "RepresentativePatent": "EP-0804179-B1",
+                "GrantDate": "1999-07-14",
+                "RepresentativePatentTitle": "Use of n-acyl derivatives of aminoalcohols in the manufacture of a medicament for practising neuroprotective action in neuropathological states connected with excitotoxicity"
+              },
+              {
+                "PatentFamilyId": "51454204",
+                "RelevanceScore": 11855,
+                "RepresentativePatent": "EP-3169367-B1",
+                "GrantDate": "2019-06-05",
+                "RepresentativePatentTitle": "Poly(beta-amino ester) conjugates for cartilage agent delivery and methods"
+              },
+              {
+                "PatentFamilyId": "25455479",
+                "RelevanceScore": 10977,
+                "RepresentativePatent": "JP-4523151-B2",
+                "GrantDate": "2010-08-11",
+                "RepresentativePatentTitle": "Chemokine peptides, variants, derivatives and analogs thereof and their use in methods of inhibiting or increasing inflammatory responses"
+              },
+              {
+                "PatentFamilyId": "51659008",
+                "RelevanceScore": 10104,
+                "RepresentativePatent": "EP-2968504-B1",
+                "GrantDate": "2019-12-18",
+                "RepresentativePatentTitle": "Compositions and methods for inducing apoptosis",
+                "OtherPatent": [
+                  "US-10251906-B2",
+                  "JP-6814824-B2",
+                  "KR-102384693-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "51625444",
+                "RelevanceScore": 6008,
+                "RepresentativePatent": "US-10544183-B2",
+                "GrantDate": "2020-01-28",
+                "RepresentativePatentTitle": "Uridine nucleoside derivatives, compositions and methods of use",
+                "OtherPatent": [
+                  "JP-6591957-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.73"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "licheninase",
+            "CooccurrenceScore": 884,
+            "NPatentFamilies": 19,
+            "NPatents": 20,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "77664453",
+                "RelevanceScore": 10104,
+                "RepresentativePatent": "KR-102710624-B1",
+                "GrantDate": "2024-09-30",
+                "RepresentativePatentTitle": "Solid granules used in detergents",
+                "OtherPatent": [
+                  "JP-7245932-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "56084443",
+                "RelevanceScore": 7524,
+                "RepresentativePatent": "JP-6961659-B2",
+                "GrantDate": "2021-11-05",
+                "RepresentativePatentTitle": "Detergent composition containing surfactant and propoxylated glycerin"
+              },
+              {
+                "PatentFamilyId": "56084442",
+                "RelevanceScore": 5526,
+                "RepresentativePatent": "JP-6623234-B2",
+                "GrantDate": "2019-12-18",
+                "RepresentativePatentTitle": "Detergent composition containing surfactant and ethoxylated glycerin"
+              },
+              {
+                "PatentFamilyId": "54360571",
+                "RelevanceScore": 5526,
+                "RepresentativePatent": "JP-6978315-B2",
+                "GrantDate": "2021-12-08",
+                "RepresentativePatentTitle": "Water-soluble polyvinyl alcohol blend film, related methods and related articles"
+              },
+              {
+                "PatentFamilyId": "63013161",
+                "RelevanceScore": 5016,
+                "RepresentativePatent": "JP-6977139-B2",
+                "GrantDate": "2021-12-08",
+                "RepresentativePatentTitle": "Cleaning composition containing an alkoxylated ester amine"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "lct"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "lct",
+            "CooccurrenceScore": 883,
+            "NPatentFamilies": 7,
+            "NPatents": 8,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "9492055",
+                "RelevanceScore": 34737,
+                "RepresentativePatent": "EP-0906430-B1",
+                "GrantDate": "2006-07-26",
+                "RepresentativePatentTitle": "Biosynthesis method enabling the preparation of o-phospho-l-threonine"
+              },
+              {
+                "PatentFamilyId": "49882612",
+                "RelevanceScore": 26980,
+                "RepresentativePatent": "EP-2869838-B1",
+                "GrantDate": "2020-09-02",
+                "RepresentativePatentTitle": "The bacterial biofilm matrix as a platform for protein delivery",
+                "OtherPatent": [
+                  "US-10722569-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "40986181",
+                "RelevanceScore": 14178,
+                "RepresentativePatent": "EP-2255377-B1",
+                "GrantDate": "2013-12-04",
+                "RepresentativePatentTitle": "Method of forming a microelectronic structure comprising dual-layer light-sensitive developer-soluble bottom anti-reflective coatings for 193-nm lithography and layer stack for its formation"
+              },
+              {
+                "PatentFamilyId": "12936996",
+                "RelevanceScore": 4511,
+                "RepresentativePatent": "JP-3167057-B2",
+                "GrantDate": "2001-05-14",
+                "RepresentativePatentTitle": "Temperature-responsive hydrogel"
+              },
+              {
+                "PatentFamilyId": "60663663",
+                "RelevanceScore": 3482,
+                "RepresentativePatent": "US-11071779-B2",
+                "GrantDate": "2021-07-27",
+                "RepresentativePatentTitle": "Biofilm matrix-boosted vaccine"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "cx3cl1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "cx3cl1",
+            "CooccurrenceScore": 864,
+            "NPatentFamilies": 4,
+            "NPatents": 5,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "69182639",
+                "RelevanceScore": 69035,
+                "RepresentativePatent": "US-11573228-B2",
+                "GrantDate": "2023-02-07",
+                "RepresentativePatentTitle": "Biomarkers of neutrophil deregulation as diagnostic for gingivitis"
+              },
+              {
+                "PatentFamilyId": "51625444",
+                "RelevanceScore": 11195,
+                "RepresentativePatent": "US-10544183-B2",
+                "GrantDate": "2020-01-28",
+                "RepresentativePatentTitle": "Uridine nucleoside derivatives, compositions and methods of use",
+                "OtherPatent": [
+                  "JP-6591957-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "35883352",
+                "RelevanceScore": 4281,
+                "RepresentativePatent": "EP-1633275-B1",
+                "GrantDate": "2017-11-29",
+                "RepresentativePatentTitle": "Reticulated elastomeric matrices, their manufacture and use in implantable devices"
+              },
+              {
+                "PatentFamilyId": "25455479",
+                "RelevanceScore": 1794,
+                "RepresentativePatent": "JP-4523151-B2",
+                "GrantDate": "2010-08-11",
+                "RepresentativePatentTitle": "Chemokine peptides, variants, derivatives and analogs thereof and their use in methods of inhibiting or increasing inflammatory responses"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:2.6.1.52"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "phosphoserine transaminase",
+            "CooccurrenceScore": 861,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 85959,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "azin2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "azin2",
+            "CooccurrenceScore": 855,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 85389,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:2.3.1.54"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "formate c-acetyltransferase",
+            "CooccurrenceScore": 849,
+            "NPatentFamilies": 3,
+            "NPatents": 4,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 76261,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              },
+              {
+                "PatentFamilyId": "55631742",
+                "RelevanceScore": 6991,
+                "RepresentativePatent": "US-11098307-B2",
+                "GrantDate": "2021-08-24",
+                "RepresentativePatentTitle": "Compositions and methods for rapid and dynamic flux control using synthetic metabolic valves",
+                "OtherPatent": [
+                  "US-11142761-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "60951892",
+                "RelevanceScore": 1503,
+                "RepresentativePatent": "US-11286490-B2",
+                "GrantDate": "2022-03-29",
+                "RepresentativePatentTitle": "Formation of alkenes through enzymatic dehydration of alkanols"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.1.3.1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "alkaline phosphatase",
+            "CooccurrenceScore": 847,
+            "NPatentFamilies": 13,
+            "NPatents": 20,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "37431219",
+                "RelevanceScore": 34550,
+                "RepresentativePatent": "JP-5003484-B2",
+                "GrantDate": "2012-08-15",
+                "RepresentativePatentTitle": "Gene detection method"
+              },
+              {
+                "PatentFamilyId": "26748852",
+                "RelevanceScore": 7288,
+                "RepresentativePatent": "EP-0705279-B1",
+                "GrantDate": "2003-02-19",
+                "RepresentativePatentTitle": "Topologically segregated, encoded solid phase libraries"
+              },
+              {
+                "PatentFamilyId": "22081851",
+                "RelevanceScore": 6961,
+                "RepresentativePatent": "EP-1310510-B1",
+                "GrantDate": "2007-07-11",
+                "RepresentativePatentTitle": "Topologically segregated, encoded solid phase libraries"
+              },
+              {
+                "PatentFamilyId": "37935857",
+                "RelevanceScore": 6961,
+                "RepresentativePatent": "JP-4916689-B2",
+                "GrantDate": "2012-04-18",
+                "RepresentativePatentTitle": "DNA strand amplification method"
+              },
+              {
+                "PatentFamilyId": "37683244",
+                "RelevanceScore": 6478,
+                "RepresentativePatent": "JP-4922936-B2",
+                "GrantDate": "2012-04-25",
+                "RepresentativePatentTitle": "Bacteria detection method"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:2.7.1.24"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "dephospho-coa kinase",
+            "CooccurrenceScore": 835,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 83411,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "flg"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "flg",
+            "CooccurrenceScore": 821,
+            "NPatentFamilies": 4,
+            "NPatents": 4,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "75473000",
+                "RelevanceScore": 68608,
+                "RepresentativePatent": "KR-102254208-B1",
+                "GrantDate": "2021-05-21",
+                "RepresentativePatentTitle": "Synthetic pseudo-ceramide complex derived from Jeju natural oil prepared by enzyme catalyst lipase and functional cosmetic raw material including the same"
+              },
+              {
+                "PatentFamilyId": "34609127",
+                "RelevanceScore": 6038,
+                "RepresentativePatent": "EP-1686956-B1",
+                "GrantDate": "2013-07-24",
+                "RepresentativePatentTitle": "Use of surfactant systems for reducing skin-intrinsic enzyme damage"
+              },
+              {
+                "PatentFamilyId": "35883352",
+                "RelevanceScore": 3900,
+                "RepresentativePatent": "EP-1633275-B1",
+                "GrantDate": "2017-11-29",
+                "RepresentativePatentTitle": "Reticulated elastomeric matrices, their manufacture and use in implantable devices"
+              },
+              {
+                "PatentFamilyId": "35006174",
+                "RelevanceScore": 3423,
+                "RepresentativePatent": "JP-5111731-B2",
+                "GrantDate": "2013-01-09",
+                "RepresentativePatentTitle": "Reticulated elastomeric matrix, its manufacture and use in implantable devices"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:2.7.13.3"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "histidine kinase",
+            "CooccurrenceScore": 816,
+            "NPatentFamilies": 9,
+            "NPatents": 14,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "49783230",
+                "RelevanceScore": 40676,
+                "RepresentativePatent": "JP-6191603-B2",
+                "GrantDate": "2017-09-06",
+                "RepresentativePatentTitle": "Aromatic polyamide and film-forming composition containing the same"
+              },
+              {
+                "PatentFamilyId": "40986181",
+                "RelevanceScore": 10792,
+                "RepresentativePatent": "EP-2255377-B1",
+                "GrantDate": "2013-12-04",
+                "RepresentativePatentTitle": "Method of forming a microelectronic structure comprising dual-layer light-sensitive developer-soluble bottom anti-reflective coatings for 193-nm lithography and layer stack for its formation",
+                "OtherPatent": [
+                  "KR-101697789-B1",
+                  "JP-4918162-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "42630241",
+                "RelevanceScore": 9792,
+                "RepresentativePatent": "EP-2399169-B1",
+                "GrantDate": "2019-04-17",
+                "RepresentativePatentTitle": "Acid-sensitive, developer-soluble bottom anti-reflective coatings",
+                "OtherPatent": [
+                  "JP-5840954-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "47009377",
+                "RelevanceScore": 4299,
+                "RepresentativePatent": "JP-5943210-B2",
+                "GrantDate": "2016-06-29",
+                "RepresentativePatentTitle": "Photosensitive organic particles"
+              },
+              {
+                "PatentFamilyId": "42827889",
+                "RelevanceScore": 3860,
+                "RepresentativePatent": "JP-5724871-B2",
+                "GrantDate": "2015-05-27",
+                "RepresentativePatentTitle": "Ink jet ink and image forming method"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "itga2b"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "itga2b",
+            "CooccurrenceScore": 816,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47914976",
+                "RelevanceScore": 81535,
+                "RepresentativePatent": "US-10012658-B2",
+                "GrantDate": "2018-07-03",
+                "RepresentativePatentTitle": "Platelet analysis system"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "bpgm"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "bpgm",
+            "CooccurrenceScore": 812,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 81057,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:4.1.1.1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "pyruvate decarboxylase",
+            "CooccurrenceScore": 795,
+            "NPatentFamilies": 4,
+            "NPatents": 8,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "51263346",
+                "RelevanceScore": 52323,
+                "RepresentativePatent": "US-10619174-B2",
+                "GrantDate": "2020-04-14",
+                "RepresentativePatentTitle": "Microorganism strains for the production of 2.3-butanediol"
+              },
+              {
+                "PatentFamilyId": "45811143",
+                "RelevanceScore": 21612,
+                "RepresentativePatent": "EP-2614138-B1",
+                "GrantDate": "2017-08-30",
+                "RepresentativePatentTitle": "Integration of a polynucleotide encoding a polypeptide that catalyzes pyruvate to acetolactate conversion",
+                "OtherPatent": [
+                  "EP-3269806-B1",
+                  "JP-6266707-B2",
+                  "JP-6008858-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "52133052",
+                "RelevanceScore": 4156,
+                "RepresentativePatent": "US-10308910-B2",
+                "GrantDate": "2019-06-04",
+                "RepresentativePatentTitle": "Partial adaption for butanol production"
+              },
+              {
+                "PatentFamilyId": "60951892",
+                "RelevanceScore": 1336,
+                "RepresentativePatent": "US-11286490-B2",
+                "GrantDate": "2022-03-29",
+                "RepresentativePatentTitle": "Formation of alkenes through enzymatic dehydration of alkanols",
+                "OtherPatent": [
+                  "JP-7015825-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "casp3"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "casp3",
+            "CooccurrenceScore": 783,
+            "NPatentFamilies": 3,
+            "NPatents": 8,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "44534559",
+                "RelevanceScore": 32350,
+                "RepresentativePatent": "EP-2585077-B1",
+                "GrantDate": "2014-09-03",
+                "RepresentativePatentTitle": "Agent for suppressing the formation of abnormal skin cells caused by exposure to light",
+                "OtherPatent": [
+                  "JP-5893013-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "40386219",
+                "RelevanceScore": 31181,
+                "RepresentativePatent": "JP-5709217-B2",
+                "GrantDate": "2015-04-30",
+                "RepresentativePatentTitle": "Compound having anti-apoptotic activity specific to caspase-3, and therapeutic, food or cosmetic use of the composition containing the compound",
+                "OtherPatent": [
+                  "EP-2352493-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "51659008",
+                "RelevanceScore": 14705,
+                "RepresentativePatent": "EP-2968504-B1",
+                "GrantDate": "2019-12-18",
+                "RepresentativePatentTitle": "Compositions and methods for inducing apoptosis",
+                "OtherPatent": [
+                  "US-10251906-B2",
+                  "JP-6814824-B2",
+                  "KR-102384693-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "gapdh"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "gapdh",
+            "CooccurrenceScore": 782,
+            "NPatentFamilies": 9,
+            "NPatents": 11,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "9492055",
+                "RelevanceScore": 27227,
+                "RepresentativePatent": "EP-0906430-B1",
+                "GrantDate": "2006-07-26",
+                "RepresentativePatentTitle": "Biosynthesis method enabling the preparation of o-phospho-l-threonine"
+              },
+              {
+                "PatentFamilyId": "69571036",
+                "RelevanceScore": 18777,
+                "RepresentativePatent": "KR-102072959-B1",
+                "GrantDate": "2020-02-04",
+                "RepresentativePatentTitle": "A pH-sensitive block copolymer and its use for cell culture"
+              },
+              {
+                "PatentFamilyId": "40202876",
+                "RelevanceScore": 8643,
+                "RepresentativePatent": "JP-5604303-B2",
+                "GrantDate": "2014-10-08",
+                "RepresentativePatentTitle": "Formaldehyde sequestration to stabilize nitrilase specific activity when converting glycolonitrile to glycolic acid."
+              },
+              {
+                "PatentFamilyId": "51263346",
+                "RelevanceScore": 6824,
+                "RepresentativePatent": "US-10619174-B2",
+                "GrantDate": "2020-04-14",
+                "RepresentativePatentTitle": "Microorganism strains for the production of 2.3-butanediol"
+              },
+              {
+                "PatentFamilyId": "46551547",
+                "RelevanceScore": 5266,
+                "RepresentativePatent": "EP-2744907-B1",
+                "GrantDate": "2017-03-22",
+                "RepresentativePatentTitle": "Method for producing 4-aminobutyric acid from algae"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "phgdh"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "phgdh",
+            "CooccurrenceScore": 773,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 77205,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "ambn"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "ambn",
+            "CooccurrenceScore": 762,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "45922696",
+                "RelevanceScore": 76102,
+                "RepresentativePatent": "JP-6034363-B2",
+                "GrantDate": "2016-11-30",
+                "RepresentativePatentTitle": "Manufacture of PU rigid foam"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "ca7"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "ca7",
+            "CooccurrenceScore": 755,
+            "NPatentFamilies": 1,
+            "NPatents": 2,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "55411124",
+                "RelevanceScore": 75434,
+                "RepresentativePatent": "US-10302632-B2",
+                "GrantDate": "2019-05-28",
+                "RepresentativePatentTitle": "Macromolecular conjugates for visualization and separation of proteins and cells",
+                "OtherPatent": [
+                  "EP-3245514-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "ccl11"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "ccl11",
+            "CooccurrenceScore": 754,
+            "NPatentFamilies": 3,
+            "NPatents": 4,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "69182639",
+                "RelevanceScore": 63410,
+                "RepresentativePatent": "US-11573228-B2",
+                "GrantDate": "2023-02-07",
+                "RepresentativePatentTitle": "Biomarkers of neutrophil deregulation as diagnostic for gingivitis"
+              },
+              {
+                "PatentFamilyId": "51625444",
+                "RelevanceScore": 10283,
+                "RepresentativePatent": "US-10544183-B2",
+                "GrantDate": "2020-01-28",
+                "RepresentativePatentTitle": "Uridine nucleoside derivatives, compositions and methods of use",
+                "OtherPatent": [
+                  "JP-6591957-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "25455479",
+                "RelevanceScore": 1648,
+                "RepresentativePatent": "JP-4523151-B2",
+                "GrantDate": "2010-08-11",
+                "RepresentativePatentTitle": "Chemokine peptides, variants, derivatives and analogs thereof and their use in methods of inhibiting or increasing inflammatory responses"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "naalad2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "naalad2",
+            "CooccurrenceScore": 750,
+            "NPatentFamilies": 1,
+            "NPatents": 2,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "55411124",
+                "RelevanceScore": 74908,
+                "RepresentativePatent": "US-10302632-B2",
+                "GrantDate": "2019-05-28",
+                "RepresentativePatentTitle": "Macromolecular conjugates for visualization and separation of proteins and cells",
+                "OtherPatent": [
+                  "EP-3245514-B1"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "egf"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "egf",
+            "CooccurrenceScore": 748,
+            "NPatentFamilies": 6,
+            "NPatents": 6,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76157648",
+                "RelevanceScore": 36366,
+                "RepresentativePatent": "KR-102254553-B1",
+                "GrantDate": "2021-05-21",
+                "RepresentativePatentTitle": "Lactobacillus paracasei HY7015 having hair growth promotion, and a composition for promoting hair growth containing there of as effective component"
+              },
+              {
+                "PatentFamilyId": "51454204",
+                "RelevanceScore": 14789,
+                "RepresentativePatent": "EP-3169367-B1",
+                "GrantDate": "2019-06-05",
+                "RepresentativePatentTitle": "Poly(beta-amino ester) conjugates for cartilage agent delivery and methods"
+              },
+              {
+                "PatentFamilyId": "26748852",
+                "RelevanceScore": 8665,
+                "RepresentativePatent": "EP-0705279-B1",
+                "GrantDate": "2003-02-19",
+                "RepresentativePatentTitle": "Topologically segregated, encoded solid phase libraries"
+              },
+              {
+                "PatentFamilyId": "22081851",
+                "RelevanceScore": 8277,
+                "RepresentativePatent": "EP-1310510-B1",
+                "GrantDate": "2007-07-11",
+                "RepresentativePatentTitle": "Topologically segregated, encoded solid phase libraries"
+              },
+              {
+                "PatentFamilyId": "50588910",
+                "RelevanceScore": 3906,
+                "RepresentativePatent": "EP-2970158-B1",
+                "GrantDate": "2019-02-20",
+                "RepresentativePatentTitle": "Alkyl-heteroaryl substituted quinone derivatives for treatment of oxidative stress disorders"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "clock"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "clock",
+            "CooccurrenceScore": 746,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "76157648",
+                "RelevanceScore": 74480,
+                "RepresentativePatent": "KR-102254553-B1",
+                "GrantDate": "2021-05-21",
+                "RepresentativePatentTitle": "Lactobacillus paracasei HY7015 having hair growth promotion, and a composition for promoting hair growth containing there of as effective component"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "beta-amylase",
+            "CooccurrenceScore": 740,
+            "NPatentFamilies": 10,
+            "NPatents": 26,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "38730831",
+                "RelevanceScore": 9650,
+                "RepresentativePatent": "JP-5192750-B2",
+                "GrantDate": "2013-05-08",
+                "RepresentativePatentTitle": "Curable composition"
+              },
+              {
+                "PatentFamilyId": "27515993",
+                "RelevanceScore": 9374,
+                "RepresentativePatent": "JP-4403150-B2",
+                "GrantDate": "2010-01-20",
+                "RepresentativePatentTitle": "Methods for making water-soluble pouches, methods for cleaning tableware / tableware with automatic dishwashing machines using the water-soluble pouches, and display packaging made by those methods",
+                "OtherPatent": [
+                  "JP-5697315-B2",
+                  "EP-1484389-B1",
+                  "EP-1337619-B1",
+                  "EP-1504994-B1",
+                  "EP-1516918-B1",
+                  "EP-1516918-B2",
+                  "EP-1337619-B2",
+                  "EP-1790713-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "32093963",
+                "RelevanceScore": 9114,
+                "RepresentativePatent": "JP-4197321-B2",
+                "GrantDate": "2008-12-17",
+                "RepresentativePatentTitle": "How to make a water-soluble pouch"
+              },
+              {
+                "PatentFamilyId": "26246066",
+                "RelevanceScore": 8413,
+                "RepresentativePatent": "EP-1392812-B1",
+                "GrantDate": "2011-10-12",
+                "RepresentativePatentTitle": "Cleaning product",
+                "OtherPatent": [
+                  "JP-4163519-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "26245335",
+                "RelevanceScore": 8203,
+                "RepresentativePatent": "EP-1337621-B1",
+                "GrantDate": "2006-09-27",
+                "RepresentativePatentTitle": "Dishwashing method"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:3.2.1.23"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "beta-galactosidase",
+            "CooccurrenceScore": 734,
+            "NPatentFamilies": 11,
+            "NPatents": 14,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "9492055",
+                "RelevanceScore": 24443,
+                "RepresentativePatent": "EP-0906430-B1",
+                "GrantDate": "2006-07-26",
+                "RepresentativePatentTitle": "Biosynthesis method enabling the preparation of o-phospho-l-threonine"
+              },
+              {
+                "PatentFamilyId": "49882612",
+                "RelevanceScore": 18985,
+                "RepresentativePatent": "EP-2869838-B1",
+                "GrantDate": "2020-09-02",
+                "RepresentativePatentTitle": "The bacterial biofilm matrix as a platform for protein delivery",
+                "OtherPatent": [
+                  "US-10722569-B2"
+                ]
+              },
+              {
+                "PatentFamilyId": "40986181",
+                "RelevanceScore": 9977,
+                "RepresentativePatent": "EP-2255377-B1",
+                "GrantDate": "2013-12-04",
+                "RepresentativePatentTitle": "Method of forming a microelectronic structure comprising dual-layer light-sensitive developer-soluble bottom anti-reflective coatings for 193-nm lithography and layer stack for its formation"
+              },
+              {
+                "PatentFamilyId": "18918380",
+                "RelevanceScore": 5050,
+                "RepresentativePatent": "JP-4136663-B2",
+                "GrantDate": "2008-08-20",
+                "RepresentativePatentTitle": "Amino ketone asymmetric reductase and its nucleic acid",
+                "OtherPatent": [
+                  "EP-1371731-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "12936996",
+                "RelevanceScore": 3174,
+                "RepresentativePatent": "JP-3167057-B2",
+                "GrantDate": "2001-05-14",
+                "RepresentativePatentTitle": "Temperature-responsive hydrogel"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.2.5.1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "pyruvate dehydrogenase (quinone)",
+            "CooccurrenceScore": 718,
+            "NPatentFamilies": 2,
+            "NPatents": 3,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "39529721",
+                "RelevanceScore": 65165,
+                "RepresentativePatent": "EP-2178492-B1",
+                "GrantDate": "2016-12-14",
+                "RepresentativePatentTitle": "Hair treatment agent comprising an acylamino acid derivative, a hydroxyalkylamine, and 2-(2-hydroxyethyl)-p-phenylenediamine"
+              },
+              {
+                "PatentFamilyId": "55631742",
+                "RelevanceScore": 6516,
+                "RepresentativePatent": "US-11098307-B2",
+                "GrantDate": "2021-08-24",
+                "RepresentativePatentTitle": "Compositions and methods for rapid and dynamic flux control using synthetic metabolic valves",
+                "OtherPatent": [
+                  "US-11142761-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:1.1.3.10"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "pyranose oxidase",
+            "CooccurrenceScore": 711,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "39529721",
+                "RelevanceScore": 70989,
+                "RepresentativePatent": "EP-2178492-B1",
+                "GrantDate": "2016-12-14",
+                "RepresentativePatentTitle": "Hair treatment agent comprising an acylamino acid derivative, a hydroxyalkylamine, and 2-(2-hydroxyethyl)-p-phenylenediamine"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "ngf"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "ngf",
+            "CooccurrenceScore": 708,
+            "NPatentFamilies": 6,
+            "NPatents": 7,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "11368280",
+                "RelevanceScore": 26993,
+                "RepresentativePatent": "EP-0804179-B1",
+                "GrantDate": "1999-07-14",
+                "RepresentativePatentTitle": "Use of n-acyl derivatives of aminoalcohols in the manufacture of a medicament for practising neuroprotective action in neuropathological states connected with excitotoxicity"
+              },
+              {
+                "PatentFamilyId": "51454204",
+                "RelevanceScore": 15116,
+                "RepresentativePatent": "EP-3169367-B1",
+                "GrantDate": "2019-06-05",
+                "RepresentativePatentTitle": "Poly(beta-amino ester) conjugates for cartilage agent delivery and methods"
+              },
+              {
+                "PatentFamilyId": "65476841",
+                "RelevanceScore": 14917,
+                "RepresentativePatent": "JP-6955251-B2",
+                "GrantDate": "2021-10-27",
+                "RepresentativePatentTitle": "Cell dissociator, cell dissociation method and cell sheet manufacturing method"
+              },
+              {
+                "PatentFamilyId": "40386219",
+                "RelevanceScore": 6829,
+                "RepresentativePatent": "JP-5709217-B2",
+                "GrantDate": "2015-04-30",
+                "RepresentativePatentTitle": "Compound having anti-apoptotic activity specific to caspase-3, and therapeutic, food or cosmetic use of the composition containing the compound",
+                "OtherPatent": [
+                  "EP-2352493-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "38327996",
+                "RelevanceScore": 4049,
+                "RepresentativePatent": "JP-5633953-B2",
+                "GrantDate": "2014-12-03",
+                "RepresentativePatentTitle": "Super flexible foam"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "cxcl12"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "cxcl12",
+            "CooccurrenceScore": 689,
+            "NPatentFamilies": 3,
+            "NPatents": 3,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "69182639",
+                "RelevanceScore": 63388,
+                "RepresentativePatent": "US-11573228-B2",
+                "GrantDate": "2023-02-07",
+                "RepresentativePatentTitle": "Biomarkers of neutrophil deregulation as diagnostic for gingivitis"
+              },
+              {
+                "PatentFamilyId": "51792513",
+                "RelevanceScore": 3747,
+                "RepresentativePatent": "US-10285702-B2",
+                "GrantDate": "2019-05-14",
+                "RepresentativePatentTitle": "Bioresorbable biopolymer anastomosis devices"
+              },
+              {
+                "PatentFamilyId": "25455479",
+                "RelevanceScore": 1648,
+                "RepresentativePatent": "JP-4523151-B2",
+                "GrantDate": "2010-08-11",
+                "RepresentativePatentTitle": "Chemokine peptides, variants, derivatives and analogs thereof and their use in methods of inhibiting or increasing inflammatory responses"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "trpv1"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "trpv1",
+            "CooccurrenceScore": 682,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 68079,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:6.4.1.2"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "acetyl-coa carboxylase",
+            "CooccurrenceScore": 681,
+            "NPatentFamilies": 2,
+            "NPatents": 3,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 62319,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              },
+              {
+                "PatentFamilyId": "55631742",
+                "RelevanceScore": 5713,
+                "RepresentativePatent": "US-11098307-B2",
+                "GrantDate": "2021-08-24",
+                "RepresentativePatentTitle": "Compositions and methods for rapid and dynamic flux control using synthetic metabolic valves",
+                "OtherPatent": [
+                  "US-11142761-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:6.3.4.14"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "biotin carboxylase",
+            "CooccurrenceScore": 681,
+            "NPatentFamilies": 2,
+            "NPatents": 3,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 62281,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              },
+              {
+                "PatentFamilyId": "55631742",
+                "RelevanceScore": 5709,
+                "RepresentativePatent": "US-11098307-B2",
+                "GrantDate": "2021-08-24",
+                "RepresentativePatentTitle": "Compositions and methods for rapid and dynamic flux control using synthetic metabolic valves",
+                "OtherPatent": [
+                  "US-11142761-B2"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "ppara"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "ppara",
+            "CooccurrenceScore": 681,
+            "NPatentFamilies": 1,
+            "NPatents": 1,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "47913634",
+                "RelevanceScore": 67983,
+                "RepresentativePatent": "JP-6251241-B2",
+                "GrantDate": "2017-12-20",
+                "RepresentativePatentTitle": "Production of alkanolamides and amidoamines by microorganisms and their use"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "GeneSymbol": "EC:2.5.1.18"
+        },
+        "Evidence": {
+          "PatentChemicalGene": {
+            "NeighborName": "glutathione transferase",
+            "CooccurrenceScore": 646,
+            "NPatentFamilies": 14,
+            "NPatents": 16,
+            "PatentFamily": [
+              {
+                "PatentFamilyId": "55411123",
+                "RelevanceScore": 15314,
+                "RepresentativePatent": "US-10114014-B2",
+                "GrantDate": "2018-10-30",
+                "RepresentativePatentTitle": "Macromolecular conjugates for isolation, immobilization and visualization of proteins"
+              },
+              {
+                "PatentFamilyId": "55411124",
+                "RelevanceScore": 9139,
+                "RepresentativePatent": "US-10302632-B2",
+                "GrantDate": "2019-05-28",
+                "RepresentativePatentTitle": "Macromolecular conjugates for visualization and separation of proteins and cells",
+                "OtherPatent": [
+                  "EP-3245514-B1"
+                ]
+              },
+              {
+                "PatentFamilyId": "49268853",
+                "RelevanceScore": 3935,
+                "RepresentativePatent": "JP-6077316-B2",
+                "GrantDate": "2017-02-08",
+                "RepresentativePatentTitle": "Tissue regeneration material and tissue regeneration protein solution"
+              },
+              {
+                "PatentFamilyId": "19163272",
+                "RelevanceScore": 3881,
+                "RepresentativePatent": "JP-4088436-B2",
+                "GrantDate": "2008-05-21",
+                "RepresentativePatentTitle": "Skin preparation"
+              },
+              {
+                "PatentFamilyId": "26611944",
+                "RelevanceScore": 3777,
+                "RepresentativePatent": "JP-4637441-B2",
+                "GrantDate": "2011-02-23",
+                "RepresentativePatentTitle": "Skin composition containing ascorbic acid"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

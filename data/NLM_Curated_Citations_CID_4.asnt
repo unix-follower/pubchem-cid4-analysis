@@ -1,0 +1,6 @@
+Literature ::= {
+  recordType "CID",
+  rR recordNumber 4,
+  allURL "https://pubmed.ncbi.nlm.nih.gov/?cmd=search&term=%22monoisopropanola
+mine%22[NM:noexp]"
+}

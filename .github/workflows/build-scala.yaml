@@ -1,0 +1,52 @@
+name: Build scala app
+on:
+  pull_request:
+    paths: scala/*
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+env:
+  JAVA_VERSION: 25
+  JDK_VENDOR: corretto
+
+jobs:
+  build:
+    runs-on:
+      - ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: ${{ env.JDK_VENDOR }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Install sbt
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https curl gnupg -yqq
+          echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list
+          echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt_old.list
+          curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo -H gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/scalasbt-release.gpg --import
+          sudo chmod 644 /etc/apt/trusted.gpg.d/scalasbt-release.gpg
+          sudo apt-get update
+          sudo apt-get install sbt
+
+      - name: Cache sbt dependencies
+        uses: actions/cache@v5
+        with:
+          path: ~/.ivy2/cache
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
+      - name: Build scala app
+        working-directory: scala
+        shell: bash
+        run: sbt clean package

@@ -1,0 +1,186 @@
+{
+  "LinkDataSet": {
+    "LinkData": [
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "MeSH": "D005183"
+        },
+        "Evidence": {
+          "ChemicalDiseaseNeighbor": {
+            "NeighborName": "Failure to Thrive",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 2553,
+            "Article": [
+              {
+                "PCLID": 836409,
+                "RelevanceScore": 255247,
+                "PMID": 8431960,
+                "DOI": "10.1007/bf00352006",
+                "PublicationDate": "1993-02-01",
+                "IsReview": false,
+                "Title": "Molecular cloning of the yeast OPI3 gene as a high copy number suppressor of the cho2 mutation",
+                "Author": "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+                "Journal": "Current Genetics",
+                "DiseaseName": "lack of growth"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "MeSH": "D010190"
+        },
+        "Evidence": {
+          "ChemicalDiseaseNeighbor": {
+            "NeighborName": "Pancreatic Neoplasms",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 1899,
+            "Article": [
+              {
+                "PCLID": 851150,
+                "RelevanceScore": 227790,
+                "PMID": 8446769,
+                "DOI": "10.1007/bf02576207",
+                "PublicationDate": "1993-12-01",
+                "IsReview": false,
+                "Title": "Glucose tolerance and insulin secretion in experimental pancreatic cancer in the Syrian hamster",
+                "Author": "Bo Ahrén, Åke Andrén-Sandberg",
+                "Journal": "Research in experimental medicine. Zeitschrift fur die gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie",
+                "DiseaseName": "pancreatic cancer"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "MeSH": "D018149"
+        },
+        "Evidence": {
+          "ChemicalDiseaseNeighbor": {
+            "NeighborName": "Glucose Intolerance",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 1705,
+            "Article": [
+              {
+                "PCLID": 851150,
+                "RelevanceScore": 204500,
+                "PMID": 8446769,
+                "DOI": "10.1007/bf02576207",
+                "PublicationDate": "1993-12-01",
+                "IsReview": false,
+                "Title": "Glucose tolerance and insulin secretion in experimental pancreatic cancer in the Syrian hamster",
+                "Author": "Bo Ahrén, Åke Andrén-Sandberg",
+                "Journal": "Research in experimental medicine. Zeitschrift fur die gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie",
+                "DiseaseName": "glucose intolerance; glucose tolerance"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "MeSH": "D014376"
+        },
+        "Evidence": {
+          "ChemicalDiseaseNeighbor": {
+            "NeighborName": "Tuberculosis",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 1153,
+            "Article": [
+              {
+                "PCLID": 2599530,
+                "RelevanceScore": 126686,
+                "PMID": 30511238,
+                "DOI": "10.1007/s11095-018-2543-x",
+                "PublicationDate": "2018-12-03",
+                "IsReview": false,
+                "Title": "HPMA-PLGA Based Nanoparticles for Effective In Vitro Delivery of Rifampicin",
+                "Author": "Sarita Rani, Avinash Gothwal, Pawan K. Pandey, Devendra S. Chauhan, Praveen K. Pachouri, Umesh D. Gupta, Umesh Gupta",
+                "Journal": "Pharmaceutical Research",
+                "DiseaseName": "tb; tuberculosis"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "MeSH": "D009369"
+        },
+        "Evidence": {
+          "ChemicalDiseaseNeighbor": {
+            "NeighborName": "Neoplasms",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 688,
+            "Article": [
+              {
+                "PCLID": 851150,
+                "RelevanceScore": 68654,
+                "PMID": 8446769,
+                "DOI": "10.1007/bf02576207",
+                "PublicationDate": "1993-12-01",
+                "IsReview": false,
+                "Title": "Glucose tolerance and insulin secretion in experimental pancreatic cancer in the Syrian hamster",
+                "Author": "Bo Ahrén, Åke Andrén-Sandberg",
+                "Journal": "Research in experimental medicine. Zeitschrift fur die gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie",
+                "DiseaseName": "cancer"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "MeSH": "D006963"
+        },
+        "Evidence": {
+          "ChemicalDiseaseNeighbor": {
+            "NeighborName": "Hyperphagia",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 469,
+            "Article": [
+              {
+                "PCLID": 464744,
+                "RelevanceScore": 46780,
+                "PMID": 23934481,
+                "DOI": "10.1007/s10482-013-9995-0",
+                "PublicationDate": "2013-08-11",
+                "IsReview": false,
+                "Title": "Bacillus oceani sp. nov., a new slightly halophilic bacterium, isolated from a deep sea sediment environment",
+                "Author": "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You, Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+                "Journal": "Antonie van Leeuwenhoek",
+                "DiseaseName": "polyphasic"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

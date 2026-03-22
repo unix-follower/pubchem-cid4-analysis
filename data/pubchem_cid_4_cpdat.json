@@ -1,0 +1,130 @@
+[
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "Arts and crafts/office supplies -> general arts and crafts supplies -> arts and crafts cleaner",
+		"catogorydesc": "Solvent- or detergent-based products for removing craft related paints, adhesives, etc. from hands or surfaces",
+		"source": "Product Use Category (PUC)",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "buffering",
+		"catogorydesc": "",
+		"source": "Reported Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "builder",
+		"catogorydesc": "",
+		"source": "Reported Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "chelating agent",
+		"catogorydesc": "",
+		"source": "OECD Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "cleaning agent",
+		"catogorydesc": "",
+		"source": "Reported Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "cleaning agent",
+		"catogorydesc": "",
+		"source": "OECD Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "Cleaning products and household care -> general household cleaning",
+		"catogorydesc": "Cleaning products for general household cleaning, which do not fit into a more refined category",
+		"source": "Product Use Category (PUC)",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "Cleaning products and household care -> general household cleaning -> glass cleaner",
+		"catogorydesc": "Products used to clean glass, mirrors, and windows",
+		"source": "Product Use Category (PUC)",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "Cleaning products and household care -> oven -> oven cleaner",
+		"catogorydesc": "Products used to clean grills, ovens, or range cooktops",
+		"source": "Product Use Category (PUC)",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "Personal care -> hair styling and care -> shampoo",
+		"catogorydesc": "Shampoos, including dual shampoo/conditioner products",
+		"source": "Product Use Category (PUC)",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "Personal care -> nails -> nail polish",
+		"catogorydesc": "Clear or colored nail enamels, polishes, basecoats, topcoats, and other acrylic coatings",
+		"source": "Product Use Category (PUC)",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "ph adjuster",
+		"catogorydesc": "",
+		"source": "Reported Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "pH regulating agent",
+		"catogorydesc": "",
+		"source": "OECD Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "ph regulating agent",
+		"catogorydesc": "",
+		"source": "Reported Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "solvent",
+		"catogorydesc": "",
+		"source": "Reported Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	},
+	{
+		"gid": "",
+		"cid": "4",
+		"category": "solvent",
+		"catogorydesc": "",
+		"source": "OECD Functional Use",
+		"cmpdname": "1-Aminopropan-2-ol"
+	}
+]

@@ -1,0 +1,4820 @@
+LinkDataSet ::= {
+  linkData {
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 13894,
+      evidence patentChemicalOrganism {
+        neighborName "cocos nucifera (coconut palm)",
+        cooccurrenceScore 58423,
+        nPatentFamilies 374,
+        nPatents 432,
+        patentFamily {
+          {
+            patentFamilyId "9429460",
+            relevanceScore 404594,
+            representativePatent "EP-0638137-B1",
+            grantDate "1996-09-11",
+            representativePatentTitle "Method for excavating tunnels,
+ utilisation of a foaming agent and new composition"
+          },
+          {
+            patentFamilyId "42758208",
+            relevanceScore 404594,
+            representativePatent "KR-101081303-B1",
+            grantDate "2011-11-08",
+            representativePatentTitle "Oil type cleanser cosmetic composition
+ and its manufacturing method"
+          },
+          {
+            patentFamilyId "83279351",
+            relevanceScore 337161,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "26149615",
+            relevanceScore 155613,
+            representativePatent "JP-3323109-B2",
+            grantDate "2002-09-09",
+            representativePatentTitle "Aqueous cosmetic composition containing
+ stably solubilized uric acid and amphoteric surfactant and method for stably
+ solubilizing uric acid in aqueous cosmetic composition"
+          },
+          {
+            patentFamilyId "51570425",
+            relevanceScore 111263,
+            representativePatent "US-10815191-B2",
+            grantDate "2020-10-27",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine and tetrahydroxypropyl ethylenediamine",
+            otherPatent {
+              "KR-102359405-B1",
+              "EP-2997959-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3193,
+      evidence patentChemicalOrganism {
+        neighborName "embryophyta (land plants)",
+        cooccurrenceScore 50653,
+        nPatentFamilies 534,
+        nPatents 627,
+        patentFamily {
+          {
+            patentFamilyId "18943707",
+            relevanceScore 272628,
+            representativePatent "JP-4718704-B2",
+            grantDate "2011-07-06",
+            representativePatentTitle "Hair dyeing method"
+          },
+          {
+            patentFamilyId "36940387",
+            relevanceScore 170393,
+            representativePatent "KR-101265569-B1",
+            grantDate "2013-05-21",
+            representativePatentTitle "Biomass-Induced Grinding Aids"
+          },
+          {
+            patentFamilyId "67700473",
+            relevanceScore 75730,
+            representativePatent "US-10392580-B1",
+            grantDate "2019-08-27",
+            representativePatentTitle "Seed oil based reactive diluent"
+          },
+          {
+            patentFamilyId "51570425",
+            relevanceScore 74973,
+            representativePatent "US-10815191-B2",
+            grantDate "2020-10-27",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine and tetrahydroxypropyl ethylenediamine",
+            otherPatent {
+              "KR-102359405-B1"
+            }
+          },
+          {
+            patentFamilyId "47215538",
+            relevanceScore 74973,
+            representativePatent "EP-2782898-B1",
+            grantDate "2015-10-21",
+            representativePatentTitle "Method for producing ethylamines and
+ monoisopropylamine (mipa)"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 2,
+      evidence patentChemicalOrganism {
+        neighborName "bacteria (bacteria)",
+        cooccurrenceScore 30290,
+        nPatentFamilies 313,
+        nPatents 385,
+        patentFamily {
+          {
+            patentFamilyId "22623947",
+            relevanceScore 261024,
+            representativePatent "JP-3497169-B2",
+            grantDate "2004-02-16",
+            representativePatentTitle "Improved aqueous functional liquid",
+            otherPatent {
+              "KR-100354981-B1"
+            }
+          },
+          {
+            patentFamilyId "83279351",
+            relevanceScore 217520,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "43541418",
+            relevanceScore 87008,
+            representativePatent "EP-2516448-B1",
+            grantDate "2015-04-15",
+            representativePatentTitle "Amine salts of cefdinir"
+          },
+          {
+            patentFamilyId "57590501",
+            relevanceScore 65256,
+            representativePatent "US-10584283-B2",
+            grantDate "2020-03-10",
+            representativePatentTitle "Preservative for technical products"
+          },
+          {
+            patentFamilyId "47175370",
+            relevanceScore 65256,
+            representativePatent "US-11434451-B2",
+            grantDate "2022-09-06",
+            representativePatentTitle "Non-corrosive oven degreaser concentrate",
+            otherPatent {
+              "JP-6054951-B2",
+              "JP-6276372-B2",
+              "US-11845913-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 138043,
+      evidence patentChemicalOrganism {
+        neighborName "senegalia senegal (gum-arabic)",
+        cooccurrenceScore 26827,
+        nPatentFamilies 309,
+        nPatents 335,
+        patentFamily {
+          {
+            patentFamilyId "18626109",
+            relevanceScore 124351,
+            representativePatent "EP-1146148-B1",
+            grantDate "2011-08-24",
+            representativePatentTitle "Cyanide-free pyrophosphoric acid bath
+ for use in copper-tin alloy plating",
+            otherPatent {
+              "JP-3455712-B2"
+            }
+          },
+          {
+            patentFamilyId "7767722",
+            relevanceScore 93263,
+            representativePatent "EP-0840593-B1",
+            grantDate "2002-10-02",
+            representativePatentTitle "Oxidation colorants for dyeing
+ keratinic fibers, containing a special combination of alkalisation agents"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 93263,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26614150",
+            relevanceScore 93263,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "43310952",
+            relevanceScore 93263,
+            representativePatent "JP-5404152-B2",
+            grantDate "2014-01-29",
+            representativePatentTitle "Hair dyeing pretreatment composition
+ and hair dyeing pretreatment method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3208,
+      evidence patentChemicalOrganism {
+        neighborName "bryophyta (mosses)",
+        cooccurrenceScore 22746,
+        nPatentFamilies 158,
+        nPatents 201,
+        patentFamily {
+          {
+            patentFamilyId "9429460",
+            relevanceScore 120821,
+            representativePatent "EP-0638137-B1",
+            grantDate "1996-09-11",
+            representativePatentTitle "Method for excavating tunnels,
+ utilisation of a foaming agent and new composition"
+          },
+          {
+            patentFamilyId "18943707",
+            relevanceScore 120821,
+            representativePatent "JP-4718704-B2",
+            grantDate "2011-07-06",
+            representativePatentTitle "Hair dyeing method"
+          },
+          {
+            patentFamilyId "83547067",
+            relevanceScore 77949,
+            representativePatent "US-11464716-B1",
+            grantDate "2022-10-11",
+            representativePatentTitle "Semi-permanent colorant composition for
+ hair"
+          },
+          {
+            patentFamilyId "9910786",
+            relevanceScore 75513,
+            representativePatent "JP-3986851-B2",
+            grantDate "2007-10-03",
+            representativePatentTitle "Cosmetic and personal care compositions"
+          },
+          {
+            patentFamilyId "47682581",
+            relevanceScore 67123,
+            representativePatent "EP-2934682-B1",
+            grantDate "2018-10-17",
+            representativePatentTitle "Personal care composition comprising a
+ natural film-forming biopolymer and methods of making the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 162890,
+      evidence patentChemicalOrganism {
+        neighborName "pterogyne nitens (tipa colorada)",
+        cooccurrenceScore 22686,
+        nPatentFamilies 95,
+        nPatents 116,
+        patentFamily {
+          {
+            patentFamilyId "7649526",
+            relevanceScore 177110,
+            representativePatent "EP-1174495-B1",
+            grantDate "2004-10-13",
+            representativePatentTitle "Soap bar comprising talc, alkali fatty
+ acid and nonionic surfactant, but not comprising alkyl oligoglycosides"
+          },
+          {
+            patentFamilyId "24524780",
+            relevanceScore 177110,
+            representativePatent "JP-4051466-B2",
+            grantDate "2008-02-27",
+            representativePatentTitle "Developing roller and manufacturing
+ method thereof"
+          },
+          {
+            patentFamilyId "46832286",
+            relevanceScore 110694,
+            representativePatent "EP-2570115-B1",
+            grantDate "2017-09-13",
+            representativePatentTitle "Composition for enhancing transdermal
+ absorption of a drug and patch preparation"
+          },
+          {
+            patentFamilyId "9910786",
+            relevanceScore 110694,
+            representativePatent "JP-3986851-B2",
+            grantDate "2007-10-03",
+            representativePatentTitle "Cosmetic and personal care compositions"
+          },
+          {
+            patentFamilyId "74877716",
+            relevanceScore 98394,
+            representativePatent "JP-7312654-B2",
+            grantDate "2023-07-21",
+            representativePatentTitle "Strength improving agent for cement,
+ additive for cement, cement composition, method for improving cement strength"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 4932,
+      evidence patentChemicalOrganism {
+        neighborName "saccharomyces cerevisiae (brewer's yeast)",
+        cooccurrenceScore 22281,
+        nPatentFamilies 173,
+        nPatents 210,
+        patentFamily {
+          {
+            patentFamilyId "88746845",
+            relevanceScore 204508,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "75473000",
+            relevanceScore 148733,
+            representativePatent "KR-102254208-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Synthetic pseudo-ceramide complex
+ derived from Jeju natural oil prepared by enzyme catalyst lipase and
+ functional cosmetic raw material including the same"
+          },
+          {
+            patentFamilyId "27091833",
+            relevanceScore 81803,
+            representativePatent "EP-0564586-B1",
+            grantDate "2002-03-20",
+            representativePatentTitle "Aqueous vaginal douche and related
+ methods"
+          },
+          {
+            patentFamilyId "22623947",
+            relevanceScore 81803,
+            representativePatent "JP-3497169-B2",
+            grantDate "2004-02-16",
+            representativePatentTitle "Improved aqueous functional liquid",
+            otherPatent {
+              "KR-100354981-B1"
+            }
+          },
+          {
+            patentFamilyId "83279351",
+            relevanceScore 81803,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3847,
+      evidence patentChemicalOrganism {
+        neighborName "glycine max (soybean)",
+        cooccurrenceScore 19148,
+        nPatentFamilies 178,
+        nPatents 202,
+        patentFamily {
+          {
+            patentFamilyId "56117553",
+            relevanceScore 346861,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "73856291",
+            relevanceScore 86715,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "26614150",
+            relevanceScore 86715,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "43310952",
+            relevanceScore 86715,
+            representativePatent "JP-5404152-B2",
+            grantDate "2014-01-29",
+            representativePatentTitle "Hair dyeing pretreatment composition
+ and hair dyeing pretreatment method"
+          },
+          {
+            patentFamilyId "6296288",
+            relevanceScore 61939,
+            representativePatent "EP-0237880-B1",
+            grantDate "1991-01-09",
+            representativePatentTitle "Phospholipid-containing products, their
+ preparation and use"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 5774,
+      evidence patentChemicalOrganism {
+        neighborName "amoeba",
+        cooccurrenceScore 13517,
+        nPatentFamilies 4,
+        nPatents 4,
+        patentFamily {
+          {
+            patentFamilyId "39755253",
+            relevanceScore 650459,
+            representativePatent "JP-5688871-B2",
+            grantDate "2015-03-25",
+            representativePatentTitle "Metal film forming method and metal
+ film obtained by the method"
+          },
+          {
+            patentFamilyId "39757631",
+            relevanceScore 464614,
+            representativePatent "JP-5157469-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Metal film forming method"
+          },
+          {
+            patentFamilyId "39378339",
+            relevanceScore 162615,
+            representativePatent "JP-5082689-B2",
+            grantDate "2012-11-28",
+            representativePatentTitle "Metal film forming method and metal
+ film obtained by the method"
+          },
+          {
+            patentFamilyId "36156126",
+            relevanceScore 73916,
+            representativePatent "JP-4250607-B2",
+            grantDate "2009-04-08",
+            representativePatentTitle "Metal colloid-containing coating film
+ formation"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 141191,
+      evidence patentChemicalOrganism {
+        neighborName "lawsonia inermis (henna)",
+        cooccurrenceScore 10975,
+        nPatentFamilies 29,
+        nPatents 32,
+        patentFamily {
+          {
+            patentFamilyId "18943707",
+            relevanceScore 629444,
+            representativePatent "JP-4718704-B2",
+            grantDate "2011-07-06",
+            representativePatentTitle "Hair dyeing method"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 50762,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "51904546",
+            relevanceScore 46283,
+            representativePatent "EP-3082726-B1",
+            grantDate "2018-03-21",
+            representativePatentTitle "Stabilised foam hair dye composition"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 45219,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "51904545",
+            relevanceScore 41411,
+            representativePatent "EP-3082739-B1",
+            grantDate "2018-11-07",
+            representativePatentTitle "Hair dye composition in the form of a
+ stabilised foam"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 4113,
+      evidence patentChemicalOrganism {
+        neighborName "solanum tuberosum (potato)",
+        cooccurrenceScore 10949,
+        nPatentFamilies 123,
+        nPatents 135,
+        patentFamily {
+          {
+            patentFamilyId "36940387",
+            relevanceScore 246081,
+            representativePatent "KR-101265569-B1",
+            grantDate "2013-05-21",
+            representativePatentTitle "Biomass-Induced Grinding Aids"
+          },
+          {
+            patentFamilyId "43310952",
+            relevanceScore 98432,
+            representativePatent "JP-5404152-B2",
+            grantDate "2014-01-29",
+            representativePatentTitle "Hair dyeing pretreatment composition
+ and hair dyeing pretreatment method"
+          },
+          {
+            patentFamilyId "32338820",
+            relevanceScore 36456,
+            representativePatent "EP-1575568-B1",
+            grantDate "2018-04-11",
+            representativePatentTitle "Use of thickening agents for producing
+ soft capsules and film production method"
+          },
+          {
+            patentFamilyId "63852238",
+            relevanceScore 35154,
+            representativePatent "US-11109591-B2",
+            grantDate "2021-09-07",
+            representativePatentTitle "Single phase liquids of alkanolamine
+ salts of dicamba"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 28285,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 339493,
+      evidence patentChemicalOrganism {
+        neighborName "astragalus gummifer",
+        cooccurrenceScore 10720,
+        nPatentFamilies 99,
+        nPatents 115,
+        patentFamily {
+          {
+            patentFamilyId "58051103",
+            relevanceScore 100004,
+            representativePatent "US-10654872-B1",
+            grantDate "2020-05-19",
+            representativePatentTitle "Polymorphs of dolutegravir and salts
+ thereof",
+            otherPatent {
+              "US-10597404-B2",
+              "US-10647729-B1"
+            }
+          },
+          {
+            patentFamilyId "27091833",
+            relevanceScore 100004,
+            representativePatent "EP-0564586-B1",
+            grantDate "2002-03-20",
+            representativePatentTitle "Aqueous vaginal douche and related
+ methods"
+          },
+          {
+            patentFamilyId "26614150",
+            relevanceScore 100004,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 62502,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "76624246",
+            relevanceScore 62114,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 40674,
+      evidence patentChemicalOrganism {
+        neighborName "mammalia (mammals)",
+        cooccurrenceScore 10472,
+        nPatentFamilies 93,
+        nPatents 124,
+        patentFamily {
+          {
+            patentFamilyId "24986783",
+            relevanceScore 213544,
+            representativePatent "EP-1216696-B1",
+            grantDate "2006-03-08",
+            representativePatentTitle "Method for reducing the appearance of
+ dark circles under the eyes"
+          },
+          {
+            patentFamilyId "24517062",
+            relevanceScore 74740,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "46832286",
+            relevanceScore 46713,
+            representativePatent "EP-2570115-B1",
+            grantDate "2017-09-13",
+            representativePatentTitle "Composition for enhancing transdermal
+ absorption of a drug and patch preparation"
+          },
+          {
+            patentFamilyId "26142825",
+            relevanceScore 42709,
+            representativePatent "EP-0904060-B1",
+            grantDate "2003-12-10",
+            representativePatentTitle "Antifungal compositions with improved
+ bioavailability"
+          },
+          {
+            patentFamilyId "7653517",
+            relevanceScore 41522,
+            representativePatent "EP-1313774-B1",
+            grantDate "2008-08-20",
+            representativePatentTitle "Water-soluble homopolymers and
+ copolymers having an improved environmental acceptability"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 153524,
+      evidence patentChemicalOrganism {
+        neighborName "styrax benzoin",
+        cooccurrenceScore 10429,
+        nPatentFamilies 130,
+        nPatents 159,
+        patentFamily {
+          {
+            patentFamilyId "6378409",
+            relevanceScore 107917,
+            representativePatent "EP-0392352-B1",
+            grantDate "1994-09-21",
+            representativePatentTitle "Aqueous dispersions of high energy
+ radiation curable polyurethanes"
+          },
+          {
+            patentFamilyId "88742404",
+            relevanceScore 79939,
+            representativePatent "KR-102699265-B1",
+            grantDate "2024-08-27",
+            representativePatentTitle "Photocurable coating composition for
+ protecting tempered glass of electronic devices"
+          },
+          {
+            patentFamilyId "7653517",
+            relevanceScore 59954,
+            representativePatent "EP-1313774-B1",
+            grantDate "2008-08-20",
+            representativePatentTitle "Water-soluble homopolymers and
+ copolymers having an improved environmental acceptability"
+          },
+          {
+            patentFamilyId "74230713",
+            relevanceScore 59954,
+            representativePatent "KR-102785080-B1",
+            grantDate "2025-03-28",
+            representativePatentTitle "Composition for removing photoresist"
+          },
+          {
+            patentFamilyId "7875371",
+            relevanceScore 53959,
+            representativePatent "EP-1100452-B1",
+            grantDate "2003-10-15",
+            representativePatentTitle "Cosmetic or dermatological water/oil
+ emulsions containing nonionic surfactants and characterized by a silicone
+ emulsifying agent content"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 13429,
+      evidence patentChemicalOrganism {
+        neighborName "cinnamomum camphora (camphor tree)",
+        cooccurrenceScore 9999,
+        nPatentFamilies 132,
+        nPatents 144,
+        patentFamily {
+          {
+            patentFamilyId "53757070",
+            relevanceScore 118380,
+            representativePatent "KR-101976248-B1",
+            grantDate "2019-05-07",
+            representativePatentTitle "Emedastine-containing tape"
+          },
+          {
+            patentFamilyId "24986783",
+            relevanceScore 84557,
+            representativePatent "EP-1216696-B1",
+            grantDate "2006-03-08",
+            representativePatentTitle "Method for reducing the appearance of
+ dark circles under the eyes"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 53809,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          },
+          {
+            patentFamilyId "60787606",
+            relevanceScore 39460,
+            representativePatent "US-11795119-B2",
+            grantDate "2023-10-24",
+            representativePatentTitle "Stabilized DCD and/or alkyl
+ thiophosphoric triamide solvent systems and use in agricultural applications",
+            otherPatent {
+              "US-10570068-B2"
+            }
+          },
+          {
+            patentFamilyId "41384162",
+            relevanceScore 34313,
+            representativePatent "JP-5393996-B2",
+            grantDate "2014-01-22",
+            representativePatentTitle "Hair treatment agent containing
+ alkaline agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 562,
+      evidence patentChemicalOrganism {
+        neighborName "escherichia coli (e. coli)",
+        cooccurrenceScore 9502,
+        nPatentFamilies 97,
+        nPatents 124,
+        patentFamily {
+          {
+            patentFamilyId "47175370",
+            relevanceScore 82194,
+            representativePatent "US-11434451-B2",
+            grantDate "2022-09-06",
+            representativePatentTitle "Non-corrosive oven degreaser concentrate",
+            otherPatent {
+              "JP-6054951-B2",
+              "JP-6276372-B2",
+              "US-11845913-B2"
+            }
+          },
+          {
+            patentFamilyId "22623947",
+            relevanceScore 82194,
+            representativePatent "JP-3497169-B2",
+            grantDate "2004-02-16",
+            representativePatentTitle "Improved aqueous functional liquid",
+            otherPatent {
+              "KR-100354981-B1"
+            }
+          },
+          {
+            patentFamilyId "90835988",
+            relevanceScore 78280,
+            representativePatent "US-11970475-B1",
+            grantDate "2024-04-30",
+            representativePatentTitle "4-(1-(2-Hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridin-3-ol as an antimicrobial compound"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 43954,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "32679936",
+            relevanceScore 28639,
+            representativePatent "JP-5096663-B2",
+            grantDate "2012-12-12",
+            representativePatentTitle "Pyrithione biocide enhanced by zinc
+ metal ions and organic amines"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3818,
+      evidence patentChemicalOrganism {
+        neighborName "arachis hypogaea (peanut)",
+        cooccurrenceScore 8752,
+        nPatentFamilies 47,
+        nPatents 52,
+        patentFamily {
+          {
+            patentFamilyId "57126282",
+            relevanceScore 109413,
+            representativePatent "US-10716763-B2",
+            grantDate "2020-07-21",
+            representativePatentTitle "Transdermal patch containing ropinirole"
+          },
+          {
+            patentFamilyId "63169715",
+            relevanceScore 109413,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "73856291",
+            relevanceScore 109413,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "6296288",
+            relevanceScore 78152,
+            representativePatent "EP-0237880-B1",
+            grantDate "1991-01-09",
+            representativePatentTitle "Phospholipid-containing products, their
+ preparation and use"
+          },
+          {
+            patentFamilyId "48779188",
+            relevanceScore 68383,
+            representativePatent "EP-2802362-B1",
+            grantDate "2019-10-09",
+            representativePatentTitle "Liquid gel concentrate compositions and
+ methods of use"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 10239,
+      evidence patentChemicalOrganism {
+        neighborName "viruses",
+        cooccurrenceScore 8716,
+        nPatentFamilies 72,
+        nPatents 95,
+        patentFamily {
+          {
+            patentFamilyId "78868610",
+            relevanceScore 142577,
+            representativePatent "KR-102428140-B1",
+            grantDate "2022-08-08",
+            representativePatentTitle "Deodorizing filter coating composition
+ for air cleaners and deodorizing filter using the same"
+          },
+          {
+            patentFamilyId "73548306",
+            relevanceScore 112025,
+            representativePatent "JP-7376903-B2",
+            grantDate "2023-11-09",
+            representativePatentTitle "Virus inactivators and sanitary
+ materials"
+          },
+          {
+            patentFamilyId "6380171",
+            relevanceScore 78417,
+            representativePatent "JP-2593951-B2",
+            grantDate "1997-03-26",
+            representativePatentTitle "Method for isolating blood coagulation
+ factor IX"
+          },
+          {
+            patentFamilyId "63173601",
+            relevanceScore 65348,
+            representativePatent "JP-6892274-B2",
+            grantDate "2021-06-23",
+            representativePatentTitle "Virus inactivating composition"
+          },
+          {
+            patentFamilyId "42974833",
+            relevanceScore 41272,
+            representativePatent "JP-5255495-B2",
+            grantDate "2013-08-07",
+            representativePatentTitle "Calidicidal virus composition and
+ method of use thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 195074,
+      evidence patentChemicalOrganism {
+        neighborName "blennius",
+        cooccurrenceScore 8658,
+        nPatentFamilies 60,
+        nPatents 63,
+        patentFamily {
+          {
+            patentFamilyId "89899885",
+            relevanceScore 150126,
+            representativePatent "KR-102634996-B1",
+            grantDate "2024-02-08",
+            representativePatentTitle "Shampoo composition with excellent gray
+ hair coverage"
+          },
+          {
+            patentFamilyId "51132312",
+            relevanceScore 77843,
+            representativePatent "KR-101405297-B1",
+            grantDate "2014-06-11",
+            representativePatentTitle "Eco-Friendly Concrete Paving
+ Composition Using Seaweeds and Constructing Methods Using Thereof"
+          },
+          {
+            patentFamilyId "47682581",
+            relevanceScore 58382,
+            representativePatent "EP-2934682-B1",
+            grantDate "2018-10-17",
+            representativePatentTitle "Personal care composition comprising a
+ natural film-forming biopolymer and methods of making the same"
+          },
+          {
+            patentFamilyId "6067140",
+            relevanceScore 48878,
+            representativePatent "EP-0017149-B1",
+            grantDate "1984-02-15",
+            representativePatentTitle "Use of a liquid composition for
+ cleaning hard surfaces"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 47767,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 4146,
+      evidence patentChemicalOrganism {
+        neighborName "olea europaea (common olive)",
+        cooccurrenceScore 8532,
+        nPatentFamilies 56,
+        nPatents 61,
+        patentFamily {
+          {
+            patentFamilyId "63169715",
+            relevanceScore 119701,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "73856291",
+            relevanceScore 119701,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "55854805",
+            relevanceScore 85501,
+            representativePatent "US-11939556-B2",
+            grantDate "2024-03-26",
+            representativePatentTitle "Cleaning composition comprising an
+ alkylamidoalkyl alkyldimonium alkylsulfate as an ionic liquid"
+          },
+          {
+            patentFamilyId "8496110",
+            relevanceScore 77226,
+            representativePatent "EP-1359211-B1",
+            grantDate "2007-02-28",
+            representativePatentTitle "Fiber softening compositions containing
+ non-ionic surface active agents"
+          },
+          {
+            patentFamilyId "13225497",
+            relevanceScore 74813,
+            representativePatent "EP-0122152-B1",
+            grantDate "1989-03-22",
+            representativePatentTitle "Enzymatic production of
+ sphingophospholipid derivatives"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1280,
+      evidence patentChemicalOrganism {
+        neighborName "staphylococcus aureus",
+        cooccurrenceScore 8500,
+        nPatentFamilies 62,
+        nPatents 73,
+        patentFamily {
+          {
+            patentFamilyId "47175370",
+            relevanceScore 105694,
+            representativePatent "US-11434451-B2",
+            grantDate "2022-09-06",
+            representativePatentTitle "Non-corrosive oven degreaser concentrate",
+            otherPatent {
+              "JP-6054951-B2",
+              "JP-6276372-B2",
+              "US-11845913-B2"
+            }
+          },
+          {
+            patentFamilyId "22623947",
+            relevanceScore 105694,
+            representativePatent "JP-3497169-B2",
+            grantDate "2004-02-16",
+            representativePatentTitle "Improved aqueous functional liquid"
+          },
+          {
+            patentFamilyId "83279351",
+            relevanceScore 105694,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "90835988",
+            relevanceScore 100661,
+            representativePatent "US-11970475-B1",
+            grantDate "2024-04-30",
+            representativePatentTitle "4-(1-(2-Hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridin-3-ol as an antimicrobial compound"
+          },
+          {
+            patentFamilyId "90472625",
+            relevanceScore 26424,
+            representativePatent "KR-102723046-B1",
+            grantDate "2024-10-25",
+            representativePatentTitle "Copper Sulfide Manufacturing Method
+ Using Underwater Plasma Discharge"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1788,
+      evidence patentChemicalOrganism {
+        neighborName "mycolicibacter terrae",
+        cooccurrenceScore 8256,
+        nPatentFamilies 2,
+        nPatents 3,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 785453,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          },
+          {
+            patentFamilyId "62683516",
+            relevanceScore 40074,
+            representativePatent "US-11432545-B2",
+            grantDate "2022-09-06",
+            representativePatentTitle "Fast kill disinfectant wiping
+ composition and premoistened wipes made from same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3760,
+      evidence patentChemicalOrganism {
+        neighborName "prunus persica (peach)",
+        cooccurrenceScore 8087,
+        nPatentFamilies 63,
+        nPatents 70,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 118429,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26614150",
+            relevanceScore 118429,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "92757310",
+            relevanceScore 59214,
+            representativePatent "KR-102705363-B1",
+            grantDate "2024-09-11",
+            representativePatentTitle "Complex microencapsulated insecticide,
+ and the preparation method thereof"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 38203,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "47471590",
+            relevanceScore 34031,
+            representativePatent "EP-3113848-B1",
+            grantDate "2018-10-31",
+            representativePatentTitle "Anhydrous dyeing composition and
+ process for dyeing hair"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 360610,
+      evidence patentChemicalOrganism {
+        neighborName "corchorus aestuans",
+        cooccurrenceScore 7850,
+        nPatentFamilies 75,
+        nPatents 96,
+        patentFamily {
+          {
+            patentFamilyId "69231658",
+            relevanceScore 122947,
+            representativePatent "JP-7374177-B2",
+            grantDate "2023-11-06",
+            representativePatentTitle "UV sinterable molecular ink and its
+ processing using broad spectrum UV light",
+            otherPatent {
+              "US-11873413-B2",
+              "KR-102790704-B1"
+            }
+          },
+          {
+            patentFamilyId "13067129",
+            relevanceScore 102456,
+            representativePatent "EP-0121265-B1",
+            grantDate "1988-07-13",
+            representativePatentTitle "Method of heterogeneous reaction"
+          },
+          {
+            patentFamilyId "64049742",
+            relevanceScore 68304,
+            representativePatent "US-10870819-B2",
+            grantDate "2020-12-22",
+            representativePatentTitle "Leuco colorants as bluing agents in
+ laundry care compositions",
+            otherPatent {
+              "JP-7030963-B2"
+            }
+          },
+          {
+            patentFamilyId "77774295",
+            relevanceScore 61473,
+            representativePatent "KR-102301607-B1",
+            grantDate "2021-09-14",
+            representativePatentTitle "Latex modified ultra quick-hardening
+ concrete composition having improved durability with graphite and maintenance
+ and construction method of bridge deck and road pavement surface using the
+ same"
+          },
+          {
+            patentFamilyId "51904546",
+            relevanceScore 36161,
+            representativePatent "EP-3082726-B1",
+            grantDate "2018-03-21",
+            representativePatentTitle "Stabilised foam hair dye composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 36809,
+      evidence patentChemicalOrganism {
+        neighborName "mycobacteroides abscessus",
+        cooccurrenceScore 7570,
+        nPatentFamilies 1,
+        nPatents 2,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 756869,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 10095,
+      evidence patentChemicalOrganism {
+        neighborName "mus sp. (mice)",
+        cooccurrenceScore 7369,
+        nPatentFamilies 86,
+        nPatents 113,
+        patentFamily {
+          {
+            patentFamilyId "62097675",
+            relevanceScore 68158,
+            representativePatent "JP-6976013-B2",
+            grantDate "2021-12-01",
+            representativePatentTitle "Pyridylimidazole benzodiazepine
+ propionic acid ester compound and its synthesis and use",
+            otherPatent {
+              "US-11919905-B2"
+            }
+          },
+          {
+            patentFamilyId "10820048",
+            relevanceScore 45438,
+            representativePatent "EP-1019090-B1",
+            grantDate "2004-02-18",
+            representativePatentTitle "Polymeric derivatives of camptothecins"
+          },
+          {
+            patentFamilyId "47357200",
+            relevanceScore 45438,
+            representativePatent "JP-5971867-B2",
+            grantDate "2016-08-17",
+            representativePatentTitle "Gallium labeled drug"
+          },
+          {
+            patentFamilyId "38833075",
+            relevanceScore 29210,
+            representativePatent "EP-2036909-B1",
+            grantDate "2016-05-04",
+            representativePatentTitle "Quaternary ammonium salt compounds of
+ spirocyclopiperazines, preparation methods and uses thereof"
+          },
+          {
+            patentFamilyId "76157648",
+            relevanceScore 26816,
+            representativePatent "KR-102254553-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Lactobacillus paracasei HY7015 having
+ hair growth promotion, and a composition for promoting hair growth containing
+ there of as effective component"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 292385,
+      evidence patentChemicalOrganism {
+        neighborName "vitellaria paradoxa (shea tree)",
+        cooccurrenceScore 6915,
+        nPatentFamilies 66,
+        nPatents 73,
+        patentFamily {
+          {
+            patentFamilyId "76086849",
+            relevanceScore 131813,
+            representativePatent "JP-7519178-B2",
+            grantDate "2024-07-19",
+            representativePatentTitle "Hair composition and hair treatment
+ method"
+          },
+          {
+            patentFamilyId "66580013",
+            relevanceScore 42520,
+            representativePatent "KR-102563513-B1",
+            grantDate "2023-08-07",
+            representativePatentTitle "Foam-type hair dye composition for
+ oxidative dyeing"
+          },
+          {
+            patentFamilyId "69468798",
+            relevanceScore 32953,
+            representativePatent "KR-102747431-B1",
+            grantDate "2024-12-26",
+            representativePatentTitle "Alkaline composition, method and use
+ comprising at least three different alkaline agents for the treatment of
+ keratin fibers"
+          },
+          {
+            patentFamilyId "70476591",
+            relevanceScore 26469,
+            representativePatent "US-11931447-B2",
+            grantDate "2024-03-19",
+            representativePatentTitle "Polymer/hydrophilic silica oil blend"
+          },
+          {
+            patentFamilyId "39774927",
+            relevanceScore 23966,
+            representativePatent "EP-2136768-B1",
+            grantDate "2018-10-17",
+            representativePatentTitle "Structured surfactant compositions"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 58860,
+      evidence patentChemicalOrganism {
+        neighborName "tamarindus indica (tamarind)",
+        cooccurrenceScore 6784,
+        nPatentFamilies 61,
+        nPatents 78,
+        patentFamily {
+          {
+            patentFamilyId "59853515",
+            relevanceScore 109312,
+            representativePatent "JP-7033391-B2",
+            grantDate "2022-03-10",
+            representativePatentTitle "Hair dye for hair"
+          },
+          {
+            patentFamilyId "76624246",
+            relevanceScore 81475,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          },
+          {
+            patentFamilyId "64049742",
+            relevanceScore 72875,
+            representativePatent "US-10870819-B2",
+            grantDate "2020-12-22",
+            representativePatentTitle "Leuco colorants as bluing agents in
+ laundry care compositions",
+            otherPatent {
+              "JP-7030963-B2"
+            }
+          },
+          {
+            patentFamilyId "43568347",
+            relevanceScore 32794,
+            representativePatent "EP-2512231-B1",
+            grantDate "2016-12-07",
+            representativePatentTitle "Composition in form of a gel for the
+ virucidal disinfection of mammalian skin"
+          },
+          {
+            patentFamilyId "53182840",
+            relevanceScore 27046,
+            representativePatent "KR-101881187-B1",
+            grantDate "2018-07-23",
+            representativePatentTitle "Hair styling agent",
+            otherPatent {
+              "JP-6274646-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 286,
+      evidence patentChemicalOrganism {
+        neighborName "pseudomonas (rna similarity group i)",
+        cooccurrenceScore 6587,
+        nPatentFamilies 40,
+        nPatents 58,
+        patentFamily {
+          {
+            patentFamilyId "73856291",
+            relevanceScore 108980,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "22623947",
+            relevanceScore 108980,
+            representativePatent "JP-3497169-B2",
+            grantDate "2004-02-16",
+            representativePatentTitle "Improved aqueous functional liquid",
+            otherPatent {
+              "KR-100354981-B1"
+            }
+          },
+          {
+            patentFamilyId "76624246",
+            relevanceScore 67689,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 58278,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "32679936",
+            relevanceScore 37972,
+            representativePatent "JP-5096663-B2",
+            grantDate "2012-12-12",
+            representativePatentTitle "Pyrithione biocide enhanced by zinc
+ metal ions and organic amines"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1764,
+      evidence patentChemicalOrganism {
+        neighborName "mycobacterium avium",
+        cooccurrenceScore 6349,
+        nPatentFamilies 1,
+        nPatents 2,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 634781,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1282,
+      evidence patentChemicalOrganism {
+        neighborName "staphylococcus epidermidis",
+        cooccurrenceScore 6331,
+        nPatentFamilies 13,
+        nPatents 17,
+        patentFamily {
+          {
+            patentFamilyId "83279351",
+            relevanceScore 459724,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "9883917",
+            relevanceScore 76621,
+            representativePatent "EP-1248520-B2",
+            grantDate "2012-04-25",
+            representativePatentTitle "Anti-microbial compositions",
+            otherPatent {
+              "EP-1248520-B1"
+            }
+          },
+          {
+            patentFamilyId "58664790",
+            relevanceScore 16943,
+            representativePatent "US-10799433-B2",
+            grantDate "2020-10-13",
+            representativePatentTitle "Foaming antimicrobial compositions"
+          },
+          {
+            patentFamilyId "38327996",
+            relevanceScore 16419,
+            representativePatent "JP-5633953-B2",
+            grantDate "2014-12-03",
+            representativePatentTitle "Super flexible foam"
+          },
+          {
+            patentFamilyId "11459287",
+            relevanceScore 15324,
+            representativePatent "EP-1446092-B1",
+            grantDate "2008-08-13",
+            representativePatentTitle "Use of capryloyl glutamate salts and
+ capryloyl hydrolysate salts of wheat and/or rice protein in detergent and
+ cosmetic compositions"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 287,
+      evidence patentChemicalOrganism {
+        neighborName "pseudomonas aeruginosa",
+        cooccurrenceScore 6201,
+        nPatentFamilies 39,
+        nPatents 46,
+        patentFamily {
+          {
+            patentFamilyId "22623947",
+            relevanceScore 115248,
+            representativePatent "JP-3497169-B2",
+            grantDate "2004-02-16",
+            representativePatentTitle "Improved aqueous functional liquid",
+            otherPatent {
+              "KR-100354981-B1"
+            }
+          },
+          {
+            patentFamilyId "90835988",
+            relevanceScore 109760,
+            representativePatent "US-11970475-B1",
+            grantDate "2024-04-30",
+            representativePatentTitle "4-(1-(2-Hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridin-3-ol as an antimicrobial compound"
+          },
+          {
+            patentFamilyId "32679936",
+            relevanceScore 40156,
+            representativePatent "JP-5096663-B2",
+            grantDate "2012-12-12",
+            representativePatentTitle "Pyrithione biocide enhanced by zinc
+ metal ions and organic amines"
+          },
+          {
+            patentFamilyId "17050998",
+            relevanceScore 28812,
+            representativePatent "JP-4351768-B2",
+            grantDate "2009-10-28",
+            representativePatentTitle "Sterilizer lubricant for conveyor"
+          },
+          {
+            patentFamilyId "35015692",
+            relevanceScore 28812,
+            representativePatent "JP-5043289-B2",
+            grantDate "2012-10-10",
+            representativePatentTitle "Metal deformation composition and use
+ thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 294739,
+      evidence patentChemicalOrganism {
+        neighborName "mentha pulegium (pennyroyoal)",
+        cooccurrenceScore 6198,
+        nPatentFamilies 24,
+        nPatents 28,
+        patentFamily {
+          {
+            patentFamilyId "88746845",
+            relevanceScore 246394,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "63169715",
+            relevanceScore 118269,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "24866431",
+            relevanceScore 118269,
+            representativePatent "JP-2922362-B2",
+            grantDate "1999-07-19",
+            representativePatentTitle "Taste protection, mild oral hygiene
+ composition"
+          },
+          {
+            patentFamilyId "85799943",
+            relevanceScore 23941,
+            representativePatent "KR-102515725-B1",
+            grantDate "2023-03-29",
+            representativePatentTitle "Conditioning shampoo composition
+ containing leaf and stem extracts and method of manufacturing conditioning
+ shampoo using the same"
+          },
+          {
+            patentFamilyId "71016658",
+            relevanceScore 16091,
+            representativePatent "US-11889832-B2",
+            grantDate "2024-02-06",
+            representativePatentTitle "Antimicrobial enhancement of cationic
+ active skin antiseptics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1313,
+      evidence patentChemicalOrganism {
+        neighborName "streptococcus pneumoniae",
+        cooccurrenceScore 6157,
+        nPatentFamilies 10,
+        nPatents 14,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 533920,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria"
+          },
+          {
+            patentFamilyId "38476566",
+            relevanceScore 39259,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          },
+          {
+            patentFamilyId "58664790",
+            relevanceScore 16398,
+            representativePatent "US-10799433-B2",
+            grantDate "2020-10-13",
+            representativePatentTitle "Foaming antimicrobial compositions"
+          },
+          {
+            patentFamilyId "51263346",
+            relevanceScore 9007,
+            representativePatent "US-10619174-B2",
+            grantDate "2020-04-14",
+            representativePatentTitle "Microorganism strains for the
+ production of 2.3-butanediol"
+          },
+          {
+            patentFamilyId "63852705",
+            relevanceScore 6308,
+            representativePatent "US-10308897-B2",
+            grantDate "2019-06-04",
+            representativePatentTitle "Alkaline sanitizing soap preparations
+ containing quaternary ammonium chloride agents",
+            otherPatent {
+              "US-10920174-B2",
+              "US-11884896-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 41568,
+      evidence patentChemicalOrganism {
+        neighborName "chrysanthemum x morifolium (florist's daisy)",
+        cooccurrenceScore 5977,
+        nPatentFamilies 4,
+        nPatents 4,
+        patentFamily {
+          {
+            patentFamilyId "80988350",
+            relevanceScore 452423,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "51132312",
+            relevanceScore 100538,
+            representativePatent "KR-101405297-B1",
+            grantDate "2014-06-11",
+            representativePatentTitle "Eco-Friendly Concrete Paving
+ Composition Using Seaweeds and Constructing Methods Using Thereof"
+          },
+          {
+            patentFamilyId "58156227",
+            relevanceScore 39920,
+            representativePatent "KR-101814373-B1",
+            grantDate "2018-01-30",
+            representativePatentTitle "Cigarette filter for discoloring by
+ cigarette smoke"
+          },
+          {
+            patentFamilyId "41053820",
+            relevanceScore 4680,
+            representativePatent "KR-101583850-B1",
+            grantDate "2016-01-08",
+            representativePatentTitle "Moisturizing hand sanitizer"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 127999,
+      evidence patentChemicalOrganism {
+        neighborName "tanacetum parthenium (feverfew)",
+        cooccurrenceScore 5920,
+        nPatentFamilies 6,
+        nPatents 7,
+        patentFamily {
+          {
+            patentFamilyId "83279351",
+            relevanceScore 553750,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "61835153",
+            relevanceScore 14199,
+            representativePatent "JP-7337476-B2",
+            grantDate "2023-09-04",
+            representativePatentTitle "skin barrier function enhancer"
+          },
+          {
+            patentFamilyId "4566254",
+            relevanceScore 6865,
+            representativePatent "EP-1429610-B1",
+            grantDate "2006-05-24",
+            representativePatentTitle "Herbicidal composition",
+            otherPatent {
+              "EP-1602277-B1"
+            }
+          },
+          {
+            patentFamilyId "25685126",
+            relevanceScore 6180,
+            representativePatent "EP-1062217-B1",
+            grantDate "2003-06-04",
+            representativePatentTitle "Herbicidally active
+ 3-hydroxy-4-aryl-5-oxopyrazoline derivatives"
+          },
+          {
+            patentFamilyId "4215198",
+            relevanceScore 6153,
+            representativePatent "EP-1209973-B1",
+            grantDate "2004-02-25",
+            representativePatentTitle "Herbicide agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 10114,
+      evidence patentChemicalOrganism {
+        neighborName "rattus (rats)",
+        cooccurrenceScore 5701,
+        nPatentFamilies 70,
+        nPatents 85,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 86671,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "7653517",
+            relevanceScore 48151,
+            representativePatent "EP-1313774-B1",
+            grantDate "2008-08-20",
+            representativePatentTitle "Water-soluble homopolymers and
+ copolymers having an improved environmental acceptability"
+          },
+          {
+            patentFamilyId "8241613",
+            relevanceScore 36113,
+            representativePatent "EP-1222217-B1",
+            grantDate "2005-06-15",
+            representativePatentTitle "Uniform molecular weight polymers"
+          },
+          {
+            patentFamilyId "65359791",
+            relevanceScore 18679,
+            representativePatent "US-10834949-B2",
+            grantDate "2020-11-17",
+            representativePatentTitle "Method of microalgal biomass processing
+ for high-value chemicals production, the resulting composition of butyrogenic
+ algal slowly fermenting dietary fiber, and a way to improve colon health
+ using a slowly fermenting butyrogenic algal dietary fiber",
+            otherPatent {
+              "US-10485253-B2"
+            }
+          },
+          {
+            patentFamilyId "26864650",
+            relevanceScore 18057,
+            representativePatent "EP-0044124-B1",
+            grantDate "1984-06-13",
+            representativePatentTitle "Composition and method for reducing
+ oxygen in aqueous media"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 4558,
+      evidence patentChemicalOrganism {
+        neighborName "sorghum bicolor (sorghum)",
+        cooccurrenceScore 5673,
+        nPatentFamilies 40,
+        nPatents 45,
+        patentFamily {
+          {
+            patentFamilyId "75787109",
+            relevanceScore 125736,
+            representativePatent "US-12156933-B2",
+            grantDate "2024-12-03",
+            representativePatentTitle "Substance for dyeing keratin fibers,
+ containing specific nonionic emulsifiers, pigments and aminosilicones"
+          },
+          {
+            patentFamilyId "71078520",
+            relevanceScore 73008,
+            representativePatent "US-11826586-B2",
+            grantDate "2023-11-28",
+            representativePatentTitle "Method for dyeing keratin material,
+ comprising the use of an organic C1-C6-alkoxy-silane and an alkalising agent"
+          },
+          {
+            patentFamilyId "8865146",
+            relevanceScore 55201,
+            representativePatent "JP-6959283-B2",
+            grantDate "2021-11-02",
+            representativePatentTitle "Lanolin alternatives, how to get them
+ and their uses"
+          },
+          {
+            patentFamilyId "63852238",
+            relevanceScore 40415,
+            representativePatent "US-11109591-B2",
+            grantDate "2021-09-07",
+            representativePatentTitle "Single phase liquids of alkanolamine
+ salts of dicamba"
+          },
+          {
+            patentFamilyId "65359791",
+            relevanceScore 24388,
+            representativePatent "US-10834949-B2",
+            grantDate "2020-11-17",
+            representativePatentTitle "Method of microalgal biomass processing
+ for high-value chemicals production, the resulting composition of butyrogenic
+ algal slowly fermenting dietary fiber, and a way to improve colon health
+ using a slowly fermenting butyrogenic algal dietary fiber",
+            otherPatent {
+              "US-10485253-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3498,
+      evidence patentChemicalOrganism {
+        neighborName "morus alba (white mulberry)",
+        cooccurrenceScore 5629,
+        nPatentFamilies 13,
+        nPatents 13,
+        patentFamily {
+          {
+            patentFamilyId "80988350",
+            relevanceScore 414805,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "92757310",
+            relevanceScore 62221,
+            representativePatent "KR-102705363-B1",
+            grantDate "2024-09-11",
+            representativePatentTitle "Complex microencapsulated insecticide,
+ and the preparation method thereof"
+          },
+          {
+            patentFamilyId "49214206",
+            relevanceScore 28282,
+            representativePatent "KR-101440425-B1",
+            grantDate "2014-09-17",
+            representativePatentTitle "Cosmetic Composition Having Water in
+ Oil in Water Type Multiple Emulsion Phase Comprising a Anionic Surfactant and
+ Manufacturing Method Thereof"
+          },
+          {
+            patentFamilyId "74863733",
+            relevanceScore 17284,
+            representativePatent "JP-7242483-B2",
+            grantDate "2023-03-20",
+            representativePatentTitle "Cooking accelerator for lignocellulosic
+ material and method for producing pulp using the same"
+          },
+          {
+            patentFamilyId "47112702",
+            relevanceScore 14470,
+            representativePatent "KR-101229762-B1",
+            grantDate "2013-02-21",
+            representativePatentTitle "External preparation for promoting hair
+ growth and preventing hair loss"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 140997,
+      evidence patentChemicalOrganism {
+        neighborName "crataegus monogyna",
+        cooccurrenceScore 5558,
+        nPatentFamilies 16,
+        nPatents 18,
+        patentFamily {
+          {
+            patentFamilyId "63169715",
+            relevanceScore 152765,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 152765,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 69438,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 49279,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 43898,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 21562,
+      evidence patentChemicalOrganism {
+        neighborName "limnanthes",
+        cooccurrenceScore 5326,
+        nPatentFamilies 22,
+        nPatents 25,
+        patentFamily {
+          {
+            patentFamilyId "69903907",
+            relevanceScore 156800,
+            representativePatent "US-11160737-B2",
+            grantDate "2021-11-02",
+            representativePatentTitle "Keratin fiber dyeing composition"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 156800,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 50581,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "70476591",
+            relevanceScore 31486,
+            representativePatent "US-11931447-B2",
+            grantDate "2024-03-19",
+            representativePatentTitle "Polymer/hydrophilic silica oil blend"
+          },
+          {
+            patentFamilyId "70482924",
+            relevanceScore 28100,
+            representativePatent "US-12201710-B2",
+            grantDate "2025-01-21",
+            representativePatentTitle "Hydrophilic silica/polymer blend"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 13422,
+      evidence patentChemicalOrganism {
+        neighborName "chrysanthemum",
+        cooccurrenceScore 5234,
+        nPatentFamilies 2,
+        nPatents 2,
+        patentFamily {
+          {
+            patentFamilyId "80988350",
+            relevanceScore 495738,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "51132312",
+            relevanceScore 27541,
+            representativePatent "KR-101405297-B1",
+            grantDate "2014-06-11",
+            representativePatentTitle "Eco-Friendly Concrete Paving
+ Composition Using Seaweeds and Constructing Methods Using Thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 104105,
+      evidence patentChemicalOrganism {
+        neighborName "desmodesmus subspicatus",
+        cooccurrenceScore 5231,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "7653517",
+            relevanceScore 523006,
+            representativePatent "EP-1313774-B1",
+            grantDate "2008-08-20",
+            representativePatentTitle "Water-soluble homopolymers and
+ copolymers having an improved environmental acceptability"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 13708,
+      evidence patentChemicalOrganism {
+        neighborName "tagetes erecta (african marigold)",
+        cooccurrenceScore 5220,
+        nPatentFamilies 2,
+        nPatents 2,
+        patentFamily {
+          {
+            patentFamilyId "83279351",
+            relevanceScore 517428,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "30438945",
+            relevanceScore 4445,
+            representativePatent "JP-4287719-B2",
+            grantDate "2009-07-01",
+            representativePatentTitle "Hair dye and hair dyeing method using
+ the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1256375,
+      evidence patentChemicalOrganism {
+        neighborName "moca",
+        cooccurrenceScore 5022,
+        nPatentFamilies 54,
+        nPatents 76,
+        patentFamily {
+          {
+            patentFamilyId "65720968",
+            relevanceScore 72001,
+            representativePatent "US-10363458-B2",
+            grantDate "2019-07-30",
+            representativePatentTitle "Methods for treating golf balls having
+ a thermoplastic polyurethane cover",
+            otherPatent {
+              "US-10744375-B2",
+              "US-11395943-B2"
+            }
+          },
+          {
+            patentFamilyId "65719800",
+            relevanceScore 66001,
+            representativePatent "US-11717725-B2",
+            grantDate "2023-08-08",
+            representativePatentTitle "Methods for cross-linking thermoplastic
+ polyurethane covers for golf balls",
+            otherPatent {
+              "US-12208314-B2",
+              "US-11383137-B2"
+            }
+          },
+          {
+            patentFamilyId "16465044",
+            relevanceScore 39600,
+            representativePatent "JP-2530776-B2",
+            grantDate "1996-09-04",
+            representativePatentTitle "Composition for urethane elastomer"
+          },
+          {
+            patentFamilyId "65719785",
+            relevanceScore 23294,
+            representativePatent "US-10918912-B2",
+            grantDate "2021-02-16",
+            representativePatentTitle "Methods for treating thermoplastic
+ polyurethane covers for golf balls with epoxy compositions",
+            otherPatent {
+              "US-11759680-B2",
+              "US-11458368-B2"
+            }
+          },
+          {
+            patentFamilyId "55083477",
+            relevanceScore 17600,
+            representativePatent "JP-6689858-B2",
+            grantDate "2020-04-28",
+            representativePatentTitle "New polyurethane curing agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 27292,
+      evidence patentChemicalOrganism {
+        neighborName "saccharomyces pastorianus (lager yeast)",
+        cooccurrenceScore 5009,
+        nPatentFamilies 3,
+        nPatents 4,
+        patentFamily {
+          {
+            patentFamilyId "83279351",
+            relevanceScore 467793,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "49727088",
+            relevanceScore 31486,
+            representativePatent "US-10392589-B2",
+            grantDate "2019-08-27",
+            representativePatentTitle "Method for extraction and dissolution
+ of hop acids in aqueous media"
+          },
+          {
+            patentFamilyId "56511361",
+            relevanceScore 1544,
+            representativePatent "US-10927364-B2",
+            grantDate "2021-02-23",
+            representativePatentTitle "Heat-stable metagenomic carbonic
+ anhydrases and their use",
+            otherPatent {
+              "US-11773386-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 126617,
+      evidence patentChemicalOrganism {
+        neighborName "freesia refracta",
+        cooccurrenceScore 4859,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "88746845",
+            relevanceScore 485775,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 442491,
+      evidence patentChemicalOrganism {
+        neighborName "agave sisalana (sisal)",
+        cooccurrenceScore 4828,
+        nPatentFamilies 43,
+        nPatents 57,
+        patentFamily {
+          {
+            patentFamilyId "13067129",
+            relevanceScore 110739,
+            representativePatent "EP-0121265-B1",
+            grantDate "1988-07-13",
+            representativePatentTitle "Method of heterogeneous reaction"
+          },
+          {
+            patentFamilyId "51904546",
+            relevanceScore 39084,
+            representativePatent "EP-3082726-B1",
+            grantDate "2018-03-21",
+            representativePatentTitle "Stabilised foam hair dye composition"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 38186,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "51904545",
+            relevanceScore 34970,
+            representativePatent "EP-3082739-B1",
+            grantDate "2018-11-07",
+            representativePatentTitle "Hair dye composition in the form of a
+ stabilised foam"
+          },
+          {
+            patentFamilyId "48569951",
+            relevanceScore 15452,
+            representativePatent "US-10421833-B2",
+            grantDate "2019-09-24",
+            representativePatentTitle "Method for improving toughness of
+ polyisocyanate polyaddition reaction products"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 2013,
+      evidence patentChemicalOrganism {
+        neighborName "nocardiopsis",
+        cooccurrenceScore 4822,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "13225497",
+            relevanceScore 482060,
+            representativePatent "EP-0122152-B1",
+            grantDate "1989-03-22",
+            representativePatentTitle "Enzymatic production of
+ sphingophospholipid derivatives"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 193163,
+      evidence patentChemicalOrganism {
+        neighborName "ceiba pentandra (kapoktree)",
+        cooccurrenceScore 4813,
+        nPatentFamilies 24,
+        nPatents 30,
+        patentFamily {
+          {
+            patentFamilyId "43310952",
+            relevanceScore 146121,
+            representativePatent "JP-5404152-B2",
+            grantDate "2014-01-29",
+            representativePatentTitle "Hair dyeing pretreatment composition
+ and hair dyeing pretreatment method"
+          },
+          {
+            patentFamilyId "13067129",
+            relevanceScore 121768,
+            representativePatent "EP-0121265-B1",
+            grantDate "1988-07-13",
+            representativePatentTitle "Method of heterogeneous reaction"
+          },
+          {
+            patentFamilyId "12718157",
+            relevanceScore 26093,
+            representativePatent "JP-2935660-B2",
+            grantDate "1999-08-16",
+            representativePatentTitle "Transparent soap composition"
+          },
+          {
+            patentFamilyId "11977722",
+            relevanceScore 25193,
+            representativePatent "JP-2840203-B2",
+            grantDate "1998-12-24",
+            representativePatentTitle "Transparent soap composition"
+          },
+          {
+            patentFamilyId "9545838",
+            relevanceScore 19746,
+            representativePatent "EP-1053780-B1",
+            grantDate "2005-05-18",
+            representativePatentTitle "Method for making compositions useful
+ as surface-active emulsifying and dispersing agents"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 223891,
+      evidence patentChemicalOrganism {
+        neighborName "solanum virginianum (yellow-fruit nightshade)",
+        cooccurrenceScore 4790,
+        nPatentFamilies 14,
+        nPatents 14,
+        patentFamily {
+          {
+            patentFamilyId "83279351",
+            relevanceScore 355574,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "52834757",
+            relevanceScore 38293,
+            representativePatent "JP-6087255-B2",
+            grantDate "2017-03-01",
+            representativePatentTitle "Preparation method of temper rolling
+ liquid"
+          },
+          {
+            patentFamilyId "47112702",
+            relevanceScore 14471,
+            representativePatent "KR-101229762-B1",
+            grantDate "2013-02-21",
+            representativePatentTitle "External preparation for promoting hair
+ growth and preventing hair loss"
+          },
+          {
+            patentFamilyId "40202876",
+            relevanceScore 14110,
+            representativePatent "JP-5604303-B2",
+            grantDate "2014-10-08",
+            representativePatentTitle "Formaldehyde sequestration to stabilize
+ nitrilase specific activity when converting glycolonitrile to glycolic acid."
+          },
+          {
+            patentFamilyId "41731990",
+            relevanceScore 9877,
+            representativePatent "KR-101042440-B1",
+            grantDate "2011-06-16",
+            representativePatentTitle "Coating agent for pattern
+ micro-fabrication, and micropattern formation method using the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 29760,
+      evidence patentChemicalOrganism {
+        neighborName "vitis vinifera (wine grape)",
+        cooccurrenceScore 4770,
+        nPatentFamilies 31,
+        nPatents 33,
+        patentFamily {
+          {
+            patentFamilyId "18943707",
+            relevanceScore 115922,
+            representativePatent "JP-4718704-B2",
+            grantDate "2011-07-06",
+            representativePatentTitle "Hair dyeing method"
+          },
+          {
+            patentFamilyId "8496110",
+            relevanceScore 74789,
+            representativePatent "EP-1359211-B1",
+            grantDate "2007-02-28",
+            representativePatentTitle "Fiber softening compositions containing
+ non-ionic surface active agents"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 52692,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          },
+          {
+            patentFamilyId "6078987",
+            relevanceScore 28981,
+            representativePatent "EP-0025841-B1",
+            grantDate "1983-02-23",
+            representativePatentTitle "Diastereomeric salts of malic acid and
+ 2-amino-1-butanol and process for the scission of racemic malic acid"
+          },
+          {
+            patentFamilyId "9527783",
+            relevanceScore 28981,
+            representativePatent "EP-1092003-B1",
+            grantDate "2004-04-21",
+            representativePatentTitle "Borehole fluid containing a lubricating
+ composition - method for verifying the lubrification of a borehole fluid -
+ application with respect to fluids with a high ph"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 4396,
+      evidence patentChemicalOrganism {
+        neighborName "hamamelis mollis (chinese witch hazel)",
+        cooccurrenceScore 4750,
+        nPatentFamilies 25,
+        nPatents 28,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 151783,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 68992,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 48962,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 43616,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "8228205",
+            relevanceScore 24481,
+            representativePatent "EP-0975312-B1",
+            grantDate "2002-07-31",
+            representativePatentTitle "Compositions containing an antifungal
+ and a phospholipid"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 20340,
+      evidence patentChemicalOrganism {
+        neighborName "ceratonia siliqua (carob)",
+        cooccurrenceScore 4743,
+        nPatentFamilies 32,
+        nPatents 34,
+        patentFamily {
+          {
+            patentFamilyId "69903907",
+            relevanceScore 134030,
+            representativePatent "US-11160737-B2",
+            grantDate "2021-11-02",
+            representativePatentTitle "Keratin fiber dyeing composition"
+          },
+          {
+            patentFamilyId "92759138",
+            relevanceScore 74461,
+            representativePatent "KR-102703449-B1",
+            grantDate "2024-09-09",
+            representativePatentTitle "Hair shampoo compositions for improving
+ hair and head skin"
+          },
+          {
+            patentFamilyId "32594554",
+            relevanceScore 55846,
+            representativePatent "EP-1576237-B1",
+            grantDate "2011-09-14",
+            representativePatentTitle "Process for bonding chemical additives
+ on to substrates containing cellulosic materials and products thereof"
+          },
+          {
+            patentFamilyId "76375516",
+            relevanceScore 31912,
+            representativePatent "US-11517514-B2",
+            grantDate "2022-12-06",
+            representativePatentTitle "Resorcinol-free hair colouring
+ compositions"
+          },
+          {
+            patentFamilyId "28459848",
+            relevanceScore 27635,
+            representativePatent "EP-1499304-B1",
+            grantDate "2018-03-07",
+            representativePatentTitle "Liquid compositions for soft
+ sustained-release capsules and method for production thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 147376,
+      evidence patentChemicalOrganism {
+        neighborName "bambuseae (bamboo)",
+        cooccurrenceScore 4728,
+        nPatentFamilies 5,
+        nPatents 6,
+        patentFamily {
+          {
+            patentFamilyId "80988350",
+            relevanceScore 394495,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "39831079",
+            relevanceScore 33814,
+            representativePatent "JP-5040405-B2",
+            grantDate "2012-10-03",
+            representativePatentTitle "Antibacterial and deodorant fibers,
+ fiber molded products and fiber products using the same",
+            otherPatent {
+              "EP-2132376-B1"
+            }
+          },
+          {
+            patentFamilyId "51132312",
+            relevanceScore 21916,
+            representativePatent "KR-101405297-B1",
+            grantDate "2014-06-11",
+            representativePatentTitle "Eco-Friendly Concrete Paving
+ Composition Using Seaweeds and Constructing Methods Using Thereof"
+          },
+          {
+            patentFamilyId "77774295",
+            relevanceScore 14794,
+            representativePatent "KR-102301607-B1",
+            grantDate "2021-09-14",
+            representativePatentTitle "Latex modified ultra quick-hardening
+ concrete composition having improved durability with graphite and maintenance
+ and construction method of bridge deck and road pavement surface using the
+ same"
+          },
+          {
+            patentFamilyId "36497791",
+            relevanceScore 7685,
+            representativePatent "EP-1829949-B1",
+            grantDate "2012-07-25",
+            representativePatentTitle "Heat carrier composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3328,
+      evidence patentChemicalOrganism {
+        neighborName "picea",
+        cooccurrenceScore 4687,
+        nPatentFamilies 23,
+        nPatents 27,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 132455,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "43418474",
+            relevanceScore 51943,
+            representativePatent "JP-5404176-B2",
+            grantDate "2014-01-29",
+            representativePatentTitle "Acid dye fading prevention agent and
+ acid hair dye composition, and oxidation dye fading prevention agent,
+ discoloration prevention agent after hair dyeing and oxidation hair dye
+ composition"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 42727,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 38062,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "76920563",
+            relevanceScore 33114,
+            representativePatent "US-12091587-B2",
+            grantDate "2024-09-17",
+            representativePatentTitle "One-component moisture-curable adhesive
+ composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1988,
+      evidence patentChemicalOrganism {
+        neighborName "actinomadura",
+        cooccurrenceScore 4647,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "13225497",
+            relevanceScore 464632,
+            representativePatent "EP-0122152-B1",
+            grantDate "1989-03-22",
+            representativePatentTitle "Enzymatic production of
+ sphingophospholipid derivatives"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1578,
+      evidence patentChemicalOrganism {
+        neighborName "lactobacillus",
+        cooccurrenceScore 4608,
+        nPatentFamilies 17,
+        nPatents 25,
+        patentFamily {
+          {
+            patentFamilyId "83279351",
+            relevanceScore 373446,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 14146,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "48096015",
+            relevanceScore 9494,
+            representativePatent "EP-2956117-B1",
+            grantDate "2017-07-19",
+            representativePatentTitle "Composition for cosmetic use suitable
+ to produce a pigmentation effect on hair"
+          },
+          {
+            patentFamilyId "76157648",
+            relevanceScore 9183,
+            representativePatent "KR-102254553-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Lactobacillus paracasei HY7015 having
+ hair growth promotion, and a composition for promoting hair growth containing
+ there of as effective component"
+          },
+          {
+            patentFamilyId "7655916",
+            relevanceScore 7780,
+            representativePatent "EP-1317264-B1",
+            grantDate "2004-07-28",
+            representativePatentTitle "Combination of lipoic acids and
+ conjugated acids for treating diabetic disorders"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3627,
+      evidence patentChemicalOrganism {
+        neighborName "actinidia deliciosa (kiwifruit)",
+        cooccurrenceScore 4532,
+        nPatentFamilies 12,
+        nPatents 13,
+        patentFamily {
+          {
+            patentFamilyId "63169715",
+            relevanceScore 141510,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 141510,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 64323,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 45648,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "69468798",
+            relevanceScore 35377,
+            representativePatent "KR-102747431-B1",
+            grantDate "2024-12-26",
+            representativePatentTitle "Alkaline composition, method and use
+ comprising at least three different alkaline agents for the treatment of
+ keratin fibers"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 2706,
+      evidence patentChemicalOrganism {
+        neighborName "citrus",
+        cooccurrenceScore 4502,
+        nPatentFamilies 33,
+        nPatents 41,
+        patentFamily {
+          {
+            patentFamilyId "76624246",
+            relevanceScore 71300,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          },
+          {
+            patentFamilyId "37605789",
+            relevanceScore 63774,
+            representativePatent "EP-1919303-B1",
+            grantDate "2011-04-20",
+            representativePatentTitle "Improved flavour compositions"
+          },
+          {
+            patentFamilyId "18512143",
+            relevanceScore 49910,
+            representativePatent "JP-2593264-B2",
+            grantDate "1997-03-26",
+            representativePatentTitle "Imide group-containing low molecular
+ weight ethylene copolymer, method for producing the same and use thereof"
+          },
+          {
+            patentFamilyId "68535808",
+            relevanceScore 41743,
+            representativePatent "KR-102043243-B1",
+            grantDate "2019-11-11",
+            representativePatentTitle "Composition for hair care and method
+ for producing the same"
+          },
+          {
+            patentFamilyId "9526567",
+            relevanceScore 39584,
+            representativePatent "EP-1032554-B1",
+            grantDate "2003-04-09",
+            representativePatentTitle "Citronellyl and/or dihydrocitronellyl
+ lactates, preparation and use thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 39338,
+      evidence patentChemicalOrganism {
+        neighborName "melissa officinalis (common balm)",
+        cooccurrenceScore 4476,
+        nPatentFamilies 30,
+        nPatents 33,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 135097,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "8865146",
+            relevanceScore 65901,
+            representativePatent "JP-6959283-B2",
+            grantDate "2021-11-02",
+            representativePatentTitle "Lanolin alternatives, how to get them
+ and their uses"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 43580,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 38821,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "85799943",
+            relevanceScore 27348,
+            representativePatent "KR-102515725-B1",
+            grantDate "2023-03-29",
+            representativePatentTitle "Conditioning shampoo composition
+ containing leaf and stem extracts and method of manufacturing conditioning
+ shampoo using the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 4072,
+      evidence patentChemicalOrganism {
+        neighborName "capsicum annuum (sweet pepper)",
+        cooccurrenceScore 4447,
+        nPatentFamilies 18,
+        nPatents 18,
+        patentFamily {
+          {
+            patentFamilyId "26614150",
+            relevanceScore 114850,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "18943707",
+            relevanceScore 114850,
+            representativePatent "JP-4718704-B2",
+            grantDate "2011-07-06",
+            representativePatentTitle "Hair dyeing method"
+          },
+          {
+            patentFamilyId "43090541",
+            relevanceScore 114850,
+            representativePatent "JP-5505861-B2",
+            grantDate "2014-05-28",
+            representativePatentTitle "Lacquer-type paint resin and paint"
+          },
+          {
+            patentFamilyId "58156227",
+            relevanceScore 33779,
+            representativePatent "KR-101814373-B1",
+            grantDate "2018-01-30",
+            representativePatentTitle "Cigarette filter for discoloring by
+ cigarette smoke"
+          },
+          {
+            patentFamilyId "71016658",
+            relevanceScore 15626,
+            representativePatent "US-11889832-B2",
+            grantDate "2024-02-06",
+            representativePatentTitle "Antimicrobial enhancement of cationic
+ active skin antiseptics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 5476,
+      evidence patentChemicalOrganism {
+        neighborName "candida albicans",
+        cooccurrenceScore 4436,
+        nPatentFamilies 34,
+        nPatents 48,
+        patentFamily {
+          {
+            patentFamilyId "90835988",
+            relevanceScore 115753,
+            representativePatent "US-11970475-B1",
+            grantDate "2024-04-30",
+            representativePatentTitle "4-(1-(2-Hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridin-3-ol as an antimicrobial compound"
+          },
+          {
+            patentFamilyId "37727665",
+            relevanceScore 26712,
+            representativePatent "JP-5538718-B2",
+            grantDate "2014-07-02",
+            representativePatentTitle "Itraconazole composition with improved
+ bioavailability"
+          },
+          {
+            patentFamilyId "77177397",
+            relevanceScore 26138,
+            representativePatent "US-11905494-B2",
+            grantDate "2024-02-20",
+            representativePatentTitle "Fabric detergent formulation"
+          },
+          {
+            patentFamilyId "8223689",
+            relevanceScore 25321,
+            representativePatent "EP-0884997-B1",
+            grantDate "2002-06-05",
+            representativePatentTitle "Compositions containing an antifungal
+ and a sulfur compound"
+          },
+          {
+            patentFamilyId "51530132",
+            relevanceScore 22508,
+            representativePatent "US-10072259-B2",
+            grantDate "2018-09-11",
+            representativePatentTitle "Compositions and methods for nucleic
+ acid extraction",
+            otherPatent {
+              "JP-6325077-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 114476,
+      evidence patentChemicalOrganism {
+        neighborName "gardenia jasminoides",
+        cooccurrenceScore 4290,
+        nPatentFamilies 22,
+        nPatents 22,
+        patentFamily {
+          {
+            patentFamilyId "26614150",
+            relevanceScore 142489,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "18943707",
+            relevanceScore 142489,
+            representativePatent "JP-4718704-B2",
+            grantDate "2011-07-06",
+            representativePatentTitle "Hair dyeing method"
+          },
+          {
+            patentFamilyId "58156227",
+            relevanceScore 41909,
+            representativePatent "KR-101814373-B1",
+            grantDate "2018-01-30",
+            representativePatentTitle "Cigarette filter for discoloring by
+ cigarette smoke"
+          },
+          {
+            patentFamilyId "72043032",
+            relevanceScore 22264,
+            representativePatent "KR-102196631-B1",
+            grantDate "2020-12-30",
+            representativePatentTitle "Composition for hair dye comprising
+ polymer of cationic polymer and gardenia yellow pigment with increased hair
+ permeability as effective component"
+          },
+          {
+            patentFamilyId "9526567",
+            relevanceScore 12284,
+            representativePatent "EP-1032554-B1",
+            grantDate "2003-04-09",
+            representativePatentTitle "Citronellyl and/or dihydrocitronellyl
+ lactates, preparation and use thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3999,
+      evidence patentChemicalOrganism {
+        neighborName "simmondsia chinensis (jojoba)",
+        cooccurrenceScore 4250,
+        nPatentFamilies 38,
+        nPatents 44,
+        patentFamily {
+          {
+            patentFamilyId "51570425",
+            relevanceScore 155944,
+            representativePatent "US-10815191-B2",
+            grantDate "2020-10-27",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine and tetrahydroxypropyl ethylenediamine",
+            otherPatent {
+              "EP-2997959-B1"
+            }
+          },
+          {
+            patentFamilyId "37440722",
+            relevanceScore 33754,
+            representativePatent "EP-1754518-B1",
+            grantDate "2009-02-25",
+            representativePatentTitle "Self-heating skin cleansing composition"
+          },
+          {
+            patentFamilyId "66580013",
+            relevanceScore 32665,
+            representativePatent "KR-102563513-B1",
+            grantDate "2023-08-07",
+            representativePatentTitle "Foam-type hair dye composition for
+ oxidative dyeing"
+          },
+          {
+            patentFamilyId "34432154",
+            relevanceScore 17721,
+            representativePatent "EP-1675562-B1",
+            grantDate "2008-05-21",
+            representativePatentTitle "Shampoo and body wash composition"
+          },
+          {
+            patentFamilyId "47471590",
+            relevanceScore 12221,
+            representativePatent "EP-3113848-B1",
+            grantDate "2018-10-31",
+            representativePatentTitle "Anhydrous dyeing composition and
+ process for dyeing hair"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 5062,
+      evidence patentChemicalOrganism {
+        neighborName "aspergillus oryzae",
+        cooccurrenceScore 4226,
+        nPatentFamilies 14,
+        nPatents 16,
+        patentFamily {
+          {
+            patentFamilyId "83279351",
+            relevanceScore 356576,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "41130596",
+            relevanceScore 10759,
+            representativePatent "EP-2350249-B1",
+            grantDate "2014-04-16",
+            representativePatentTitle "Dishwasher detergent"
+          },
+          {
+            patentFamilyId "18918380",
+            relevanceScore 9455,
+            representativePatent "JP-4136663-B2",
+            grantDate "2008-08-20",
+            representativePatentTitle "Amino ketone asymmetric reductase and
+ its nucleic acid",
+            otherPatent {
+              "EP-1371731-B1"
+            }
+          },
+          {
+            patentFamilyId "33443104",
+            relevanceScore 8000,
+            representativePatent "KR-101129996-B1",
+            grantDate "2012-04-23",
+            representativePatentTitle "Synthesis method of ceramide type
+ compound"
+          },
+          {
+            patentFamilyId "18604966",
+            relevanceScore 5562,
+            representativePatent "EP-1273665-B1",
+            grantDate "2007-05-16",
+            representativePatentTitle "Process for the production of optically
+ active beta-amino alcohols"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 29780,
+      evidence patentChemicalOrganism {
+        neighborName "mangifera indica (mango)",
+        cooccurrenceScore 4217,
+        nPatentFamilies 21,
+        nPatents 23,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 132861,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 42859,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 38179,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "69468798",
+            relevanceScore 33215,
+            representativePatent "KR-102747431-B1",
+            grantDate "2024-12-26",
+            representativePatentTitle "Alkaline composition, method and use
+ comprising at least three different alkaline agents for the treatment of
+ keratin fibers"
+          },
+          {
+            patentFamilyId "66580013",
+            relevanceScore 30613,
+            representativePatent "KR-102563513-B1",
+            grantDate "2023-08-07",
+            representativePatentTitle "Foam-type hair dye composition for
+ oxidative dyeing"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 40499,
+      evidence patentChemicalOrganism {
+        neighborName "ocyurus chrysurus",
+        cooccurrenceScore 4196,
+        nPatentFamilies 10,
+        nPatents 10,
+        patentFamily {
+          {
+            patentFamilyId "62979354",
+            relevanceScore 164561,
+            representativePatent "JP-6661175-B2",
+            grantDate "2020-03-11",
+            representativePatentTitle "Processing medium, processing
+ composition and processing method"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 53084,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "51904546",
+            relevanceScore 48400,
+            representativePatent "EP-3082726-B1",
+            grantDate "2018-03-21",
+            representativePatentTitle "Stabilised foam hair dye composition"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 47288,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "51904545",
+            relevanceScore 43306,
+            representativePatent "EP-3082739-B1",
+            grantDate "2018-11-07",
+            representativePatentTitle "Hair dye composition in the form of a
+ stabilised foam"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 39343,
+      evidence patentChemicalOrganism {
+        neighborName "monarda didyma (bee balm)",
+        cooccurrenceScore 4156,
+        nPatentFamilies 9,
+        nPatents 9,
+        patentFamily {
+          {
+            patentFamilyId "88746845",
+            relevanceScore 310630,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "85799943",
+            relevanceScore 30183,
+            representativePatent "KR-102515725-B1",
+            grantDate "2023-03-29",
+            representativePatentTitle "Conditioning shampoo composition
+ containing leaf and stem extracts and method of manufacturing conditioning
+ shampoo using the same"
+          },
+          {
+            patentFamilyId "34131244",
+            relevanceScore 24850,
+            representativePatent "EP-1722752-B1",
+            grantDate "2011-03-16",
+            representativePatentTitle "A cleansing composition based on oily
+ substances"
+          },
+          {
+            patentFamilyId "71016658",
+            relevanceScore 20286,
+            representativePatent "US-11889832-B2",
+            grantDate "2024-02-06",
+            representativePatentTitle "Antimicrobial enhancement of cationic
+ active skin antiseptics"
+          },
+          {
+            patentFamilyId "26621278",
+            relevanceScore 10500,
+            representativePatent "JP-4703090-B2",
+            grantDate "2011-06-15",
+            representativePatentTitle "Hair treatment composition and method
+ for producing the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1402,
+      evidence patentChemicalOrganism {
+        neighborName "bacillus licheniformis",
+        cooccurrenceScore 4073,
+        nPatentFamilies 39,
+        nPatents 49,
+        patentFamily {
+          {
+            patentFamilyId "73856291",
+            relevanceScore 131798,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "76624246",
+            relevanceScore 81862,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          },
+          {
+            patentFamilyId "92759138",
+            relevanceScore 19969,
+            representativePatent "KR-102703449-B1",
+            grantDate "2024-09-09",
+            representativePatentTitle "Hair shampoo compositions for improving
+ hair and head skin"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 16641,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "68535808",
+            relevanceScore 11982,
+            representativePatent "KR-102043243-B1",
+            grantDate "2019-11-11",
+            representativePatentTitle "Composition for hair care and method
+ for producing the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 43673,
+      evidence patentChemicalOrganism {
+        neighborName "jonesia",
+        cooccurrenceScore 4059,
+        nPatentFamilies 3,
+        nPatents 5,
+        patentFamily {
+          {
+            patentFamilyId "73856291",
+            relevanceScore 246898,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "76624246",
+            relevanceScore 153353,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          },
+          {
+            patentFamilyId "79173585",
+            relevanceScore 5533,
+            representativePatent "US-12247184-B2",
+            grantDate "2025-03-11",
+            representativePatentTitle "Liquid detergent composition",
+            otherPatent {
+              "US-11512264-B2",
+              "US-11834626-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 13329,
+      evidence patentChemicalOrganism {
+        neighborName "achillea millefolium",
+        cooccurrenceScore 4046,
+        nPatentFamilies 15,
+        nPatents 15,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 154832,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 49946,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 44492,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "62837528",
+            relevanceScore 32257,
+            representativePatent "US-10703685-B2",
+            grantDate "2020-07-07",
+            representativePatentTitle "Acidifying compound"
+          },
+          {
+            patentFamilyId "19200480",
+            relevanceScore 32257,
+            representativePatent "KR-790001603-B1",
+            grantDate "1979-11-16",
+            representativePatentTitle "A method of combating algae and aquatic
+ weed"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3087,
+      evidence patentChemicalOrganism {
+        neighborName "scenedesmus",
+        cooccurrenceScore 3911,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "7653517",
+            relevanceScore 391017,
+            representativePatent "EP-1313774-B1",
+            grantDate "2008-08-20",
+            representativePatentTitle "Water-soluble homopolymers and
+ copolymers having an improved environmental acceptability"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 183277,
+      evidence patentChemicalOrganism {
+        neighborName "malva neglecta (common mallow)",
+        cooccurrenceScore 3876,
+        nPatentFamilies 18,
+        nPatents 20,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 151098,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 68681,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 48741,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 43419,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "67846391",
+            relevanceScore 16789,
+            representativePatent "US-11666054-B2",
+            grantDate "2023-06-06",
+            representativePatentTitle "High-load glyphosate herbicidal
+ composition, ready-to-use formulation obtained from the composition and
+ method to control various weed species in agricultural crops",
+            otherPatent {
+              "JP-7221993-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 119260,
+      evidence patentChemicalOrganism {
+        neighborName "cinnamomum aromaticum",
+        cooccurrenceScore 3858,
+        nPatentFamilies 17,
+        nPatents 20,
+        patentFamily {
+          {
+            patentFamilyId "56120991",
+            relevanceScore 287806,
+            representativePatent "KR-102397502-B1",
+            grantDate "2022-05-13",
+            representativePatentTitle "Aqueous Surfactant Composition",
+            otherPatent {
+              "US-10869824-B2"
+            }
+          },
+          {
+            patentFamilyId "71016658",
+            relevanceScore 19579,
+            representativePatent "US-11889832-B2",
+            grantDate "2024-02-06",
+            representativePatentTitle "Antimicrobial enhancement of cationic
+ active skin antiseptics"
+          },
+          {
+            patentFamilyId "51405231",
+            relevanceScore 17988,
+            representativePatent "JP-6110132-B2",
+            grantDate "2017-04-05",
+            representativePatentTitle "Hair treatment agent"
+          },
+          {
+            patentFamilyId "46603918",
+            relevanceScore 5756,
+            representativePatent "KR-101639293-B1",
+            grantDate "2016-07-13",
+            representativePatentTitle "Cosmetic compositions"
+          },
+          {
+            patentFamilyId "58347950",
+            relevanceScore 5176,
+            representativePatent "US-10653609-B2",
+            grantDate "2020-05-19",
+            representativePatentTitle "Method of cleaning hair using a low pH
+ hair care composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 34256,
+      evidence patentChemicalOrganism {
+        neighborName "mentha x piperita (peppermint)",
+        cooccurrenceScore 3837,
+        nPatentFamilies 4,
+        nPatents 4,
+        patentFamily {
+          {
+            patentFamilyId "88746845",
+            relevanceScore 358804,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "43418474",
+            relevanceScore 16885,
+            representativePatent "JP-5404176-B2",
+            grantDate "2014-01-29",
+            representativePatentTitle "Acid dye fading prevention agent and
+ acid hair dye composition, and oxidation dye fading prevention agent,
+ discoloration prevention agent after hair dyeing and oxidation hair dye
+ composition"
+          },
+          {
+            patentFamilyId "54754424",
+            relevanceScore 6260,
+            representativePatent "EP-3168251-B1",
+            grantDate "2019-02-06",
+            representativePatentTitle "Crosslinked polyglycerol esters"
+          },
+          {
+            patentFamilyId "36793480",
+            relevanceScore 1698,
+            representativePatent "JP-5570696-B2",
+            grantDate "2014-08-13",
+            representativePatentTitle "Disinfecting composition and method for
+ producing the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1423,
+      evidence patentChemicalOrganism {
+        neighborName "bacillus subtilis",
+        cooccurrenceScore 3649,
+        nPatentFamilies 45,
+        nPatents 60,
+        patentFamily {
+          {
+            patentFamilyId "76624246",
+            relevanceScore 67016,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 57698,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "48698046",
+            relevanceScore 53948,
+            representativePatent "KR-101444877-B1",
+            grantDate "2014-10-01",
+            representativePatentTitle "On-site crosslinked hydrogel composed
+ of gamma-polyglutamic acid and its preparation method",
+            otherPatent {
+              "EP-2797984-B1"
+            }
+          },
+          {
+            patentFamilyId "9492055",
+            relevanceScore 26974,
+            representativePatent "EP-0906430-B1",
+            grantDate "2006-07-26",
+            representativePatentTitle "Biosynthesis method enabling the
+ preparation of o-phospho-l-threonine"
+          },
+          {
+            patentFamilyId "92759138",
+            relevanceScore 16348,
+            representativePatent "KR-102703449-B1",
+            grantDate "2024-09-09",
+            representativePatentTitle "Hair shampoo compositions for improving
+ hair and head skin"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3998,
+      evidence patentChemicalOrganism {
+        neighborName "simmondsia",
+        cooccurrenceScore 3574,
+        nPatentFamilies 10,
+        nPatents 10,
+        patentFamily {
+          {
+            patentFamilyId "51570425",
+            relevanceScore 177292,
+            representativePatent "US-10815191-B2",
+            grantDate "2020-10-27",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine and tetrahydroxypropyl ethylenediamine"
+          },
+          {
+            patentFamilyId "58155110",
+            relevanceScore 65785,
+            representativePatent "KR-102446643-B1",
+            grantDate "2022-09-23",
+            representativePatentTitle "Hair dye composition containing mud"
+          },
+          {
+            patentFamilyId "40340630",
+            relevanceScore 50367,
+            representativePatent "JP-5290318-B2",
+            grantDate "2013-09-18",
+            representativePatentTitle "Compound useful as toner and method for
+ forming the same"
+          },
+          {
+            patentFamilyId "84421232",
+            relevanceScore 20932,
+            representativePatent "US-11998628-B2",
+            grantDate "2024-06-04",
+            representativePatentTitle "Personal care compositions"
+          },
+          {
+            patentFamilyId "27745040",
+            relevanceScore 20663,
+            representativePatent "JP-3947403-B2",
+            grantDate "2007-07-18",
+            representativePatentTitle "Spray products"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 5320,
+      evidence patentChemicalOrganism {
+        neighborName "pleurotus",
+        cooccurrenceScore 3542,
+        nPatentFamilies 4,
+        nPatents 5,
+        patentFamily {
+          {
+            patentFamilyId "26007724",
+            relevanceScore 325718,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 20563,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "31972713",
+            relevanceScore 6312,
+            representativePatent "JP-4116620-B2",
+            grantDate "2008-07-09",
+            representativePatentTitle "Culture with phenol oxidase-like
+ activity"
+          },
+          {
+            patentFamilyId "56511361",
+            relevanceScore 1536,
+            representativePatent "US-10927364-B2",
+            grantDate "2021-02-23",
+            representativePatentTitle "Heat-stable metagenomic carbonic
+ anhydrases and their use",
+            otherPatent {
+              "US-11773386-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 237575,
+      evidence patentChemicalOrganism {
+        neighborName "citrus tangerina (dancy tangerine)",
+        cooccurrenceScore 3533,
+        nPatentFamilies 3,
+        nPatents 3,
+        patentFamily {
+          {
+            patentFamilyId "88746845",
+            relevanceScore 287676,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "68535808",
+            relevanceScore 50213,
+            representativePatent "KR-102043243-B1",
+            grantDate "2019-11-11",
+            representativePatentTitle "Composition for hair care and method
+ for producing the same"
+          },
+          {
+            patentFamilyId "49850253",
+            relevanceScore 15343,
+            representativePatent "KR-101723119-B1",
+            grantDate "2017-04-04",
+            representativePatentTitle "Painting Material, Printing Material,
+ and Coating Material"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 58332,
+      evidence patentChemicalOrganism {
+        neighborName "quercus ithaburensis subsp. macrolepis (valonia oak)",
+        cooccurrenceScore 3486,
+        nPatentFamilies 13,
+        nPatents 14,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 157091,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 50675,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 45141,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "4286452",
+            relevanceScore 24546,
+            representativePatent "EP-0044270-B1",
+            grantDate "1984-07-25",
+            representativePatentTitle "Intumescent fire-retarding composition
+ and its use in the fireproofing of substrates and as fire-tighting agent"
+          },
+          {
+            patentFamilyId "55310605",
+            relevanceScore 13313,
+            representativePatent "EP-3037472-B1",
+            grantDate "2020-07-29",
+            representativePatentTitle "Polyolefin dispersion compositions for
+ making high vapor transport hydrophobic coatings"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1716,
+      evidence patentChemicalOrganism {
+        neighborName "corynebacterium",
+        cooccurrenceScore 3347,
+        nPatentFamilies 19,
+        nPatents 28,
+        patentFamily {
+          {
+            patentFamilyId "76624246",
+            relevanceScore 77760,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          },
+          {
+            patentFamilyId "9883917",
+            relevanceScore 69552,
+            representativePatent "EP-1248520-B2",
+            grantDate "2012-04-25",
+            representativePatentTitle "Anti-microbial compositions",
+            otherPatent {
+              "EP-1248520-B1"
+            }
+          },
+          {
+            patentFamilyId "26659951",
+            relevanceScore 31298,
+            representativePatent "EP-0309432-B1",
+            grantDate "1993-04-14",
+            representativePatentTitle "A cleaning method and apparatus therefor"
+          },
+          {
+            patentFamilyId "42179595",
+            relevanceScore 31298,
+            representativePatent "KR-101415995-B1",
+            grantDate "2014-07-08",
+            representativePatentTitle "Method for preparing green tea saponin,
+ 21-O-angeloyltheasapogenol E3"
+          },
+          {
+            patentFamilyId "13067129",
+            relevanceScore 26082,
+            representativePatent "EP-0121265-B1",
+            grantDate "1988-07-13",
+            representativePatentTitle "Method of heterogeneous reaction"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 142786,
+      evidence patentChemicalOrganism {
+        neighborName "norovirus",
+        cooccurrenceScore 3326,
+        nPatentFamilies 10,
+        nPatents 12,
+        patentFamily {
+          {
+            patentFamilyId "73548306",
+            relevanceScore 217194,
+            representativePatent "JP-7376903-B2",
+            grantDate "2023-11-09",
+            representativePatentTitle "Virus inactivators and sanitary
+ materials"
+          },
+          {
+            patentFamilyId "63173601",
+            relevanceScore 31674,
+            representativePatent "JP-6892274-B2",
+            grantDate "2021-06-23",
+            representativePatentTitle "Virus inactivating composition"
+          },
+          {
+            patentFamilyId "42974833",
+            relevanceScore 20005,
+            representativePatent "JP-5255495-B2",
+            grantDate "2013-08-07",
+            representativePatentTitle "Calidicidal virus composition and
+ method of use thereof"
+          },
+          {
+            patentFamilyId "53014256",
+            relevanceScore 19492,
+            representativePatent "JP-6286321-B2",
+            grantDate "2018-02-28",
+            representativePatentTitle "disinfectant"
+          },
+          {
+            patentFamilyId "57884991",
+            relevanceScore 15053,
+            representativePatent "US-10874100-B2",
+            grantDate "2020-12-29",
+            representativePatentTitle "Residual disinfectant composition",
+            otherPatent {
+              "KR-102470466-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3866,
+      evidence patentChemicalOrganism {
+        neighborName "leucaena leucocephala (white popinac)",
+        cooccurrenceScore 3301,
+        nPatentFamilies 32,
+        nPatents 41,
+        patentFamily {
+          {
+            patentFamilyId "58051103",
+            relevanceScore 106040,
+            representativePatent "US-10654872-B1",
+            grantDate "2020-05-19",
+            representativePatentTitle "Polymorphs of dolutegravir and salts
+ thereof",
+            otherPatent {
+              "US-10597404-B2",
+              "US-10647729-B1"
+            }
+          },
+          {
+            patentFamilyId "43418474",
+            relevanceScore 41584,
+            representativePatent "JP-5404176-B2",
+            grantDate "2014-01-29",
+            representativePatentTitle "Acid dye fading prevention agent and
+ acid hair dye composition, and oxidation dye fading prevention agent,
+ discoloration prevention agent after hair dyeing and oxidation hair dye
+ composition"
+          },
+          {
+            patentFamilyId "28459848",
+            relevanceScore 21864,
+            representativePatent "EP-1499304-B1",
+            grantDate "2018-03-07",
+            representativePatentTitle "Liquid compositions for soft
+ sustained-release capsules and method for production thereof"
+          },
+          {
+            patentFamilyId "26859151",
+            relevanceScore 12330,
+            representativePatent "EP-0042626-B1",
+            grantDate "1986-05-21",
+            representativePatentTitle "Anticonvulsive compositions"
+          },
+          {
+            patentFamilyId "51659008",
+            relevanceScore 12050,
+            representativePatent "EP-2968504-B1",
+            grantDate "2019-12-18",
+            representativePatentTitle "Compositions and methods for inducing
+ apoptosis",
+            otherPatent {
+              "US-10251906-B2",
+              "JP-6814824-B2",
+              "KR-102384693-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1704430,
+      evidence patentChemicalOrganism {
+        neighborName "pixus",
+        cooccurrenceScore 3257,
+        nPatentFamilies 33,
+        nPatents 44,
+        patentFamily {
+          {
+            patentFamilyId "48979515",
+            relevanceScore 28944,
+            representativePatent "EP-2706097-B1",
+            grantDate "2015-07-29",
+            representativePatentTitle "Ink, ink cartridge and ink jet
+ recording method"
+          },
+          {
+            patentFamilyId "52626950",
+            relevanceScore 28944,
+            representativePatent "EP-2924082-B1",
+            grantDate "2017-04-12",
+            representativePatentTitle "Ink, ink cartridge, and ink jet
+ recording method"
+          },
+          {
+            patentFamilyId "61655623",
+            relevanceScore 27241,
+            representativePatent "EP-3378911-B1",
+            grantDate "2020-05-13",
+            representativePatentTitle "Aqueous ink, ink cartridge, and ink jet
+ recording method",
+            otherPatent {
+              "US-10240053-B2"
+            }
+          },
+          {
+            patentFamilyId "44712135",
+            relevanceScore 10178,
+            representativePatent "JP-5663561-B2",
+            grantDate "2015-02-04",
+            representativePatentTitle "Water-soluble azo compound or salt
+ thereof, ink composition and colored body"
+          },
+          {
+            patentFamilyId "38591210",
+            relevanceScore 9648,
+            representativePatent "JP-4888949-B2",
+            grantDate "2012-02-29",
+            representativePatentTitle "Azo dye or salt thereof, aqueous orange
+ ink composition containing the azo dye or salt thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 29674,
+      evidence patentChemicalOrganism {
+        neighborName "eleusine indica (goosegrass)",
+        cooccurrenceScore 3236,
+        nPatentFamilies 5,
+        nPatents 6,
+        patentFamily {
+          {
+            patentFamilyId "67846391",
+            relevanceScore 176430,
+            representativePatent "US-11666054-B2",
+            grantDate "2023-06-06",
+            representativePatentTitle "High-load glyphosate herbicidal
+ composition, ready-to-use formulation obtained from the composition and
+ method to control various weed species in agricultural crops",
+            otherPatent {
+              "JP-7221993-B2"
+            }
+          },
+          {
+            patentFamilyId "51132312",
+            relevanceScore 130689,
+            representativePatent "KR-101405297-B1",
+            grantDate "2014-06-11",
+            representativePatentTitle "Eco-Friendly Concrete Paving
+ Composition Using Seaweeds and Constructing Methods Using Thereof"
+          },
+          {
+            patentFamilyId "25167481",
+            relevanceScore 11310,
+            representativePatent "EP-0613341-B1",
+            grantDate "1999-06-09",
+            representativePatentTitle "Novel herbicidally-active fatty acid
+ salts"
+          },
+          {
+            patentFamilyId "47883676",
+            relevanceScore 2656,
+            representativePatent "EP-2755476-B1",
+            grantDate "2017-10-25",
+            representativePatentTitle "Agricultural pesticide compositions"
+          },
+          {
+            patentFamilyId "50485868",
+            relevanceScore 2404,
+            representativePatent "EP-2911507-B1",
+            grantDate "2020-02-12",
+            representativePatentTitle "Agricultural pesticide compositions"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 270993,
+      evidence patentChemicalOrganism {
+        neighborName "erythranthe moschata (muskflower)",
+        cooccurrenceScore 3226,
+        nPatentFamilies 20,
+        nPatents 28,
+        patentFamily {
+          {
+            patentFamilyId "73856291",
+            relevanceScore 143543,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "89899885",
+            relevanceScore 51265,
+            representativePatent "KR-102634996-B1",
+            grantDate "2024-02-08",
+            representativePatentTitle "Shampoo composition with excellent gray
+ hair coverage"
+          },
+          {
+            patentFamilyId "43856684",
+            relevanceScore 40435,
+            representativePatent "KR-101590219-B1",
+            grantDate "2016-01-29",
+            representativePatentTitle "Liquid skin cleanser composition"
+          },
+          {
+            patentFamilyId "56084443",
+            relevanceScore 7635,
+            representativePatent "JP-6961659-B2",
+            grantDate "2021-11-05",
+            representativePatentTitle "Detergent composition containing
+ surfactant and propoxylated glycerin",
+            otherPatent {
+              "JP-6640248-B2"
+            }
+          },
+          {
+            patentFamilyId "23263123",
+            relevanceScore 6525,
+            representativePatent "JP-4266822-B2",
+            grantDate "2009-05-20",
+            representativePatentTitle "Detergency composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 44249,
+      evidence patentChemicalOrganism {
+        neighborName "paenibacillus",
+        cooccurrenceScore 3218,
+        nPatentFamilies 10,
+        nPatents 19,
+        patentFamily {
+          {
+            patentFamilyId "73856291",
+            relevanceScore 166996,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "76624246",
+            relevanceScore 103724,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant"
+          },
+          {
+            patentFamilyId "51263346",
+            relevanceScore 11268,
+            representativePatent "US-10619174-B2",
+            grantDate "2020-04-14",
+            representativePatentTitle "Microorganism strains for the
+ production of 2.3-butanediol"
+          },
+          {
+            patentFamilyId "38668305",
+            relevanceScore 10650,
+            representativePatent "EP-2010664-B1",
+            grantDate "2014-11-05",
+            representativePatentTitle "Fermentive production of four carbon
+ alcohols"
+          },
+          {
+            patentFamilyId "52133052",
+            relevanceScore 8235,
+            representativePatent "US-10308910-B2",
+            grantDate "2019-06-04",
+            representativePatentTitle "Partial adaption for butanol production"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 118778,
+      evidence patentChemicalOrganism {
+        neighborName "tussilago farfara (coltsfoot)",
+        cooccurrenceScore 3199,
+        nPatentFamilies 8,
+        nPatents 8,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 168798,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 54451,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 48505,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "93521435",
+            relevanceScore 23444,
+            representativePatent "JP-7614712-B2",
+            grantDate "2025-01-16",
+            representativePatentTitle "Hair dyeing method"
+          },
+          {
+            patentFamilyId "22527309",
+            relevanceScore 9591,
+            representativePatent "EP-1202709-B1",
+            grantDate "2005-09-28",
+            representativePatentTitle "Cosmetic strip with an agent for
+ inducing a temperature change"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3659,
+      evidence patentChemicalOrganism {
+        neighborName "cucumis sativus (cucumber)",
+        cooccurrenceScore 3177,
+        nPatentFamilies 21,
+        nPatents 23,
+        patentFamily {
+          {
+            patentFamilyId "18943707",
+            relevanceScore 120376,
+            representativePatent "JP-4718704-B2",
+            grantDate "2011-07-06",
+            representativePatentTitle "Hair dyeing method"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 54716,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          },
+          {
+            patentFamilyId "47071295",
+            relevanceScore 25078,
+            representativePatent "EP-2771377-B1",
+            grantDate "2016-02-24",
+            representativePatentTitle "Process for making a polyurethane foam"
+          },
+          {
+            patentFamilyId "51132312",
+            relevanceScore 22292,
+            representativePatent "KR-101405297-B1",
+            grantDate "2014-06-11",
+            representativePatentTitle "Eco-Friendly Concrete Paving
+ Composition Using Seaweeds and Constructing Methods Using Thereof"
+          },
+          {
+            patentFamilyId "63852705",
+            relevanceScore 21807,
+            representativePatent "US-11884896-B2",
+            grantDate "2024-01-30",
+            representativePatentTitle "Sanitizing soap preparation comprising
+ a benzalkonium chloride/alkyl trimonium cationic surfactant combination",
+            otherPatent {
+              "US-10308897-B2",
+              "US-10920174-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 13100,
+      evidence patentChemicalOrganism {
+        neighborName "juniperus (junipers)",
+        cooccurrenceScore 3147,
+        nPatentFamilies 15,
+        nPatents 21,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 146884,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 47382,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 42208,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "34432154",
+            relevanceScore 18360,
+            representativePatent "EP-1675562-B1",
+            grantDate "2008-05-21",
+            representativePatentTitle "Shampoo and body wash composition"
+          },
+          {
+            patentFamilyId "48531337",
+            relevanceScore 10961,
+            representativePatent "JP-5977934-B2",
+            grantDate "2016-08-24",
+            representativePatentTitle "Hair dye composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 4395,
+      evidence patentChemicalOrganism {
+        neighborName "hamamelis (witch hazels)",
+        cooccurrenceScore 3128,
+        nPatentFamilies 22,
+        nPatents 22,
+        patentFamily {
+          {
+            patentFamilyId "39973193",
+            relevanceScore 70755,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 50214,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 44730,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "8228205",
+            relevanceScore 25107,
+            representativePatent "EP-0975312-B1",
+            grantDate "2002-07-31",
+            representativePatentTitle "Compositions containing an antifungal
+ and a phospholipid"
+          },
+          {
+            patentFamilyId "8228206",
+            relevanceScore 24322,
+            representativePatent "EP-0963195-B1",
+            grantDate "2002-07-17",
+            representativePatentTitle "Compositions containing an antifungal
+ and a cationic agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1985254,
+      evidence patentChemicalOrganism {
+        neighborName "xanthomonas phaseoli",
+        cooccurrenceScore 3078,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "70283750",
+            relevanceScore 307706,
+            representativePatent "US-12187957-B2",
+            grantDate "2025-01-07",
+            representativePatentTitle "Water-based foamed system for
+ perforating zones with low pressure and high temperature"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 5258,
+      evidence patentChemicalOrganism {
+        neighborName "pucciniales (rusts)",
+        cooccurrenceScore 3045,
+        nPatentFamilies 10,
+        nPatents 11,
+        patentFamily {
+          {
+            patentFamilyId "62979354",
+            relevanceScore 151382,
+            representativePatent "JP-6661175-B2",
+            grantDate "2020-03-11",
+            representativePatentTitle "Processing medium, processing
+ composition and processing method"
+          },
+          {
+            patentFamilyId "18346926",
+            relevanceScore 26100,
+            representativePatent "JP-2918215-B2",
+            grantDate "1999-07-12",
+            representativePatentTitle "Water-soluble or water-dispersible
+ metalworking oil"
+          },
+          {
+            patentFamilyId "43631560",
+            relevanceScore 24416,
+            representativePatent "JP-5465941-B2",
+            grantDate "2014-04-09",
+            representativePatentTitle "Metal protective liquid"
+          },
+          {
+            patentFamilyId "17384289",
+            relevanceScore 22937,
+            representativePatent "JP-2741332-B2",
+            grantDate "1998-04-15",
+            representativePatentTitle "Water soluble cutting fluid"
+          },
+          {
+            patentFamilyId "38614850",
+            relevanceScore 21626,
+            representativePatent "EP-1944353-B1",
+            grantDate "2010-03-10",
+            representativePatentTitle "Composition of water-soluble metal
+ working fluid using distillation residue generated in production of biodiesel"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 164405,
+      evidence patentChemicalOrganism {
+        neighborName "melaleuca alternifolia (tea tree)",
+        cooccurrenceScore 3041,
+        nPatentFamilies 6,
+        nPatents 6,
+        patentFamily {
+          {
+            patentFamilyId "80988350",
+            relevanceScore 152750,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "92759138",
+            relevanceScore 101834,
+            representativePatent "KR-102703449-B1",
+            grantDate "2024-09-09",
+            representativePatentTitle "Hair shampoo compositions for improving
+ hair and head skin"
+          },
+          {
+            patentFamilyId "71016658",
+            relevanceScore 24939,
+            representativePatent "US-11889832-B2",
+            grantDate "2024-02-06",
+            representativePatentTitle "Antimicrobial enhancement of cationic
+ active skin antiseptics"
+          },
+          {
+            patentFamilyId "36793480",
+            relevanceScore 10846,
+            representativePatent "JP-5570696-B2",
+            grantDate "2014-08-13",
+            representativePatentTitle "Disinfecting composition and method for
+ producing the same"
+          },
+          {
+            patentFamilyId "56894097",
+            relevanceScore 8408,
+            representativePatent "JP-7368941-B2",
+            grantDate "2023-10-25",
+            representativePatentTitle "Cosmetic composition containing
+ diglycerol tetrapelargonate"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 39416,
+      evidence patentChemicalOrganism {
+        neighborName "tuber melanosporum (perigord truffle)",
+        cooccurrenceScore 3031,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "89899885",
+            relevanceScore 302965,
+            representativePatent "KR-102634996-B1",
+            grantDate "2024-02-08",
+            representativePatentTitle "Shampoo composition with excellent gray
+ hair coverage"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1239,
+      evidence patentChemicalOrganism {
+        neighborName "bacillota (firmicutes)",
+        cooccurrenceScore 3007,
+        nPatentFamilies 33,
+        nPatents 44,
+        patentFamily {
+          {
+            patentFamilyId "32679936",
+            relevanceScore 41312,
+            representativePatent "JP-5096663-B2",
+            grantDate "2012-12-12",
+            representativePatentTitle "Pyrithione biocide enhanced by zinc
+ metal ions and organic amines"
+          },
+          {
+            patentFamilyId "38476566",
+            relevanceScore 34872,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          },
+          {
+            patentFamilyId "90835988",
+            relevanceScore 28230,
+            representativePatent "US-11970475-B1",
+            grantDate "2024-04-30",
+            representativePatentTitle "4-(1-(2-Hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridin-3-ol as an antimicrobial compound"
+          },
+          {
+            patentFamilyId "57884991",
+            relevanceScore 23953,
+            representativePatent "KR-102470466-B1",
+            grantDate "2022-11-25",
+            representativePatentTitle "Residual disinfectant composition",
+            otherPatent {
+              "US-10874100-B2"
+            }
+          },
+          {
+            patentFamilyId "51530132",
+            relevanceScore 21956,
+            representativePatent "US-10072259-B2",
+            grantDate "2018-09-11",
+            representativePatentTitle "Compositions and methods for nucleic
+ acid extraction"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 28930,
+      evidence patentChemicalOrganism {
+        neighborName "fagus sylvatica (european beech)",
+        cooccurrenceScore 2994,
+        nPatentFamilies 23,
+        nPatents 25,
+        patentFamily {
+          {
+            patentFamilyId "76920563",
+            relevanceScore 35500,
+            representativePatent "US-12091587-B2",
+            grantDate "2024-09-17",
+            representativePatentTitle "One-component moisture-curable adhesive
+ composition"
+          },
+          {
+            patentFamilyId "34639276",
+            relevanceScore 33810,
+            representativePatent "JP-5171039-B2",
+            grantDate "2013-03-27",
+            representativePatentTitle "Concentrated aqueous composition of dye"
+          },
+          {
+            patentFamilyId "25020671",
+            relevanceScore 26296,
+            representativePatent "JP-3182384-B2",
+            grantDate "2001-07-03",
+            representativePatentTitle "Method for producing triethylenediamine"
+          },
+          {
+            patentFamilyId "20343780",
+            relevanceScore 23667,
+            representativePatent "EP-0089958-B1",
+            grantDate "1985-12-27",
+            representativePatentTitle "Wood preservative compositions"
+          },
+          {
+            patentFamilyId "4286452",
+            relevanceScore 22188,
+            representativePatent "EP-0044270-B1",
+            grantDate "1984-07-25",
+            representativePatentTitle "Intumescent fire-retarding composition
+ and its use in the fireproofing of substrates and as fire-tighting agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 171239,
+      evidence patentChemicalOrganism {
+        neighborName "colpidium aqueous",
+        cooccurrenceScore 2967,
+        nPatentFamilies 8,
+        nPatents 9,
+        patentFamily {
+          {
+            patentFamilyId "19202527",
+            relevanceScore 156662,
+            representativePatent "KR-790001867-B1",
+            grantDate "1979-12-27",
+            representativePatentTitle "Acid gas removal method"
+          },
+          {
+            patentFamilyId "42186519",
+            relevanceScore 39166,
+            representativePatent "JP-5586135-B2",
+            grantDate "2014-09-10",
+            representativePatentTitle "Water-based drawing material"
+          },
+          {
+            patentFamilyId "77458432",
+            relevanceScore 34057,
+            representativePatent "JP-7429127-B2",
+            grantDate "2024-02-07",
+            representativePatentTitle "Polarized luminescent fiber and its
+ manufacturing method"
+          },
+          {
+            patentFamilyId "76087596",
+            relevanceScore 27975,
+            representativePatent "JP-7448910-B2",
+            grantDate "2024-03-13",
+            representativePatentTitle "Liquid crystal cells and liquid crystal
+ display devices",
+            otherPatent {
+              "JP-7660820-B2"
+            }
+          },
+          {
+            patentFamilyId "70218969",
+            relevanceScore 17028,
+            representativePatent "JP-7411361-B2",
+            grantDate "2024-01-11",
+            representativePatentTitle "Polarized light source and display
+ device that suppresses light reflection"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 194266,
+      evidence patentChemicalOrganism {
+        neighborName "hesperocnide",
+        cooccurrenceScore 2948,
+        nPatentFamilies 5,
+        nPatents 5,
+        patentFamily {
+          {
+            patentFamilyId "37606824",
+            relevanceScore 177402,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 57226,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "39529721",
+            relevanceScore 50978,
+            representativePatent "EP-2178492-B1",
+            grantDate "2016-12-14",
+            representativePatentTitle "Hair treatment agent comprising an
+ acylamino acid derivative, a hydroxyalkylamine, and
+ 2-(2-hydroxyethyl)-p-phenylenediamine"
+          },
+          {
+            patentFamilyId "42978885",
+            relevanceScore 5475,
+            representativePatent "EP-2430073-B1",
+            grantDate "2015-01-07",
+            representativePatentTitle "Cationic benzoxazine (co)polymers"
+          },
+          {
+            patentFamilyId "44627813",
+            relevanceScore 3599,
+            representativePatent "EP-2590618-B1",
+            grantDate "2018-02-21",
+            representativePatentTitle "Highly foaming shampoo"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5396 @@
+LinkDataSet ::= {
+  linkData {
+    {
+      iD_1 cID 4,
+      iD_2 cID 8113,
+      evidence patentChemicalChemical {
+        neighborName "Diethanolamine",
+        cooccurrenceScore 366511,
+        nPatentFamilies 3013,
+        nPatents 3615,
+        patentFamily {
+          {
+            patentFamilyId "57126282",
+            relevanceScore 465799,
+            representativePatent "US-10716763-B2",
+            grantDate "2020-07-21",
+            representativePatentTitle "Transdermal patch containing ropinirole",
+            otherPatent {
+              "JP-6530059-B2",
+              "KR-101937073-B1"
+            }
+          },
+          {
+            patentFamilyId "47175370",
+            relevanceScore 465799,
+            representativePatent "US-11434451-B2",
+            grantDate "2022-09-06",
+            representativePatentTitle "Non-corrosive oven degreaser concentrate",
+            otherPatent {
+              "US-11845913-B2",
+              "JP-6054951-B2",
+              "JP-6276372-B2"
+            }
+          },
+          {
+            patentFamilyId "19844500",
+            relevanceScore 465799,
+            representativePatent "EP-0176151-B1",
+            grantDate "1988-01-20",
+            representativePatentTitle "Detergents containing amides as
+ thickening agents"
+          },
+          {
+            patentFamilyId "22844392",
+            relevanceScore 465799,
+            representativePatent "EP-0352775-B1",
+            grantDate "1993-09-01",
+            representativePatentTitle "Polyols comprising an alkoxylated
+ mannich condensate and process for preparing the same",
+            otherPatent {
+              "JP-3145380-B2"
+            }
+          },
+          {
+            patentFamilyId "24179165",
+            relevanceScore 465799,
+            representativePatent "EP-0463823-B1",
+            grantDate "1995-07-26",
+            representativePatentTitle "Froth flotation of silica or siliceous
+ gangue"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8086,
+      evidence patentChemicalChemical {
+        neighborName "Diisopropanolamine",
+        cooccurrenceScore 307417,
+        nPatentFamilies 1897,
+        nPatents 2271,
+        patentFamily {
+          {
+            patentFamilyId "57126282",
+            relevanceScore 604825,
+            representativePatent "US-10716763-B2",
+            grantDate "2020-07-21",
+            representativePatentTitle "Transdermal patch containing ropinirole",
+            otherPatent {
+              "JP-6530059-B2",
+              "KR-101937073-B1"
+            }
+          },
+          {
+            patentFamilyId "47175370",
+            relevanceScore 604825,
+            representativePatent "US-11434451-B2",
+            grantDate "2022-09-06",
+            representativePatentTitle "Non-corrosive oven degreaser concentrate",
+            otherPatent {
+              "JP-6054951-B2",
+              "JP-6276372-B2",
+              "US-11845913-B2"
+            }
+          },
+          {
+            patentFamilyId "17506321",
+            relevanceScore 604825,
+            representativePatent "EP-0186055-B1",
+            grantDate "1990-07-25",
+            representativePatentTitle "Antimycotic gel preparations"
+          },
+          {
+            patentFamilyId "6384242",
+            relevanceScore 604825,
+            representativePatent "EP-0406623-B1",
+            grantDate "1994-11-30",
+            representativePatentTitle "Polyaspartic acid derivatives as a
+ coating for pharmaceutical forms and foodstuffs"
+          },
+          {
+            patentFamilyId "24591937",
+            relevanceScore 604825,
+            representativePatent "EP-0496420-B1",
+            grantDate "1996-11-13",
+            representativePatentTitle "Combustion-modified flexible
+ polyurethane foams"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 11807,
+      evidence patentChemicalChemical {
+        neighborName "2-Amino-2-methyl-1-propanol",
+        cooccurrenceScore 195483,
+        nPatentFamilies 1013,
+        nPatents 1207,
+        patentFamily {
+          {
+            patentFamilyId "57590501",
+            relevanceScore 584858,
+            representativePatent "US-10584283-B2",
+            grantDate "2020-03-10",
+            representativePatentTitle "Preservative for technical products"
+          },
+          {
+            patentFamilyId "47175370",
+            relevanceScore 584858,
+            representativePatent "US-11434451-B2",
+            grantDate "2022-09-06",
+            representativePatentTitle "Non-corrosive oven degreaser concentrate",
+            otherPatent {
+              "JP-6054951-B2",
+              "JP-6276372-B2",
+              "US-11845913-B2"
+            }
+          },
+          {
+            patentFamilyId "24179165",
+            relevanceScore 584858,
+            representativePatent "EP-0463823-B1",
+            grantDate "1995-07-26",
+            representativePatentTitle "Froth flotation of silica or siliceous
+ gangue"
+          },
+          {
+            patentFamilyId "25241965",
+            relevanceScore 584858,
+            representativePatent "EP-0623166-B1",
+            grantDate "1996-06-05",
+            representativePatentTitle "Liquid hard surface detergent
+ compositions containing zwitterionic and cationic detergent surfactants and
+ monoethanolamine and/or beta-aminoalkanol"
+          },
+          {
+            patentFamilyId "7767722",
+            relevanceScore 584858,
+            representativePatent "EP-0840593-B1",
+            grantDate "2002-10-02",
+            representativePatentTitle "Oxidation colorants for dyeing
+ keratinic fibers, containing a special combination of alkalisation agents"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 24730,
+      evidence patentChemicalChemical {
+        neighborName "Triisopropanolamine",
+        cooccurrenceScore 194894,
+        nPatentFamilies 1281,
+        nPatents 1556,
+        patentFamily {
+          {
+            patentFamilyId "26836961",
+            relevanceScore 611711,
+            representativePatent "EP-1200368-B1",
+            grantDate "2007-02-14",
+            representativePatentTitle "High early strength cement and
+ additives and methods for making the same",
+            otherPatent {
+              "JP-4883859-B2"
+            }
+          },
+          {
+            patentFamilyId "26614150",
+            relevanceScore 611711,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "32282724",
+            relevanceScore 611711,
+            representativePatent "JP-3970740-B2",
+            grantDate "2007-09-05",
+            representativePatentTitle "Developer composition"
+          },
+          {
+            patentFamilyId "24524780",
+            relevanceScore 611711,
+            representativePatent "JP-4051466-B2",
+            grantDate "2008-02-27",
+            representativePatentTitle "Developing roller and manufacturing
+ method thereof"
+          },
+          {
+            patentFamilyId "18943707",
+            relevanceScore 611711,
+            representativePatent "JP-4718704-B2",
+            grantDate "2011-07-06",
+            representativePatentTitle "Hair dyeing method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 9086,
+      evidence patentChemicalChemical {
+        neighborName "3-Amino-1-propanol",
+        cooccurrenceScore 193655,
+        nPatentFamilies 982,
+        nPatents 1194,
+        patentFamily {
+          {
+            patentFamilyId "57590501",
+            relevanceScore 626329,
+            representativePatent "US-10584283-B2",
+            grantDate "2020-03-10",
+            representativePatentTitle "Preservative for technical products"
+          },
+          {
+            patentFamilyId "24449561",
+            relevanceScore 626329,
+            representativePatent "EP-0164162-B1",
+            grantDate "1989-12-06",
+            representativePatentTitle "Process for preparing supported
+ hydroconversion catalysts and catalysts thus prepared"
+          },
+          {
+            patentFamilyId "24179165",
+            relevanceScore 626329,
+            representativePatent "EP-0463823-B1",
+            grantDate "1995-07-26",
+            representativePatentTitle "Froth flotation of silica or siliceous
+ gangue"
+          },
+          {
+            patentFamilyId "25241965",
+            relevanceScore 626329,
+            representativePatent "EP-0623166-B1",
+            grantDate "1996-06-05",
+            representativePatentTitle "Liquid hard surface detergent
+ compositions containing zwitterionic and cationic detergent surfactants and
+ monoethanolamine and/or beta-aminoalkanol"
+          },
+          {
+            patentFamilyId "27282377",
+            relevanceScore 626329,
+            representativePatent "EP-0945119-B1",
+            grantDate "2006-05-31",
+            representativePatentTitle "Calcium phosphate cements"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8016,
+      evidence patentChemicalChemical {
+        neighborName "2-(Methylamino)ethanol",
+        cooccurrenceScore 135183,
+        nPatentFamilies 952,
+        nPatents 1128,
+        patentFamily {
+          {
+            patentFamilyId "6378409",
+            relevanceScore 620163,
+            representativePatent "EP-0392352-B1",
+            grantDate "1994-09-21",
+            representativePatentTitle "Aqueous dispersions of high energy
+ radiation curable polyurethanes"
+          },
+          {
+            patentFamilyId "36537291",
+            relevanceScore 620163,
+            representativePatent "JP-4442817-B2",
+            grantDate "2010-03-31",
+            representativePatentTitle "Photoresist stripping solution"
+          },
+          {
+            patentFamilyId "43090541",
+            relevanceScore 620163,
+            representativePatent "JP-5505861-B2",
+            grantDate "2014-05-28",
+            representativePatentTitle "Lacquer-type paint resin and paint"
+          },
+          {
+            patentFamilyId "54568528",
+            relevanceScore 620163,
+            representativePatent "JP-6487630-B2",
+            grantDate "2019-03-20",
+            representativePatentTitle "Stock solution for cleaning
+ composition, cleaning composition and cleaning method"
+          },
+          {
+            patentFamilyId "6296288",
+            relevanceScore 316410,
+            representativePatent "EP-0237880-B1",
+            grantDate "1991-01-09",
+            representativePatentTitle "Phospholipid-containing products, their
+ preparation and use"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 756,
+      evidence patentChemicalChemical {
+        neighborName "Glycolaldehyde",
+        cooccurrenceScore 128598,
+        nPatentFamilies 1619,
+        nPatents 1927,
+        patentFamily {
+          {
+            patentFamilyId "17506321",
+            relevanceScore 370610,
+            representativePatent "EP-0186055-B1",
+            grantDate "1990-07-25",
+            representativePatentTitle "Antimycotic gel preparations"
+          },
+          {
+            patentFamilyId "69414024",
+            relevanceScore 370610,
+            representativePatent "JP-7386844-B2",
+            grantDate "2023-11-27",
+            representativePatentTitle "Overmolded printed electronic
+ components and their manufacturing method"
+          },
+          {
+            patentFamilyId "54243137",
+            relevanceScore 370610,
+            representativePatent "KR-101557778-B1",
+            grantDate "2015-10-06",
+            representativePatentTitle "Composition for photoresist stripper"
+          },
+          {
+            patentFamilyId "45928052",
+            relevanceScore 370610,
+            representativePatent "KR-101792532-B1",
+            grantDate "2017-11-02",
+            representativePatentTitle "Dilution-stable cement grinding
+ additive composition"
+          },
+          {
+            patentFamilyId "31969518",
+            relevanceScore 257368,
+            representativePatent "EP-1402778-B1",
+            grantDate "2014-10-01",
+            representativePatentTitle "Low-emission formaldehyde donor
+ preparations and use thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 13578,
+      evidence patentChemicalChemical {
+        neighborName "Diglycolamine",
+        cooccurrenceScore 117385,
+        nPatentFamilies 513,
+        nPatents 647,
+        patentFamily {
+          {
+            patentFamilyId "47175370",
+            relevanceScore 653760,
+            representativePatent "US-11434451-B2",
+            grantDate "2022-09-06",
+            representativePatentTitle "Non-corrosive oven degreaser concentrate",
+            otherPatent {
+              "JP-6054951-B2",
+              "JP-6276372-B2",
+              "US-11845913-B2"
+            }
+          },
+          {
+            patentFamilyId "19667052",
+            relevanceScore 454000,
+            representativePatent "JP-3679753-B2",
+            grantDate "2005-08-03",
+            representativePatentTitle "Resist stripper composition"
+          },
+          {
+            patentFamilyId "51027018",
+            relevanceScore 454000,
+            representativePatent "JP-5916589-B2",
+            grantDate "2016-05-11",
+            representativePatentTitle "Water-soluble cutting fluid"
+          },
+          {
+            patentFamilyId "59790086",
+            relevanceScore 454000,
+            representativePatent "KR-102275042-B1",
+            grantDate "2021-07-08",
+            representativePatentTitle "Graphene dispersion, method for
+ preparing electrode paste, and method for preparing electrode",
+            otherPatent {
+              "JP-6888631-B2",
+              "US-10734652-B2"
+            }
+          },
+          {
+            patentFamilyId "70617223",
+            relevanceScore 408600,
+            representativePatent "US-10774040-B1",
+            grantDate "2020-09-15",
+            representativePatentTitle "Processes for removing carbon disulfide
+ from symmetrical and asymmetrical sulfide product streams"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 101638830,
+      evidence patentChemicalChemical {
+        neighborName "sodium
+ [(3S,4aR,6aR,6bS,8aS,11R,12R,12aS,14aR,14bR)-12-hydroxy-4,4,6a,6b,11,12,14b-h
+eptamethyl-8a-[(2S,3R,4S,5S,6R)-3,4,5-trihydroxy-6-(hydroxymethyl)oxan-2-yl]ox
+ycarbonyl-1,2,3,4a,5,6,7,8,9,10,11,12a,14,14a-tetradecahydropicen-3-yl] sulfate",
+        cooccurrenceScore 114450,
+        nPatentFamilies 1794,
+        nPatents 2154,
+        patentFamily {
+          {
+            patentFamilyId "73856291",
+            relevanceScore 335956,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "9429460",
+            relevanceScore 335956,
+            representativePatent "EP-0638137-B1",
+            grantDate "1996-09-11",
+            representativePatentTitle "Method for excavating tunnels,
+ utilisation of a foaming agent and new composition"
+          },
+          {
+            patentFamilyId "7649526",
+            relevanceScore 335956,
+            representativePatent "EP-1174495-B1",
+            grantDate "2004-10-13",
+            representativePatentTitle "Soap bar comprising talc, alkali fatty
+ acid and nonionic surfactant, but not comprising alkyl oligoglycosides"
+          },
+          {
+            patentFamilyId "26836961",
+            relevanceScore 335956,
+            representativePatent "EP-1200368-B1",
+            grantDate "2007-02-14",
+            representativePatentTitle "High early strength cement and
+ additives and methods for making the same",
+            otherPatent {
+              "JP-4883859-B2"
+            }
+          },
+          {
+            patentFamilyId "50288182",
+            relevanceScore 335956,
+            representativePatent "EP-3105294-B1",
+            grantDate "2018-01-31",
+            representativePatentTitle "Printing ink"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7767,
+      evidence patentChemicalChemical {
+        neighborName "N-Methyldiethanolamine",
+        cooccurrenceScore 90872,
+        nPatentFamilies 782,
+        nPatents 954,
+        patentFamily {
+          {
+            patentFamilyId "73856291",
+            relevanceScore 582308,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "23829653",
+            relevanceScore 297096,
+            representativePatent "EP-0436514-B1",
+            grantDate "1996-07-31",
+            representativePatentTitle "Polymer compositions and absorbent
+ fibers produced therefrom"
+          },
+          {
+            patentFamilyId "48779188",
+            relevanceScore 227464,
+            representativePatent "EP-2802362-B1",
+            grantDate "2019-10-09",
+            representativePatentTitle "Liquid gel concentrate compositions and
+ methods of use"
+          },
+          {
+            patentFamilyId "26594894",
+            relevanceScore 227464,
+            representativePatent "JP-3431074-B2",
+            grantDate "2003-07-28",
+            representativePatentTitle "Release agent composition and release
+ method"
+          },
+          {
+            patentFamilyId "64049742",
+            relevanceScore 179725,
+            representativePatent "US-10870819-B2",
+            grantDate "2020-12-22",
+            representativePatentTitle "Leuco colorants as bluing agents in
+ laundry care compositions"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7902,
+      evidence patentChemicalChemical {
+        neighborName "2-(Dimethylamino)ethanol",
+        cooccurrenceScore 87377,
+        nPatentFamilies 1013,
+        nPatents 1205,
+        patentFamily {
+          {
+            patentFamilyId "73856291",
+            relevanceScore 546210,
+            representativePatent "US-11879110-B2",
+            grantDate "2024-01-23",
+            representativePatentTitle "Alkylbenzenesulfonate surfactants"
+          },
+          {
+            patentFamilyId "15418921",
+            relevanceScore 379312,
+            representativePatent "JP-2609524-B2",
+            grantDate "1997-05-14",
+            representativePatentTitle "Hydrolysis method of fluorine ion
+ exchange resin membrane"
+          },
+          {
+            patentFamilyId "6296288",
+            relevanceScore 278678,
+            representativePatent "EP-0237880-B1",
+            grantDate "1991-01-09",
+            representativePatentTitle "Phospholipid-containing products, their
+ preparation and use"
+          },
+          {
+            patentFamilyId "27491987",
+            relevanceScore 248277,
+            representativePatent "EP-1401418-B1",
+            grantDate "2008-12-24",
+            representativePatentTitle "Topical treatments using alkanolamines"
+          },
+          {
+            patentFamilyId "15281504",
+            relevanceScore 213363,
+            representativePatent "JP-2753731-B2",
+            grantDate "1998-05-20",
+            representativePatentTitle "Preparation method of fluorine ion
+ exchange membrane"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 159832,
+      evidence patentChemicalChemical {
+        neighborName "Atomic oxygen",
+        cooccurrenceScore 86732,
+        nPatentFamilies 1231,
+        nPatents 1506,
+        patentFamily {
+          {
+            patentFamilyId "14448977",
+            relevanceScore 255231,
+            representativePatent "JP-2887833-B2",
+            grantDate "1999-05-10",
+            representativePatentTitle "Cyclobutenedione derivative, method for
+ producing the same, and nonlinear optical element using the same"
+          },
+          {
+            patentFamilyId "39378339",
+            relevanceScore 255231,
+            representativePatent "JP-5082689-B2",
+            grantDate "2012-11-28",
+            representativePatentTitle "Metal film forming method and metal
+ film obtained by the method"
+          },
+          {
+            patentFamilyId "39755253",
+            relevanceScore 255231,
+            representativePatent "JP-5688871-B2",
+            grantDate "2015-03-25",
+            representativePatentTitle "Metal film forming method and metal
+ film obtained by the method"
+          },
+          {
+            patentFamilyId "12577678",
+            relevanceScore 177244,
+            representativePatent "JP-3710007-B2",
+            grantDate "2005-10-26",
+            representativePatentTitle "Color developer concentrate composition"
+          },
+          {
+            patentFamilyId "37962710",
+            relevanceScore 177244,
+            representativePatent "KR-101366957-B1",
+            grantDate "2014-02-25",
+            representativePatentTitle "Stripping solution composition and
+ stripping method using the same",
+            otherPatent {
+              "KR-101366904-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 867,
+      evidence patentChemicalChemical {
+        neighborName "Malonic Acid",
+        cooccurrenceScore 86283,
+        nPatentFamilies 1768,
+        nPatents 2119,
+        patentFamily {
+          {
+            patentFamilyId "6068511",
+            relevanceScore 367798,
+            representativePatent "EP-0017947-B1",
+            grantDate "1983-07-20",
+            representativePatentTitle "Process for preparing polyisocyanurate
+ foams containing urethane groups"
+          },
+          {
+            patentFamilyId "59565669",
+            relevanceScore 367798,
+            representativePatent "JP-6833490-B2",
+            grantDate "2021-02-24",
+            representativePatentTitle "Aqueous binder for mineral fibers"
+          },
+          {
+            patentFamilyId "6118831",
+            relevanceScore 262713,
+            representativePatent "EP-0054216-B1",
+            grantDate "1984-06-06",
+            representativePatentTitle "Aqueous dispersions of polyesters,
+ process for their preparation, and use in the preparation of enamels"
+          },
+          {
+            patentFamilyId "62557254",
+            relevanceScore 187652,
+            representativePatent "US-10125316-B2",
+            grantDate "2018-11-13",
+            representativePatentTitle "Etching solution and manufacturing
+ method of display"
+          },
+          {
+            patentFamilyId "52279742",
+            relevanceScore 183899,
+            representativePatent "KR-102000726-B1",
+            grantDate "2019-07-16",
+            representativePatentTitle "Liquid composition for
+ cleaning/removing copper-containing adhering matter from surface of oxide
+ comprising indium, gallium, zinc, and oxygen (igzo), method for cleaning igzo
+ surface using said liquid composition, and substrate cleaned using said
+ method for cleaning"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 787,
+      evidence patentChemicalChemical {
+        neighborName "Hydroxylamine",
+        cooccurrenceScore 85029,
+        nPatentFamilies 422,
+        nPatents 499,
+        patentFamily {
+          {
+            patentFamilyId "6378409",
+            relevanceScore 501046,
+            representativePatent "EP-0392352-B1",
+            grantDate "1994-09-21",
+            representativePatentTitle "Aqueous dispersions of high energy
+ radiation curable polyurethanes"
+          },
+          {
+            patentFamilyId "23962882",
+            relevanceScore 278359,
+            representativePatent "EP-0472687-B1",
+            grantDate "1994-09-21",
+            representativePatentTitle "Compositions and polymer fabrics
+ treated with the same"
+          },
+          {
+            patentFamilyId "6382237",
+            relevanceScore 255636,
+            representativePatent "EP-0401627-B1",
+            grantDate "1994-06-22",
+            representativePatentTitle "Copolymers with hydroxy groups, process
+ for their preparation and their usage as binder"
+          },
+          {
+            patentFamilyId "26760803",
+            relevanceScore 255636,
+            representativePatent "EP-0578507-B1",
+            grantDate "2005-09-28",
+            representativePatentTitle "Cleaning solutions including
+ nucleophilic amine compound having reduction and oxidation potentials",
+            otherPatent {
+              "JP-3048207-B2"
+            }
+          },
+          {
+            patentFamilyId "61094808",
+            relevanceScore 255636,
+            representativePatent "KR-101820878-B1",
+            grantDate "2018-01-22",
+            representativePatentTitle "Coating composition comprising protein,
+ method for manufacturing same, film for food packaging using same, and method
+ for manufacturing film for food packaging using same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 5126,
+      evidence patentChemicalChemical {
+        neighborName "2-Aminopropanol",
+        cooccurrenceScore 81083,
+        nPatentFamilies 346,
+        nPatents 425,
+        patentFamily {
+          {
+            patentFamilyId "22551689",
+            relevanceScore 735248,
+            representativePatent "EP-0401286-B1",
+            grantDate "1995-09-13",
+            representativePatentTitle "Process for preparing
+ n-(hydroxyalkyl)-2-unsaturated amides and 2-alkenyl oxazolines",
+            otherPatent {
+              "JP-2766697-B2"
+            }
+          },
+          {
+            patentFamilyId "19638690",
+            relevanceScore 735248,
+            representativePatent "KR-100378551-B1",
+            grantDate "2003-03-29",
+            representativePatentTitle "Resist remover composition"
+          },
+          {
+            patentFamilyId "55917007",
+            relevanceScore 735248,
+            representativePatent "KR-101693473-B1",
+            grantDate "2017-01-10",
+            representativePatentTitle "Alumina composition for jet scrubbing
+ process"
+          },
+          {
+            patentFamilyId "6382237",
+            relevanceScore 375127,
+            representativePatent "EP-0401627-B1",
+            grantDate "1994-06-22",
+            representativePatentTitle "Copolymers with hydroxy groups, process
+ for their preparation and their usage as binder"
+          },
+          {
+            patentFamilyId "58427422",
+            relevanceScore 287206,
+            representativePatent "US-10857502-B2",
+            grantDate "2020-12-08",
+            representativePatentTitle "Absorbent liquid for CO2 and/or H2S,
+ and apparatus and method using same",
+            otherPatent {
+              "JP-6659293-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 172995039,
+      evidence patentChemicalChemical {
+        neighborName "Hydrogen sulfate;hydron",
+        cooccurrenceScore 79043,
+        nPatentFamilies 1430,
+        nPatents 1685,
+        patentFamily {
+          {
+            patentFamilyId "56120939",
+            relevanceScore 242710,
+            representativePatent "US-11007132-B2",
+            grantDate "2021-05-18",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "KR-102375994-B1",
+              "JP-6882345-B2"
+            }
+          },
+          {
+            patentFamilyId "56096969",
+            relevanceScore 242710,
+            representativePatent "KR-102376569-B1",
+            grantDate "2022-03-21",
+            representativePatentTitle "Aqueous Surfactant Composition"
+          },
+          {
+            patentFamilyId "25803135",
+            relevanceScore 235968,
+            representativePatent "EP-0100865-B1",
+            grantDate "1986-10-08",
+            representativePatentTitle "Process for the production of a
+ hydrolyzable titanyl sulphate solution"
+          },
+          {
+            patentFamilyId "62557254",
+            relevanceScore 173365,
+            representativePatent "US-10125316-B2",
+            grantDate "2018-11-13",
+            representativePatentTitle "Etching solution and manufacturing
+ method of display"
+          },
+          {
+            patentFamilyId "56120991",
+            relevanceScore 169897,
+            representativePatent "KR-102397502-B1",
+            grantDate "2022-05-13",
+            representativePatentTitle "Aqueous Surfactant Composition",
+            otherPatent {
+              "US-10869824-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 172995034,
+      evidence patentChemicalChemical {
+        neighborName "Hydrogen phosphate;hydron",
+        cooccurrenceScore 78014,
+        nPatentFamilies 1492,
+        nPatents 1696,
+        patentFamily {
+          {
+            patentFamilyId "24449561",
+            relevanceScore 359525,
+            representativePatent "EP-0164162-B1",
+            grantDate "1989-12-06",
+            representativePatentTitle "Process for preparing supported
+ hydroconversion catalysts and catalysts thus prepared"
+          },
+          {
+            patentFamilyId "59853515",
+            relevanceScore 249670,
+            representativePatent "JP-7033391-B2",
+            grantDate "2022-03-10",
+            representativePatentTitle "Hair dye for hair"
+          },
+          {
+            patentFamilyId "60950452",
+            relevanceScore 197739,
+            representativePatent "EP-3717443-B1",
+            grantDate "2022-04-20",
+            representativePatentTitle "Phosphatic fertilizers based on
+ alkanolamine salts of phosphoric acid and alkanolamine metal complexes"
+          },
+          {
+            patentFamilyId "8528673",
+            relevanceScore 140439,
+            representativePatent "EP-0406194-B1",
+            grantDate "1994-01-12",
+            representativePatentTitle "Process for coating titanium dioxide
+ pigments",
+            otherPatent {
+              "EP-0406194-B2"
+            }
+          },
+          {
+            patentFamilyId "48627048",
+            relevanceScore 110964,
+            representativePatent "EP-2799511-B1",
+            grantDate "2020-01-22",
+            representativePatentTitle "Heat transfer liquid composition and
+ energy saving heating method using it"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 173000318,
+      evidence patentChemicalChemical {
+        neighborName "Hydron;2-methylprop-2-enoate",
+        cooccurrenceScore 71419,
+        nPatentFamilies 1410,
+        nPatents 1645,
+        patentFamily {
+          {
+            patentFamilyId "56117553",
+            relevanceScore 371792,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "59565669",
+            relevanceScore 371792,
+            representativePatent "JP-6833490-B2",
+            grantDate "2021-02-24",
+            representativePatentTitle "Aqueous binder for mineral fibers"
+          },
+          {
+            patentFamilyId "14548264",
+            relevanceScore 145231,
+            representativePatent "EP-0875241-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Aqueous cosmetic composition containing
+ stably solubilized uric acid and water-soluble polymer and method for stably
+ solubilizing uric acid in aqueous cosmetic composition",
+            otherPatent {
+              "JP-3439067-B2"
+            }
+          },
+          {
+            patentFamilyId "7653517",
+            relevanceScore 114751,
+            representativePatent "EP-1313774-B1",
+            grantDate "2008-08-20",
+            representativePatentTitle "Water-soluble homopolymers and
+ copolymers having an improved environmental acceptability"
+          },
+          {
+            patentFamilyId "26974923",
+            relevanceScore 114751,
+            representativePatent "EP-1409598-B1",
+            grantDate "2005-08-31",
+            representativePatentTitle "Unfinished rutile titanium dioxide
+ slurry for paints and paper coatings"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8083,
+      evidence patentChemicalChemical {
+        neighborName "Morpholine",
+        cooccurrenceScore 70648,
+        nPatentFamilies 782,
+        nPatents 936,
+        patentFamily {
+          {
+            patentFamilyId "22623947",
+            relevanceScore 503933,
+            representativePatent "JP-3497169-B2",
+            grantDate "2004-02-16",
+            representativePatentTitle "Improved aqueous functional liquid",
+            otherPatent {
+              "KR-100354981-B1"
+            }
+          },
+          {
+            patentFamilyId "48618246",
+            relevanceScore 503933,
+            representativePatent "JP-5885996-B2",
+            grantDate "2016-03-16",
+            representativePatentTitle "Corrosion prevention or inhibitor for
+ ferrous metals and corrosion prevention or inhibition method"
+          },
+          {
+            patentFamilyId "6224900",
+            relevanceScore 349953,
+            representativePatent "EP-0150474-B1",
+            grantDate "1988-08-17",
+            representativePatentTitle "Process for the preparation of
+ 5,6-dihydro-pyrrolo-[2,1-a]isoquinolines"
+          },
+          {
+            patentFamilyId "64049742",
+            relevanceScore 155535,
+            representativePatent "US-10870819-B2",
+            grantDate "2020-12-22",
+            representativePatentTitle "Leuco colorants as bluing agents in
+ laundry care compositions"
+          },
+          {
+            patentFamilyId "42755640",
+            relevanceScore 132614,
+            representativePatent "KR-101082011-B1",
+            grantDate "2011-11-10",
+            representativePatentTitle "Composition for removing photoresist
+ and pattern formation method using same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8021,
+      evidence patentChemicalChemical {
+        neighborName "Diethylamine",
+        cooccurrenceScore 70104,
+        nPatentFamilies 1533,
+        nPatents 1744,
+        patentFamily {
+          {
+            patentFamilyId "32032550",
+            relevanceScore 131106,
+            representativePatent "JP-4200781-B2",
+            grantDate "2008-12-24",
+            representativePatentTitle "Method for producing
+ electrophotographic photosensitive member"
+          },
+          {
+            patentFamilyId "38256319",
+            relevanceScore 131106,
+            representativePatent "JP-4861014-B2",
+            grantDate "2012-01-25",
+            representativePatentTitle "Colorant composition"
+          },
+          {
+            patentFamilyId "37812039",
+            relevanceScore 124863,
+            representativePatent "KR-100812635-B1",
+            grantDate "2008-03-13",
+            representativePatentTitle "Dispersion polycarbonate polyurethane
+ resin"
+          },
+          {
+            patentFamilyId "17506321",
+            relevanceScore 100851,
+            representativePatent "EP-0186055-B1",
+            grantDate "1990-07-25",
+            representativePatentTitle "Antimycotic gel preparations"
+          },
+          {
+            patentFamilyId "35266774",
+            relevanceScore 91046,
+            representativePatent "JP-4603586-B2",
+            grantDate "2010-12-22",
+            representativePatentTitle "Three-dimensional structure for inkjet
+ printhead and associated manufacturing method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 173001628,
+      evidence patentChemicalChemical {
+        neighborName "Azane;hydron;hydroxide",
+        cooccurrenceScore 69217,
+        nPatentFamilies 971,
+        nPatents 1153,
+        patentFamily {
+          {
+            patentFamilyId "10539383",
+            relevanceScore 408484,
+            representativePatent "EP-0120638-B1",
+            grantDate "1989-04-26",
+            representativePatentTitle "Concentrated aqueous surfactant"
+          },
+          {
+            patentFamilyId "43310952",
+            relevanceScore 408484,
+            representativePatent "JP-5404152-B2",
+            grantDate "2014-01-29",
+            representativePatentTitle "Hair dyeing pretreatment composition
+ and hair dyeing pretreatment method"
+          },
+          {
+            patentFamilyId "48521411",
+            relevanceScore 283669,
+            representativePatent "EP-2847281-B1",
+            grantDate "2016-03-23",
+            representativePatentTitle "Spray-dried, hydrous, kaolin clay and
+ methods of making same"
+          },
+          {
+            patentFamilyId "76624246",
+            relevanceScore 208410,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant",
+            otherPatent {
+              "US-11891587-B2"
+            }
+          },
+          {
+            patentFamilyId "60570277",
+            relevanceScore 208410,
+            representativePatent "US-11884897-B2",
+            grantDate "2024-01-30",
+            representativePatentTitle "Hard surface cleaners including
+ fluorosurfactants"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 4962813,
+      evidence patentChemicalChemical {
+        neighborName "2-(2-Methoxy-5-methylphenyl)ethan-1-amine",
+        cooccurrenceScore 65672,
+        nPatentFamilies 1484,
+        nPatents 1765,
+        patentFamily {
+          {
+            patentFamilyId "56117553",
+            relevanceScore 377540,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "14548264",
+            relevanceScore 147477,
+            representativePatent "EP-0875241-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Aqueous cosmetic composition containing
+ stably solubilized uric acid and water-soluble polymer and method for stably
+ solubilizing uric acid in aqueous cosmetic composition",
+            otherPatent {
+              "JP-3439067-B2"
+            }
+          },
+          {
+            patentFamilyId "48779188",
+            relevanceScore 147477,
+            representativePatent "EP-2802362-B1",
+            grantDate "2019-10-09",
+            representativePatentTitle "Liquid gel concentrate compositions and
+ methods of use"
+          },
+          {
+            patentFamilyId "7653517",
+            relevanceScore 116525,
+            representativePatent "EP-1313774-B1",
+            grantDate "2008-08-20",
+            representativePatentTitle "Water-soluble homopolymers and
+ copolymers having an improved environmental acceptability"
+          },
+          {
+            patentFamilyId "26974923",
+            relevanceScore 116525,
+            representativePatent "EP-1409598-B1",
+            grantDate "2005-08-31",
+            representativePatentTitle "Unfinished rutile titanium dioxide
+ slurry for paints and paper coatings"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 22129,
+      evidence patentChemicalChemical {
+        neighborName "2-Amino-1-butanol",
+        cooccurrenceScore 65605,
+        nPatentFamilies 383,
+        nPatents 495,
+        patentFamily {
+          {
+            patentFamilyId "57590501",
+            relevanceScore 717729,
+            representativePatent "US-10584283-B2",
+            grantDate "2020-03-10",
+            representativePatentTitle "Preservative for technical products"
+          },
+          {
+            patentFamilyId "69231658",
+            relevanceScore 717729,
+            representativePatent "JP-7374177-B2",
+            grantDate "2023-11-06",
+            representativePatentTitle "UV sinterable molecular ink and its
+ processing using broad spectrum UV light",
+            otherPatent {
+              "US-11873413-B2",
+              "KR-102790704-B1"
+            }
+          },
+          {
+            patentFamilyId "23829653",
+            relevanceScore 366188,
+            representativePatent "EP-0436514-B1",
+            grantDate "1996-07-31",
+            representativePatentTitle "Polymer compositions and absorbent
+ fibers produced therefrom"
+          },
+          {
+            patentFamilyId "58427422",
+            relevanceScore 280363,
+            representativePatent "US-10857502-B2",
+            grantDate "2020-12-08",
+            representativePatentTitle "Absorbent liquid for CO2 and/or H2S,
+ and apparatus and method using same",
+            otherPatent {
+              "JP-6659293-B2"
+            }
+          },
+          {
+            patentFamilyId "63039580",
+            relevanceScore 221521,
+            representativePatent "US-10960346-B2",
+            grantDate "2021-03-30",
+            representativePatentTitle "Composite amine absorbing solution, and
+ device and method for removing CO2 or H2S or both"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 162856854,
+      evidence patentChemicalChemical {
+        neighborName "[2-[(12R)-12-hydroxyoctadec-9-enoyl]oxy-3-[(12S)-12-hydr
+oxyoctadec-9-enoyl]oxypropyl] (12R)-12-hydroxyoctadec-9-enoate",
+        cooccurrenceScore 64840,
+        nPatentFamilies 960,
+        nPatents 1124,
+        patentFamily {
+          {
+            patentFamilyId "55655033",
+            relevanceScore 448116,
+            representativePatent "US-10041019-B2",
+            grantDate "2018-08-07",
+            representativePatentTitle "Drilling fluid system"
+          },
+          {
+            patentFamilyId "56117553",
+            relevanceScore 448116,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "26614150",
+            relevanceScore 448116,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "42282054",
+            relevanceScore 311192,
+            representativePatent "KR-100959691-B1",
+            grantDate "2010-05-26",
+            representativePatentTitle "Urethane foam composition and structure
+ reinforcement restoration method using the same"
+          },
+          {
+            patentFamilyId "76624246",
+            relevanceScore 228631,
+            representativePatent "US-11807829-B2",
+            grantDate "2023-11-07",
+            representativePatentTitle "Detergent compositions containing a
+ branched surfactant",
+            otherPatent {
+              "US-11891587-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8112,
+      evidence patentChemicalChemical {
+        neighborName "N-(2-Hydroxyethyl)ethylenediamine",
+        cooccurrenceScore 64084,
+        nPatentFamilies 612,
+        nPatents 740,
+        patentFamily {
+          {
+            patentFamilyId "6284093",
+            relevanceScore 630717,
+            representativePatent "EP-0219789-B1",
+            grantDate "1992-02-26",
+            representativePatentTitle "Stripping solvent for photoresists"
+          },
+          {
+            patentFamilyId "65529887",
+            relevanceScore 630717,
+            representativePatent "JP-7280279-B2",
+            grantDate "2023-05-23",
+            representativePatentTitle "Neutralizer composition"
+          },
+          {
+            patentFamilyId "8224067",
+            relevanceScore 143345,
+            representativePatent "EP-0843841-B1",
+            grantDate "2002-09-04",
+            representativePatentTitle "Stripping composition"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 130314,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "84535652",
+            relevanceScore 109500,
+            representativePatent "KR-102477036-B1",
+            grantDate "2022-12-19",
+            representativePatentTitle "Wet lubricating composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8111,
+      evidence patentChemicalChemical {
+        neighborName "Diethylenetriamine",
+        cooccurrenceScore 63570,
+        nPatentFamilies 912,
+        nPatents 1117,
+        patentFamily {
+          {
+            patentFamilyId "6068506",
+            relevanceScore 521895,
+            representativePatent "EP-0017948-B1",
+            grantDate "1983-07-13",
+            representativePatentTitle "Process for preparing polyurethane foams"
+          },
+          {
+            patentFamilyId "14051937",
+            relevanceScore 521895,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "11210763",
+            relevanceScore 130474,
+            representativePatent "EP-0109548-B1",
+            grantDate "1988-07-13",
+            representativePatentTitle "Corrosion inhibitors for aqueous
+ solutions for the treatment of metals, and process for their preparation"
+          },
+          {
+            patentFamilyId "11210758",
+            relevanceScore 130474,
+            representativePatent "EP-0109549-B1",
+            grantDate "1988-08-31",
+            representativePatentTitle "Corrosion inhibitors for aqueous
+ solutions for the treatment of metals, and process for their preparation"
+          },
+          {
+            patentFamilyId "6284093",
+            relevanceScore 130474,
+            representativePatent "EP-0219789-B1",
+            grantDate "1992-02-26",
+            representativePatentTitle "Stripping solvent for photoresists"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8007,
+      evidence patentChemicalChemical {
+        neighborName "Butylamine",
+        cooccurrenceScore 58811,
+        nPatentFamilies 1285,
+        nPatents 1467,
+        patentFamily {
+          {
+            patentFamilyId "14051937",
+            relevanceScore 140287,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "32032550",
+            relevanceScore 140287,
+            representativePatent "JP-4200781-B2",
+            grantDate "2008-12-24",
+            representativePatentTitle "Method for producing
+ electrophotographic photosensitive member"
+          },
+          {
+            patentFamilyId "57590501",
+            relevanceScore 116906,
+            representativePatent "US-10584283-B2",
+            grantDate "2020-03-10",
+            representativePatentTitle "Preservative for technical products"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 115939,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "67907796",
+            relevanceScore 79708,
+            representativePatent "US-11441109-B2",
+            grantDate "2022-09-13",
+            representativePatentTitle "Cleaning solution for removing dry
+ etching residue and method for manufacturing semiconductor substrate using
+ same",
+            otherPatent {
+              "EP-3767666-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7497,
+      evidence patentChemicalChemical {
+        neighborName "Diethylethanolamine",
+        cooccurrenceScore 57670,
+        nPatentFamilies 672,
+        nPatents 792,
+        patentFamily {
+          {
+            patentFamilyId "48618246",
+            relevanceScore 561421,
+            representativePatent "JP-5885996-B2",
+            grantDate "2016-03-16",
+            representativePatentTitle "Corrosion prevention or inhibitor for
+ ferrous metals and corrosion prevention or inhibition method"
+          },
+          {
+            patentFamilyId "15418921",
+            relevanceScore 389876,
+            representativePatent "JP-2609524-B2",
+            grantDate "1997-05-14",
+            representativePatentTitle "Hydrolysis method of fluorine ion
+ exchange resin membrane"
+          },
+          {
+            patentFamilyId "15281504",
+            relevanceScore 219305,
+            representativePatent "JP-2753731-B2",
+            grantDate "1998-05-20",
+            representativePatentTitle "Preparation method of fluorine ion
+ exchange membrane"
+          },
+          {
+            patentFamilyId "59078039",
+            relevanceScore 115996,
+            representativePatent "US-11408080-B2",
+            grantDate "2022-08-09",
+            representativePatentTitle "Method of cleaning pretreatment of
+ ferrous components that have been joined by welding",
+            otherPatent {
+              "KR-102317571-B1"
+            }
+          },
+          {
+            patentFamilyId "82162995",
+            relevanceScore 115996,
+            representativePatent "JP-7661960-B2",
+            grantDate "2025-04-15",
+            representativePatentTitle "Polyester film recovery method,
+ recovery device, and functional layer remover",
+            otherPatent {
+              "JP-7196901-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 25868,
+      evidence patentChemicalChemical {
+        neighborName "4-Amino-1-butanol",
+        cooccurrenceScore 56045,
+        nPatentFamilies 311,
+        nPatents 365,
+        patentFamily {
+          {
+            patentFamilyId "24179165",
+            relevanceScore 717551,
+            representativePatent "EP-0463823-B1",
+            grantDate "1995-07-26",
+            representativePatentTitle "Froth flotation of silica or siliceous
+ gangue"
+          },
+          {
+            patentFamilyId "48668546",
+            relevanceScore 498299,
+            representativePatent "US-10174164-B2",
+            grantDate "2019-01-08",
+            representativePatentTitle "Triazine ring-containing polymer and
+ composition for film formation comprising same"
+          },
+          {
+            patentFamilyId "59790086",
+            relevanceScore 498299,
+            representativePatent "KR-102275042-B1",
+            grantDate "2021-07-08",
+            representativePatentTitle "Graphene dispersion, method for
+ preparing electrode paste, and method for preparing electrode",
+            otherPatent {
+              "JP-6888631-B2",
+              "US-10734652-B2"
+            }
+          },
+          {
+            patentFamilyId "63039580",
+            relevanceScore 221466,
+            representativePatent "US-10960346-B2",
+            grantDate "2021-03-30",
+            representativePatentTitle "Composite amine absorbing solution, and
+ device and method for removing CO2 or H2S or both"
+          },
+          {
+            patentFamilyId "48627048",
+            relevanceScore 221466,
+            representativePatent "EP-2799511-B1",
+            grantDate "2020-01-22",
+            representativePatentTitle "Heat transfer liquid composition and
+ energy saving heating method using it"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 6341,
+      evidence patentChemicalChemical {
+        neighborName "Ethylamine",
+        cooccurrenceScore 55340,
+        nPatentFamilies 1139,
+        nPatents 1352,
+        patentFamily {
+          {
+            patentFamilyId "14051937",
+            relevanceScore 134167,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "38256319",
+            relevanceScore 134167,
+            representativePatent "JP-4861014-B2",
+            grantDate "2012-01-25",
+            representativePatentTitle "Colorant composition"
+          },
+          {
+            patentFamilyId "57590501",
+            relevanceScore 111806,
+            representativePatent "US-10584283-B2",
+            grantDate "2020-03-10",
+            representativePatentTitle "Preservative for technical products"
+          },
+          {
+            patentFamilyId "17506321",
+            relevanceScore 103205,
+            representativePatent "EP-0186055-B1",
+            grantDate "1990-07-25",
+            representativePatentTitle "Antimycotic gel preparations"
+          },
+          {
+            patentFamilyId "35266774",
+            relevanceScore 93171,
+            representativePatent "JP-4603586-B2",
+            grantDate "2010-12-22",
+            representativePatentTitle "Three-dimensional structure for inkjet
+ printhead and associated manufacturing method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8072,
+      evidence patentChemicalChemical {
+        neighborName "2-(Ethylamino)ethanol",
+        cooccurrenceScore 54265,
+        nPatentFamilies 501,
+        nPatents 607,
+        patentFamily {
+          {
+            patentFamilyId "32282724",
+            relevanceScore 667589,
+            representativePatent "JP-3970740-B2",
+            grantDate "2007-09-05",
+            representativePatentTitle "Developer composition"
+          },
+          {
+            patentFamilyId "54568528",
+            relevanceScore 667589,
+            representativePatent "JP-6487630-B2",
+            grantDate "2019-03-20",
+            representativePatentTitle "Stock solution for cleaning
+ composition, cleaning composition and cleaning method"
+          },
+          {
+            patentFamilyId "24986783",
+            relevanceScore 340606,
+            representativePatent "EP-1216696-B1",
+            grantDate "2006-03-08",
+            representativePatentTitle "Method for reducing the appearance of
+ dark circles under the eyes"
+          },
+          {
+            patentFamilyId "80624121",
+            relevanceScore 206046,
+            representativePatent "US-12187910-B2",
+            grantDate "2025-01-07",
+            representativePatentTitle "Dispersant composition for electricity
+ storage device electrodes"
+          },
+          {
+            patentFamilyId "27491987",
+            relevanceScore 137932,
+            representativePatent "EP-1401418-B1",
+            grantDate "2008-12-24",
+            representativePatentTitle "Topical treatments using alkanolamines"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 6329,
+      evidence patentChemicalChemical {
+        neighborName "Methylamine",
+        cooccurrenceScore 52267,
+        nPatentFamilies 1038,
+        nPatents 1228,
+        patentFamily {
+          {
+            patentFamilyId "61094808",
+            relevanceScore 265047,
+            representativePatent "KR-101820878-B1",
+            grantDate "2018-01-22",
+            representativePatentTitle "Coating composition comprising protein,
+ method for manufacturing same, film for food packaging using same, and method
+ for manufacturing film for food packaging using same"
+          },
+          {
+            patentFamilyId "27438646",
+            relevanceScore 152792,
+            representativePatent "EP-0961815-B1",
+            grantDate "2003-05-07",
+            representativePatentTitle "Polyurethane foam remover for different
+ background materials"
+          },
+          {
+            patentFamilyId "14051937",
+            relevanceScore 129873,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "38256319",
+            relevanceScore 129873,
+            representativePatent "JP-4861014-B2",
+            grantDate "2012-01-25",
+            representativePatentTitle "Colorant composition"
+          },
+          {
+            patentFamilyId "17506321",
+            relevanceScore 99902,
+            representativePatent "EP-0186055-B1",
+            grantDate "1990-07-25",
+            representativePatentTitle "Antimycotic gel preparations"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 32857,
+      evidence patentChemicalChemical {
+        neighborName "3,3'-Dihydroxydipropyl ether",
+        cooccurrenceScore 51915,
+        nPatentFamilies 1042,
+        nPatents 1273,
+        patentFamily {
+          {
+            patentFamilyId "52469615",
+            relevanceScore 188633,
+            representativePatent "US-10227461-B2",
+            grantDate "2019-03-12",
+            representativePatentTitle "Fiber reinforced thermoplastic
+ composites and methods of making",
+            otherPatent {
+              "EP-2905303-B1"
+            }
+          },
+          {
+            patentFamilyId "46832286",
+            relevanceScore 188633,
+            representativePatent "EP-2570115-B1",
+            grantDate "2017-09-13",
+            representativePatentTitle "Composition for enhancing transdermal
+ absorption of a drug and patch preparation"
+          },
+          {
+            patentFamilyId "42758208",
+            relevanceScore 160967,
+            representativePatent "KR-101081303-B1",
+            grantDate "2011-11-08",
+            representativePatentTitle "Oil type cleanser cosmetic composition
+ and its manufacturing method"
+          },
+          {
+            patentFamilyId "42186519",
+            relevanceScore 120725,
+            representativePatent "JP-5586135-B2",
+            grantDate "2014-09-10",
+            representativePatentTitle "Water-based drawing material"
+          },
+          {
+            patentFamilyId "80203435",
+            relevanceScore 120725,
+            representativePatent "JP-7229485-B2",
+            grantDate "2023-02-28",
+            representativePatentTitle "Coating remover"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 444266,
+      evidence patentChemicalChemical {
+        neighborName "Maleic Acid",
+        cooccurrenceScore 51884,
+        nPatentFamilies 1352,
+        nPatents 1641,
+        patentFamily {
+          {
+            patentFamilyId "59565669",
+            relevanceScore 411627,
+            representativePatent "JP-6833490-B2",
+            grantDate "2021-02-24",
+            representativePatentTitle "Aqueous binder for mineral fibers"
+          },
+          {
+            patentFamilyId "7653517",
+            relevanceScore 127045,
+            representativePatent "EP-1313774-B1",
+            grantDate "2008-08-20",
+            representativePatentTitle "Water-soluble homopolymers and
+ copolymers having an improved environmental acceptability"
+          },
+          {
+            patentFamilyId "26836961",
+            relevanceScore 102907,
+            representativePatent "EP-1200368-B1",
+            grantDate "2007-02-14",
+            representativePatentTitle "High early strength cement and
+ additives and methods for making the same",
+            otherPatent {
+              "JP-4883859-B2"
+            }
+          },
+          {
+            patentFamilyId "58191615",
+            relevanceScore 102907,
+            representativePatent "EP-3423518-B1",
+            grantDate "2020-03-25",
+            representativePatentTitle "Polymer films and detergent packets
+ containing them",
+            otherPatent {
+              "JP-6777748-B2"
+            }
+          },
+          {
+            patentFamilyId "18385921",
+            relevanceScore 102907,
+            representativePatent "JP-3304584-B2",
+            grantDate "2002-07-22",
+            representativePatentTitle "Rosin emulsion composition, production
+ method thereof, sizing agent, sizing method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 1531,
+      evidence patentChemicalChemical {
+        neighborName "2-Amino-2-methyl-1,3-propanediol",
+        cooccurrenceScore 51593,
+        nPatentFamilies 441,
+        nPatents 531,
+        patentFamily {
+          {
+            patentFamilyId "7767722",
+            relevanceScore 666125,
+            representativePatent "EP-0840593-B1",
+            grantDate "2002-10-02",
+            representativePatentTitle "Oxidation colorants for dyeing
+ keratinic fibers, containing a special combination of alkalisation agents"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 666125,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "14548264",
+            relevanceScore 260205,
+            representativePatent "EP-0875241-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Aqueous cosmetic composition containing
+ stably solubilized uric acid and water-soluble polymer and method for stably
+ solubilizing uric acid in aqueous cosmetic composition",
+            otherPatent {
+              "JP-3439067-B2"
+            }
+          },
+          {
+            patentFamilyId "35961559",
+            relevanceScore 205594,
+            representativePatent "EP-1814954-B1",
+            grantDate "2012-03-14",
+            representativePatentTitle "Compositions and methods comprising
+ pigments and polyprotic dispersing agents"
+          },
+          {
+            patentFamilyId "72422371",
+            relevanceScore 166531,
+            representativePatent "US-11008536-B2",
+            grantDate "2021-05-18",
+            representativePatentTitle "Liquid product for stainless-steel
+ corrosion remediation"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8132,
+      evidence patentChemicalChemical {
+        neighborName "Butylethanolamine",
+        cooccurrenceScore 50352,
+        nPatentFamilies 328,
+        nPatents 399,
+        patentFamily {
+          {
+            patentFamilyId "32282724",
+            relevanceScore 736462,
+            representativePatent "JP-3970740-B2",
+            grantDate "2007-09-05",
+            representativePatentTitle "Developer composition"
+          },
+          {
+            patentFamilyId "69231658",
+            relevanceScore 736462,
+            representativePatent "JP-7374177-B2",
+            grantDate "2023-11-06",
+            representativePatentTitle "UV sinterable molecular ink and its
+ processing using broad spectrum UV light",
+            otherPatent {
+              "US-11873413-B2",
+              "KR-102790704-B1"
+            }
+          },
+          {
+            patentFamilyId "39642733",
+            relevanceScore 375746,
+            representativePatent "JP-5642898-B2",
+            grantDate "2014-12-17",
+            representativePatentTitle "Stabilized fluid",
+            otherPatent {
+              "EP-1992227-B1"
+            }
+          },
+          {
+            patentFamilyId "51027029",
+            relevanceScore 227303,
+            representativePatent "JP-5858290-B2",
+            grantDate "2016-02-10",
+            representativePatentTitle "Water-soluble metalworking fluid
+ composition"
+          },
+          {
+            patentFamilyId "25148031",
+            relevanceScore 152162,
+            representativePatent "EP-0956141-B1",
+            grantDate "2003-03-19",
+            representativePatentTitle "Amine heat stable salt neutralization
+ having reduced solids"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 6363,
+      evidence patentChemicalChemical {
+        neighborName "Isopropylamine",
+        cooccurrenceScore 48769,
+        nPatentFamilies 681,
+        nPatents 792,
+        patentFamily {
+          {
+            patentFamilyId "47215538",
+            relevanceScore 1060068,
+            representativePatent "EP-2782898-B1",
+            grantDate "2015-10-21",
+            representativePatentTitle "Method for producing ethylamines and
+ monoisopropylamine (mipa)"
+          },
+          {
+            patentFamilyId "67846391",
+            relevanceScore 147232,
+            representativePatent "US-11666054-B2",
+            grantDate "2023-06-06",
+            representativePatentTitle "High-load glyphosate herbicidal
+ composition, ready-to-use formulation obtained from the composition and
+ method to control various weed species in agricultural crops",
+            otherPatent {
+              "JP-7221993-B2"
+            }
+          },
+          {
+            patentFamilyId "57083160",
+            relevanceScore 147232,
+            representativePatent "US-11834632-B2",
+            grantDate "2023-12-05",
+            representativePatentTitle "Cleaning solution and methods of
+ cleaning a turbine engine",
+            otherPatent {
+              "EP-3153604-B1"
+            }
+          },
+          {
+            patentFamilyId "55166218",
+            relevanceScore 147232,
+            representativePatent "US-12187986-B2",
+            grantDate "2025-01-07",
+            representativePatentTitle "Cleaning solution and methods of
+ cleaning a turbine engine"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 147232,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 26107,
+      evidence patentChemicalChemical {
+        neighborName "1-Amino-2-butanol",
+        cooccurrenceScore 48586,
+        nPatentFamilies 271,
+        nPatents 330,
+        patentFamily {
+          {
+            patentFamilyId "43090541",
+            relevanceScore 762886,
+            representativePatent "JP-5505861-B2",
+            grantDate "2014-05-28",
+            representativePatentTitle "Lacquer-type paint resin and paint"
+          },
+          {
+            patentFamilyId "48668546",
+            relevanceScore 529782,
+            representativePatent "US-10174164-B2",
+            grantDate "2019-01-08",
+            representativePatentTitle "Triazine ring-containing polymer and
+ composition for film formation comprising same"
+          },
+          {
+            patentFamilyId "58427422",
+            relevanceScore 298002,
+            representativePatent "US-10857502-B2",
+            grantDate "2020-12-08",
+            representativePatentTitle "Absorbent liquid for CO2 and/or H2S,
+ and apparatus and method using same",
+            otherPatent {
+              "JP-6659293-B2"
+            }
+          },
+          {
+            patentFamilyId "63039580",
+            relevanceScore 235459,
+            representativePatent "US-10960346-B2",
+            grantDate "2021-03-30",
+            representativePatentTitle "Composite amine absorbing solution, and
+ device and method for removing CO2 or H2S or both"
+          },
+          {
+            patentFamilyId "51988814",
+            relevanceScore 235459,
+            representativePatent "EP-3006544-B1",
+            grantDate "2021-05-05",
+            representativePatentTitle "Water-soluble cutting/grinding fluid"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 60966,
+      evidence patentChemicalChemical {
+        neighborName "Tetramethylammonium hydroxide",
+        cooccurrenceScore 47740,
+        nPatentFamilies 506,
+        nPatents 622,
+        patentFamily {
+          {
+            patentFamilyId "55954125",
+            relevanceScore 347178,
+            representativePatent "US-10160938-B2",
+            grantDate "2018-12-25",
+            representativePatentTitle "Semiconductor element cleaning solution
+ that suppresses damage to tantalum-containing materials, and cleaning method
+ using same",
+            otherPatent {
+              "EP-3193359-B1",
+              "KR-102405631-B1"
+            }
+          },
+          {
+            patentFamilyId "65527403",
+            relevanceScore 192283,
+            representativePatent "US-11072767-B2",
+            grantDate "2021-07-27",
+            representativePatentTitle "Treatment liquid, kit, and method for
+ washing substrate",
+            otherPatent {
+              "KR-102295991-B1"
+            }
+          },
+          {
+            patentFamilyId "39183784",
+            relevanceScore 154301,
+            representativePatent "JP-4674704-B2",
+            grantDate "2011-04-20",
+            representativePatentTitle "Etching solution composition"
+          },
+          {
+            patentFamilyId "68239787",
+            relevanceScore 154301,
+            representativePatent "KR-102224907-B1",
+            grantDate "2021-03-09",
+            representativePatentTitle "Liquid stripper composition for dryfilm
+ resist",
+            otherPatent {
+              "US-11092895-B2",
+              "JP-6888846-B2"
+            }
+          },
+          {
+            patentFamilyId "74230713",
+            relevanceScore 154301,
+            representativePatent "KR-102785080-B1",
+            grantDate "2025-03-28",
+            representativePatentTitle "Composition for removing photoresist"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7852,
+      evidence patentChemicalChemical {
+        neighborName "Propylamine",
+        cooccurrenceScore 46612,
+        nPatentFamilies 716,
+        nPatents 889,
+        patentFamily {
+          {
+            patentFamilyId "61094808",
+            relevanceScore 292785,
+            representativePatent "KR-101820878-B1",
+            grantDate "2018-01-22",
+            representativePatentTitle "Coating composition comprising protein,
+ method for manufacturing same, film for food packaging using same, and method
+ for manufacturing film for food packaging using same"
+          },
+          {
+            patentFamilyId "62567232",
+            relevanceScore 239108,
+            representativePatent "US-11332554-B2",
+            grantDate "2022-05-17",
+            representativePatentTitle "Amidation of polymers containing ester
+ side chains using functionalized amines"
+          },
+          {
+            patentFamilyId "14051937",
+            relevanceScore 143465,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "17050998",
+            relevanceScore 143465,
+            representativePatent "JP-4351768-B2",
+            grantDate "2009-10-28",
+            representativePatentTitle "Sterilizer lubricant for conveyor"
+          },
+          {
+            patentFamilyId "57590501",
+            relevanceScore 119554,
+            representativePatent "US-10584283-B2",
+            grantDate "2020-03-10",
+            representativePatentTitle "Preservative for technical products"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8029,
+      evidence patentChemicalChemical {
+        neighborName "Furan",
+        cooccurrenceScore 45664,
+        nPatentFamilies 1324,
+        nPatents 1532,
+        patentFamily {
+          {
+            patentFamilyId "38479186",
+            relevanceScore 94086,
+            representativePatent "EP-1993506-B1",
+            grantDate "2013-08-28",
+            representativePatentTitle "Low-odor dimethicone copolyol
+ sulfosuccinate surfactant compositions"
+          },
+          {
+            patentFamilyId "14448977",
+            relevanceScore 94086,
+            representativePatent "JP-2887833-B2",
+            grantDate "1999-05-10",
+            representativePatentTitle "Cyclobutenedione derivative, method for
+ producing the same, and nonlinear optical element using the same"
+          },
+          {
+            patentFamilyId "32032550",
+            relevanceScore 94086,
+            representativePatent "JP-4200781-B2",
+            grantDate "2008-12-24",
+            representativePatentTitle "Method for producing
+ electrophotographic photosensitive member"
+          },
+          {
+            patentFamilyId "6224900",
+            relevanceScore 78405,
+            representativePatent "EP-0150474-B1",
+            grantDate "1988-08-17",
+            representativePatentTitle "Process for the preparation of
+ 5,6-dihydro-pyrrolo-[2,1-a]isoquinolines"
+          },
+          {
+            patentFamilyId "8241613",
+            relevanceScore 65338,
+            representativePatent "EP-1222217-B1",
+            grantDate "2005-06-15",
+            representativePatentTitle "Uniform molecular weight polymers"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7220,
+      evidence patentChemicalChemical {
+        neighborName "1H-Benzotriazole",
+        cooccurrenceScore 43059,
+        nPatentFamilies 377,
+        nPatents 460,
+        patentFamily {
+          {
+            patentFamilyId "19638690",
+            relevanceScore 492700,
+            representativePatent "KR-100378551-B1",
+            grantDate "2003-03-29",
+            representativePatentTitle "Resist remover composition"
+          },
+          {
+            patentFamilyId "55917007",
+            relevanceScore 492700,
+            representativePatent "KR-101693473-B1",
+            grantDate "2017-01-10",
+            representativePatentTitle "Alumina composition for jet scrubbing
+ process"
+          },
+          {
+            patentFamilyId "37962710",
+            relevanceScore 342153,
+            representativePatent "KR-101366957-B1",
+            grantDate "2014-02-25",
+            representativePatentTitle "Stripping solution composition and
+ stripping method using the same"
+          },
+          {
+            patentFamilyId "65233471",
+            relevanceScore 123175,
+            representativePatent "US-11193094-B2",
+            grantDate "2021-12-07",
+            representativePatentTitle "Liquid composition for reducing damage
+ of cobalt, alumina, interlayer insulating film and silicon nitride, and
+ washing method using same"
+          },
+          {
+            patentFamilyId "21713291",
+            relevanceScore 123175,
+            representativePatent "EP-1066123-B1",
+            grantDate "2011-11-16",
+            representativePatentTitle "Improvement in aqueous stripping and
+ cleaning compositions"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 9237,
+      evidence patentChemicalChemical {
+        neighborName "Dabco",
+        cooccurrenceScore 42732,
+        nPatentFamilies 892,
+        nPatents 1016,
+        patentFamily {
+          {
+            patentFamilyId "25020678",
+            relevanceScore 164061,
+            representativePatent "EP-0842936-B1",
+            grantDate "2001-07-25",
+            representativePatentTitle "Production of triethylenediamine using
+ surface acidity deactivated zeolite catalysts",
+            otherPatent {
+              "JP-3182383-B2"
+            }
+          },
+          {
+            patentFamilyId "50754718",
+            relevanceScore 147655,
+            representativePatent "US-10266541-B2",
+            grantDate "2019-04-23",
+            representativePatentTitle "Joint production method and device for
+ aziridine, piperazine and triethylenediamine"
+          },
+          {
+            patentFamilyId "32032550",
+            relevanceScore 134232,
+            representativePatent "JP-4200781-B2",
+            grantDate "2008-12-24",
+            representativePatentTitle "Method for producing
+ electrophotographic photosensitive member"
+          },
+          {
+            patentFamilyId "41623362",
+            relevanceScore 111860,
+            representativePatent "KR-100695389-B1",
+            grantDate "2007-03-16",
+            representativePatentTitle "A composition for reinforcing structure
+ restoration and a method for reinforcing structure restoration using thereof"
+          },
+          {
+            patentFamilyId "42282054",
+            relevanceScore 111860,
+            representativePatent "KR-100959691-B1",
+            grantDate "2010-05-26",
+            representativePatentTitle "Urethane foam composition and structure
+ reinforcement restoration method using the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8146,
+      evidence patentChemicalChemical {
+        neighborName "Diethylene Glycol Monoethyl Ether",
+        cooccurrenceScore 42727,
+        nPatentFamilies 560,
+        nPatents 663,
+        patentFamily {
+          {
+            patentFamilyId "19544159",
+            relevanceScore 211649,
+            representativePatent "KR-100324172-B1",
+            grantDate "2002-06-20",
+            representativePatentTitle "Photoresist stripping composition and
+ photoresist stripping method using the same"
+          },
+          {
+            patentFamilyId "42144877",
+            relevanceScore 167229,
+            representativePatent "EP-2207197-B1",
+            grantDate "2017-03-22",
+            representativePatentTitle "Photoresist residue removal composition"
+          },
+          {
+            patentFamilyId "51988814",
+            relevanceScore 167229,
+            representativePatent "EP-3006544-B1",
+            grantDate "2021-05-05",
+            representativePatentTitle "Water-soluble cutting/grinding fluid"
+          },
+          {
+            patentFamilyId "45612185",
+            relevanceScore 167229,
+            representativePatent "KR-101485217-B1",
+            grantDate "2015-01-22",
+            representativePatentTitle "Composition for Removing Polymer
+ Residue of Photosensitive Resistive Etching Film"
+          },
+          {
+            patentFamilyId "68239787",
+            relevanceScore 167229,
+            representativePatent "KR-102224907-B1",
+            grantDate "2021-03-09",
+            representativePatentTitle "Liquid stripper composition for dryfilm
+ resist",
+            otherPatent {
+              "US-11092895-B2",
+              "JP-6888846-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 247,
+      evidence patentChemicalChemical {
+        neighborName "Betaine",
+        cooccurrenceScore 41706,
+        nPatentFamilies 693,
+        nPatents 806,
+        patentFamily {
+          {
+            patentFamilyId "56120939",
+            relevanceScore 351760,
+            representativePatent "US-11007132-B2",
+            grantDate "2021-05-18",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "KR-102375994-B1",
+              "JP-6882345-B2"
+            }
+          },
+          {
+            patentFamilyId "14548264",
+            relevanceScore 192369,
+            representativePatent "EP-0875241-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Aqueous cosmetic composition containing
+ stably solubilized uric acid and water-soluble polymer and method for stably
+ solubilizing uric acid in aqueous cosmetic composition"
+          },
+          {
+            patentFamilyId "80988350",
+            relevanceScore 136795,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "41728269",
+            relevanceScore 128979,
+            representativePatent "EP-2467462-B1",
+            grantDate "2014-12-17",
+            representativePatentTitle "Concentrated aqueous solution of an
+ amphoteric surfactant particularly betaine, and method for the preparation
+ thereof"
+          },
+          {
+            patentFamilyId "8175336",
+            relevanceScore 101749,
+            representativePatent "EP-1287108-B1",
+            grantDate "2006-11-02",
+            representativePatentTitle "A cleansing device for wc pans"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 4837,
+      evidence patentChemicalChemical {
+        neighborName "Piperazine",
+        cooccurrenceScore 41669,
+        nPatentFamilies 708,
+        nPatents 844,
+        patentFamily {
+          {
+            patentFamilyId "58427422",
+            relevanceScore 197077,
+            representativePatent "US-10857502-B2",
+            grantDate "2020-12-08",
+            representativePatentTitle "Absorbent liquid for CO2 and/or H2S,
+ and apparatus and method using same",
+            otherPatent {
+              "JP-6659293-B2"
+            }
+          },
+          {
+            patentFamilyId "6084102",
+            relevanceScore 197077,
+            representativePatent "EP-0027944-B1",
+            grantDate "1985-06-05",
+            representativePatentTitle "Polyester-amide based melting adhesives
+ and their use in bonding organic and inorganic substrates"
+          },
+          {
+            patentFamilyId "50754718",
+            relevanceScore 138742,
+            representativePatent "US-10266541-B2",
+            grantDate "2019-04-23",
+            representativePatentTitle "Joint production method and device for
+ aziridine, piperazine and triethylenediamine"
+          },
+          {
+            patentFamilyId "55654775",
+            relevanceScore 126129,
+            representativePatent "US-10434461-B2",
+            grantDate "2019-10-08",
+            representativePatentTitle "Carbon dioxide absorbent and method for
+ absorbing and desorbing carbon dioxide"
+          },
+          {
+            patentFamilyId "59385927",
+            relevanceScore 126129,
+            representativePatent "US-10589214-B2",
+            grantDate "2020-03-17",
+            representativePatentTitle "CO2 mass transfer enhancement of
+ aqueous amine solvents by particle additives"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 289,
+      evidence patentChemicalChemical {
+        neighborName "Catechol",
+        cooccurrenceScore 41198,
+        nPatentFamilies 425,
+        nPatents 482,
+        patentFamily {
+          {
+            patentFamilyId "19667052",
+            relevanceScore 366238,
+            representativePatent "JP-3679753-B2",
+            grantDate "2005-08-03",
+            representativePatentTitle "Resist stripper composition"
+          },
+          {
+            patentFamilyId "26760803",
+            relevanceScore 269073,
+            representativePatent "EP-0578507-B1",
+            grantDate "2005-09-28",
+            representativePatentTitle "Cleaning solutions including
+ nucleophilic amine compound having reduction and oxidation potentials",
+            otherPatent {
+              "JP-3048207-B2"
+            }
+          },
+          {
+            patentFamilyId "26779843",
+            relevanceScore 162772,
+            representativePatent "EP-0652293-B1",
+            grantDate "1999-03-31",
+            representativePatentTitle "Process for making finely divided,
+ dense packing, spherical shaped silver particles",
+            otherPatent {
+              "JP-2562005-B2"
+            }
+          },
+          {
+            patentFamilyId "19083926",
+            relevanceScore 131846,
+            representativePatent "JP-3578276-B2",
+            grantDate "2004-10-20",
+            representativePatentTitle "Hair dye"
+          },
+          {
+            patentFamilyId "35355858",
+            relevanceScore 108963,
+            representativePatent "JP-4625842-B2",
+            grantDate "2011-02-02",
+            representativePatentTitle "Cleaning compositions for
+ microelectronic substrates"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8133,
+      evidence patentChemicalChemical {
+        neighborName "2-Butoxyethanol",
+        cooccurrenceScore 40408,
+        nPatentFamilies 772,
+        nPatents 902,
+        patentFamily {
+          {
+            patentFamilyId "6284093",
+            relevanceScore 124748,
+            representativePatent "EP-0219789-B1",
+            grantDate "1992-02-26",
+            representativePatentTitle "Stripping solvent for photoresists"
+          },
+          {
+            patentFamilyId "63454431",
+            relevanceScore 124748,
+            representativePatent "KR-101891533-B1",
+            grantDate "2018-08-24",
+            representativePatentTitle "Anti-spatter compound and method thereof"
+          },
+          {
+            patentFamilyId "9246308",
+            relevanceScore 103098,
+            representativePatent "EP-0049191-B1",
+            grantDate "1984-05-09",
+            representativePatentTitle "Process for preparing completion
+ fluids, and pastes used in carrying out the process"
+          },
+          {
+            patentFamilyId "39061281",
+            relevanceScore 99006,
+            representativePatent "KR-100774525-B1",
+            grantDate "2007-11-08",
+            representativePatentTitle "Pre- calsinated rib barrier repmover
+ composition and method for removing dielectro layer using the same"
+          },
+          {
+            patentFamilyId "59285332",
+            relevanceScore 90397,
+            representativePatent "US-10941347-B2",
+            grantDate "2021-03-09",
+            representativePatentTitle "Composition for steam extraction of
+ bitumen"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8979,
+      evidence patentChemicalChemical {
+        neighborName "2,11,20,29,37,38,39,40-Octazanonacyclo[28.6.1.13,10.112,
+19.121,28.04,9.013,18.022,27.031,36]tetraconta-1,3(40),4,6,8,10,12(39),13,15,1
+7,19,21,23,25,27,30(37),31,33,35-nonadecaene",
+        cooccurrenceScore 40405,
+        nPatentFamilies 697,
+        nPatents 757,
+        patentFamily {
+          {
+            patentFamilyId "50288182",
+            relevanceScore 119304,
+            representativePatent "EP-3105294-B1",
+            grantDate "2018-01-31",
+            representativePatentTitle "Printing ink"
+          },
+          {
+            patentFamilyId "42350008",
+            relevanceScore 95443,
+            representativePatent "JP-5381068-B2",
+            grantDate "2014-01-08",
+            representativePatentTitle "Organic photoreceptor, image forming
+ method using the same, image forming apparatus and process cartridge"
+          },
+          {
+            patentFamilyId "18426854",
+            relevanceScore 82279,
+            representativePatent "JP-3702680-B2",
+            grantDate "2005-10-05",
+            representativePatentTitle "Electrophotographic photosensitive
+ member, process cartridge and image forming apparatus using the same"
+          },
+          {
+            patentFamilyId "16489060",
+            relevanceScore 79536,
+            representativePatent "JP-3978941-B2",
+            grantDate "2007-09-19",
+            representativePatentTitle "Electrophotographic photoreceptor"
+          },
+          {
+            patentFamilyId "43360267",
+            relevanceScore 79536,
+            representativePatent "JP-5353421-B2",
+            grantDate "2013-11-27",
+            representativePatentTitle "Image forming method, image forming
+ apparatus, color image forming method, and color image forming apparatus"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8282,
+      evidence patentChemicalChemical {
+        neighborName "2-Amino-2-ethyl-1,3-propanediol",
+        cooccurrenceScore 40110,
+        nPatentFamilies 243,
+        nPatents 309,
+        patentFamily {
+          {
+            patentFamilyId "7767722",
+            relevanceScore 722688,
+            representativePatent "EP-0840593-B1",
+            grantDate "2002-10-02",
+            representativePatentTitle "Oxidation colorants for dyeing
+ keratinic fibers, containing a special combination of alkalisation agents"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 722688,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "9910786",
+            relevanceScore 282300,
+            representativePatent "JP-3986851-B2",
+            grantDate "2007-10-03",
+            representativePatentTitle "Cosmetic and personal care compositions"
+          },
+          {
+            patentFamilyId "9883917",
+            relevanceScore 223052,
+            representativePatent "EP-1248520-B2",
+            grantDate "2012-04-25",
+            representativePatentTitle "Anti-microbial compositions",
+            otherPatent {
+              "EP-1248520-B1"
+            }
+          },
+          {
+            patentFamilyId "35961559",
+            relevanceScore 223052,
+            representativePatent "EP-1814954-B1",
+            grantDate "2012-03-14",
+            representativePatentTitle "Compositions and methods comprising
+ pigments and polyprotic dispersing agents"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7615,
+      evidence patentChemicalChemical {
+        neighborName "Edetol",
+        cooccurrenceScore 40080,
+        nPatentFamilies 156,
+        nPatents 201,
+        patentFamily {
+          {
+            patentFamilyId "51570425",
+            relevanceScore 1221066,
+            representativePatent "US-10815191-B2",
+            grantDate "2020-10-27",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine and tetrahydroxypropyl ethylenediamine",
+            otherPatent {
+              "JP-6697860-B2",
+              "KR-102359405-B1",
+              "EP-2997959-B1"
+            }
+          },
+          {
+            patentFamilyId "6068506",
+            relevanceScore 678370,
+            representativePatent "EP-0017948-B1",
+            grantDate "1983-07-13",
+            representativePatentTitle "Process for preparing polyurethane foams"
+          },
+          {
+            patentFamilyId "41623362",
+            relevanceScore 471090,
+            representativePatent "KR-100695389-B1",
+            grantDate "2007-03-16",
+            representativePatentTitle "A composition for reinforcing structure
+ restoration and a method for reinforcing structure restoration using thereof"
+          },
+          {
+            patentFamilyId "62557254",
+            relevanceScore 346107,
+            representativePatent "US-10125316-B2",
+            grantDate "2018-11-13",
+            representativePatentTitle "Etching solution and manufacturing
+ method of display"
+          },
+          {
+            patentFamilyId "74877716",
+            relevanceScore 209373,
+            representativePatent "JP-7312654-B2",
+            grantDate "2023-07-21",
+            representativePatentTitle "Strength improving agent for cement,
+ additive for cement, cement composition, method for improving cement strength"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 104748,
+      evidence patentChemicalChemical {
+        neighborName "Bisulfite",
+        cooccurrenceScore 39951,
+        nPatentFamilies 678,
+        nPatents 772,
+        patentFamily {
+          {
+            patentFamilyId "72837938",
+            relevanceScore 419094,
+            representativePatent "US-12227719-B2",
+            grantDate "2025-02-18",
+            representativePatentTitle "Liquid concentrated surfactant
+ compositions"
+          },
+          {
+            patentFamilyId "57890436",
+            relevanceScore 174623,
+            representativePatent "KR-101960670-B1",
+            grantDate "2019-03-21",
+            representativePatentTitle "A method for reducing corrosive ions in
+ an aromatic compound extraction solvent"
+          },
+          {
+            patentFamilyId "23962882",
+            relevanceScore 129350,
+            representativePatent "EP-0472687-B1",
+            grantDate "1994-09-21",
+            representativePatentTitle "Compositions and polymer fabrics
+ treated with the same"
+          },
+          {
+            patentFamilyId "21735090",
+            relevanceScore 109763,
+            representativePatent "EP-1056693-B1",
+            grantDate "2006-06-21",
+            representativePatentTitle "Anionic surfactants based on alkene
+ sulfonic acid"
+          },
+          {
+            patentFamilyId "52809841",
+            relevanceScore 104774,
+            representativePatent "US-10024852-B2",
+            grantDate "2018-07-17",
+            representativePatentTitle "Use of disulfide bonds to form a
+ reversible and reusable coating for nanofluidic devices",
+            otherPatent {
+              "JP-6505093-B2",
+              "US-10024851-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 173239856,
+      evidence patentChemicalChemical {
+        neighborName "Hydron;4-hydroxy-4-oxobutanoate",
+        cooccurrenceScore 39443,
+        nPatentFamilies 1094,
+        nPatents 1272,
+        patentFamily {
+          {
+            patentFamilyId "62557254",
+            relevanceScore 220854,
+            representativePatent "US-10125316-B2",
+            grantDate "2018-11-13",
+            representativePatentTitle "Etching solution and manufacturing
+ method of display"
+          },
+          {
+            patentFamilyId "23962882",
+            relevanceScore 133603,
+            representativePatent "EP-0472687-B1",
+            grantDate "1994-09-21",
+            representativePatentTitle "Compositions and polymer fabrics
+ treated with the same"
+          },
+          {
+            patentFamilyId "11210758",
+            relevanceScore 108218,
+            representativePatent "EP-0109549-B1",
+            grantDate "1988-08-31",
+            representativePatentTitle "Corrosion inhibitors for aqueous
+ solutions for the treatment of metals, and process for their preparation"
+          },
+          {
+            patentFamilyId "18385921",
+            relevanceScore 108218,
+            representativePatent "JP-3304584-B2",
+            grantDate "2002-07-22",
+            representativePatentTitle "Rosin emulsion composition, production
+ method thereof, sizing agent, sizing method"
+          },
+          {
+            patentFamilyId "48698046",
+            relevanceScore 108218,
+            representativePatent "KR-101444877-B1",
+            grantDate "2014-10-01",
+            representativePatentTitle "On-site crosslinked hydrogel composed
+ of gamma-polyglutamic acid and its preparation method",
+            otherPatent {
+              "EP-2797984-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 656472,
+      evidence patentChemicalChemical {
+        neighborName "Oxido(dioxo)-lambda6-sulfane",
+        cooccurrenceScore 38860,
+        nPatentFamilies 636,
+        nPatents 748,
+        patentFamily {
+          {
+            patentFamilyId "60570277",
+            relevanceScore 227063,
+            representativePatent "US-11884897-B2",
+            grantDate "2024-01-30",
+            representativePatentTitle "Hard surface cleaners including
+ fluorosurfactants"
+          },
+          {
+            patentFamilyId "22906172",
+            relevanceScore 188288,
+            representativePatent "EP-0059522-B1",
+            grantDate "1987-01-21",
+            representativePatentTitle "A method of stabilizing the dimensions
+ of fluorpolymer membranes containing sulfonate and/or carboxylate functional
+ groups for use in electrolytic cells and membranes prepared in accordance
+ with this method"
+          },
+          {
+            patentFamilyId "9429460",
+            relevanceScore 111261,
+            representativePatent "EP-0638137-B1",
+            grantDate "1996-09-11",
+            representativePatentTitle "Method for excavating tunnels,
+ utilisation of a foaming agent and new composition"
+          },
+          {
+            patentFamilyId "6103563",
+            relevanceScore 96749,
+            representativePatent "EP-0041134-B1",
+            grantDate "1984-06-13",
+            representativePatentTitle "Process for the separation of
+ water-soluble salts of aromatic sulphonic acids from sulphonated mixtures"
+          },
+          {
+            patentFamilyId "35015692",
+            relevanceScore 92718,
+            representativePatent "JP-5043289-B2",
+            grantDate "2012-10-10",
+            representativePatentTitle "Metal deformation composition and use
+ thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 674,
+      evidence patentChemicalChemical {
+        neighborName "Dimethylamine",
+        cooccurrenceScore 38779,
+        nPatentFamilies 952,
+        nPatents 1121,
+        patentFamily {
+          {
+            patentFamilyId "25241965",
+            relevanceScore 519366,
+            representativePatent "EP-0623166-B1",
+            grantDate "1996-06-05",
+            representativePatentTitle "Liquid hard surface detergent
+ compositions containing zwitterionic and cationic detergent surfactants and
+ monoethanolamine and/or beta-aminoalkanol"
+          },
+          {
+            patentFamilyId "38256319",
+            relevanceScore 129842,
+            representativePatent "JP-4861014-B2",
+            grantDate "2012-01-25",
+            representativePatentTitle "Colorant composition"
+          },
+          {
+            patentFamilyId "17506321",
+            relevanceScore 99878,
+            representativePatent "EP-0186055-B1",
+            grantDate "1990-07-25",
+            representativePatentTitle "Antimycotic gel preparations"
+          },
+          {
+            patentFamilyId "63852238",
+            relevanceScore 66246,
+            representativePatent "US-11109591-B2",
+            grantDate "2021-09-07",
+            representativePatentTitle "Single phase liquids of alkanolamine
+ salts of dicamba"
+          },
+          {
+            patentFamilyId "18626109",
+            relevanceScore 57707,
+            representativePatent "EP-1146148-B1",
+            grantDate "2011-08-24",
+            representativePatentTitle "Cyanide-free pyrophosphoric acid bath
+ for use in copper-tin alloy plating",
+            otherPatent {
+              "JP-3455712-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 5282600,
+      evidence patentChemicalChemical {
+        neighborName "10-Methylheptadecanoic acid",
+        cooccurrenceScore 38090,
+        nPatentFamilies 925,
+        nPatents 1072,
+        patentFamily {
+          {
+            patentFamilyId "43758770",
+            relevanceScore 211385,
+            representativePatent "JP-5131258-B2",
+            grantDate "2013-01-30",
+            representativePatentTitle "Metal processing oil, metal processing
+ method and metal processed product"
+          },
+          {
+            patentFamilyId "53026942",
+            relevanceScore 161841,
+            representativePatent "KR-101500624-B1",
+            grantDate "2015-03-12",
+            representativePatentTitle "The manufacturing method of rubber
+ molding using the textile fabrics"
+          },
+          {
+            patentFamilyId "55655033",
+            relevanceScore 103579,
+            representativePatent "US-10041019-B2",
+            grantDate "2018-08-07",
+            representativePatentTitle "Drilling fluid system"
+          },
+          {
+            patentFamilyId "24512018",
+            relevanceScore 103579,
+            representativePatent "EP-0167375-B1",
+            grantDate "1991-02-27",
+            representativePatentTitle "Stable bleaching compositions"
+          },
+          {
+            patentFamilyId "8175336",
+            relevanceScore 85602,
+            representativePatent "EP-1287108-B1",
+            grantDate "2006-11-02",
+            representativePatentTitle "A cleansing device for wc pans"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 5565,
+      evidence patentChemicalChemical {
+        neighborName "Triethylenetetramine",
+        cooccurrenceScore 37976,
+        nPatentFamilies 602,
+        nPatents 753,
+        patentFamily {
+          {
+            patentFamilyId "14051937",
+            relevanceScore 549681,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "27361268",
+            relevanceScore 137420,
+            representativePatent "EP-0010390-B1",
+            grantDate "1982-09-29",
+            representativePatentTitle "Method and composition for reducing
+ cold-end corrosion"
+          },
+          {
+            patentFamilyId "6284093",
+            relevanceScore 137420,
+            representativePatent "EP-0219789-B1",
+            grantDate "1992-02-26",
+            representativePatentTitle "Stripping solvent for photoresists"
+          },
+          {
+            patentFamilyId "57442411",
+            relevanceScore 59748,
+            representativePatent "EP-3370735-B1",
+            grantDate "2020-05-13",
+            representativePatentTitle "Polysaccharide-based polymer and its
+ use for the prevention and treatment of the wilson's disease"
+          },
+          {
+            patentFamilyId "6202883",
+            relevanceScore 54532,
+            representativePatent "EP-0131200-B1",
+            grantDate "1991-04-24",
+            representativePatentTitle "Water-soluble reaction products
+ essentially free from ester linkages, made from epihalohydrine and
+ water-soluble basic polyamide amines, process for their preparation, and
+ their use"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8019,
+      evidence patentChemicalChemical {
+        neighborName "2-Methoxyethanol",
+        cooccurrenceScore 37684,
+        nPatentFamilies 987,
+        nPatents 1111,
+        patentFamily {
+          {
+            patentFamilyId "32032550",
+            relevanceScore 122292,
+            representativePatent "JP-4200781-B2",
+            grantDate "2008-12-24",
+            representativePatentTitle "Method for producing
+ electrophotographic photosensitive member"
+          },
+          {
+            patentFamilyId "30429425",
+            relevanceScore 122292,
+            representativePatent "JP-4375943-B2",
+            grantDate "2009-12-02",
+            representativePatentTitle "Method for producing powder N-long
+ chain acylimino dibasic acid salt"
+          },
+          {
+            patentFamilyId "9246308",
+            relevanceScore 101068,
+            representativePatent "EP-0049191-B1",
+            grantDate "1984-05-09",
+            representativePatentTitle "Process for preparing completion
+ fluids, and pastes used in carrying out the process"
+          },
+          {
+            patentFamilyId "39061281",
+            relevanceScore 97057,
+            representativePatent "KR-100774525-B1",
+            grantDate "2007-11-08",
+            representativePatentTitle "Pre- calsinated rib barrier repmover
+ composition and method for removing dielectro layer using the same"
+          },
+          {
+            patentFamilyId "27649182",
+            relevanceScore 87351,
+            representativePatent "JP-3942439-B2",
+            grantDate "2007-07-11",
+            representativePatentTitle "Casting coating composition and casting
+ cutting method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 521261,
+      evidence patentChemicalChemical {
+        neighborName "Tetronic acid",
+        cooccurrenceScore 37099,
+        nPatentFamilies 353,
+        nPatents 422,
+        patentFamily {
+          {
+            patentFamilyId "36537291",
+            relevanceScore 573279,
+            representativePatent "JP-4442817-B2",
+            grantDate "2010-03-31",
+            representativePatentTitle "Photoresist stripping solution"
+          },
+          {
+            patentFamilyId "19544159",
+            relevanceScore 223937,
+            representativePatent "KR-100324172-B1",
+            grantDate "2002-06-20",
+            representativePatentTitle "Photoresist stripping composition and
+ photoresist stripping method using the same"
+          },
+          {
+            patentFamilyId "42144877",
+            relevanceScore 176938,
+            representativePatent "EP-2207197-B1",
+            grantDate "2017-03-22",
+            representativePatentTitle "Photoresist residue removal composition"
+          },
+          {
+            patentFamilyId "45612185",
+            relevanceScore 176938,
+            representativePatent "KR-101485217-B1",
+            grantDate "2015-01-22",
+            representativePatentTitle "Composition for Removing Polymer
+ Residue of Photosensitive Resistive Etching Film"
+          },
+          {
+            patentFamilyId "68239787",
+            relevanceScore 176938,
+            representativePatent "KR-102224907-B1",
+            grantDate "2021-03-09",
+            representativePatentTitle "Liquid stripper composition for dryfilm
+ resist",
+            otherPatent {
+              "US-11092895-B2",
+              "JP-6888846-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 259994,
+      evidence patentChemicalChemical {
+        neighborName "R-(-)-1,2-Propanediol",
+        cooccurrenceScore 36778,
+        nPatentFamilies 435,
+        nPatents 539,
+        patentFamily {
+          {
+            patentFamilyId "56244644",
+            relevanceScore 470400,
+            representativePatent "JP-5940204-B1",
+            grantDate "2016-06-29",
+            representativePatentTitle "Film remover"
+          },
+          {
+            patentFamilyId "59853515",
+            relevanceScore 326667,
+            representativePatent "JP-7033391-B2",
+            grantDate "2022-03-10",
+            representativePatentTitle "Hair dye for hair"
+          },
+          {
+            patentFamilyId "67846391",
+            relevanceScore 117600,
+            representativePatent "US-11666054-B2",
+            grantDate "2023-06-06",
+            representativePatentTitle "High-load glyphosate herbicidal
+ composition, ready-to-use formulation obtained from the composition and
+ method to control various weed species in agricultural crops"
+          },
+          {
+            patentFamilyId "56120939",
+            relevanceScore 117600,
+            representativePatent "JP-6882345-B2",
+            grantDate "2021-06-02",
+            representativePatentTitle "Aqueous surfactant composition"
+          },
+          {
+            patentFamilyId "14241996",
+            relevanceScore 90462,
+            representativePatent "EP-0622388-B2",
+            grantDate "2001-04-11",
+            representativePatentTitle "Method of producing open cell rigid
+ polyurethane foam",
+            otherPatent {
+              "EP-0622388-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 965,
+      evidence patentChemicalChemical {
+        neighborName "9-Octadecenoic Acid",
+        cooccurrenceScore 36267,
+        nPatentFamilies 800,
+        nPatents 937,
+        patentFamily {
+          {
+            patentFamilyId "53837533",
+            relevanceScore 233927,
+            representativePatent "JP-6310727-B2",
+            grantDate "2018-04-11",
+            representativePatentTitle "Floor polish release agent and floor
+ polish release method"
+          },
+          {
+            patentFamilyId "8175336",
+            relevanceScore 94731,
+            representativePatent "EP-1287108-B1",
+            grantDate "2006-11-02",
+            representativePatentTitle "A cleansing device for wc pans"
+          },
+          {
+            patentFamilyId "75473000",
+            relevanceScore 94731,
+            representativePatent "KR-102254208-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Synthetic pseudo-ceramide complex
+ derived from Jeju natural oil prepared by enzyme catalyst lipase and
+ functional cosmetic raw material including the same"
+          },
+          {
+            patentFamilyId "84535652",
+            relevanceScore 79600,
+            representativePatent "KR-102477036-B1",
+            grantDate "2022-12-19",
+            representativePatentTitle "Wet lubricating composition"
+          },
+          {
+            patentFamilyId "50189585",
+            relevanceScore 74169,
+            representativePatent "KR-102182835-B1",
+            grantDate "2020-11-25",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 3014063,
+      evidence patentChemicalChemical {
+        neighborName "9-Heptadecenoic acid",
+        cooccurrenceScore 36080,
+        nPatentFamilies 798,
+        nPatents 934,
+        patentFamily {
+          {
+            patentFamilyId "53837533",
+            relevanceScore 234221,
+            representativePatent "JP-6310727-B2",
+            grantDate "2018-04-11",
+            representativePatentTitle "Floor polish release agent and floor
+ polish release method"
+          },
+          {
+            patentFamilyId "8175336",
+            relevanceScore 94850,
+            representativePatent "EP-1287108-B1",
+            grantDate "2006-11-02",
+            representativePatentTitle "A cleansing device for wc pans"
+          },
+          {
+            patentFamilyId "75473000",
+            relevanceScore 94850,
+            representativePatent "KR-102254208-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Synthetic pseudo-ceramide complex
+ derived from Jeju natural oil prepared by enzyme catalyst lipase and
+ functional cosmetic raw material including the same"
+          },
+          {
+            patentFamilyId "84535652",
+            relevanceScore 79700,
+            representativePatent "KR-102477036-B1",
+            grantDate "2022-12-19",
+            representativePatentTitle "Wet lubricating composition"
+          },
+          {
+            patentFamilyId "50189585",
+            relevanceScore 74262,
+            representativePatent "KR-102182835-B1",
+            grantDate "2020-11-25",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 94159,
+      evidence patentChemicalChemical {
+        neighborName "9-Eicosenoic Acid",
+        cooccurrenceScore 36031,
+        nPatentFamilies 800,
+        nPatents 936,
+        patentFamily {
+          {
+            patentFamilyId "53837533",
+            relevanceScore 234170,
+            representativePatent "JP-6310727-B2",
+            grantDate "2018-04-11",
+            representativePatentTitle "Floor polish release agent and floor
+ polish release method"
+          },
+          {
+            patentFamilyId "8175336",
+            relevanceScore 94829,
+            representativePatent "EP-1287108-B1",
+            grantDate "2006-11-02",
+            representativePatentTitle "A cleansing device for wc pans"
+          },
+          {
+            patentFamilyId "75473000",
+            relevanceScore 94829,
+            representativePatent "KR-102254208-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Synthetic pseudo-ceramide complex
+ derived from Jeju natural oil prepared by enzyme catalyst lipase and
+ functional cosmetic raw material including the same"
+          },
+          {
+            patentFamilyId "84535652",
+            relevanceScore 79683,
+            representativePatent "KR-102477036-B1",
+            grantDate "2022-12-19",
+            representativePatentTitle "Wet lubricating composition"
+          },
+          {
+            patentFamilyId "50189585",
+            relevanceScore 74246,
+            representativePatent "KR-102182835-B1",
+            grantDate "2020-11-25",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 33604,
+      evidence patentChemicalChemical {
+        neighborName "Octadec-8-enoic acid",
+        cooccurrenceScore 36030,
+        nPatentFamilies 798,
+        nPatents 934,
+        patentFamily {
+          {
+            patentFamilyId "53837533",
+            relevanceScore 234221,
+            representativePatent "JP-6310727-B2",
+            grantDate "2018-04-11",
+            representativePatentTitle "Floor polish release agent and floor
+ polish release method"
+          },
+          {
+            patentFamilyId "8175336",
+            relevanceScore 94850,
+            representativePatent "EP-1287108-B1",
+            grantDate "2006-11-02",
+            representativePatentTitle "A cleansing device for wc pans"
+          },
+          {
+            patentFamilyId "75473000",
+            relevanceScore 94850,
+            representativePatent "KR-102254208-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Synthetic pseudo-ceramide complex
+ derived from Jeju natural oil prepared by enzyme catalyst lipase and
+ functional cosmetic raw material including the same"
+          },
+          {
+            patentFamilyId "84535652",
+            relevanceScore 79700,
+            representativePatent "KR-102477036-B1",
+            grantDate "2022-12-19",
+            representativePatentTitle "Wet lubricating composition"
+          },
+          {
+            patentFamilyId "50189585",
+            relevanceScore 74262,
+            representativePatent "KR-102182835-B1",
+            grantDate "2020-11-25",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 12745,
+      evidence patentChemicalChemical {
+        neighborName "10-Octadecenoic acid",
+        cooccurrenceScore 36004,
+        nPatentFamilies 798,
+        nPatents 934,
+        patentFamily {
+          {
+            patentFamilyId "53837533",
+            relevanceScore 234049,
+            representativePatent "JP-6310727-B2",
+            grantDate "2018-04-11",
+            representativePatentTitle "Floor polish release agent and floor
+ polish release method"
+          },
+          {
+            patentFamilyId "8175336",
+            relevanceScore 94780,
+            representativePatent "EP-1287108-B1",
+            grantDate "2006-11-02",
+            representativePatentTitle "A cleansing device for wc pans"
+          },
+          {
+            patentFamilyId "75473000",
+            relevanceScore 94780,
+            representativePatent "KR-102254208-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Synthetic pseudo-ceramide complex
+ derived from Jeju natural oil prepared by enzyme catalyst lipase and
+ functional cosmetic raw material including the same"
+          },
+          {
+            patentFamilyId "84535652",
+            relevanceScore 79642,
+            representativePatent "KR-102477036-B1",
+            grantDate "2022-12-19",
+            representativePatentTitle "Wet lubricating composition"
+          },
+          {
+            patentFamilyId "50189585",
+            relevanceScore 74207,
+            representativePatent "KR-102182835-B1",
+            grantDate "2020-11-25",
+            representativePatentTitle "Formulation comprising ester quats
+ based on isopropanolamine"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8252,
+      evidence patentChemicalChemical {
+        neighborName "Propylene",
+        cooccurrenceScore 35676,
+        nPatentFamilies 557,
+        nPatents 678,
+        patentFamily {
+          {
+            patentFamilyId "22844392",
+            relevanceScore 382142,
+            representativePatent "JP-3145380-B2",
+            grantDate "2001-03-12",
+            representativePatentTitle "Polyol containing alkoxylated Mannich
+ condensate and method for producing the same"
+          },
+          {
+            patentFamilyId "59285332",
+            relevanceScore 265377,
+            representativePatent "US-10941347-B2",
+            grantDate "2021-03-09",
+            representativePatentTitle "Composition for steam extraction of
+ bitumen"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 149274,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "55065786",
+            relevanceScore 105089,
+            representativePatent "JP-6681676-B2",
+            grantDate "2020-04-15",
+            representativePatentTitle "Method and apparatus for the cyclic
+ treatment and purification of propylene"
+          },
+          {
+            patentFamilyId "27649182",
+            relevanceScore 68240,
+            representativePatent "JP-3942439-B2",
+            grantDate "2007-07-11",
+            representativePatentTitle "Casting coating composition and casting
+ cutting method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7965,
+      evidence patentChemicalChemical {
+        neighborName "Cyclohexylamine",
+        cooccurrenceScore 35159,
+        nPatentFamilies 472,
+        nPatents 577,
+        patentFamily {
+          {
+            patentFamilyId "88416121",
+            relevanceScore 226669,
+            representativePatent "US-12187964-B2",
+            grantDate "2025-01-07",
+            representativePatentTitle "Amelioration of solids formation in
+ spent hydrogen sulfide scavengers"
+          },
+          {
+            patentFamilyId "9883917",
+            relevanceScore 179096,
+            representativePatent "EP-1248520-B2",
+            grantDate "2012-04-25",
+            representativePatentTitle "Anti-microbial compositions",
+            otherPatent {
+              "EP-1248520-B1"
+            }
+          },
+          {
+            patentFamilyId "57985667",
+            relevanceScore 161187,
+            representativePatent "KR-102291351-B1",
+            grantDate "2021-08-20",
+            representativePatentTitle "Etching solution for etching multilayer
+ thin film comprising copper layer and titanium layer, etching method using
+ said solution, and substrate obtained by using said method"
+          },
+          {
+            patentFamilyId "18940116",
+            relevanceScore 145068,
+            representativePatent "JP-4780849-B2",
+            grantDate "2011-09-28",
+            representativePatentTitle "Water-soluble metalworking fluid
+ composition"
+          },
+          {
+            patentFamilyId "59222100",
+            relevanceScore 100742,
+            representativePatent "KR-101742708-B1",
+            grantDate "2017-06-01",
+            representativePatentTitle "Coating compositions using natural
+ compounds for food package and manufacturing method thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8172,
+      evidence patentChemicalChemical {
+        neighborName "Triethylene Glycol",
+        cooccurrenceScore 35099,
+        nPatentFamilies 841,
+        nPatents 997,
+        patentFamily {
+          {
+            patentFamilyId "6248334",
+            relevanceScore 119818,
+            representativePatent "EP-0178611-B1",
+            grantDate "1992-06-17",
+            representativePatentTitle "Process for the preparation of n,n',n'
+'-tris(2-hydroxypropyl) melamine"
+          },
+          {
+            patentFamilyId "80203435",
+            relevanceScore 119818,
+            representativePatent "JP-7229485-B2",
+            grantDate "2023-02-28",
+            representativePatentTitle "Coating remover"
+          },
+          {
+            patentFamilyId "78268127",
+            relevanceScore 119818,
+            representativePatent "KR-102377439-B1",
+            grantDate "2022-03-23",
+            representativePatentTitle "Cement Milling Additives Comprising
+ Amine and Silicon Compounds"
+          },
+          {
+            patentFamilyId "78825236",
+            relevanceScore 92168,
+            representativePatent "US-11573186-B2",
+            grantDate "2023-02-07",
+            representativePatentTitle "Testing H2S scavengers' polymerization
+ factors"
+          },
+          {
+            patentFamilyId "59285332",
+            relevanceScore 86825,
+            representativePatent "US-10941347-B2",
+            grantDate "2021-03-09",
+            representativePatentTitle "Composition for steam extraction of
+ bitumen"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 31347,
+      evidence patentChemicalChemical {
+        neighborName "Sulfolane",
+        cooccurrenceScore 34849,
+        nPatentFamilies 418,
+        nPatents 480,
+        patentFamily {
+          {
+            patentFamilyId "41559230",
+            relevanceScore 198489,
+            representativePatent "EP-2352812-B1",
+            grantDate "2013-12-11",
+            representativePatentTitle "Gluconic acid containing photoresist
+ cleaning composition for multi-metal device processing",
+            otherPatent {
+              "KR-101749610-B1"
+            }
+          },
+          {
+            patentFamilyId "35355858",
+            relevanceScore 104986,
+            representativePatent "JP-4625842-B2",
+            grantDate "2011-02-02",
+            representativePatentTitle "Cleaning compositions for
+ microelectronic substrates"
+          },
+          {
+            patentFamilyId "50383965",
+            relevanceScore 104986,
+            representativePatent "JP-6126227-B2",
+            grantDate "2017-05-10",
+            representativePatentTitle "Improved liquid formulation of urease
+ inhibitor for fertilizer",
+            otherPatent {
+              "JP-6685257-B2",
+              "US-10221108-B2",
+              "US-10329208-B2"
+            }
+          },
+          {
+            patentFamilyId "8241613",
+            relevanceScore 88217,
+            representativePatent "EP-1222217-B1",
+            grantDate "2005-06-15",
+            representativePatentTitle "Uniform molecular weight polymers"
+          },
+          {
+            patentFamilyId "57890436",
+            relevanceScore 88217,
+            representativePatent "KR-101960670-B1",
+            grantDate "2019-03-21",
+            representativePatentTitle "A method for reducing corrosive ions in
+ an aromatic compound extraction solvent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8134,
+      evidence patentChemicalChemical {
+        neighborName "Diethylene Glycol Monomethyl Ether",
+        cooccurrenceScore 34602,
+        nPatentFamilies 497,
+        nPatents 582,
+        patentFamily {
+          {
+            patentFamilyId "41559230",
+            relevanceScore 219238,
+            representativePatent "EP-2352812-B1",
+            grantDate "2013-12-11",
+            representativePatentTitle "Gluconic acid containing photoresist
+ cleaning composition for multi-metal device processing",
+            otherPatent {
+              "KR-101749610-B1"
+            }
+          },
+          {
+            patentFamilyId "19544159",
+            relevanceScore 219238,
+            representativePatent "KR-100324172-B1",
+            grantDate "2002-06-20",
+            representativePatentTitle "Photoresist stripping composition and
+ photoresist stripping method using the same"
+          },
+          {
+            patentFamilyId "42144877",
+            relevanceScore 173225,
+            representativePatent "EP-2207197-B1",
+            grantDate "2017-03-22",
+            representativePatentTitle "Photoresist residue removal composition"
+          },
+          {
+            patentFamilyId "39061281",
+            relevanceScore 111359,
+            representativePatent "KR-100774525-B1",
+            grantDate "2007-11-08",
+            representativePatentTitle "Pre- calsinated rib barrier repmover
+ composition and method for removing dielectro layer using the same"
+          },
+          {
+            patentFamilyId "42266638",
+            relevanceScore 89944,
+            representativePatent "KR-101579846-B1",
+            grantDate "2015-12-24",
+            representativePatentTitle "Composition for removing a photoresist
+ pattern and method of forming a metal pattern using the composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 173165358,
+      evidence patentChemicalChemical {
+        neighborName "2-[2-[Bis(carboxylatomethyl)amino]ethyl-(carboxylatometh
+yl)amino]acetate;hydron",
+        cooccurrenceScore 34231,
+        nPatentFamilies 681,
+        nPatents 811,
+        patentFamily {
+          {
+            patentFamilyId "55854805",
+            relevanceScore 210779,
+            representativePatent "US-11939556-B2",
+            grantDate "2024-03-26",
+            representativePatentTitle "Cleaning composition comprising an
+ alkylamidoalkyl alkyldimonium alkylsulfate as an ionic liquid"
+          },
+          {
+            patentFamilyId "47682581",
+            relevanceScore 127508,
+            representativePatent "EP-2934682-B1",
+            grantDate "2018-10-17",
+            representativePatentTitle "Personal care composition comprising a
+ natural film-forming biopolymer and methods of making the same"
+          },
+          {
+            patentFamilyId "18403898",
+            relevanceScore 93892,
+            representativePatent "JP-3262523-B2",
+            grantDate "2002-03-04",
+            representativePatentTitle "Transparent liquid detergent containing
+ sodium silicate",
+            otherPatent {
+              "EP-0969081-B1"
+            }
+          },
+          {
+            patentFamilyId "25264284",
+            relevanceScore 87392,
+            representativePatent "JP-4138891-B2",
+            grantDate "2008-08-27",
+            representativePatentTitle "Semiconductor process residue removal
+ composition and method which is ethylenediaminetetraacetic acid or its
+ ammonium salt",
+            otherPatent {
+              "EP-0975731-B1"
+            }
+          },
+          {
+            patentFamilyId "43018755",
+            relevanceScore 86068,
+            representativePatent "JP-5431014-B2",
+            grantDate "2014-03-05",
+            representativePatentTitle "Indium oxalate solubilizer composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 173323775,
+      evidence patentChemicalChemical {
+        neighborName "Hydron;2-hydroxy-2-oxoacetate",
+        cooccurrenceScore 34149,
+        nPatentFamilies 779,
+        nPatents 908,
+        patentFamily {
+          {
+            patentFamilyId "72422371",
+            relevanceScore 215075,
+            representativePatent "US-11008536-B2",
+            grantDate "2021-05-18",
+            representativePatentTitle "Liquid product for stainless-steel
+ corrosion remediation"
+          },
+          {
+            patentFamilyId "23363338",
+            relevanceScore 195523,
+            representativePatent "EP-0395815-B1",
+            grantDate "1993-06-02",
+            representativePatentTitle "Method and composition for refinement
+ of metal surfaces"
+          },
+          {
+            patentFamilyId "39183784",
+            relevanceScore 132762,
+            representativePatent "JP-4674704-B2",
+            grantDate "2011-04-20",
+            representativePatentTitle "Etching solution composition"
+          },
+          {
+            patentFamilyId "14051937",
+            relevanceScore 107537,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "63792510",
+            relevanceScore 76812,
+            representativePatent "JP-6976597-B2",
+            grantDate "2021-12-08",
+            representativePatentTitle "Copper particle mixture and its
+ production method, copper particle mixture dispersion, copper particle
+ mixture-containing ink, copper particle mixture storage method and copper
+ particle mixture sintering method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 757,
+      evidence patentChemicalChemical {
+        neighborName "Glycolic Acid",
+        cooccurrenceScore 34048,
+        nPatentFamilies 465,
+        nPatents 562,
+        patentFamily {
+          {
+            patentFamilyId "69414024",
+            relevanceScore 475725,
+            representativePatent "JP-7386844-B2",
+            grantDate "2023-11-27",
+            representativePatentTitle "Overmolded printed electronic
+ components and their manufacturing method"
+          },
+          {
+            patentFamilyId "45612185",
+            relevanceScore 264292,
+            representativePatent "KR-101485217-B1",
+            grantDate "2015-01-22",
+            representativePatentTitle "Composition for Removing Polymer
+ Residue of Photosensitive Resistive Etching Film"
+          },
+          {
+            patentFamilyId "42144877",
+            relevanceScore 146829,
+            representativePatent "EP-2207197-B1",
+            grantDate "2017-03-22",
+            representativePatentTitle "Photoresist residue removal composition"
+          },
+          {
+            patentFamilyId "57485326",
+            relevanceScore 118931,
+            representativePatent "US-11027317-B2",
+            grantDate "2021-06-08",
+            representativePatentTitle "Equipment cleaning system and method",
+            otherPatent {
+              "EP-3187273-B1",
+              "JP-6397465-B2"
+            }
+          },
+          {
+            patentFamilyId "57083160",
+            relevanceScore 118931,
+            representativePatent "US-11834632-B2",
+            grantDate "2023-12-05",
+            representativePatentTitle "Cleaning solution and methods of
+ cleaning a turbine engine",
+            otherPatent {
+              "EP-3153604-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7570,
+      evidence patentChemicalChemical {
+        neighborName "Diphenylmethane diisocyanate",
+        cooccurrenceScore 33828,
+        nPatentFamilies 652,
+        nPatents 783,
+        patentFamily {
+          {
+            patentFamilyId "49857663",
+            relevanceScore 130727,
+            representativePatent "KR-101329058-B1",
+            grantDate "2013-11-14",
+            representativePatentTitle "Polyurethane resin composition for
+ footwear upper with excellent workability"
+          },
+          {
+            patentFamilyId "59059023",
+            relevanceScore 106959,
+            representativePatent "JP-6676356-B2",
+            grantDate "2020-04-08",
+            representativePatentTitle "Polyurethane foam"
+          },
+          {
+            patentFamilyId "47071295",
+            relevanceScore 98046,
+            representativePatent "EP-2771377-B1",
+            grantDate "2016-02-24",
+            representativePatentTitle "Process for making a polyurethane foam"
+          },
+          {
+            patentFamilyId "41623362",
+            relevanceScore 98046,
+            representativePatent "KR-100695389-B1",
+            grantDate "2007-03-16",
+            representativePatentTitle "A composition for reinforcing structure
+ restoration and a method for reinforcing structure restoration using thereof"
+          },
+          {
+            patentFamilyId "65720968",
+            relevanceScore 97235,
+            representativePatent "US-10363458-B2",
+            grantDate "2019-07-30",
+            representativePatentTitle "Methods for treating golf balls having
+ a thermoplastic polyurethane cover",
+            otherPatent {
+              "US-10744375-B2",
+              "US-11395943-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 525,
+      evidence patentChemicalChemical {
+        neighborName "Malic Acid",
+        cooccurrenceScore 33715,
+        nPatentFamilies 623,
+        nPatents 724,
+        patentFamily {
+          {
+            patentFamilyId "69903907",
+            relevanceScore 454079,
+            representativePatent "US-11160737-B2",
+            grantDate "2021-11-02",
+            representativePatentTitle "Keratin fiber dyeing composition"
+          },
+          {
+            patentFamilyId "6078987",
+            relevanceScore 124872,
+            representativePatent "EP-0025841-B1",
+            grantDate "1983-02-23",
+            representativePatentTitle "Diastereomeric salts of malic acid and
+ 2-amino-1-butanol and process for the scission of racemic malic acid"
+          },
+          {
+            patentFamilyId "44276339",
+            relevanceScore 113520,
+            representativePatent "EP-2566448-B1",
+            grantDate "2015-06-17",
+            representativePatentTitle "Efervescent formulations comprising
+ cefdinir"
+          },
+          {
+            patentFamilyId "59233766",
+            relevanceScore 113520,
+            representativePatent "KR-102493276-B1",
+            grantDate "2023-01-30",
+            representativePatentTitle "Liquid composition for etching
+ multilayer thin film containing copper and molybdenum, etching method using
+ the same, and method for manufacturing display device"
+          },
+          {
+            patentFamilyId "18403898",
+            relevanceScore 103200,
+            representativePatent "JP-3262523-B2",
+            grantDate "2002-03-04",
+            representativePatentTitle "Transparent liquid detergent containing
+ sodium silicate",
+            otherPatent {
+              "EP-0969081-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 875,
+      evidence patentChemicalChemical {
+        neighborName "2,3-Dihydroxybutanedioic Acid",
+        cooccurrenceScore 33548,
+        nPatentFamilies 625,
+        nPatents 741,
+        patentFamily {
+          {
+            patentFamilyId "46024406",
+            relevanceScore 310885,
+            representativePatent "EP-2636710-B1",
+            grantDate "2016-08-31",
+            representativePatentTitle "Carbon nanofiber dispersion liquid,
+ coating composition, and paste composition"
+          },
+          {
+            patentFamilyId "6294296",
+            relevanceScore 111919,
+            representativePatent "EP-0234461-B1",
+            grantDate "1990-05-09",
+            representativePatentTitle "Wood protecting agent"
+          },
+          {
+            patentFamilyId "44276339",
+            relevanceScore 111919,
+            representativePatent "EP-2566448-B1",
+            grantDate "2015-06-17",
+            representativePatentTitle "Efervescent formulations comprising
+ cefdinir"
+          },
+          {
+            patentFamilyId "52279742",
+            relevanceScore 111919,
+            representativePatent "KR-102000726-B1",
+            grantDate "2019-07-16",
+            representativePatentTitle "Liquid composition for
+ cleaning/removing copper-containing adhering matter from surface of oxide
+ comprising indium, gallium, zinc, and oxygen (igzo), method for cleaning igzo
+ surface using said liquid composition, and substrate cleaned using said
+ method for cleaning"
+          },
+          {
+            patentFamilyId "48618246",
+            relevanceScore 82903,
+            representativePatent "JP-5885996-B2",
+            grantDate "2016-03-16",
+            representativePatentTitle "Corrosion prevention or inhibitor for
+ ferrous metals and corrosion prevention or inhibition method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 5054,
+      evidence patentChemicalChemical {
+        neighborName "Resorcinol",
+        cooccurrenceScore 33395,
+        nPatentFamilies 514,
+        nPatents 578,
+        patentFamily {
+          {
+            patentFamilyId "42327117",
+            relevanceScore 491864,
+            representativePatent "JP-5464844-B2",
+            grantDate "2014-04-09",
+            representativePatentTitle "Oxidative hair dye"
+          },
+          {
+            patentFamilyId "19667052",
+            relevanceScore 341572,
+            representativePatent "JP-3679753-B2",
+            grantDate "2005-08-03",
+            representativePatentTitle "Resist stripper composition"
+          },
+          {
+            patentFamilyId "7767722",
+            relevanceScore 144666,
+            representativePatent "EP-0840593-B1",
+            grantDate "2002-10-02",
+            representativePatentTitle "Oxidation colorants for dyeing
+ keratinic fibers, containing a special combination of alkalisation agents"
+          },
+          {
+            patentFamilyId "10371322",
+            relevanceScore 122966,
+            representativePatent "EP-0001321-B1",
+            grantDate "1981-07-22",
+            representativePatentTitle "Alkanolamine salts of phenolic resins,
+ their manufacture and their use as bonding agents"
+          },
+          {
+            patentFamilyId "10789928",
+            relevanceScore 122966,
+            representativePatent "EP-0799930-B1",
+            grantDate "2003-10-08",
+            representativePatentTitle "Improvements in fabric printing"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 11443,
+      evidence patentChemicalChemical {
+        neighborName "Toluene 2,4-Diisocyanate",
+        cooccurrenceScore 33206,
+        nPatentFamilies 592,
+        nPatents 709,
+        patentFamily {
+          {
+            patentFamilyId "24524780",
+            relevanceScore 480991,
+            representativePatent "JP-4051466-B2",
+            grantDate "2008-02-27",
+            representativePatentTitle "Developing roller and manufacturing
+ method thereof"
+          },
+          {
+            patentFamilyId "49857663",
+            relevanceScore 133609,
+            representativePatent "KR-101329058-B1",
+            grantDate "2013-11-14",
+            representativePatentTitle "Polyurethane resin composition for
+ footwear upper with excellent workability"
+          },
+          {
+            patentFamilyId "16465044",
+            relevanceScore 120248,
+            representativePatent "JP-2530776-B2",
+            grantDate "1996-09-04",
+            representativePatentTitle "Composition for urethane elastomer"
+          },
+          {
+            patentFamilyId "92757310",
+            relevanceScore 120248,
+            representativePatent "KR-102705363-B1",
+            grantDate "2024-09-11",
+            representativePatentTitle "Complex microencapsulated insecticide,
+ and the preparation method thereof"
+          },
+          {
+            patentFamilyId "65720968",
+            relevanceScore 99378,
+            representativePatent "US-10363458-B2",
+            grantDate "2019-07-30",
+            representativePatentTitle "Methods for treating golf balls having
+ a thermoplastic polyurethane cover",
+            otherPatent {
+              "US-10744375-B2",
+              "US-11395943-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8076,
+      evidence patentChemicalChemical {
+        neighborName "Glycol monoethyl ether",
+        cooccurrenceScore 32418,
+        nPatentFamilies 810,
+        nPatents 923,
+        patentFamily {
+          {
+            patentFamilyId "6284093",
+            relevanceScore 124659,
+            representativePatent "EP-0219789-B1",
+            grantDate "1992-02-26",
+            representativePatentTitle "Stripping solvent for photoresists"
+          },
+          {
+            patentFamilyId "9246308",
+            relevanceScore 103024,
+            representativePatent "EP-0049191-B1",
+            grantDate "1984-05-09",
+            representativePatentTitle "Process for preparing completion
+ fluids, and pastes used in carrying out the process"
+          },
+          {
+            patentFamilyId "39061281",
+            relevanceScore 98935,
+            representativePatent "KR-100774525-B1",
+            grantDate "2007-11-08",
+            representativePatentTitle "Pre- calsinated rib barrier repmover
+ composition and method for removing dielectro layer using the same"
+          },
+          {
+            patentFamilyId "59285332",
+            relevanceScore 90332,
+            representativePatent "US-10941347-B2",
+            grantDate "2021-03-09",
+            representativePatentTitle "Composition for steam extraction of
+ bitumen"
+          },
+          {
+            patentFamilyId "4198131",
+            relevanceScore 77912,
+            representativePatent "EP-0033719-B1",
+            grantDate "1984-12-27",
+            representativePatentTitle "Liquid preparation of an anionic disazo
+ dyestuff, process for its preparation, and use"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 1146,
+      evidence patentChemicalChemical {
+        neighborName "Trimethylamine",
+        cooccurrenceScore 32080,
+        nPatentFamilies 908,
+        nPatents 1039,
+        patentFamily {
+          {
+            patentFamilyId "17473495",
+            relevanceScore 348617,
+            representativePatent "JP-2511774-B2",
+            grantDate "1996-07-03",
+            representativePatentTitle "Method for producing aqueous dispersion
+ of polyurethane resin"
+          },
+          {
+            patentFamilyId "38256319",
+            relevanceScore 125502,
+            representativePatent "JP-4861014-B2",
+            grantDate "2012-01-25",
+            representativePatentTitle "Colorant composition"
+          },
+          {
+            patentFamilyId "17506321",
+            relevanceScore 96540,
+            representativePatent "EP-0186055-B1",
+            grantDate "1990-07-25",
+            representativePatentTitle "Antimycotic gel preparations"
+          },
+          {
+            patentFamilyId "39183784",
+            relevanceScore 53633,
+            representativePatent "JP-4674704-B2",
+            grantDate "2011-04-20",
+            representativePatentTitle "Etching solution composition"
+          },
+          {
+            patentFamilyId "65359791",
+            relevanceScore 49024,
+            representativePatent "US-10834949-B2",
+            grantDate "2020-11-17",
+            representativePatentTitle "Method of microalgal biomass processing
+ for high-value chemicals production, the resulting composition of butyrogenic
+ algal slowly fermenting dietary fiber, and a way to improve colon health
+ using a slowly fermenting butyrogenic algal dietary fiber",
+            otherPatent {
+              "US-10485253-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 232,
+      evidence patentChemicalChemical {
+        neighborName "DL-Arginine",
+        cooccurrenceScore 32057,
+        nPatentFamilies 382,
+        nPatents 443,
+        patentFamily {
+          {
+            patentFamilyId "30429425",
+            relevanceScore 452282,
+            representativePatent "JP-4375943-B2",
+            grantDate "2009-12-02",
+            representativePatentTitle "Method for producing powder N-long
+ chain acylimino dibasic acid salt"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 323058,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "47682581",
+            relevanceScore 139593,
+            representativePatent "EP-2934682-B1",
+            grantDate "2018-10-17",
+            representativePatentTitle "Personal care composition comprising a
+ natural film-forming biopolymer and methods of making the same"
+          },
+          {
+            patentFamilyId "7767722",
+            relevanceScore 133024,
+            representativePatent "EP-0840593-B1",
+            grantDate "2002-10-02",
+            representativePatentTitle "Oxidation colorants for dyeing
+ keratinic fibers, containing a special combination of alkalisation agents"
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 113070,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 9321,
+      evidence patentChemicalChemical {
+        neighborName "Hydrazine",
+        cooccurrenceScore 30434,
+        nPatentFamilies 336,
+        nPatents 421,
+        patentFamily {
+          {
+            patentFamilyId "6195494",
+            relevanceScore 231511,
+            representativePatent "EP-0121850-B1",
+            grantDate "1989-08-30",
+            representativePatentTitle "Process for preparing a cellular
+ polyurethane"
+          },
+          {
+            patentFamilyId "26760803",
+            relevanceScore 231511,
+            representativePatent "EP-0578507-B1",
+            grantDate "2005-09-28",
+            representativePatentTitle "Cleaning solutions including
+ nucleophilic amine compound having reduction and oxidation potentials",
+            otherPatent {
+              "JP-3048207-B2"
+            }
+          },
+          {
+            patentFamilyId "63792510",
+            relevanceScore 81029,
+            representativePatent "JP-6976597-B2",
+            grantDate "2021-12-08",
+            representativePatentTitle "Copper particle mixture and its
+ production method, copper particle mixture dispersion, copper particle
+ mixture-containing ink, copper particle mixture storage method and copper
+ particle mixture sintering method"
+          },
+          {
+            patentFamilyId "35266774",
+            relevanceScore 78778,
+            representativePatent "JP-4603586-B2",
+            grantDate "2010-12-22",
+            representativePatentTitle "Three-dimensional structure for inkjet
+ printhead and associated manufacturing method"
+          },
+          {
+            patentFamilyId "24115003",
+            relevanceScore 73187,
+            representativePatent "EP-0137728-B1",
+            grantDate "1989-09-13",
+            representativePatentTitle "Water-in-oil emulsions having improved
+ low temperature properties"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7628,
+      evidence patentChemicalChemical {
+        neighborName "Boric Acid",
+        cooccurrenceScore 30422,
+        nPatentFamilies 532,
+        nPatents 644,
+        patentFamily {
+          {
+            patentFamilyId "6190250",
+            relevanceScore 121351,
+            representativePatent "EP-0116348-B1",
+            grantDate "1987-05-27",
+            representativePatentTitle "Reaction products of boric acid,
+ diethanolamine and monoethanolamine and their application as protection
+ against corrosion"
+          },
+          {
+            patentFamilyId "55655033",
+            relevanceScore 110319,
+            representativePatent "US-10041019-B2",
+            grantDate "2018-08-07",
+            representativePatentTitle "Drilling fluid system"
+          },
+          {
+            patentFamilyId "65233471",
+            relevanceScore 110319,
+            representativePatent "US-11193094-B2",
+            grantDate "2021-12-07",
+            representativePatentTitle "Liquid composition for reducing damage
+ of cobalt, alumina, interlayer insulating film and silicon nitride, and
+ washing method using same"
+          },
+          {
+            patentFamilyId "6294296",
+            relevanceScore 110319,
+            representativePatent "EP-0234461-B1",
+            grantDate "1990-05-09",
+            representativePatentTitle "Wood protecting agent"
+          },
+          {
+            patentFamilyId "6452030",
+            relevanceScore 110319,
+            representativePatent "EP-0556454-B1",
+            grantDate "1996-01-24",
+            representativePatentTitle "Wood protective agent without chromium",
+            otherPatent {
+              "JP-3642795-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 604,
+      evidence patentChemicalChemical {
+        neighborName "2,3,4,5,6-Pentahydroxyhexanoic acid",
+        cooccurrenceScore 30366,
+        nPatentFamilies 275,
+        nPatents 328,
+        patentFamily {
+          {
+            patentFamilyId "26836961",
+            relevanceScore 513668,
+            representativePatent "EP-1200368-B1",
+            grantDate "2007-02-14",
+            representativePatentTitle "High early strength cement and
+ additives and methods for making the same",
+            otherPatent {
+              "JP-4883859-B2"
+            }
+          },
+          {
+            patentFamilyId "39831894",
+            relevanceScore 513668,
+            representativePatent "EP-2028262-B1",
+            grantDate "2012-02-15",
+            representativePatentTitle "Improved alkaline chemistry for
+ post-cmp cleaning"
+          },
+          {
+            patentFamilyId "46024406",
+            relevanceScore 356714,
+            representativePatent "EP-2636710-B1",
+            grantDate "2016-08-31",
+            representativePatentTitle "Carbon nanofiber dispersion liquid,
+ coating composition, and paste composition"
+          },
+          {
+            patentFamilyId "41559230",
+            relevanceScore 353146,
+            representativePatent "EP-2352812-B1",
+            grantDate "2013-12-11",
+            representativePatentTitle "Gluconic acid containing photoresist
+ cleaning composition for multi-metal device processing",
+            otherPatent {
+              "KR-101749610-B1"
+            }
+          },
+          {
+            patentFamilyId "39418711",
+            relevanceScore 102734,
+            representativePatent "KR-100762091-B1",
+            grantDate "2007-10-04",
+            representativePatentTitle "Cmp slurry composition for copper
+ damascene process"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 16402,
+      evidence patentChemicalChemical {
+        neighborName "Hexamethylenediamine",
+        cooccurrenceScore 30203,
+        nPatentFamilies 764,
+        nPatents 939,
+        patentFamily {
+          {
+            patentFamilyId "6084102",
+            relevanceScore 198481,
+            representativePatent "EP-0027944-B1",
+            grantDate "1985-06-05",
+            representativePatentTitle "Polyester-amide based melting adhesives
+ and their use in bonding organic and inorganic substrates"
+          },
+          {
+            patentFamilyId "47357994",
+            relevanceScore 75164,
+            representativePatent "US-11407776-B2",
+            grantDate "2022-08-09",
+            representativePatentTitle "Method for producing aqueous
+ preparations of complexes of platinum group metals",
+            otherPatent {
+              "US-11702437-B2",
+              "EP-2931735-B1",
+              "JP-6316838-B2",
+              "US-10954261-B2"
+            }
+          },
+          {
+            patentFamilyId "18626109",
+            relevanceScore 56457,
+            representativePatent "EP-1146148-B1",
+            grantDate "2011-08-24",
+            representativePatentTitle "Cyanide-free pyrophosphoric acid bath
+ for use in copper-tin alloy plating",
+            otherPatent {
+              "JP-3455712-B2"
+            }
+          },
+          {
+            patentFamilyId "50146509",
+            relevanceScore 49620,
+            representativePatent "KR-101355863-B1",
+            grantDate "2014-01-27",
+            representativePatentTitle "Neutral cleaner and continuous coating
+ method applied to it"
+          },
+          {
+            patentFamilyId "21798592",
+            relevanceScore 48117,
+            representativePatent "EP-0280815-B1",
+            grantDate "1994-02-02",
+            representativePatentTitle "Certain hydroxyalkyl carbamates,
+ polymers and uses thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 13192,
+      evidence patentChemicalChemical {
+        neighborName "Hexamethylene diisocyanate",
+        cooccurrenceScore 29990,
+        nPatentFamilies 707,
+        nPatents 857,
+        patentFamily {
+          {
+            patentFamilyId "24591937",
+            relevanceScore 339682,
+            representativePatent "EP-0496420-B1",
+            grantDate "1996-11-13",
+            representativePatentTitle "Combustion-modified flexible
+ polyurethane foams"
+          },
+          {
+            patentFamilyId "49857663",
+            relevanceScore 132099,
+            representativePatent "KR-101329058-B1",
+            grantDate "2013-11-14",
+            representativePatentTitle "Polyurethane resin composition for
+ footwear upper with excellent workability"
+          },
+          {
+            patentFamilyId "52469615",
+            relevanceScore 74306,
+            representativePatent "US-10227461-B2",
+            grantDate "2019-03-12",
+            representativePatentTitle "Fiber reinforced thermoplastic
+ composites and methods of making",
+            otherPatent {
+              "EP-2905303-B1"
+            }
+          },
+          {
+            patentFamilyId "52278665",
+            relevanceScore 74306,
+            representativePatent "EP-3077342-B1",
+            grantDate "2018-04-18",
+            representativePatentTitle "Glazing unit comprising a hydrophilic
+ layer having an improved scratch resistance"
+          },
+          {
+            patentFamilyId "46839504",
+            relevanceScore 57995,
+            representativePatent "JP-5837304-B2",
+            grantDate "2015-12-24",
+            representativePatentTitle "Solvent-free two-component paint
+ composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 20205692,
+      evidence patentChemicalChemical {
+        neighborName "Sulfoketone",
+        cooccurrenceScore 29651,
+        nPatentFamilies 10,
+        nPatents 17,
+        patentFamily {
+          {
+            patentFamilyId "56120939",
+            relevanceScore 610331,
+            representativePatent "US-11007132-B2",
+            grantDate "2021-05-18",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "KR-102375994-B1",
+              "JP-6882345-B2"
+            }
+          },
+          {
+            patentFamilyId "56096969",
+            relevanceScore 610331,
+            representativePatent "KR-102376569-B1",
+            grantDate "2022-03-21",
+            representativePatentTitle "Aqueous Surfactant Composition"
+          },
+          {
+            patentFamilyId "56120991",
+            relevanceScore 427232,
+            representativePatent "KR-102397502-B1",
+            grantDate "2022-05-13",
+            representativePatentTitle "Aqueous Surfactant Composition",
+            otherPatent {
+              "US-10869824-B2"
+            }
+          },
+          {
+            patentFamilyId "56024144",
+            relevanceScore 213616,
+            representativePatent "US-10905643-B2",
+            grantDate "2021-02-02",
+            representativePatentTitle "Aqueous surfactant compositions"
+          },
+          {
+            patentFamilyId "56024145",
+            relevanceScore 213616,
+            representativePatent "US-10945937-B2",
+            grantDate "2021-03-16",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "JP-7053494-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 866,
+      evidence patentChemicalChemical {
+        neighborName "Lysine, DL-",
+        cooccurrenceScore 29478,
+        nPatentFamilies 419,
+        nPatents 489,
+        patentFamily {
+          {
+            patentFamilyId "8187222",
+            relevanceScore 438318,
+            representativePatent "EP-0044363-B1",
+            grantDate "1984-05-23",
+            representativePatentTitle "Method for preparing aminoalkyl esters
+ of aminoacids"
+          },
+          {
+            patentFamilyId "30429425",
+            relevanceScore 438318,
+            representativePatent "JP-4375943-B2",
+            grantDate "2009-12-02",
+            representativePatentTitle "Method for producing powder N-long
+ chain acylimino dibasic acid salt"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 313084,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "47682581",
+            relevanceScore 135283,
+            representativePatent "EP-2934682-B1",
+            grantDate "2018-10-17",
+            representativePatentTitle "Personal care composition comprising a
+ natural film-forming biopolymer and methods of making the same"
+          },
+          {
+            patentFamilyId "39973193",
+            relevanceScore 90562,
+            representativePatent "JP-5155583-B2",
+            grantDate "2013-03-06",
+            representativePatentTitle "Foam aerosol type hair treatment agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 6115,
+      evidence patentChemicalChemical {
+        neighborName "Aniline",
+        cooccurrenceScore 29416,
+        nPatentFamilies 570,
+        nPatents 672,
+        patentFamily {
+          {
+            patentFamilyId "51027018",
+            relevanceScore 328059,
+            representativePatent "JP-5916589-B2",
+            grantDate "2016-05-11",
+            representativePatentTitle "Water-soluble cutting fluid"
+          },
+          {
+            patentFamilyId "6195494",
+            relevanceScore 241023,
+            representativePatent "EP-0121850-B1",
+            grantDate "1989-08-30",
+            representativePatentTitle "Process for preparing a cellular
+ polyurethane"
+          },
+          {
+            patentFamilyId "88416121",
+            relevanceScore 184533,
+            representativePatent "US-12187964-B2",
+            grantDate "2025-01-07",
+            representativePatentTitle "Amelioration of solids formation in
+ spent hydrogen sulfide scavengers"
+          },
+          {
+            patentFamilyId "14051937",
+            relevanceScore 118101,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "6343153",
+            relevanceScore 102697,
+            representativePatent "JP-2647939-B2",
+            grantDate "1997-08-27",
+            representativePatentTitle "Method for producing azo dye",
+            otherPatent {
+              "EP-0321814-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 6635,
+      evidence patentChemicalChemical {
+        neighborName "Chlorfenson",
+        cooccurrenceScore 29388,
+        nPatentFamilies 29,
+        nPatents 45,
+        patentFamily {
+          {
+            patentFamilyId "56120939",
+            relevanceScore 713880,
+            representativePatent "JP-6882345-B2",
+            grantDate "2021-06-02",
+            representativePatentTitle "Aqueous surfactant composition",
+            otherPatent {
+              "US-11007132-B2",
+              "KR-102375994-B1"
+            }
+          },
+          {
+            patentFamilyId "56096969",
+            relevanceScore 364224,
+            representativePatent "KR-102376569-B1",
+            grantDate "2022-03-21",
+            representativePatentTitle "Aqueous Surfactant Composition"
+          },
+          {
+            patentFamilyId "51399535",
+            relevanceScore 178470,
+            representativePatent "US-10370618-B2",
+            grantDate "2019-08-06",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "KR-102478689-B1",
+              "JP-6629298-B2"
+            }
+          },
+          {
+            patentFamilyId "50030199",
+            relevanceScore 178470,
+            representativePatent "US-10736832-B2",
+            grantDate "2020-08-11",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "KR-102348889-B1",
+              "EP-2902010-B1"
+            }
+          },
+          {
+            patentFamilyId "50030200",
+            relevanceScore 178470,
+            representativePatent "US-10792237-B2",
+            grantDate "2020-10-06",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "KR-102348890-B1",
+              "EP-2902011-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 7955,
+      evidence patentChemicalChemical {
+        neighborName "Melamine",
+        cooccurrenceScore 29187,
+        nPatentFamilies 452,
+        nPatents 547,
+        patentFamily {
+          {
+            patentFamilyId "6248334",
+            relevanceScore 490990,
+            representativePatent "EP-0178611-B1",
+            grantDate "1992-06-17",
+            representativePatentTitle "Process for the preparation of n,n',n'
+'-tris(2-hydroxypropyl) melamine"
+          },
+          {
+            patentFamilyId "10789928",
+            relevanceScore 111589,
+            representativePatent "EP-0799930-B1",
+            grantDate "2003-10-08",
+            representativePatentTitle "Improvements in fabric printing"
+          },
+          {
+            patentFamilyId "15921242",
+            relevanceScore 111589,
+            representativePatent "JP-4282155-B2",
+            grantDate "2009-06-17",
+            representativePatentTitle "Melamine resin decorative board"
+          },
+          {
+            patentFamilyId "72264472",
+            relevanceScore 111589,
+            representativePatent "JP-7171146-B2",
+            grantDate "2022-11-15",
+            representativePatentTitle "Cement-based hydraulic composition"
+          },
+          {
+            patentFamilyId "45922696",
+            relevanceScore 92222,
+            representativePatent "EP-2694564-B1",
+            grantDate "2015-06-17",
+            representativePatentTitle "Method for producing rigid pu foam
+ materials",
+            otherPatent {
+              "JP-6034363-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 379,
+      evidence patentChemicalChemical {
+        neighborName "Octanoic Acid",
+        cooccurrenceScore 29130,
+        nPatentFamilies 573,
+        nPatents 672,
+        patentFamily {
+          {
+            patentFamilyId "47357200",
+            relevanceScore 152756,
+            representativePatent "JP-5971867-B2",
+            grantDate "2016-08-17",
+            representativePatentTitle "Gallium labeled drug"
+          },
+          {
+            patentFamilyId "80988350",
+            relevanceScore 137480,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "79034195",
+            relevanceScore 102258,
+            representativePatent "KR-102500882-B1",
+            grantDate "2023-02-17",
+            representativePatentTitle "Composition of conditioning shampoo
+ having Lamellar structure"
+          },
+          {
+            patentFamilyId "8165367",
+            relevanceScore 88380,
+            representativePatent "EP-0455631-B1",
+            grantDate "1993-06-30",
+            representativePatentTitle "Preparation containing salicylic acid
+ for treating desquamative skin diseases"
+          },
+          {
+            patentFamilyId "56117553",
+            relevanceScore 72784,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8177,
+      evidence patentChemicalChemical {
+        neighborName "Diethylene Glycol Monobutyl Ether",
+        cooccurrenceScore 28969,
+        nPatentFamilies 331,
+        nPatents 416,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 546120,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          },
+          {
+            patentFamilyId "13983221",
+            relevanceScore 136530,
+            representativePatent "EP-0885267-B1",
+            grantDate "2000-01-12",
+            representativePatentTitle "Releasant for aqueous polymer-type
+ floor polish"
+          },
+          {
+            patentFamilyId "39061281",
+            relevanceScore 108357,
+            representativePatent "KR-100774525-B1",
+            grantDate "2007-11-08",
+            representativePatentTitle "Pre- calsinated rib barrier repmover
+ composition and method for removing dielectro layer using the same"
+          },
+          {
+            patentFamilyId "6366526",
+            relevanceScore 97521,
+            representativePatent "EP-0441850-B1",
+            grantDate "1993-06-09",
+            representativePatentTitle "Condensation products based on
+ colophonium maleic imides",
+            otherPatent {
+              "JP-2902430-B2"
+            }
+          },
+          {
+            patentFamilyId "44952017",
+            relevanceScore 94813,
+            representativePatent "KR-101152536-B1",
+            grantDate "2012-06-01",
+            representativePatentTitle "Paint release agent composition and
+ preparation method thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 21220,
+      evidence patentChemicalChemical {
+        neighborName "Sulfosuccinic acid monosodium salt",
+        cooccurrenceScore 28946,
+        nPatentFamilies 241,
+        nPatents 267,
+        patentFamily {
+          {
+            patentFamilyId "24866431",
+            relevanceScore 557805,
+            representativePatent "JP-2922362-B2",
+            grantDate "1999-07-19",
+            representativePatentTitle "Taste protection, mild oral hygiene
+ composition"
+          },
+          {
+            patentFamilyId "38479186",
+            relevanceScore 306793,
+            representativePatent "EP-1993506-B1",
+            grantDate "2013-08-28",
+            representativePatentTitle "Low-odor dimethicone copolyol
+ sulfosuccinate surfactant compositions"
+          },
+          {
+            patentFamilyId "8856844",
+            relevanceScore 139451,
+            representativePatent "EP-1208898-B1",
+            grantDate "2011-02-09",
+            representativePatentTitle "Demulsifying organic formulation and
+ use thereof in the treatment of wells drilled with oil mud"
+          },
+          {
+            patentFamilyId "16619564",
+            relevanceScore 139451,
+            representativePatent "JP-3419001-B2",
+            grantDate "2003-06-23",
+            representativePatentTitle "Surfactant composition"
+          },
+          {
+            patentFamilyId "12181969",
+            relevanceScore 139451,
+            representativePatent "JP-3522477-B2",
+            grantDate "2004-04-26",
+            representativePatentTitle "Cosmetic detergent composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 23266,
+      evidence patentChemicalChemical {
+        neighborName "Sodium Silicate",
+        cooccurrenceScore 28347,
+        nPatentFamilies 524,
+        nPatents 613,
+        patentFamily {
+          {
+            patentFamilyId "14051937",
+            relevanceScore 430868,
+            representativePatent "JP-3858333-B2",
+            grantDate "2006-12-13",
+            representativePatentTitle "Method for producing white deodorant"
+          },
+          {
+            patentFamilyId "18403898",
+            relevanceScore 107717,
+            representativePatent "JP-3262523-B2",
+            grantDate "2002-03-04",
+            representativePatentTitle "Transparent liquid detergent containing
+ sodium silicate",
+            otherPatent {
+              "EP-0969081-B1"
+            }
+          },
+          {
+            patentFamilyId "19132791",
+            relevanceScore 107717,
+            representativePatent "JP-3848982-B2",
+            grantDate "2006-11-22",
+            representativePatentTitle "Composition for coating calcium-based
+ inorganic base material"
+          },
+          {
+            patentFamilyId "18403894",
+            relevanceScore 84635,
+            representativePatent "EP-0971022-B1",
+            grantDate "2003-11-12",
+            representativePatentTitle "Transparent liquid detergent containing
+ alkylbenzenesulfonate anionic surfactant and sodium silicate",
+            otherPatent {
+              "JP-3262339-B2",
+              "KR-100352934-B1"
+            }
+          },
+          {
+            patentFamilyId "8528673",
+            relevanceScore 67323,
+            representativePatent "EP-0406194-B1",
+            grantDate "1994-01-12",
+            representativePatentTitle "Process for coating titanium dioxide
+ pigments",
+            otherPatent {
+              "EP-0406194-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 6420096,
+      evidence patentChemicalChemical {
+        neighborName "Methanolamine",
+        cooccurrenceScore 28025,
+        nPatentFamilies 75,
+        nPatents 95,
+        patentFamily {
+          {
+            patentFamilyId "27282377",
+            relevanceScore 702328,
+            representativePatent "EP-0945119-B1",
+            grantDate "2006-05-31",
+            representativePatentTitle "Calcium phosphate cements"
+          },
+          {
+            patentFamilyId "48668546",
+            relevanceScore 487728,
+            representativePatent "US-10174164-B2",
+            grantDate "2019-01-08",
+            representativePatentTitle "Triazine ring-containing polymer and
+ composition for film formation comprising same"
+          },
+          {
+            patentFamilyId "61094808",
+            relevanceScore 358331,
+            representativePatent "KR-101820878-B1",
+            grantDate "2018-01-22",
+            representativePatentTitle "Coating composition comprising protein,
+ method for manufacturing same, film for food packaging using same, and method
+ for manufacturing film for food packaging using same"
+          },
+          {
+            patentFamilyId "70617223",
+            relevanceScore 274347,
+            representativePatent "US-10774040-B1",
+            grantDate "2020-09-15",
+            representativePatentTitle "Processes for removing carbon disulfide
+ from symmetrical and asymmetrical sulfide product streams",
+            otherPatent {
+              "US-12209063-B2"
+            }
+          },
+          {
+            patentFamilyId "48698046",
+            relevanceScore 175582,
+            representativePatent "KR-101444877-B1",
+            grantDate "2014-10-01",
+            representativePatentTitle "On-site crosslinked hydrogel composed
+ of gamma-polyglutamic acid and its preparation method",
+            otherPatent {
+              "EP-2797984-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 31272,
+      evidence patentChemicalChemical {
+        neighborName "Butyl Acetate",
+        cooccurrenceScore 27640,
+        nPatentFamilies 837,
+        nPatents 954,
+        patentFamily {
+          {
+            patentFamilyId "32032550",
+            relevanceScore 117291,
+            representativePatent "JP-4200781-B2",
+            grantDate "2008-12-24",
+            representativePatentTitle "Method for producing
+ electrophotographic photosensitive member"
+          },
+          {
+            patentFamilyId "46024406",
+            relevanceScore 97743,
+            representativePatent "EP-2636710-B1",
+            grantDate "2016-08-31",
+            representativePatentTitle "Carbon nanofiber dispersion liquid,
+ coating composition, and paste composition"
+          },
+          {
+            patentFamilyId "84924510",
+            relevanceScore 93833,
+            representativePatent "KR-102483530-B1",
+            grantDate "2023-01-03",
+            representativePatentTitle "Coating composition for protecting and
+ repairing surface of concrete structure exposed to environment having high
+ water content and constructing method for protecting and repairing surface of
+ the concrete structure using the same"
+          },
+          {
+            patentFamilyId "10856857",
+            relevanceScore 69403,
+            representativePatent "JP-4490016-B2",
+            grantDate "2010-06-23",
+            representativePatentTitle "Particle formation method",
+            otherPatent {
+              "EP-1191999-B1"
+            }
+          },
+          {
+            patentFamilyId "43090541",
+            relevanceScore 45112,
+            representativePatent "JP-5505861-B2",
+            grantDate "2014-05-28",
+            representativePatentTitle "Lacquer-type paint resin and paint"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 6451503,
+      evidence patentChemicalChemical {
+        neighborName "Formaldehyde-(14)C",
+        cooccurrenceScore 27423,
+        nPatentFamilies 331,
+        nPatents 383,
+        patentFamily {
+          {
+            patentFamilyId "22844392",
+            relevanceScore 468718,
+            representativePatent "EP-0352775-B1",
+            grantDate "1993-09-01",
+            representativePatentTitle "Polyols comprising an alkoxylated
+ mannich condensate and process for preparing the same",
+            otherPatent {
+              "JP-3145380-B2"
+            }
+          },
+          {
+            patentFamilyId "10371322",
+            relevanceScore 117179,
+            representativePatent "EP-0001321-B1",
+            grantDate "1981-07-22",
+            representativePatentTitle "Alkanolamine salts of phenolic resins,
+ their manufacture and their use as bonding agents"
+          },
+          {
+            patentFamilyId "10789928",
+            relevanceScore 117179,
+            representativePatent "EP-0799930-B1",
+            grantDate "2003-10-08",
+            representativePatentTitle "Improvements in fabric printing"
+          },
+          {
+            patentFamilyId "50288182",
+            relevanceScore 117179,
+            representativePatent "EP-3105294-B1",
+            grantDate "2018-01-31",
+            representativePatentTitle "Printing ink"
+          },
+          {
+            patentFamilyId "57590501",
+            relevanceScore 97650,
+            representativePatent "US-10584283-B2",
+            grantDate "2020-03-10",
+            representativePatentTitle "Preservative for technical products"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 31285,
+      evidence patentChemicalChemical {
+        neighborName "1-Nonene",
+        cooccurrenceScore 27076,
+        nPatentFamilies 515,
+        nPatents 627,
+        patentFamily {
+          {
+            patentFamilyId "15281504",
+            relevanceScore 147672,
+            representativePatent "JP-2753731-B2",
+            grantDate "1998-05-20",
+            representativePatentTitle "Preparation method of fluorine ion
+ exchange membrane"
+          },
+          {
+            patentFamilyId "18385921",
+            relevanceScore 94510,
+            representativePatent "JP-3304584-B2",
+            grantDate "2002-07-22",
+            representativePatentTitle "Rosin emulsion composition, production
+ method thereof, sizing agent, sizing method"
+          },
+          {
+            patentFamilyId "34693038",
+            relevanceScore 72700,
+            representativePatent "JP-3927167-B2",
+            grantDate "2007-06-06",
+            representativePatentTitle "Molten Mg-containing zinc alloy plated
+ steel sheet with excellent corrosion resistance and blackening resistance"
+          },
+          {
+            patentFamilyId "27361923",
+            relevanceScore 69307,
+            representativePatent "EP-0964904-B1",
+            grantDate "2001-07-04",
+            representativePatentTitle "Olefin purification by adsorption of
+ acetylenics and regeneration of adsorbent"
+          },
+          {
+            patentFamilyId "29771397",
+            relevanceScore 58339,
+            representativePatent "JP-3808800-B2",
+            grantDate "2006-08-16",
+            representativePatentTitle "Film-coated hot-dip galvanized steel
+ sheet with excellent conductivity and corrosion resistance and method for
+ producing the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 cID 8037,
+      evidence patentChemicalChemical {
+        neighborName "N,N,N',N'-Tetramethylethylenediamine",
+        cooccurrenceScore 26653,
+        nPatentFamilies 168,
+        nPatents 195,
+        patentFamily {
+          {
+            patentFamilyId "6068511",
+            relevanceScore 564517,
+            representativePatent "EP-0017947-B1",
+            grantDate "1983-07-20",
+            representativePatentTitle "Process for preparing polyisocyanurate
+ foams containing urethane groups"
+          },
+          {
+            patentFamilyId "6068506",
+            relevanceScore 564517,
+            representativePatent "EP-0017948-B1",
+            grantDate "1983-07-13",
+            representativePatentTitle "Process for preparing polyurethane foams"
+          },
+          {
+            patentFamilyId "62557254",
+            relevanceScore 288019,
+            representativePatent "US-10125316-B2",
+            grantDate "2018-11-13",
+            representativePatentTitle "Etching solution and manufacturing
+ method of display"
+          },
+          {
+            patentFamilyId "65228895",
+            relevanceScore 256598,
+            representativePatent "KR-102333896-B1",
+            grantDate "2021-12-02",
+            representativePatentTitle "etchant"
+          },
+          {
+            patentFamilyId "25674708",
+            relevanceScore 141129,
+            representativePatent "JP-3210700-B2",
+            grantDate "2001-09-17",
+            representativePatentTitle "Tire with tread"
+          }
+        }
+      }
+    }
+  }
+}
