@@ -1,15 +1,17 @@
 .vscode
-.idea
 HELP.md
+build
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 ### Mac OS ###
 .DS_Store
 
-### Python ###
-*.pyc
-*__pycache__*
-.ipynb_checkpoints/
-
-### ML ###
-*.pkl
-*.keras
+data/pubchem_cid_4_patent.csv

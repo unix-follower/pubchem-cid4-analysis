@@ -17,7 +17,7 @@
             },
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "Boolean": [
                     true
@@ -35,7 +35,7 @@
             },
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Description": "1-Amino-2-propanol",
                 "Value": {
                   "Number": [
@@ -56,7 +56,7 @@
         },
         "Information": [
           {
-            "ReferenceNumber": 81,
+            "ReferenceNumber": 69,
             "Value": {
               "StringWithMarkup": [
                 {
@@ -283,7 +283,17 @@
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 83,
+                "Value": {
+                  "StringWithMarkup": [
+                    {
+                      "String": "possible industrial pollutant; structure"
+                    }
+                  ]
+                }
+              },
+              {
+                "ReferenceNumber": 84,
                 "Name": "See Also",
                 "Value": {
                   "StringWithMarkup": [
@@ -317,9 +327,9 @@
                 "URL": "https://iupac.org/what-we-do/nomenclature/",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by Lexichem TK 2.7.0 (PubChem release 2025.04.14)"
+                      "Computed by Lexichem TK 2.9.3 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "StringWithMarkup": [
@@ -337,9 +347,9 @@
                 "URL": "https://iupac.org/who-we-are/divisions/division-details/inchi/",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by InChI 1.07.2 (PubChem release 2025.04.14)"
+                      "Computed by InChI 1.07.4 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "StringWithMarkup": [
@@ -357,9 +367,9 @@
                 "URL": "https://iupac.org/who-we-are/divisions/division-details/inchi/",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by InChI 1.07.2 (PubChem release 2025.04.14)"
+                      "Computed by InChI 1.07.4 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "StringWithMarkup": [
@@ -377,9 +387,9 @@
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/docs/glossary#section=SMILES",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by OEChem 2.3.0 (PubChem release 2025.04.14)"
+                      "Computed by OEChem 4.2.0 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "StringWithMarkup": [
@@ -465,9 +475,9 @@
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Reference": [
-                  "Computed by PubChem 2.2 (PubChem release 2025.04.14)"
+                  "Computed by PubChem 2.2 (PubChem release 2025.09.15)"
                 ],
                 "Value": {
                   "StringWithMarkup": [
@@ -487,6 +497,9 @@
                 "TOCHeading": "CAS",
                 "Description": "A CAS Registry Number (also called CAS RN or CAS Number) is a proprietary registry number assigned by the Chemical Abstracts Service (CAS) division of the American Chemical Society (ACS).  It is a numeric identifier that can contain up to 10 digits, divided by hyphens into three parts.",
                 "URL": "https://www.cas.org/support/documentation/chemical-substances/faqs",
+                "DisplayControls": {
+                  "ShowAtMost": 2
+                },
                 "Information": [
                   {
                     "ReferenceNumber": 1,
@@ -622,7 +635,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 59,
+                    "ReferenceNumber": 60,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -632,7 +645,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 64,
+                    "ReferenceNumber": 65,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -642,7 +655,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -873,7 +886,7 @@
                   {
                     "ReferenceNumber": 34,
                     "Name": "",
-                    "URL": "https://www.ilo.org/dyn/icsc/showcard.display?p_card_id=0905",
+                    "URL": "https://chemicalsafety.ilo.org/dyn/icsc/showcard.display?p_card_id=0905",
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -920,12 +933,30 @@
                 ]
               },
               {
+                "TOCHeading": "MetaboLights",
+                "Description": "MetaboLights compound accession",
+                "URL": "https://www.ebi.ac.uk/metabolights/",
+                "Information": [
+                  {
+                    "ReferenceNumber": 56,
+                    "URL": "https://www.ebi.ac.uk/metabolights/MTBLC19030",
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "MTBLC19030"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
                 "TOCHeading": "Metabolomics Workbench ID",
                 "Description": "Registration number used by Metabolomics Workbench",
                 "URL": "https://www.metabolomicsworkbench.org/",
                 "Information": [
                   {
-                    "ReferenceNumber": 56,
+                    "ReferenceNumber": 57,
                     "URL": "https://www.metabolomicsworkbench.org/data/StructureData.php?RegNo=93705",
                     "Value": {
                       "StringWithMarkup": [
@@ -936,7 +967,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 57,
+                    "ReferenceNumber": 58,
                     "URL": "https://www.metabolomicsworkbench.org/data/StructureData.php?RegNo=166299",
                     "Value": {
                       "StringWithMarkup": [
@@ -982,7 +1013,7 @@
                 "Description": "The National Service Center (NSC) number is a numeric identifier for substances submitted to the National Cancer Institute (NCI) for testing and evaluation. It is a registration number for the Developmental Therapeutics Program (DTP) repository.",
                 "URL": "https://dtp.cancer.gov/organization/dscb/compoundSubmission/faqs.htm",
                 "DisplayControls": {
-                  "ShowAtMost": 3
+                  "ShowAtMost": 2
                 },
                 "Information": [
                   {
@@ -1000,22 +1031,47 @@
                 ]
               },
               {
+                "TOCHeading": "RXCUI",
+                "Description": "RxNorm concept unique identifier (RXCUI)",
+                "URL": "https://www.nlm.nih.gov/research/umls/rxnorm/index.html",
+                "Information": [
+                  {
+                    "ReferenceNumber": 66,
+                    "URL": "https://rxnav.nlm.nih.gov/id/rxnorm/1736006",
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "1736006"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "TOCHeading": "Wikidata",
+                "Description": "Wikidata entity identifier for the given compound.",
+                "URL": "https://www.wikidata.org/w/index.php?title=Special:WhatLinksHere/Property:P662",
+                "Information": [
+                  {
+                    "ReferenceNumber": 80,
+                    "URL": "https://www.wikidata.org/wiki/Q161580",
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "Q161580"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
                 "TOCHeading": "Wikipedia",
                 "Description": "Wikidata entity identifier for this compound.",
                 "Information": [
                   {
-                    "ReferenceNumber": 78,
-                    "URL": "https://en.wikipedia.org/wiki/Imidazenil",
-                    "Value": {
-                      "StringWithMarkup": [
-                        {
-                          "String": "Imidazenil"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "ReferenceNumber": 79,
+                    "ReferenceNumber": 81,
                     "URL": "https://en.wikipedia.org/wiki/1-Aminopropan-2-ol",
                     "Value": {
                       "StringWithMarkup": [
@@ -1042,17 +1098,17 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 82,
+                    "ReferenceNumber": 83,
                     "Value": {
                       "StringWithMarkup": [
+                        {
+                          "String": "monoisopropanolamine"
+                        },
                         {
                           "String": "1-amino-2-propanol"
                         },
                         {
                           "String": "isopropanolamine"
-                        },
-                        {
-                          "String": "monoisopropanolamine"
                         }
                       ]
                     }
@@ -1068,7 +1124,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -1081,10 +1137,10 @@
                           "String": "Isopropanolamine"
                         },
                         {
-                          "String": "Monoisopropanolamine"
+                          "String": "Threamine"
                         },
                         {
-                          "String": "Threamine"
+                          "String": "Monoisopropanolamine"
                         },
                         {
                           "String": "DL-1-Amino-2-propanol"
@@ -1099,10 +1155,10 @@
                           "String": "1-Methyl-2-aminoethanol"
                         },
                         {
-                          "String": "2-Hydroxypropanamine"
+                          "String": "2-Amino-1-methylethanol"
                         },
                         {
-                          "String": "2-Amino-1-methylethanol"
+                          "String": "2-Hydroxypropanamine"
                         },
                         {
                           "String": "1-Amino-2-hydroxypropane"
@@ -1111,10 +1167,10 @@
                           "String": "2-Hydroxy-1-propylamine"
                         },
                         {
-                          "String": "Mono-iso-propanolamine"
+                          "String": "alpha-Aminoisopropyl alcohol"
                         },
                         {
-                          "String": "alpha-Aminoisopropyl alcohol"
+                          "String": "Mono-iso-propanolamine"
                         },
                         {
                           "String": "CCRIS 2284"
@@ -1147,9 +1203,6 @@
                           "String": "DTXSID9021764"
                         },
                         {
-                          "String": "CHEBI:19030"
-                        },
-                        {
                           "String": "NSC-3188"
                         },
                         {
@@ -1160,6 +1213,9 @@
                         },
                         {
                           "String": "FEMA NO. 3965"
+                        },
+                        {
+                          "String": "CHEBI:19030"
                         },
                         {
                           "String": "EC 201-162-7"
@@ -1198,6 +1254,9 @@
                           "String": "1Amino2hydroxypropane"
                         },
                         {
+                          "String": "RefChem:429211"
+                        },
+                        {
                           "String": "alphaAminoisopropyl alcohol"
                         },
                         {
@@ -1231,9 +1290,6 @@
                           "String": "(RS)-1-amino-2-propanol"
                         },
                         {
-                          "String": "MFCD00008139"
-                        },
-                        {
                           "String": ".alpha.-Aminoisopropyl alcohol"
                         },
                         {
@@ -1241,6 +1297,9 @@
                         },
                         {
                           "String": "(+/-)-Isopropanolamine"
+                        },
+                        {
+                          "String": "MFCD00008139"
                         },
                         {
                           "String": "D-1-amino-2-propanol"
@@ -1255,10 +1314,13 @@
                           "String": "2-Propanol, 1-amino- (8CI,9CI)"
                         },
                         {
+                          "String": "2-Propanol, 1-amino-, (.+/-.)-"
+                        },
+                        {
                           "String": "1674-56-2"
                         },
                         {
-                          "String": "2-Propanol, 1-amino-, (.+/-.)-"
+                          "String": "3-amino-2-propanol"
                         },
                         {
                           "String": "(R)-(-)-Isopropanolamine"
@@ -1282,9 +1344,6 @@
                           "String": "1-amino-2 propanol"
                         },
                         {
-                          "String": "3-amino-2-propanol"
-                        },
-                        {
                           "String": "3-aminopropan-2-ol"
                         },
                         {
@@ -1301,9 +1360,6 @@
                         },
                         {
                           "String": "1-amino-propane-2-ol"
-                        },
-                        {
-                          "String": "1-Amin-iso-proylalcohol"
                         },
                         {
                           "String": "rac-1-amino-2-propanol"
@@ -1363,6 +1419,9 @@
                           "String": "orb1962263"
                         },
                         {
+                          "String": "orb3026105"
+                        },
+                        {
                           "String": "SCHEMBL1140446"
                         },
                         {
@@ -1393,9 +1452,6 @@
                           "String": "(.+/-.)-1-Amino-2-propanol"
                         },
                         {
-                          "String": "BCP08083"
-                        },
-                        {
                           "String": "HY-W015969R"
                         },
                         {
@@ -1408,6 +1464,9 @@
                           "String": "DL-1-Amino-2-propanol, >=90%"
                         },
                         {
+                          "String": "MSK167300"
+                        },
+                        {
                           "String": "STL308732"
                         },
                         {
@@ -1418,6 +1477,9 @@
                         },
                         {
                           "String": "CS-W016685"
+                        },
+                        {
+                          "String": "EBC-253118"
                         },
                         {
                           "String": "HY-W015969"
@@ -1435,13 +1497,13 @@
                           "String": "CAS-78-96-6"
                         },
                         {
+                          "String": "MSK167300-1000M"
+                        },
+                        {
                           "String": "NCGC00257540-01"
                         },
                         {
                           "String": "1-AMINO-2-PROPANOL, (+/-)-"
-                        },
-                        {
-                          "String": "SY002691"
                         },
                         {
                           "String": "DB-013106"
@@ -1471,7 +1533,13 @@
                           "String": "(+/-)-1-Amino-2-propanol, analytical standard"
                         },
                         {
+                          "String": "F099022"
+                        },
+                        {
                           "String": "Q161580"
+                        },
+                        {
+                          "String": "1-Amino-2-propanol Solution in Methanol, 1000ug/mL"
                         },
                         {
                           "String": "F2190-0369"
@@ -1495,7 +1563,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -1517,10 +1585,10 @@
                           "String": "(R)-1-aminopropan-2-ol"
                         },
                         {
-                          "String": "(R)-(-)-1-Amino-2-propanol"
+                          "String": "MIPA; Threamine"
                         },
                         {
-                          "String": "MIPA; Threamine"
+                          "String": "(R)-(-)-1-Amino-2-propanol"
                         },
                         {
                           "String": "(S)-1-aminopropan-2-ol"
@@ -1542,6 +1610,12 @@
                         },
                         {
                           "String": "MPA (CHRIS Code)"
+                        },
+                        {
+                          "String": "1-Amin-iso-proylalcohol"
+                        },
+                        {
+                          "String": "2-Hydroxy-n-propylamine"
                         },
                         {
                           "String": "AC1Q2BVJ"
@@ -1577,7 +1651,7 @@
                           "String": "ACMC-1BL70"
                         },
                         {
-                          "String": "(+-)-1-amino-2-propanol"
+                          "String": "(  )-1-Amino-2-propanol"
                         },
                         {
                           "String": "s-(+)-1-amino-2-propanol"
@@ -1589,22 +1663,22 @@
                           "String": "(+/-)-1-aminopropan-2-ol"
                         },
                         {
+                          "String": "2799-17-9"
+                        },
+                        {
                           "String": "AC1L189D"
                         },
                         {
                           "String": "AC1Q76O6"
                         },
                         {
-                          "String": "2799-16-8"
-                        },
-                        {
-                          "String": "2799-17-9"
-                        },
-                        {
                           "String": "C3-H9-N-O"
                         },
                         {
                           "String": "CTK5E6214"
+                        },
+                        {
+                          "String": "2799-16-8"
                         },
                         {
                           "String": "(R)-(-)-1-Aminopropan-2-ol"
@@ -1616,13 +1690,16 @@
                           "String": "ACT02864"
                         },
                         {
+                          "String": "BCP08083"
+                        },
+                        {
                           "String": "KS-00000VP6"
                         },
                         {
                           "String": "AR-1C1554"
                         },
                         {
-                          "String": "MFCD00064428"
+                          "String": "MFCD00064429"
                         },
                         {
                           "String": "NA8027"
@@ -1632,6 +1709,12 @@
                         },
                         {
                           "String": "AN-9372"
+                        },
+                        {
+                          "String": "J1.961E"
+                        },
+                        {
+                          "String": "J2.150D"
                         },
                         {
                           "String": "LS-1763"
@@ -1715,6 +1798,9 @@
                           "String": "( inverted exclamation markA)-1-Amino-2-propanol"
                         },
                         {
+                          "String": "A1200277"
+                        },
+                        {
                           "String": "A1203918"
                         },
                         {
@@ -1739,9 +1825,6 @@
                           "String": "1-Amino-2-propanol; (2-Hydroxy-2-methylethyl)amine; (RS)-1-Amino-2-hydroxypropane; (RS)-1-amino-2-propanol; (+/-)-1-Amino-2-propanol; 1-Amino-2-hydroxypropane; 1-Aminoisopropanol; 1-Methyl-2-aminoethanol; 2-Amino-1-methylethanol; 2-Hydroxy-1-propanamine; 2-Hydroxy-1-propylamine; 2-Hydroxypropanamine; 2-Hydroxypropylamine; DL-1-Amino-2-propanol; Isopropanolamine; MIPA; Monoisopropanolamine; NSC 3188; Threamine; dl-1-Amino-2-propanol; a-Aminoisopropyl alcohol; ss-Aminoisopropanol"
                         },
                         {
-                          "String": "1-aminopropan-2-ol,ethane-1,2-diol,3-(5-methylocta-2,4,6-trien-4-yl)-4-prop-1-enyloxolane-2,5-dione"
-                        },
-                        {
                           "String": "109-83-1"
                         },
                         {
@@ -1755,9 +1838,6 @@
                         },
                         {
                           "String": "83447-87-4"
-                        },
-                        {
-                          "String": "9060-53-1"
                         }
                       ]
                     }
@@ -1776,7 +1856,7 @@
             },
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "DateISO8601": [
                     "2005-03-26"
@@ -1795,10 +1875,10 @@
             },
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "DateISO8601": [
-                    "2025-07-20"
+                    "2026-03-14"
                   ]
                 }
               }
@@ -1839,9 +1919,9 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by PubChem 2.2 (PubChem release 2025.04.14)"
+                      "Computed by PubChem 2.2 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "StringWithMarkup": [
@@ -1860,9 +1940,9 @@
                 "URL": "https://pubmed.ncbi.nlm.nih.gov/17985865/",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by XLogP3 3.0 (PubChem release 2025.04.14)"
+                      "Computed by XLogP3 3.0 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "Number": [
@@ -1877,9 +1957,9 @@
                 "Description": "The number of hydrogen bond donors in this compound.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by Cactvs 3.4.8.18 (PubChem release 2025.04.14)"
+                      "Computed by Cactvs 3.4.8.24 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "Number": [
@@ -1894,9 +1974,9 @@
                 "Description": "The number of hydrogen bond acceptors in this compound.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by Cactvs 3.4.8.18 (PubChem release 2025.04.14)"
+                      "Computed by Cactvs 3.4.8.24 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "Number": [
@@ -1911,9 +1991,9 @@
                 "Description": "A rotatable bond is defined as any single-order non-ring bond, where atoms on either side of the bond are in turn bound to nonterminal heavy (i.e., non-hydrogen) atoms. That is, where rotation around the bond axis changes the overall shape of the molecule, and generates conformers which can be distinguished by standard fast spectroscopic methods.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by Cactvs 3.4.8.18 (PubChem release 2025.04.14)"
+                      "Computed by Cactvs 3.4.8.24 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "Number": [
@@ -1928,9 +2008,9 @@
                 "Description": "The exact mass of an isotopic species is obtained by summing the masses of the individual isotopes of the molecule.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by PubChem 2.2 (PubChem release 2025.04.14)"
+                      "Computed by PubChem 2.2 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "StringWithMarkup": [
@@ -1948,9 +2028,9 @@
                 "Description": "The monoisotopic mass is the sum of the masses of the atoms in a molecule using the unbound, ground-state, rest mass of the principal (most abundant) isotope for each element instead of the isotopic average mass.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by PubChem 2.2 (PubChem release 2025.04.14)"
+                      "Computed by PubChem 2.2 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "StringWithMarkup": [
@@ -1969,9 +2049,9 @@
                 "URL": "https://pubmed.ncbi.nlm.nih.gov/11020286/",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by Cactvs 3.4.8.18 (PubChem release 2025.04.14)"
+                      "Computed by Cactvs 3.4.8.24 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "Number": [
@@ -1987,7 +2067,7 @@
                 "Description": "The number of heavy atoms (i.e., non-hydrogen atoms) in this compound.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
                       "Computed by PubChem"
                     ],
@@ -2004,7 +2084,7 @@
                 "Description": "Formal charge is the difference between the number of valence electrons of each atom and the number of electrons the atom is associated with. Formal charge assumes any shared electrons are equally shared between the two bonded atoms.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
                       "Computed by PubChem"
                     ],
@@ -2022,9 +2102,9 @@
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/docs/glossary#section=Complexity",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by Cactvs 3.4.8.18 (PubChem release 2025.04.14)"
+                      "Computed by Cactvs 3.4.8.24 (PubChem release 2025.09.15)"
                     ],
                     "Value": {
                       "Number": [
@@ -2039,7 +2119,7 @@
                 "Description": "Isotope atom count is the number of isotopes that are not most abundant for the corresponding chemical elements.  Isotopes are variants of a chemical element which differ in neutron number.  For example, among three isotopes of carbon (i.e., C-12, C-13, and C-14), the isotope atom count considers the C-13 and C-14 atoms, because C-12 is the most abundant isotope of carbon.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
                       "Computed by PubChem"
                     ],
@@ -2056,7 +2136,7 @@
                 "Description": "An atom stereocenter, also known as a chiral center, is an atom that is attached to four different types of atoms (or groups of atoms) in the tetrahedral arrangement. It can have either (R)- or (S)- configurations.  Some compounds, such as racemic mixtures, have an undefined atom stereocenter, whose (R/S)-configuration is not specifically defined.  The \"defined atom stereocenter count\" is the number of atom stereocenters whose configurations are specifically defined.  ",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
                       "Computed by PubChem"
                     ],
@@ -2073,7 +2153,7 @@
                 "Description": "The number of atom stereocenters whose configurations are not specifically defined.  For the definition of atom stereocenters, see the \"defined atom stereocenter count\" above.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
                       "Computed by PubChem"
                     ],
@@ -2090,7 +2170,7 @@
                 "Description": "A bond stereocenter is a non-rotatable bond around which two atoms can have different arrangement (as in cis- and trans-forms of butene around its double bond).  Some compounds have an undefined bond stereocenter, whose stereochemistry is not specifically defined.  The \"defined bond stereocenter count\" is the number of bond stereocenters whose configurations are specifically defined.  ",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
                       "Computed by PubChem"
                     ],
@@ -2107,7 +2187,7 @@
                 "Description": "The number of bond stereocenters whose configurations are not specifically defined.  For the definition of bond stereocenters, see the \"defined bond stereocenter count\" above.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
                       "Computed by PubChem"
                     ],
@@ -2124,7 +2204,7 @@
                 "Description": "A covalently-bonded unit is a group of atoms connected by covalent bonds, ignoring other bond types (or a single atom without covalent bonds).  The \"covalently-bonded unit count\" property is the number of such units in this compound compound.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
                       "Computed by PubChem"
                     ],
@@ -2141,9 +2221,9 @@
                 "Description": "Whether the compound has successfully passed PubChem's valence bond canonicalization procedure. Some large, complex, or highly symmetric structures may fail this process.",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Reference": [
-                      "Computed by PubChem (release 2025.04.14)"
+                      "Computed by PubChem (release 2025.09.15)"
                     ],
                     "Value": {
                       "StringWithMarkup": [
@@ -2273,7 +2353,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -2437,7 +2517,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -2532,7 +2612,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -2615,7 +2695,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -2862,7 +2942,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -2934,7 +3014,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -3017,7 +3097,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -3239,7 +3319,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 62,
+                    "ReferenceNumber": 63,
                     "Name": "Standard non-polar",
                     "Value": {
                       "Number": [
@@ -3249,7 +3329,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 62,
+                    "ReferenceNumber": 63,
                     "Name": "Standard polar",
                     "Value": {
                       "Number": [
@@ -3342,7 +3422,7 @@
                 }
               },
               {
-                "ReferenceNumber": 64,
+                "ReferenceNumber": 65,
                 "Value": {
                   "StringWithMarkup": [
                     {
@@ -3402,7 +3482,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 65,
+                    "ReferenceNumber": 67,
                     "Reference": [
                       "S13 | EUCOSMETICS | Combined Inventory of Ingredients Employed in Cosmetic Products (2000) and Revised Inventory (2006) | DOI:10.5281/zenodo.2624118"
                     ],
@@ -3560,7 +3640,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 72,
+                    "ReferenceNumber": 74,
                     "Name": "Copyright",
                     "Value": {
                       "StringWithMarkup": [
@@ -3571,7 +3651,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 72,
+                    "ReferenceNumber": 74,
                     "Name": "Thumbnail",
                     "URL": "https://spectrabase.com/spectrum/LmdDGojnyfM",
                     "Value": {
@@ -3599,7 +3679,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 71,
+                    "ReferenceNumber": 73,
                     "Name": "Copyright",
                     "Value": {
                       "StringWithMarkup": [
@@ -3610,7 +3690,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 71,
+                    "ReferenceNumber": 73,
                     "Name": "Thumbnail",
                     "URL": "https://spectrabase.com/spectrum/AghKHxtOKuV",
                     "Value": {
@@ -4313,7 +4393,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 60,
+                    "ReferenceNumber": 61,
                     "Name": "NIST Number",
                     "Value": {
                       "Number": [
@@ -4322,7 +4402,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 60,
+                    "ReferenceNumber": 61,
                     "Name": "Library",
                     "Value": {
                       "StringWithMarkup": [
@@ -4333,7 +4413,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 60,
+                    "ReferenceNumber": 61,
                     "Name": "Total Peaks",
                     "Value": {
                       "Number": [
@@ -4342,7 +4422,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 60,
+                    "ReferenceNumber": 61,
                     "Name": "m/z Top Peak",
                     "Value": {
                       "Number": [
@@ -4351,7 +4431,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 60,
+                    "ReferenceNumber": 61,
                     "Name": "m/z 2nd Highest",
                     "Value": {
                       "Number": [
@@ -4360,7 +4440,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 60,
+                    "ReferenceNumber": 61,
                     "Name": "m/z 3rd Highest",
                     "Value": {
                       "Number": [
@@ -4369,7 +4449,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 60,
+                    "ReferenceNumber": 61,
                     "Name": "Thumbnail",
                     "Value": {
                       "ExternalDataURL": [
@@ -4379,7 +4459,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 61,
+                    "ReferenceNumber": 62,
                     "Name": "NIST Number",
                     "Value": {
                       "Number": [
@@ -4388,7 +4468,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 61,
+                    "ReferenceNumber": 62,
                     "Name": "Library",
                     "Value": {
                       "StringWithMarkup": [
@@ -4399,7 +4479,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 61,
+                    "ReferenceNumber": 62,
                     "Name": "Total Peaks",
                     "Value": {
                       "Number": [
@@ -4408,7 +4488,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 61,
+                    "ReferenceNumber": 62,
                     "Name": "m/z Top Peak",
                     "Value": {
                       "Number": [
@@ -4417,7 +4497,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 61,
+                    "ReferenceNumber": 62,
                     "Name": "m/z 2nd Highest",
                     "Value": {
                       "Number": [
@@ -4426,7 +4506,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 61,
+                    "ReferenceNumber": 62,
                     "Name": "m/z 3rd Highest",
                     "Value": {
                       "Number": [
@@ -4435,7 +4515,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 61,
+                    "ReferenceNumber": 62,
                     "Name": "Thumbnail",
                     "Value": {
                       "ExternalDataURL": [
@@ -4445,7 +4525,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 73,
+                    "ReferenceNumber": 75,
                     "Name": "Source of Spectrum",
                     "Value": {
                       "StringWithMarkup": [
@@ -4456,7 +4536,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 73,
+                    "ReferenceNumber": 75,
                     "Name": "Copyright",
                     "Value": {
                       "StringWithMarkup": [
@@ -4467,7 +4547,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 73,
+                    "ReferenceNumber": 75,
                     "Name": "Thumbnail",
                     "URL": "https://spectrabase.com/spectrum/IlIUb4SCJcQ",
                     "Value": {
@@ -5002,7 +5082,7 @@
                     "Value": {
                       "StringWithMarkup": [
                         {
-                          "String": "76.07569037"
+                          "String": "76.0756903685"
                         }
                       ]
                     }
@@ -5168,7 +5248,7 @@
                     "Value": {
                       "StringWithMarkup": [
                         {
-                          "String": "76.07569037"
+                          "String": "76.0756903685"
                         }
                       ]
                     }
@@ -5334,7 +5414,7 @@
                     "Value": {
                       "StringWithMarkup": [
                         {
-                          "String": "76.07569037"
+                          "String": "76.0756903685"
                         }
                       ]
                     }
@@ -6252,7 +6332,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 69,
+                    "ReferenceNumber": 71,
                     "Name": "Instrument Name",
                     "Value": {
                       "StringWithMarkup": [
@@ -6263,7 +6343,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 69,
+                    "ReferenceNumber": 71,
                     "Name": "Technique",
                     "Value": {
                       "StringWithMarkup": [
@@ -6274,7 +6354,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 69,
+                    "ReferenceNumber": 71,
                     "Name": "Source of Sample",
                     "Value": {
                       "StringWithMarkup": [
@@ -6285,7 +6365,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 69,
+                    "ReferenceNumber": 71,
                     "Name": "Copyright",
                     "Value": {
                       "StringWithMarkup": [
@@ -6296,7 +6376,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 69,
+                    "ReferenceNumber": 71,
                     "Name": "Thumbnail",
                     "URL": "https://spectrabase.com/spectrum/BEFsQT8JbAM",
                     "Value": {
@@ -6325,7 +6405,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 74,
+                    "ReferenceNumber": 76,
                     "Name": "Source of Sample",
                     "Value": {
                       "StringWithMarkup": [
@@ -6336,7 +6416,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 74,
+                    "ReferenceNumber": 76,
                     "Name": "Catalog Number",
                     "Value": {
                       "StringWithMarkup": [
@@ -6347,7 +6427,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 74,
+                    "ReferenceNumber": 76,
                     "Name": "Copyright",
                     "Value": {
                       "StringWithMarkup": [
@@ -6358,7 +6438,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 74,
+                    "ReferenceNumber": 76,
                     "Name": "Thumbnail",
                     "URL": "https://spectrabase.com/spectrum/FjN05HUgOl4",
                     "Value": {
@@ -6387,7 +6467,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 70,
+                    "ReferenceNumber": 72,
                     "Name": "Instrument Name",
                     "Value": {
                       "StringWithMarkup": [
@@ -6398,7 +6478,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 70,
+                    "ReferenceNumber": 72,
                     "Name": "Technique",
                     "Value": {
                       "StringWithMarkup": [
@@ -6409,7 +6489,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 70,
+                    "ReferenceNumber": 72,
                     "Name": "Source of Spectrum",
                     "Value": {
                       "StringWithMarkup": [
@@ -6420,7 +6500,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 70,
+                    "ReferenceNumber": 72,
                     "Name": "Copyright",
                     "Value": {
                       "StringWithMarkup": [
@@ -6431,7 +6511,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 70,
+                    "ReferenceNumber": 72,
                     "Name": "Thumbnail",
                     "URL": "https://spectrabase.com/spectrum/95IHi5Cxjwr",
                     "Value": {
@@ -6460,7 +6540,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 68,
+                    "ReferenceNumber": 70,
                     "Name": "Instrument Name",
                     "Value": {
                       "StringWithMarkup": [
@@ -6471,7 +6551,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 68,
+                    "ReferenceNumber": 70,
                     "Name": "Technique",
                     "Value": {
                       "StringWithMarkup": [
@@ -6482,7 +6562,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 68,
+                    "ReferenceNumber": 70,
                     "Name": "Copyright",
                     "Value": {
                       "StringWithMarkup": [
@@ -6493,7 +6573,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 68,
+                    "ReferenceNumber": 70,
                     "Name": "Thumbnail",
                     "URL": "https://spectrabase.com/spectrum/24Qhybm3dTP",
                     "Value": {
@@ -6524,7 +6604,7 @@
             },
             "Information": [
               {
-                "ReferenceNumber": 75,
+                "ReferenceNumber": 77,
                 "Name": "Catalog Number",
                 "Value": {
                   "StringWithMarkup": [
@@ -6535,7 +6615,7 @@
                 }
               },
               {
-                "ReferenceNumber": 75,
+                "ReferenceNumber": 77,
                 "Name": "Copyright",
                 "Value": {
                   "StringWithMarkup": [
@@ -6546,7 +6626,7 @@
                 }
               },
               {
-                "ReferenceNumber": 75,
+                "ReferenceNumber": 77,
                 "Name": "Thumbnail",
                 "URL": "https://spectrabase.com/spectrum/1tFrtQhSMQG",
                 "Value": {
@@ -6570,7 +6650,7 @@
             "URL": "https://doi.org/10.1186/s13321-016-0163-1",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "StringWithMarkup": [
                     {
@@ -6615,7 +6695,7 @@
             },
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Same Connectivity Count",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/cids/JSON?cids_type=same_connectivity&list_return=redirect",
                 "Value": {
@@ -6625,7 +6705,7 @@
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Same Stereo Count",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/cids/JSON?cids_type=same_stereo&list_return=redirect",
                 "Value": {
@@ -6635,7 +6715,7 @@
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Same Isotope Count",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/cids/JSON?cids_type=same_isotopes&list_return=redirect",
                 "Value": {
@@ -6645,57 +6725,57 @@
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Same Parent, Connectivity Count",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/cids/JSON?cids_type=same_parent_connectivity&list_return=redirect",
                 "Value": {
                   "Number": [
-                    60
+                    62
                   ]
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Same Parent, Stereo Count",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/cids/JSON?cids_type=same_parent_stereo&list_return=redirect",
                 "Value": {
                   "Number": [
-                    47
+                    49
                   ]
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Same Parent, Isotope Count",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/cids/JSON?cids_type=same_parent_isotopes&list_return=redirect",
                 "Value": {
                   "Number": [
-                    55
+                    57
                   ]
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Same Parent, Exact Count",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/cids/JSON?cids_type=same_parent&list_return=redirect",
                 "Value": {
                   "Number": [
-                    42
+                    44
                   ]
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Mixtures, Components, and Neutralized Forms Count",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/cids/JSON?cids_type=component&list_return=redirect",
                 "Value": {
                   "Number": [
-                    593
+                    604
                   ]
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Similar Compounds (2D)",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/#query=CID4%20structure&tab=similarity",
                 "Value": {
@@ -6707,7 +6787,7 @@
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Similar Conformers (3D)",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/#query=CID4%20structure&tab=similarity_3d",
                 "Value": {
@@ -6733,7 +6813,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "URL": "https://pubchem.ncbi.nlm.nih.gov/substance/505424941",
                     "Value": {
                       "Number": [
@@ -6759,32 +6839,32 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Name": "All Count",
                     "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/sids/JSON?sids_type=all&list_return=redirect",
                     "Value": {
                       "Number": [
-                        1545
+                        1583
                       ]
                     }
                   },
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Name": "Same Count",
                     "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/sids/JSON?sids_type=standardized&list_return=redirect",
                     "Value": {
                       "Number": [
-                        260
+                        264
                       ]
                     }
                   },
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Name": "Mixture Count",
                     "URL": "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/4/sids/JSON?sids_type=component&list_return=redirect",
                     "Value": {
                       "Number": [
-                        1285
+                        1319
                       ]
                     }
                   }
@@ -6795,7 +6875,7 @@
                 "Description": "Substances associated with this compound, grouped by the category of the data sources who submitted the substances to PubChem (e.g., government organizations, chemical vendors, research and development, curation efforts, NIH initiatives, etc.).",
                 "Information": [
                   {
-                    "ReferenceNumber": 81,
+                    "ReferenceNumber": 84,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -6834,7 +6914,7 @@
             },
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "StringWithMarkup": [
                     {
@@ -6868,7 +6948,7 @@
             },
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "PubMed Count",
                 "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?LinkName=pccompound_pubmed&db=pccompound&cmd=Link&from_uid=4",
                 "Value": {
@@ -6945,7 +7025,7 @@
         "Description": "A list of chemical vendors that sell this compound. Note that the order of chemical vendors on the list is randomized, and that PubChem do not endorse any of the vendors. Each vendor may have multiple products containing the same chemical, but different in various aspects, such as amount and purity.  For each product, the external identifier used to locate the product on the vendor's website is provided under the Purchasable Chemical column, and clicking this identifier directs you to the vendor's website.  The information on the product provided by the vendor to PubChem can be accessed at the Summary page of the corresponding PubChem Substance ID (SID).  ",
         "Information": [
           {
-            "ReferenceNumber": 81,
+            "ReferenceNumber": 84,
             "Value": {
               "Boolean": [
                 true
@@ -7003,7 +7083,7 @@
               {
                 "ReferenceNumber": 24,
                 "Name": "Substance",
-                "URL": "https://www.hfpappexternal.fda.gov/scripts/fdcc/index.cfm?set=FoodSubstances&id=AMINO-2-PROPANOL",
+                "URL": "https://www.hfpappexternal.fda.gov/scripts/fdcc/index.cfm?set=FoodSubstances",
                 "Value": {
                   "StringWithMarkup": [
                     {
@@ -7612,7 +7692,7 @@
             "Description": "Biochemical reactions in which this compound participates.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "ExternalTableName": "pathwayreaction"
                 }
@@ -7825,7 +7905,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 65,
+                    "ReferenceNumber": 67,
                     "Reference": [
                       "S13 | EUCOSMETICS | Combined Inventory of Ingredients Employed in Cosmetic Products (2000) and Revised Inventory (2006) | DOI:10.5281/zenodo.2624118"
                     ],
@@ -8112,7 +8192,7 @@
                 },
                 "Information": [
                   {
-                    "ReferenceNumber": 67,
+                    "ReferenceNumber": 69,
                     "Name": "Pictogram(s)",
                     "Value": {
                       "StringWithMarkup": [
@@ -8132,7 +8212,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 67,
+                    "ReferenceNumber": 69,
                     "Name": "Signal",
                     "Value": {
                       "StringWithMarkup": [
@@ -8151,7 +8231,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 67,
+                    "ReferenceNumber": 69,
                     "Name": "GHS Hazard Statements",
                     "Value": {
                       "StringWithMarkup": [
@@ -8170,20 +8250,72 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 67,
+                    "ReferenceNumber": 69,
                     "Name": "Precautionary Statement Codes",
                     "Value": {
                       "StringWithMarkup": [
                         {
-                          "String": "P260, P264, P280, P301+P330+P331, P302+P361+P354, P304+P340, P305+P354+P338, P316, P321, P363, P405, and P501"
-                        },
-                        {
-                          "String": "(The corresponding statement to each P-code can be found at the GHS Classification page.)",
+                          "String": "P260, P264, P280, P301+P330+P331, P302+P361+P354, P304+P340, P305+P354+P338, P316, P321, P363, P405, and P501",
                           "Markup": [
                             {
-                              "Start": 64,
-                              "Length": 18,
-                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#_prec"
+                              "Start": 0,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P260"
+                            },
+                            {
+                              "Start": 6,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P264"
+                            },
+                            {
+                              "Start": 12,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P280"
+                            },
+                            {
+                              "Start": 18,
+                              "Length": 14,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P301+P330+P331"
+                            },
+                            {
+                              "Start": 34,
+                              "Length": 14,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P302+P361+P354"
+                            },
+                            {
+                              "Start": 50,
+                              "Length": 9,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P304+P340"
+                            },
+                            {
+                              "Start": 61,
+                              "Length": 14,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P305+P354+P338"
+                            },
+                            {
+                              "Start": 77,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P316"
+                            },
+                            {
+                              "Start": 83,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P321"
+                            },
+                            {
+                              "Start": 89,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P363"
+                            },
+                            {
+                              "Start": 95,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P405"
+                            },
+                            {
+                              "Start": 105,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P501"
                             }
                           ]
                         }
@@ -8442,6 +8574,40 @@
                     }
                   },
                   {
+                    "ReferenceNumber": 64,
+                    "Name": "GHS Hazard Statements",
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "H402: Harmful to aquatic life [Hazardous to the aquatic environment, acute hazard]"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "ReferenceNumber": 64,
+                    "Name": "Precautionary Statement Codes",
+                    "Value": {
+                      "StringWithMarkup": [
+                        {
+                          "String": "P273, and P501",
+                          "Markup": [
+                            {
+                              "Start": 0,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P273"
+                            },
+                            {
+                              "Start": 10,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P501"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
                     "ReferenceNumber": 28,
                     "Name": "Pictogram(s)",
                     "Value": {
@@ -8534,47 +8700,97 @@
                     "Value": {
                       "StringWithMarkup": [
                         {
-                          "String": "P260, P264, P270, P280, P301+P317, P301+P330+P331, P302+P352, P302+P361+P354, P304+P340, P305+P354+P338, P316, P317, P321, P330, P362+P364, P363, P405, and P501"
-                        },
-                        {
-                          "String": "(The corresponding statement to each P-code can be found at the GHS Classification page.)",
+                          "String": "P260, P264, P270, P280, P301+P317, P301+P330+P331, P302+P352, P302+P361+P354, P304+P340, P305+P354+P338, P316, P317, P321, P330, P362+P364, P363, P405, and P501",
                           "Markup": [
                             {
-                              "Start": 64,
-                              "Length": 18,
-                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#_prec"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "ReferenceNumber": 63,
-                    "Name": "GHS Hazard Statements",
-                    "Value": {
-                      "StringWithMarkup": [
-                        {
-                          "String": "H402: Harmful to aquatic life [Hazardous to the aquatic environment, acute hazard]"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "ReferenceNumber": 63,
-                    "Name": "Precautionary Statement Codes",
-                    "Value": {
-                      "StringWithMarkup": [
-                        {
-                          "String": "P273, and P501"
-                        },
-                        {
-                          "String": "(The corresponding statement to each P-code can be found at the GHS Classification page.)",
-                          "Markup": [
+                              "Start": 0,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P260"
+                            },
                             {
-                              "Start": 64,
-                              "Length": 18,
-                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#_prec"
+                              "Start": 6,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P264"
+                            },
+                            {
+                              "Start": 12,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P270"
+                            },
+                            {
+                              "Start": 18,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P280"
+                            },
+                            {
+                              "Start": 24,
+                              "Length": 9,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P301+P317"
+                            },
+                            {
+                              "Start": 35,
+                              "Length": 14,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P301+P330+P331"
+                            },
+                            {
+                              "Start": 51,
+                              "Length": 9,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P302+P352"
+                            },
+                            {
+                              "Start": 62,
+                              "Length": 14,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P302+P361+P354"
+                            },
+                            {
+                              "Start": 78,
+                              "Length": 9,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P304+P340"
+                            },
+                            {
+                              "Start": 89,
+                              "Length": 14,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P305+P354+P338"
+                            },
+                            {
+                              "Start": 105,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P316"
+                            },
+                            {
+                              "Start": 111,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P317"
+                            },
+                            {
+                              "Start": 117,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P321"
+                            },
+                            {
+                              "Start": 123,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P330"
+                            },
+                            {
+                              "Start": 129,
+                              "Length": 9,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P362+P364"
+                            },
+                            {
+                              "Start": 140,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P363"
+                            },
+                            {
+                              "Start": 146,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P405"
+                            },
+                            {
+                              "Start": 156,
+                              "Length": 4,
+                              "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/#P501"
                             }
                           ]
                         }
@@ -8588,7 +8804,7 @@
                 "Description": "The Hazard Classes and Categories are aligned with GHS (Globally Harmonized System of Classification and Labelling of Chemicals) hazard statement codes.  The percentage data in the parenthesis from ECHA indicates that the hazard classes and categories information are consolidated from multiple companies.  Also, see the detailed explanation from the above GHS classification section.",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/ghs/",
                 "DisplayControls": {
-                  "ShowAtMost": 2
+                  "ShowAtMost": 1
                 },
                 "Information": [
                   {
@@ -8624,7 +8840,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 63,
+                    "ReferenceNumber": 64,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -8634,7 +8850,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 64,
+                    "ReferenceNumber": 65,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -8644,7 +8860,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 67,
+                    "ReferenceNumber": 69,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -8658,7 +8874,7 @@
               {
                 "TOCHeading": "NFPA Hazard Classification",
                 "Description": "The National Fire Protection Association (NFPA) Hazard Classification (also known as NFPA 704) provides a simple, readily recognized, easily understood system for identifying the specific hazards of a material and the severity of the hazard that would occur during an emergency response. The system addresses the health, flammability, instability, and special hazards presented from short-term, acute exposures that could occur as a result of a fire, spill, or similar emergency.",
-                "URL": "https://www.nfpa.org/News-and-Research/Publications-and-media/Blogs-Landing-Page/NFPA-Today/Blog-Posts/2021/11/05/Hazardous-Materials-Identification",
+                "URL": "https://www.nfpa.org/news-blogs-and-articles/blogs/2021/11/05/hazardous-materials-identification",
                 "DisplayControls": {
                   "CreateTable": {
                     "FromInformationIn": "ThisSection",
@@ -8725,7 +8941,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Name": "NFPA 704 Diamond",
                     "Value": {
                       "StringWithMarkup": [
@@ -8745,7 +8961,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Name": "NFPA Health Rating",
                     "Value": {
                       "StringWithMarkup": [
@@ -8756,7 +8972,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Name": "NFPA Fire Rating",
                     "Value": {
                       "StringWithMarkup": [
@@ -8767,7 +8983,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Name": "NFPA Instability Rating",
                     "Value": {
                       "StringWithMarkup": [
@@ -8951,7 +9167,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -8990,7 +9206,7 @@
                     }
                   },
                   {
-                    "ReferenceNumber": 66,
+                    "ReferenceNumber": 68,
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -9509,12 +9725,12 @@
                 ]
               },
               {
-                "TOCHeading": "Preventions",
-                "Description": "Precautionary measures to prevent fires, explosion, exposure, skin, eye, inhalation, ingestion, etc. from  chemicals.",
+                "TOCHeading": "Fire Prevention",
+                "Description": "Precautionary measures to prevent fires from this chemical.",
                 "Information": [
                   {
                     "ReferenceNumber": 34,
-                    "Name": "Fire Prevention",
+                    "Name": "",
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -9522,10 +9738,16 @@
                         }
                       ]
                     }
-                  },
+                  }
+                ]
+              },
+              {
+                "TOCHeading": "Exposure Prevention",
+                "Description": "Prevention measures to avoid exposure to this chemical through various routes (for example, ingestion, inhalation, skin contact, and eye contact).",
+                "Information": [
                   {
                     "ReferenceNumber": 34,
-                    "Name": "Exposure Prevention",
+                    "Name": "",
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -9533,10 +9755,16 @@
                         }
                       ]
                     }
-                  },
+                  }
+                ]
+              },
+              {
+                "TOCHeading": "Inhalation Prevention",
+                "Description": "Precautionary measures to avoid inhalation of this chemical.",
+                "Information": [
                   {
                     "ReferenceNumber": 34,
-                    "Name": "Inhalation Prevention",
+                    "Name": "",
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -9544,10 +9772,16 @@
                         }
                       ]
                     }
-                  },
+                  }
+                ]
+              },
+              {
+                "TOCHeading": "Skin Prevention",
+                "Description": "Precautionary measures to avoid skin exposure to this chemical.",
+                "Information": [
                   {
                     "ReferenceNumber": 34,
-                    "Name": "Skin Prevention",
+                    "Name": "",
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -9555,10 +9789,16 @@
                         }
                       ]
                     }
-                  },
+                  }
+                ]
+              },
+              {
+                "TOCHeading": "Eye Prevention",
+                "Description": "Precautionary measures to avoid eye exposure to this chemical.",
+                "Information": [
                   {
                     "ReferenceNumber": 34,
-                    "Name": "Eye Prevention",
+                    "Name": "",
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -9566,10 +9806,16 @@
                         }
                       ]
                     }
-                  },
+                  }
+                ]
+              },
+              {
+                "TOCHeading": "Ingestion Prevention",
+                "Description": "Precautionary measures to avoid ingestion of this chemical.",
+                "Information": [
                   {
                     "ReferenceNumber": 34,
-                    "Name": "Ingestion Prevention",
+                    "Name": "",
                     "Value": {
                       "StringWithMarkup": [
                         {
@@ -9785,7 +10031,7 @@
                 }
               },
               {
-                "ReferenceNumber": 59,
+                "ReferenceNumber": 60,
                 "Name": "New Zealand EPA Inventory of Chemical Status",
                 "Value": {
                   "StringWithMarkup": [
@@ -9805,7 +10051,7 @@
                 }
               },
               {
-                "ReferenceNumber": 64,
+                "ReferenceNumber": 65,
                 "Name": "New Jersey Worker and Community Right to Know Act",
                 "Value": {
                   "StringWithMarkup": [
@@ -10103,7 +10349,7 @@
                 "TOCHeading": "Non-Human Toxicity Values",
                 "Description": "Quantitative non-human toxicity values (e.g., lethal dose) for this compound.  The data shown here are mostly for lab animals (e.g., rat, mouse, guinea pig, and rabbit).",
                 "DisplayControls": {
-                  "ShowAtMost": 5
+                  "ShowAtMost": 3
                 },
                 "Information": [
                   {
@@ -10759,7 +11005,7 @@
             "URL": "https://pubchem.ncbi.nlm.nih.gov/docs/literature",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "ExternalTableName": "literature"
                 }
@@ -10772,7 +11018,7 @@
             "URL": "https://jcheminf.biomedcentral.com/articles/10.1186/s13321-016-0142-6",
             "Information": [
               {
-                "ReferenceNumber": 101,
+                "ReferenceNumber": 103,
                 "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?LinkName=pccompound_pubmed_mesh&db=pccompound&cmd=Link&from_uid=4",
                 "Value": {
                   "Boolean": [
@@ -10787,7 +11033,7 @@
             "Description": "Literature references related to scientific contents from Springer Nature journals and books. These references have been ranked automatically by an algorithm which calculates the relevance for each substance in a Springer Nature document. It is based on: (1) the TF-IDF, adapted to chemical structures, (2) location information in the text (e.g. title, abstract, keywords), and (3) the document size.  Springer Nature aims to provide only highly qualitative and relevant content but references of lower relevance aren't withheld as they might contain also very useful information.",
             "Information": [
               {
-                "ReferenceNumber": 76,
+                "ReferenceNumber": 78,
                 "Value": {
                   "ExternalTableName": "collection=springernature&query_type=sid&query=341143784"
                 }
@@ -10799,9 +11045,9 @@
             "Description": "Literature references related to scientific contents from Thieme Chemistry journals and books. The Thieme Chemistry content within this section is provided under a CC-BY-NC-ND 4.0 license (https://creativecommons.org/licenses/by-nc-nd/4.0/), unless otherwise stated.",
             "Information": [
               {
-                "ReferenceNumber": 77,
+                "ReferenceNumber": 79,
                 "Value": {
-                  "ExternalTableName": "collection=thiemechemistry&query_type=sid&query=376660921"
+                  "ExternalTableName": "collection=thiemechemistry&query_type=sid&query=516647966"
                 }
               }
             ]
@@ -10809,9 +11055,10 @@
           {
             "TOCHeading": "Wiley References",
             "Description": "Literature references related to scientific contents from Wiley journals and books.",
+            "URL": "https://pubchem.ncbi.nlm.nih.gov/source/23690",
             "Information": [
               {
-                "ReferenceNumber": 80,
+                "ReferenceNumber": 82,
                 "Value": {
                   "ExternalTableName": "collection=wiley&query_type=sid&query=386233732"
                 }
@@ -10824,7 +11071,7 @@
             "URL": "https://doi.org/10.3389/frma.2021.689059",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Co-Occurrence Panel",
                 "Value": {
                   "StringWithMarkup": [
@@ -10860,7 +11107,7 @@
             "URL": "https://doi.org/10.3389/frma.2021.689059",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Co-Occurrence Panel",
                 "Value": {
                   "StringWithMarkup": [
@@ -10896,7 +11143,7 @@
             "URL": "https://doi.org/10.3389/frma.2021.689059",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Co-Occurrence Panel",
                 "Value": {
                   "StringWithMarkup": [
@@ -10931,7 +11178,7 @@
             "Description": "Chemical-organism co-occurrences in literature highlight chemical-organism pairs mentioned together in scientific articles. This may suggest that an important relationship exists between the two. Please note that this content is not human curated. It is generated by text-mining algorithms that can be fooled such that a co-occurrence may be happenstance or a casual mention. The lists are ordered by relevancy as indicated by count of publications and other statistics, with the most relevant mentions appearing at the top.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Co-Occurrence Panel",
                 "Value": {
                   "StringWithMarkup": [
@@ -10975,13 +11222,13 @@
             "Description": "Patent identifiers provided by data depositors, along with information on those patents.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "ExternalTableName": "patent"
                 }
               },
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "StringWithMarkup": [
                     {
@@ -11005,7 +11252,7 @@
             "URL": "https://www.wipo.int/patentscope/en/",
             "Information": [
               {
-                "ReferenceNumber": 102,
+                "ReferenceNumber": 104,
                 "Value": {
                   "StringWithMarkup": [
                     {
@@ -11031,7 +11278,7 @@
             "Description": "Chemical co-occurrences in patents highlight chemicals mentioned together in patent documents. This may suggest that an important relationship exists between the two. Please note that this content is not human curated. It is generated by text-mining algorithms that can be fooled such that a co-occurrence may be happenstance or a casual mention. The lists are ordered by relevancy as indicated by count of patents and other statistics, with the most relevant mentions appearing at the top.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Co-Occurrence Panel",
                 "Value": {
                   "StringWithMarkup": [
@@ -11066,7 +11313,7 @@
             "Description": "Disease co-occurrences in patents highlight chemicals and diseases mentioned together in patent documents. This may suggest that an important relationship exists between the two. Please note that this content is not human curated. It is generated by text-mining algorithms that can be fooled such that a co-occurrence may be happenstance or a casual mention. The lists are ordered by relevancy as indicated by count of patents and other statistics, with the most relevant mentions appearing at the top.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Co-Occurrence Panel",
                 "Value": {
                   "StringWithMarkup": [
@@ -11101,7 +11348,7 @@
             "Description": "Gene co-occurrences in patents highlight chemicals and genes mentioned together in patent documents. This may suggest that an important relationship exists between the two. Please note that this content is not human curated. It is generated by text-mining algorithms that can be fooled such that a co-occurrence may be happenstance or a casual mention. The lists are ordered by relevancy as indicated by count of patents and other statistics, with the most relevant mentions appearing at the top.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Co-Occurrence Panel",
                 "Value": {
                   "StringWithMarkup": [
@@ -11136,7 +11383,7 @@
             "Description": "Gene co-occurrences in patents highlight chemicals and organisms mentioned together in patent documents. This may suggest that an important relationship exists between the two. Please note that this content is not human curated. It is generated by text-mining algorithms that can be fooled such that a co-occurrence may be happenstance or a casual mention. The lists are ordered by relevancy as indicated by count of patents and other statistics, with the most relevant mentions appearing at the top.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Name": "Co-Occurrence Panel",
                 "Value": {
                   "StringWithMarkup": [
@@ -11177,7 +11424,7 @@
             "Description": "Biological pathways in which this compound is involved.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "ExternalTableName": "collection=pathway&core=1"
                 }
@@ -11196,7 +11443,7 @@
             "Description": "Bioactivity data for this compound, reported in PubChem BioAssay records.",
             "Information": [
               {
-                "ReferenceNumber": 81,
+                "ReferenceNumber": 84,
                 "Value": {
                   "ExternalTableName": "bioactivity"
                 }
@@ -11239,7 +11486,13 @@
             }
           },
           {
-            "ReferenceNumber": 58,
+            "ReferenceNumber": 56,
+            "Value": {
+              "ExternalTableName": "consolidatedcompoundtaxonomy"
+            }
+          },
+          {
+            "ReferenceNumber": 59,
             "Value": {
               "ExternalTableName": "consolidatedcompoundtaxonomy"
             }
@@ -11256,7 +11509,7 @@
             "URL": "https://www.nlm.nih.gov/mesh",
             "Information": [
               {
-                "ReferenceNumber": 83,
+                "ReferenceNumber": 85,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=1",
                 "Value": {
@@ -11273,7 +11526,7 @@
             "URL": "https://www.ebi.ac.uk/chebi/",
             "Information": [
               {
-                "ReferenceNumber": 84,
+                "ReferenceNumber": 86,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=2",
                 "Value": {
@@ -11290,7 +11543,7 @@
             "URL": "https://chem.nlm.nih.gov/chemidplus/",
             "Information": [
               {
-                "ReferenceNumber": 87,
+                "ReferenceNumber": 89,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=84",
                 "Value": {
@@ -11307,7 +11560,7 @@
             "URL": "https://cameochemicals.noaa.gov/",
             "Information": [
               {
-                "ReferenceNumber": 88,
+                "ReferenceNumber": 90,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=86",
                 "Value": {
@@ -11323,7 +11576,7 @@
             "Description": "Household Products Database Tree",
             "Information": [
               {
-                "ReferenceNumber": 89,
+                "ReferenceNumber": 91,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=98",
                 "Value": {
@@ -11340,7 +11593,7 @@
             "URL": "https://unece.org/about-ghs",
             "Information": [
               {
-                "ReferenceNumber": 86,
+                "ReferenceNumber": 88,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=83",
                 "Value": {
@@ -11357,7 +11610,7 @@
             "URL": "https://www.epa.gov/chemical-research/chemical-and-products-database-cpdat",
             "Information": [
               {
-                "ReferenceNumber": 90,
+                "ReferenceNumber": 92,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=99",
                 "Value": {
@@ -11374,7 +11627,7 @@
             "URL": "https://www.norman-network.com/nds/SLE/",
             "Information": [
               {
-                "ReferenceNumber": 91,
+                "ReferenceNumber": 93,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=101",
                 "Value": {
@@ -11391,7 +11644,7 @@
             "URL": "https://www.epa.gov/chemical-research/distributed-structure-searchable-toxicity-dsstox-database",
             "Information": [
               {
-                "ReferenceNumber": 92,
+                "ReferenceNumber": 94,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=105",
                 "Value": {
@@ -11408,7 +11661,7 @@
             "URL": "https://www.whatsinproducts.com/",
             "Information": [
               {
-                "ReferenceNumber": 93,
+                "ReferenceNumber": 95,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=110",
                 "Value": {
@@ -11425,7 +11678,7 @@
             "URL": "https://www.epa.gov/tsca-inventory",
             "Information": [
               {
-                "ReferenceNumber": 98,
+                "ReferenceNumber": 100,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=132",
                 "Value": {
@@ -11442,7 +11695,7 @@
             "URL": "https://lotus.naturalproducts.net/",
             "Information": [
               {
-                "ReferenceNumber": 95,
+                "ReferenceNumber": 97,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=115",
                 "Value": {
@@ -11458,7 +11711,7 @@
             "Description": "Substance Registry Services (SRS) is the Environmental Protection Agency's (EPA) central system for information about substances that are tracked or regulated by EPA or other sources. It is a resource for basic information about chemicals, biological organisms, and other substances of interest to EPA and its state and tribal partners. SRS makes it possible to identify which EPA data systems, environmental statutes, or other sources have information about a substance and which synonym is used by that system or statute.",
             "Information": [
               {
-                "ReferenceNumber": 97,
+                "ReferenceNumber": 99,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=123",
                 "Value": {
@@ -11475,7 +11728,7 @@
             "URL": "https://github.com/MolGenie/ontology/",
             "Information": [
               {
-                "ReferenceNumber": 99,
+                "ReferenceNumber": 101,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=134",
                 "Value": {
@@ -11491,7 +11744,7 @@
             "Description": "PubChem chemicals with regulatory data sources provides list of chemicals with annotation specific to regulatory data sources.",
             "Information": [
               {
-                "ReferenceNumber": 100,
+                "ReferenceNumber": 102,
                 "Name": "HID",
                 "URL": "https://pubchem.ncbi.nlm.nih.gov/classification/#hid=135",
                 "Value": {
@@ -11631,8 +11884,8 @@
         "Name": "1-Amino-propan-2-ol",
         "Description": "The Human Metabolome Database (HMDB) is a freely available electronic database containing detailed information about small molecule metabolites found in the human body.",
         "URL": "http://www.hmdb.ca/metabolites/HMDB0012136",
-        "LicenseNote": "\u0009HMDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (HMDB) and the original publication (see the HMDB citing page). We ask that users who download significant portions of the database cite the HMDB paper in any resulting publications.",
-        "LicenseURL": "http://www.hmdb.ca/citing",
+        "LicenseNote": "HMDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (HMDB) and the original publication (see the HMDB citing page). We ask that users who download significant portions of the database cite the HMDB paper in any resulting publications.",
+        "LicenseURL": "https://www.hmdb.ca/citing",
         "ANID": 2149844
       },
       {
@@ -11641,13 +11894,13 @@
         "SourceID": "0905",
         "Name": "ISOPROPANOLAMINE",
         "Description": "The International Chemical Safety Cards (ICSCs) are data sheets intended to provide essential safety and health information on chemicals in a clear and concise way. The primary aim of the Cards is to promote the safe use of chemicals in the workplace.",
-        "URL": "https://www.ilo.org/dyn/icsc/showcard.display?p_version=2&p_card_id=0905",
+        "URL": "https://chemicalsafety.ilo.org/dyn/icsc/showcard.display?p_card_id=0905",
         "LicenseNote": "Creative Commons CC BY 4.0",
         "LicenseURL": "https://www.ilo.org/global/copyright/lang--en/index.htm",
         "ANID": 2260780
       },
       {
-        "ReferenceNumber": 59,
+        "ReferenceNumber": 60,
         "SourceName": "New Zealand Environmental Protection Authority (EPA)",
         "SourceID": "23248c61690adc070ccf9c39c00bc709",
         "Name": "Aminopropanol",
@@ -11658,7 +11911,7 @@
         "ANID": 37162665
       },
       {
-        "ReferenceNumber": 64,
+        "ReferenceNumber": 65,
         "SourceName": "NJDOH RTK Hazardous Substance List",
         "SourceID": "4190",
         "Name": "2-propanol, 1-amino-",
@@ -11668,7 +11921,7 @@
         "ANID": 2271184
       },
       {
-        "ReferenceNumber": 66,
+        "ReferenceNumber": 68,
         "SourceName": "Occupational Safety and Health Administration (OSHA)",
         "SourceID": "819",
         "Name": "1-AMINO-2-PROPANOL",
@@ -11781,7 +12034,7 @@
         "ANID": 13740243
       },
       {
-        "ReferenceNumber": 65,
+        "ReferenceNumber": 67,
         "SourceName": "NORMAN Suspect List Exchange",
         "SourceID": "nrm_4",
         "Description": "The NORMAN network enhances the exchange of information on emerging environmental substances, and encourages the validation and harmonisation of common measurement methods and monitoring tools so that the requirements of risk assessors and risk managers can be better met. The NORMAN Suspect List Exchange (NORMAN-SLE) is a central access point to find suspect lists relevant for various environmental monitoring questions, described in DOI:10.1186/s12302-022-00680-6",
@@ -11809,7 +12062,18 @@
         "ANID": 20117226
       },
       {
-        "ReferenceNumber": 58,
+        "ReferenceNumber": 56,
+        "SourceName": "MetaboLights",
+        "SourceID": "MTBLC19030",
+        "Name": "1-aminopropan-2-ol",
+        "Description": "MetaboLights is a database for Metabolomics experiments and derived information.  The database is cross-species, cross-technique and covers metabolite structures and their reference spectra as well as their biological roles, locations and concentrations, and experimental data from metabolic experiments.",
+        "URL": "https://www.ebi.ac.uk/metabolights/MTBLC19030",
+        "LicenseNote": "All data is governed by the EMBL-EBI's Terms of use and aligned to EMBL-EBI's long-term data preservation.",
+        "LicenseURL": "https://www.ebi.ac.uk/metabolights/about",
+        "ANID": 55557761
+      },
+      {
+        "ReferenceNumber": 59,
         "SourceName": "Natural Product Activity and Species Source (NPASS)",
         "SourceID": "NPC141902",
         "Name": "1-Aminopropan-2-Ol",
@@ -11818,7 +12082,7 @@
         "ANID": 20337535
       },
       {
-        "ReferenceNumber": 67,
+        "ReferenceNumber": 69,
         "SourceName": "Regulation (EC) No 1272/2008 of the European Parliament and of the Council",
         "SourceID": "603-082-00-1",
         "Name": "1-aminopropan-2-ol; isopropanolamine",
@@ -11826,7 +12090,8 @@
         "URL": "https://eur-lex.europa.eu/eli/reg/2008/1272/oj",
         "LicenseNote": "The copyright for the editorial content of this source, the summaries of EU legislation and the consolidated texts, which is owned by the EU, is licensed under the Creative Commons Attribution 4.0 International licence.",
         "LicenseURL": "https://eur-lex.europa.eu/content/legal-notice/legal-notice.html",
-        "ANID": 392810
+        "ANID": 392810,
+        "SortOrder": 100000
       },
       {
         "ReferenceNumber": 17,
@@ -11837,7 +12102,18 @@
         "URL": "https://echa.europa.eu/information-on-chemicals/cl-inventory-database/-/discli/details/121020",
         "LicenseNote": "Use of the information, documents and data from the ECHA website is subject to the terms and conditions of this Legal Notice, and subject to other binding limitations provided for under applicable law, the information, documents and data made available on the ECHA website may be reproduced, distributed and/or used, totally or in part, for non-commercial purposes provided that ECHA is acknowledged as the source: \"Source: European Chemicals Agency, http://echa.europa.eu/\". Such acknowledgement must be included in each copy of the material. ECHA permits and encourages organisations and individuals to create links to the ECHA website under the following cumulative conditions: Links can only be made to webpages that provide a link to the Legal Notice page.",
         "LicenseURL": "https://echa.europa.eu/web/guest/legal-notice",
-        "ANID": 1886646
+        "ANID": 1886646,
+        "SortOrder": 6123
+      },
+      {
+        "ReferenceNumber": 64,
+        "SourceName": "NITE-CMC",
+        "SourceID": "H30_C_103_MOE",
+        "Name": "1-Amino-2-propanol - FY2018 (Revised classification)",
+        "Description": "The chemical classification in this section was conducted by the Chemical Management Center (CMC) of Japan National Institute of Technology and Evaluation (NITE) in accordance with GHS Classification Guidance for the Japanese Government, and is intended to provide a reference for preparing GHS labelling and SDS for users.",
+        "URL": "https://www.chem-info.nite.go.jp/chem/english/ghs/18-moe-2103e.html",
+        "ANID": 39311584,
+        "SortOrder": 2018
       },
       {
         "ReferenceNumber": 28,
@@ -11846,16 +12122,8 @@
         "Name": "2-Propanol, 1-amino-",
         "Description": "The Hazardous Chemical Information System (HCIS) at the Safe Work Australia is a database of chemical classifications and workplace exposure standards. It allows users to find information on chemicals that have been classified in accordance with the GHS or which have an Australian Workplace Exposure Standard.",
         "URL": "http://hcis.safeworkaustralia.gov.au/HazardousChemical/Details?chemicalID=3674",
-        "ANID": 2282410
-      },
-      {
-        "ReferenceNumber": 63,
-        "SourceName": "NITE-CMC",
-        "SourceID": "H30_C_103_MOE",
-        "Name": "1-Amino-2-propanol - FY2018 (Revised classification)",
-        "Description": "The chemical classification in this section was conducted by the Chemical Management Center (CMC) of Japan National Institute of Technology and Evaluation (NITE) in accordance with GHS Classification Guidance for the Japanese Government, and is intended to provide a reference for preparing GHS labelling and SDS for users.",
-        "URL": "https://www.chem-info.nite.go.jp/chem/english/ghs/18-moe-2103e.html",
-        "ANID": 39311584
+        "ANID": 2282410,
+        "SortOrder": 10
       },
       {
         "ReferenceNumber": 20,
@@ -11900,13 +12168,13 @@
       {
         "ReferenceNumber": 24,
         "SourceName": "FDA Substances Added to Food",
-        "SourceID": "710178404",
+        "SourceID": "3574699552",
         "Name": "1-AMINO-2-PROPANOL",
         "Description": "The Substances Added to Food (formerly EAFUS) inventory includes information on food additives, color additives, Generally Recognized As Safe (GRAS) and prior-sanctioned substances.\u0009https://www.fda.gov/food/food-additives-petitions/substances-added-food-formerly-eafus",
-        "URL": "https://www.hfpappexternal.fda.gov/scripts/fdcc/index.cfm?set=FoodSubstances&id=AMINO-2-PROPANOL",
+        "URL": "https://www.hfpappexternal.fda.gov/scripts/fdcc/index.cfm?set=FoodSubstances",
         "LicenseNote": "Unless otherwise noted, the contents of the FDA website (www.fda.gov), both text and graphics, are not copyrighted. They are in the public domain and may be republished, reprinted and otherwise used freely by anyone without the need to obtain permission from FDA. Credit to the U.S. Food and Drug Administration as the source is appreciated but not required.",
         "LicenseURL": "https://www.fda.gov/about-fda/about-website/website-policies#linking",
-        "ANID": 45229926
+        "ANID": 54300141
       },
       {
         "ReferenceNumber": 25,
@@ -12018,8 +12286,8 @@
         "Name": "HMDB0012136_cms_26833",
         "Description": "The Human Metabolome Database (HMDB) is a freely available electronic database containing detailed information about small molecule metabolites found in the human body.",
         "URL": "https://hmdb.ca/metabolites/HMDB0012136#spectra",
-        "LicenseNote": "\u0009HMDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (HMDB) and the original publication (see the HMDB citing page). We ask that users who download significant portions of the database cite the HMDB paper in any resulting publications.",
-        "LicenseURL": "http://www.hmdb.ca/citing",
+        "LicenseNote": "HMDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (HMDB) and the original publication (see the HMDB citing page). We ask that users who download significant portions of the database cite the HMDB paper in any resulting publications.",
+        "LicenseURL": "https://www.hmdb.ca/citing",
         "ANID": 15325324
       },
       {
@@ -12029,8 +12297,8 @@
         "Name": "HMDB0012136_cms_27924",
         "Description": "The Human Metabolome Database (HMDB) is a freely available electronic database containing detailed information about small molecule metabolites found in the human body.",
         "URL": "https://hmdb.ca/metabolites/HMDB0012136#spectra",
-        "LicenseNote": "\u0009HMDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (HMDB) and the original publication (see the HMDB citing page). We ask that users who download significant portions of the database cite the HMDB paper in any resulting publications.",
-        "LicenseURL": "http://www.hmdb.ca/citing",
+        "LicenseNote": "HMDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (HMDB) and the original publication (see the HMDB citing page). We ask that users who download significant portions of the database cite the HMDB paper in any resulting publications.",
+        "LicenseURL": "https://www.hmdb.ca/citing",
         "ANID": 15325325
       },
       {
@@ -12040,8 +12308,8 @@
         "Name": "HMDB0012136_cms_100008",
         "Description": "The Human Metabolome Database (HMDB) is a freely available electronic database containing detailed information about small molecule metabolites found in the human body.",
         "URL": "https://hmdb.ca/metabolites/HMDB0012136#spectra",
-        "LicenseNote": "\u0009HMDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (HMDB) and the original publication (see the HMDB citing page). We ask that users who download significant portions of the database cite the HMDB paper in any resulting publications.",
-        "LicenseURL": "http://www.hmdb.ca/citing",
+        "LicenseNote": "HMDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (HMDB) and the original publication (see the HMDB citing page). We ask that users who download significant portions of the database cite the HMDB paper in any resulting publications.",
+        "LicenseURL": "https://www.hmdb.ca/citing",
         "ANID": 27237844
       },
       {
@@ -12078,7 +12346,7 @@
         "ANID": 8727143
       },
       {
-        "ReferenceNumber": 60,
+        "ReferenceNumber": 61,
         "SourceName": "NIST Mass Spectrometry Data Center",
         "SourceID": "GC-MS #1 for HXKKHQJGJAFBHI-UHFFFAOYSA-N",
         "Name": "2-Propanol, 1-amino-",
@@ -12089,7 +12357,7 @@
         "ANID": 6795
       },
       {
-        "ReferenceNumber": 61,
+        "ReferenceNumber": 62,
         "SourceName": "NIST Mass Spectrometry Data Center",
         "SourceID": "GC-MS #2 for HXKKHQJGJAFBHI-UHFFFAOYSA-N",
         "Name": "2-Propanol, 1-amino-",
@@ -12100,7 +12368,7 @@
         "ANID": 248022
       },
       {
-        "ReferenceNumber": 73,
+        "ReferenceNumber": 75,
         "SourceName": "SpectraBase",
         "SourceID": "IlIUb4SCJcQ",
         "Name": "1-AMINO-PROPAN-2-OL",
@@ -12175,7 +12443,7 @@
         "ANID": 30294121
       },
       {
-        "ReferenceNumber": 56,
+        "ReferenceNumber": 57,
         "SourceName": "Metabolomics Workbench",
         "SourceID": "93705",
         "Name": "Isopropanolamine",
@@ -12184,7 +12452,7 @@
         "ANID": 20244644
       },
       {
-        "ReferenceNumber": 57,
+        "ReferenceNumber": 58,
         "SourceName": "Metabolomics Workbench",
         "SourceID": "166299",
         "Name": "1-Amino-2-propanol",
@@ -12193,7 +12461,7 @@
         "ANID": 20305381
       },
       {
-        "ReferenceNumber": 62,
+        "ReferenceNumber": 63,
         "SourceName": "NIST Mass Spectrometry Data Center",
         "SourceID": "RI for HXKKHQJGJAFBHI-UHFFFAOYSA-N",
         "Name": "2-Propanol, 1-amino-",
@@ -12204,7 +12472,18 @@
         "ANID": 307526
       },
       {
-        "ReferenceNumber": 68,
+        "ReferenceNumber": 66,
+        "SourceName": "NLM RxNorm Terminology",
+        "SourceID": "1736006",
+        "Name": "isopropanolamine",
+        "Description": "RxNorm provides normalized names for clinical drugs and links its names to many of the drug vocabularies commonly used in pharmacy management and drug interaction software.",
+        "URL": "https://rxnav.nlm.nih.gov/id/rxnorm/1736006",
+        "LicenseNote": "The RxNorm Terminology is created by the National Library of Medicine (NLM) and is in the public domain and may be republished, reprinted and otherwise used freely by anyone without the need to obtain permission from NLM. Credit to the U.S. National Library of Medicine as the source is appreciated but not required. The full RxNorm dataset requires a free license.",
+        "LicenseURL": "https://www.nlm.nih.gov/research/umls/rxnorm/docs/termsofservice.html",
+        "ANID": 15099075
+      },
+      {
+        "ReferenceNumber": 70,
         "SourceName": "SpectraBase",
         "SourceID": "24Qhybm3dTP",
         "Name": "1-Amino-2-propanol",
@@ -12213,7 +12492,7 @@
         "ANID": 10068396
       },
       {
-        "ReferenceNumber": 69,
+        "ReferenceNumber": 71,
         "SourceName": "SpectraBase",
         "SourceID": "BEFsQT8JbAM",
         "Name": "1-Amino-2-propanol",
@@ -12222,7 +12501,7 @@
         "ANID": 10068397
       },
       {
-        "ReferenceNumber": 70,
+        "ReferenceNumber": 72,
         "SourceName": "SpectraBase",
         "SourceID": "95IHi5Cxjwr",
         "Name": "2-Propanol, 1-amino-",
@@ -12231,7 +12510,7 @@
         "ANID": 10068399
       },
       {
-        "ReferenceNumber": 71,
+        "ReferenceNumber": 73,
         "SourceName": "SpectraBase",
         "SourceID": "AghKHxtOKuV",
         "Name": "1-Amino-2-propanol",
@@ -12240,7 +12519,7 @@
         "ANID": 10068401
       },
       {
-        "ReferenceNumber": 72,
+        "ReferenceNumber": 74,
         "SourceName": "SpectraBase",
         "SourceID": "LmdDGojnyfM",
         "Name": "1-Amino-2-propanol",
@@ -12249,7 +12528,7 @@
         "ANID": 10068402
       },
       {
-        "ReferenceNumber": 74,
+        "ReferenceNumber": 76,
         "SourceName": "SpectraBase",
         "SourceID": "FjN05HUgOl4",
         "Name": "Amino-2-propanol",
@@ -12258,7 +12537,7 @@
         "ANID": 10068417
       },
       {
-        "ReferenceNumber": 75,
+        "ReferenceNumber": 77,
         "SourceName": "SpectraBase",
         "SourceID": "1tFrtQhSMQG",
         "Name": "Amino-2-propanol",
@@ -12267,7 +12546,7 @@
         "ANID": 10068419
       },
       {
-        "ReferenceNumber": 76,
+        "ReferenceNumber": 78,
         "SourceName": "Springer Nature",
         "SourceID": "341143784",
         "Description": "Springer Nature is the world's largest academic book publisher, publisher of the world's most influential journals, and a pioneer in the field of open research. SpringerLink provides electronic access to its book and journal content.",
@@ -12275,35 +12554,37 @@
         "ANID": 47650707
       },
       {
-        "ReferenceNumber": 77,
+        "ReferenceNumber": 79,
         "SourceName": "Thieme Chemistry",
-        "SourceID": "376660921",
+        "SourceID": "516647966",
         "Description": "Thieme Chemistry is part of the privately owned Thieme Group and publishes highly evaluated information about synthetic and general chemistry for professional chemists and advanced students since 1909. \u000A \u000AOur portfolio includes the journals SYNFACTS, SYNLETT, SYNTHESIS and SynOpen, the synthetic methodology reference work Science of Synthesis, the German chemical encyclopedia ROEMPP, and monographs in electronic and printed format. The Thieme Chemistry contribution within PubChem is provided under a CC-BY-NC-ND 4.0 license (https://creativecommons.org/licenses/by-nc-nd/4.0/), unless otherwise stated.",
-        "URL": "https://pubchem.ncbi.nlm.nih.gov/substance/376660921",
+        "URL": "https://pubchem.ncbi.nlm.nih.gov/substance/516647966",
         "LicenseNote": "The Thieme Chemistry contribution within PubChem is provided under a CC-BY-NC-ND 4.0 license, unless otherwise stated.",
         "LicenseURL": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
-        "ANID": 48456375
-      },
-      {
-        "ReferenceNumber": 78,
-        "SourceName": "Wikipedia",
-        "SourceID": "c_5395",
-        "Name": "Imidazenil",
-        "Description": "Link to the chemical information in Wikipedia.",
-        "URL": "https://en.wikipedia.org/wiki/Imidazenil",
-        "ANID": 24326931
-      },
-      {
-        "ReferenceNumber": 79,
-        "SourceName": "Wikipedia",
-        "SourceID": "c_5397",
-        "Name": "1-Aminopropan-2-ol",
-        "Description": "Link to the chemical information in Wikipedia.",
-        "URL": "https://en.wikipedia.org/wiki/1-Aminopropan-2-ol",
-        "ANID": 24326933
+        "ANID": 50370246
       },
       {
         "ReferenceNumber": 80,
+        "SourceName": "Wikidata",
+        "SourceID": "Compound::Q161580",
+        "Name": "1-aminopropan-2-ol",
+        "Description": "Wikidata is a CCZero crowdsourced and curated database, linked to Wikipedia, with a strong machine readable architecture.",
+        "URL": "https://www.wikidata.org/wiki/Q161580",
+        "LicenseNote": "CCZero",
+        "LicenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "ANID": 44203615
+      },
+      {
+        "ReferenceNumber": 81,
+        "SourceName": "Wikipedia",
+        "SourceID": "1238696978",
+        "Name": "1-Aminopropan-2-ol",
+        "Description": "Link to the chemical information in Wikipedia.",
+        "URL": "https://en.wikipedia.org/wiki/1-Aminopropan-2-ol",
+        "ANID": 55332729
+      },
+      {
+        "ReferenceNumber": 82,
         "SourceName": "Wiley",
         "SourceID": "386233732",
         "Description": "Wiley drives the world forward with research and education. Through publishing, platforms and services, we help students, researchers, universities, and corporations to achieve their goals in an ever-changing world.",
@@ -12311,50 +12592,50 @@
         "ANID": 49019521
       },
       {
-        "ReferenceNumber": 81,
+        "ReferenceNumber": 83,
+        "SourceName": "Medical Subject Headings (MeSH)",
+        "SourceID": "M0052486",
+        "Name": "monoisopropanolamine",
+        "Description": "MeSH (Medical Subject Headings) is the U.S. National Library of Medicine's controlled vocabulary thesaurus used for indexing articles for PubMed.",
+        "URL": "https://id.nlm.nih.gov/mesh/M0052486.html",
+        "LicenseNote": "Works produced by the U.S. government are not subject to copyright protection in the United States. Any such works found on National Library of Medicine (NLM) Web sites may be freely used or reproduced without permission in the U.S.",
+        "LicenseURL": "https://www.nlm.nih.gov/copyright.html"
+      },
+      {
+        "ReferenceNumber": 84,
         "SourceName": "PubChem",
         "SourceID": "PubChem",
         "Description": "Data deposited in or computed by PubChem",
         "URL": "https://pubchem.ncbi.nlm.nih.gov"
       },
       {
-        "ReferenceNumber": 82,
-        "SourceName": "Medical Subject Headings (MeSH)",
-        "SourceID": "67008544",
-        "Name": "monoisopropanolamine",
-        "Description": "MeSH (Medical Subject Headings) is the U.S. National Library of Medicine's controlled vocabulary thesaurus used for indexing articles for PubMed.",
-        "URL": "https://www.ncbi.nlm.nih.gov/mesh/67008544",
-        "LicenseNote": "Works produced by the U.S. government are not subject to copyright protection in the United States. Any such works found on National Library of Medicine (NLM) Web sites may be freely used or reproduced without permission in the U.S.",
-        "LicenseURL": "https://www.nlm.nih.gov/copyright.html"
-      },
-      {
-        "ReferenceNumber": 83,
+        "ReferenceNumber": 85,
         "SourceName": "Medical Subject Headings (MeSH)",
         "SourceID": "DescTree",
         "Name": "MeSH Tree",
         "Description": "MeSH (Medical Subject Headings) is the NLM controlled vocabulary thesaurus used for indexing articles for PubMed.",
-        "URL": "http://www.nlm.nih.gov/mesh/meshhome.html",
+        "URL": "https://www.nlm.nih.gov/mesh/meshhome.html",
         "LicenseNote": "Works produced by the U.S. government are not subject to copyright protection in the United States. Any such works found on National Library of Medicine (NLM) Web sites may be freely used or reproduced without permission in the U.S.",
         "LicenseURL": "https://www.nlm.nih.gov/copyright.html"
       },
       {
-        "ReferenceNumber": 84,
+        "ReferenceNumber": 86,
         "SourceName": "ChEBI",
         "SourceID": "OBO",
         "Name": "ChEBI Ontology",
         "Description": "The ChEBI Ontology is a structured classification of the entities contained within ChEBI.",
-        "URL": "http://www.ebi.ac.uk/chebi/userManualForward.do#ChEBI%20Ontology"
+        "URL": "https://www.ebi.ac.uk/chebi/"
       },
       {
-        "ReferenceNumber": 86,
+        "ReferenceNumber": 88,
         "SourceName": "GHS Classification (UNECE)",
         "SourceID": "UN_GHS_tree",
         "Name": "GHS Classification",
         "Description": "The United Nations' Globally Harmonized System of Classification and Labeling of Chemicals (GHS) provides a harmonized basis for globally uniform physical, environmental, health and safety information on hazardous chemical substances and mixtures.",
-        "URL": "http://www.unece.org/trans/danger/publi/ghs/ghs_welcome_e.html"
+        "URL": "https://unece.org/about-ghs"
       },
       {
-        "ReferenceNumber": 87,
+        "ReferenceNumber": 89,
         "SourceName": "ChemIDplus",
         "SourceID": "ChemIDplus_tree",
         "Name": "ChemIDplus Chemical Information Classification",
@@ -12364,7 +12645,7 @@
         "IsToxnet": true
       },
       {
-        "ReferenceNumber": 88,
+        "ReferenceNumber": 90,
         "SourceName": "CAMEO Chemicals",
         "SourceID": "CameoReactivityTree",
         "Name": "CAMEO Chemical Reactivity Classification",
@@ -12374,7 +12655,7 @@
         "LicenseURL": "https://cameochemicals.noaa.gov/help/reference/terms_and_conditions.htm?d_f=false"
       },
       {
-        "ReferenceNumber": 89,
+        "ReferenceNumber": 91,
         "SourceName": "Consumer Product Information Database (CPID)",
         "SourceID": "household_tree",
         "Name": "Household Products Classification",
@@ -12384,7 +12665,7 @@
         "LicenseURL": "https://www.whatsinproducts.com/contents/view/1/6"
       },
       {
-        "ReferenceNumber": 90,
+        "ReferenceNumber": 92,
         "SourceName": "EPA Chemical and Products Database (CPDat)",
         "SourceID": "cpdat_tree",
         "Name": "EPA CPDat Classification",
@@ -12393,7 +12674,7 @@
         "LicenseURL": "https://www.epa.gov/privacy/privacy-act-laws-policies-and-resources"
       },
       {
-        "ReferenceNumber": 91,
+        "ReferenceNumber": 93,
         "SourceName": "NORMAN Suspect List Exchange",
         "SourceID": "norman_sle_tree",
         "Name": "NORMAN Suspect List Exchange Classification",
@@ -12403,7 +12684,7 @@
         "LicenseURL": "https://creativecommons.org/licenses/by/4.0/"
       },
       {
-        "ReferenceNumber": 92,
+        "ReferenceNumber": 94,
         "SourceName": "EPA DSSTox",
         "SourceID": "dsstoxlist_tree",
         "Name": "CompTox Chemicals Dashboard Chemical Lists",
@@ -12412,7 +12693,7 @@
         "LicenseURL": "https://www.epa.gov/privacy/privacy-act-laws-policies-and-resources"
       },
       {
-        "ReferenceNumber": 93,
+        "ReferenceNumber": 95,
         "SourceName": "Consumer Product Information Database (CPID)",
         "SourceID": "cpid_tree",
         "Name": "Consumer Products Category Classification",
@@ -12422,7 +12703,7 @@
         "LicenseURL": "https://www.whatsinproducts.com/contents/view/1/6"
       },
       {
-        "ReferenceNumber": 95,
+        "ReferenceNumber": 97,
         "SourceName": "LOTUS - the natural products occurrence database",
         "SourceID": "biochem",
         "Name": "LOTUS Tree",
@@ -12432,7 +12713,7 @@
         "LicenseURL": "https://lotus.nprod.net/"
       },
       {
-        "ReferenceNumber": 97,
+        "ReferenceNumber": 99,
         "SourceName": "EPA Substance Registry Services",
         "SourceID": "epasrs_tree",
         "Name": "EPA SRS List Classification",
@@ -12441,7 +12722,7 @@
         "LicenseURL": "https://www.epa.gov/privacy/privacy-act-laws-policies-and-resources"
       },
       {
-        "ReferenceNumber": 98,
+        "ReferenceNumber": 100,
         "SourceName": "EPA Chemicals under the TSCA",
         "SourceID": "epa_tsca_tree",
         "Name": "EPA TSCA Classification",
@@ -12450,7 +12731,7 @@
         "LicenseURL": "https://www.epa.gov/privacy/privacy-act-laws-policies-and-resources"
       },
       {
-        "ReferenceNumber": 99,
+        "ReferenceNumber": 101,
         "SourceName": "MolGenie",
         "SourceID": "mol_classes",
         "Name": "MolGenie Organic Chemistry Ontology",
@@ -12460,14 +12741,14 @@
         "LicenseURL": "https://creativecommons.org/licenses/by/4.0/"
       },
       {
-        "ReferenceNumber": 100,
+        "ReferenceNumber": 102,
         "SourceName": "PubChem",
         "SourceID": "regtree",
         "Name": "Chemicals in PubChem from Regulatory Sources",
-        "Description": "PubChem chemicals with regulatory data sources provides list of chemicals with annotation specific to regulatory data sources."
+        "Description": "PubChem chemicals with regulatory data sources provides lists of chemicals with annotation specific to regulatory data sources."
       },
       {
-        "ReferenceNumber": 101,
+        "ReferenceNumber": 103,
         "SourceName": "Medical Subject Headings (MeSH)",
         "SourceID": "PubMed from MeSH",
         "Description": "MeSH (Medical Subject Headings) is the U.S. National Library of Medicine's controlled vocabulary thesaurus used for indexing articles for PubMed.",
@@ -12476,7 +12757,7 @@
         "LicenseURL": "https://www.nlm.nih.gov/copyright.html"
       },
       {
-        "ReferenceNumber": 102,
+        "ReferenceNumber": 104,
         "SourceName": "PATENTSCOPE (WIPO)",
         "Name": "SID 403031192",
         "Description": "The PATENTSCOPE database from WIPO includes patent and chemical structure search (with a free account) that gives access to millions of patent documents. The World Intellectual Property Organisation (WIPO) is a specialized United Nations (UN) agency headquartered in Geneva (Switzerland). Our mission is to lead the development of a balanced and effective international Intellectual Property (IP) system that enables innovation and creativity for the benefit of all. We help governments, businesses and society realize the benefits of Intellectual Property and are notably a world reference source for IP information.",

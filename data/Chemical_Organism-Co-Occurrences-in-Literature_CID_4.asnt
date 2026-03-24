@@ -1,0 +1,750 @@
+LinkDataSet ::= {
+  linkData {
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1053381,
+      evidence chemicalOrganismNeighbor {
+        neighborName "osteospermum ecklonis",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3969,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 396825,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 49054,
+      evidence chemicalOrganismNeighbor {
+        neighborName "antennaria dioica",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3969,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 396825,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1436938,
+      evidence chemicalOrganismNeighbor {
+        neighborName "xerochrysum subundulatum",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3969,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 396825,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 113639,
+      evidence chemicalOrganismNeighbor {
+        neighborName "argyranthemum pinnatifidum",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3969,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 396825,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 227193,
+      evidence chemicalOrganismNeighbor {
+        neighborName "commidendrum rugosum",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3969,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 396825,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 49065,
+      evidence chemicalOrganismNeighbor {
+        neighborName "antennaria plantaginifolia",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3969,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 396825,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 159672,
+      evidence chemicalOrganismNeighbor {
+        neighborName "electranthera mutica",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3924,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 392299,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 92915,
+      evidence chemicalOrganismNeighbor {
+        neighborName "onopordum acanthium",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3694,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 369334,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 41650,
+      evidence chemicalOrganismNeighbor {
+        neighborName "tarchonanthus camphoratus",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3670,
+        article {
+          {
+            pCLID 688307048,
+            relevanceScore 366856,
+            dOI "10.1016/0031-9422(88)80301-7",
+            publicationDate "1988-01-01",
+            isReview FALSE,
+            title "1-Amino-2-propanol, a natural product from the compositae",
+            author "Laura S.R. Brown, David O. Gray",
+            journal "Phytochemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 9606,
+      evidence chemicalOrganismNeighbor {
+        neighborName "homo sapiens (human)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 6,
+        cooccurrenceScore 2637,
+        article {
+          {
+            pCLID 33297933,
+            relevanceScore 73263,
+            pMID 4274990,
+            publicationDate "1974-05-01",
+            isReview FALSE,
+            title "Occupational health case report. No. 8. Monoisopropanolamine",
+            author "R L Hervin, J B Lucas",
+            journal "Journal of occupational medicine. : official publication
+ of the Industrial Medical Association"
+          },
+          {
+            pCLID 15996138,
+            relevanceScore 73263,
+            pMID 17583405,
+            dOI "10.1016/j.fct.2007.05.003",
+            publicationDate "2007-10-01",
+            isReview FALSE,
+            title "Pharmacokinetics and bioavailability of diisopropanolamine
+ (DIPA) in rats following intravenous or dermal application",
+            author "S.A. Saghir, S.W. Frantz, M.W. Spence, R.J. Nolan, E.R.
+ Lowe, D.L. Rick, M.J. Bartels",
+            journal "Food and chemical toxicology : an international journal
+ published for the British Industrial Biological Research Association"
+          },
+          {
+            pCLID 17293949,
+            relevanceScore 73263,
+            pMID 15282789,
+            dOI "10.1002/rcm.1531",
+            publicationDate "2004-06-16",
+            isReview FALSE,
+            title "Determination of alkanolamines in cattails ( Typha
+ latifolia ) utilizing electrospray ionization with selected reaction
+ monitoring and ion‐exchange chromatography",
+            author "Kerry M. Peru, John V. Headley, William J. Doucette",
+            journal "Rapid communications in mass spectrometry : RCM"
+          },
+          {
+            pCLID 5596569,
+            relevanceScore 34189,
+            pMID 6192074,
+            dOI "10.1007/bf00289484",
+            publicationDate "1983-07-01",
+            isReview FALSE,
+            title "Variability in the phenotypic expression of abnormal
+ sarcosine metabolism in a family",
+            author "Ellen S. Kang, J. Seyer, T. A. Todd, C. Herrera",
+            journal "Human Genetics"
+          },
+          {
+            pCLID 213496787,
+            relevanceScore 5398,
+            dOI "10.1007/s11306-012-0464-y",
+            publicationDate "2012-09-29",
+            isReview FALSE,
+            title "Physiological and environmental parameters associated with
+ mass spectrometry-based salivary metabolomic profiles",
+            author "Masahiro Sugimoto, Juri Saruta, Chisa Matsuki, Masahiro
+ To, Hiromi Onuma, Miku Kaneko, Tomoyoshi Soga, Masaru Tomita, Keiichi
+ Tsukinoki",
+            journal "Metabolomics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 10036,
+      evidence chemicalOrganismNeighbor {
+        neighborName "mesocricetus auratus (golden hamster)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2205,
+        article {
+          {
+            pCLID 851150,
+            relevanceScore 242440,
+            pMID 8446769,
+            dOI "10.1007/bf02576207",
+            publicationDate "1993-12-01",
+            isReview FALSE,
+            title "Glucose tolerance and insulin secretion in experimental
+ pancreatic cancer in the Syrian hamster",
+            author "Bo Ahrén, Åke Andrén-Sandberg",
+            journal "Research in experimental medicine. Zeitschrift fur die
+ gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie",
+            organismName "syrian golden hamster; syrian hamster"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 559292,
+      evidence chemicalOrganismNeighbor {
+        neighborName "saccharomyces cerevisiae s288c",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 2,
+        cooccurrenceScore 2097,
+        article {
+          {
+            pCLID 6632714,
+            relevanceScore 109343,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          },
+          {
+            pCLID 836409,
+            relevanceScore 100231,
+            pMID 8431960,
+            dOI "10.1007/bf00352006",
+            publicationDate "1993-02-01",
+            isReview FALSE,
+            title "Molecular cloning of the yeast OPI3 gene as a high copy
+ number suppressor of the cho2 mutation",
+            author "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan
+ A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+            journal "Current Genetics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 84588,
+      evidence chemicalOrganismNeighbor {
+        neighborName "parasynechococcus marenigrum wh 8102",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1881,
+        article {
+          {
+            pCLID 6502454,
+            relevanceScore 187970,
+            pMID 17019606,
+            dOI "10.1007/s00203-006-0167-8",
+            publicationDate "2006-09-22",
+            isReview FALSE,
+            title "Identification of glycine betaine as compatible solute in
+ Synechococcus sp. WH8102 and characterization of its N-methyltransferase
+ genes involved in betaine synthesis",
+            author "Wei-Dong Lu, Zhen-Ming Chi, Chuan-Dong Su",
+            journal "Archives of Microbiology"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 45202,
+      evidence chemicalOrganismNeighbor {
+        neighborName "unidentified plasmid",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1736,
+        article {
+          {
+            pCLID 836409,
+            relevanceScore 190807,
+            pMID 8431960,
+            dOI "10.1007/bf00352006",
+            publicationDate "1993-02-01",
+            isReview FALSE,
+            title "Molecular cloning of the yeast OPI3 gene as a high copy
+ number suppressor of the cho2 mutation",
+            author "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan
+ A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+            journal "Current Genetics",
+            organismName "plasmid"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 28039,
+      evidence chemicalOrganismNeighbor {
+        neighborName "lactobacillus leichmannii",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1635,
+        article {
+          {
+            pCLID 171836,
+            relevanceScore 179725,
+            pMID 8002712,
+            dOI "10.1007/bf00303583",
+            publicationDate "1994-04-01",
+            isReview FALSE,
+            title "Microbiological activities of nucleotide loop-modified
+ analogues of vitamin B12",
+            author "Atsuhiko Ishida, Hirokazu Kanefusa, Hidenori Fujita,
+ Tetsuo Toraya",
+            journal "Archives of Microbiology",
+            organismName "l. leichmannii; lactobacillus leichmannii"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1773,
+      evidence chemicalOrganismNeighbor {
+        neighborName "mycobacterium tuberculosis",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1391,
+        article {
+          {
+            pCLID 2599530,
+            relevanceScore 152855,
+            pMID 30511238,
+            dOI "10.1007/s11095-018-2543-x",
+            publicationDate "2018-12-03",
+            isReview FALSE,
+            title "HPMA-PLGA Based Nanoparticles for Effective In Vitro
+ Delivery of Rifampicin",
+            author "Sarita Rani, Avinash Gothwal, Pawan K. Pandey, Devendra S.
+ Chauhan, Praveen K. Pachouri, Umesh D. Gupta, Umesh Gupta",
+            journal "Pharmaceutical Research",
+            organismName "mtb; mycobacterium tuberculosis"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1653776,
+      evidence chemicalOrganismNeighbor {
+        neighborName "halalkalibacter oceani",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 878,
+        article {
+          {
+            pCLID 464744,
+            relevanceScore 96491,
+            pMID 23934481,
+            dOI "10.1007/s10482-013-9995-0",
+            publicationDate "2013-08-11",
+            isReview FALSE,
+            title "Bacillus oceani sp. nov., a new slightly halophilic
+ bacterium, isolated from a deep sea sediment environment",
+            author "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You,
+ Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+            journal "Antonie van Leeuwenhoek",
+            organismName "bacillus oceani"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 135735,
+      evidence chemicalOrganismNeighbor {
+        neighborName "priestia endophytica",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 791,
+        article {
+          {
+            pCLID 464744,
+            relevanceScore 79013,
+            pMID 23934481,
+            dOI "10.1007/s10482-013-9995-0",
+            publicationDate "2013-08-11",
+            isReview FALSE,
+            title "Bacillus oceani sp. nov., a new slightly halophilic
+ bacterium, isolated from a deep sea sediment environment",
+            author "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You,
+ Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+            journal "Antonie van Leeuwenhoek",
+            organismName "bacillus endophyticus"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 2747269,
+      evidence chemicalOrganismNeighbor {
+        neighborName "halophilic bacterium",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 669,
+        article {
+          {
+            pCLID 464744,
+            relevanceScore 73458,
+            pMID 23934481,
+            dOI "10.1007/s10482-013-9995-0",
+            publicationDate "2013-08-11",
+            isReview FALSE,
+            title "Bacillus oceani sp. nov., a new slightly halophilic
+ bacterium, isolated from a deep sea sediment environment",
+            author "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You,
+ Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+            journal "Antonie van Leeuwenhoek",
+            organismName "halophilic bacterium"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 511145,
+      evidence chemicalOrganismNeighbor {
+        neighborName "escherichia coli str. k-12 substr. mg1655",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 634,
+        article {
+          {
+            pCLID 15080320,
+            relevanceScore 63321,
+            pMID 6361270,
+            dOI "10.1007/bf02102318",
+            publicationDate "1983-11-01",
+            isReview FALSE,
+            title "Experimental evolution of a novel pathway for glycerol
+ dissimilation in Escherichia coli",
+            author "R. Z. Jin, John C. -T. Tang, E. C. C. Lin",
+            journal "Journal of Molecular Evolution"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 2,
+      evidence chemicalOrganismNeighbor {
+        neighborName "bacteria (bacteria)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 626,
+        article {
+          {
+            pCLID 171836,
+            relevanceScore 68695,
+            pMID 8002712,
+            dOI "10.1007/bf00303583",
+            publicationDate "1994-04-01",
+            isReview FALSE,
+            title "Microbiological activities of nucleotide loop-modified
+ analogues of vitamin B12",
+            author "Atsuhiko Ishida, Hirokazu Kanefusa, Hidenori Fujita,
+ Tetsuo Toraya",
+            journal "Archives of Microbiology",
+            organismName "bacterium"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 10090,
+      evidence chemicalOrganismNeighbor {
+        neighborName "mus musculus (house mouse)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 603,
+        article {
+          {
+            pCLID 1642601,
+            relevanceScore 60154,
+            pMID 15026556,
+            dOI "10.1158/1535-7163.353.3.3",
+            publicationDate "2004-03-01",
+            isReview FALSE,
+            title "Cassette dosing pharmacokinetics of a library of
+ 2,6,9-trisubstituted purine cyclin-dependent kinase 2 inhibitors prepared by
+ parallel synthesis",
+            author "Florence I. Raynaud, Peter M. Fischer, Bernard P. Nutley,
+ Phyllis M. Goddard, David P. Lane, Paul Workman",
+            journal "Molecular Cancer Therapeutics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 1386,
+      evidence chemicalOrganismNeighbor {
+        neighborName "bacillus (bacillus rrna group 1)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 452,
+        article {
+          {
+            pCLID 464744,
+            relevanceScore 49635,
+            pMID 23934481,
+            dOI "10.1007/s10482-013-9995-0",
+            publicationDate "2013-08-11",
+            isReview FALSE,
+            title "Bacillus oceani sp. nov., a new slightly halophilic
+ bacterium, isolated from a deep sea sediment environment",
+            author "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You,
+ Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+            journal "Antonie van Leeuwenhoek",
+            organismName "bacillus"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 10116,
+      evidence chemicalOrganismNeighbor {
+        neighborName "rattus norvegicus (norway rat)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 380,
+        article {
+          {
+            pCLID 7311888,
+            relevanceScore 37909,
+            pMID 23538234,
+            dOI "10.1016/j.bmc.2013.02.044",
+            publicationDate "2013-05-01",
+            isReview FALSE,
+            title "Novel hybrids of natural isochroman-4-one bearing
+ N-substituted isopropanolamine as potential antihypertensive candidates",
+            author "Renren Bai, Xiaojing Huang, Xue Yang, Wen Hong, Yiqun
+ Tang, Hequan Yao, Jieyun Jiang, Jie Liu, Mingqin Shen, Xiaoming Wu, Jinyi Xu",
+            journal "Bioorganic & Medicinal Chemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 3193,
+      evidence chemicalOrganismNeighbor {
+        neighborName "embryophyta (land plants)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 355,
+        article {
+          {
+            pCLID 2586670,
+            relevanceScore 35379,
+            pMID 28988386,
+            dOI "10.1007/s11030-017-9787-y",
+            publicationDate "2017-10-07",
+            isReview TRUE,
+            title "Perspectives on medicinal properties of natural phenolic
+ monoterpenoids and their hybrids",
+            author "Jamatsing D. Rajput, Suresh D. Bagul, Umesh D. Pete,
+ Chetan M. Zade, Subhash B. Padhye, Ratnamala S. Bendre",
+            journal "Molecular Diversity",
+            organismName "plants"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 5691,
+      evidence chemicalOrganismNeighbor {
+        neighborName "trypanosoma brucei",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 204,
+        article {
+          {
+            pCLID 22979057,
+            relevanceScore 20314,
+            pMID 30589893,
+            dOI "10.1371/journal.ppat.1007475",
+            publicationDate "2018-12-27",
+            isReview FALSE,
+            title "Gluconeogenesis using glycerol as a substrate in
+ bloodstream-form Trypanosoma brucei",
+            author "Julie Kovářová, Rupa Nagar, Joana Faria, Michael A. J.
+ Ferguson, Michael P. Barrett, David Horn",
+            journal "PLOS Pathogens"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 622,
+      evidence chemicalOrganismNeighbor {
+        neighborName "shigella dysenteriae",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 175,
+        article {
+          {
+            pCLID 26569979,
+            relevanceScore 17449,
+            pMID 3882967,
+            dOI "10.1021/jm00381a013",
+            publicationDate "1985-03-01",
+            isReview FALSE,
+            title "Use of physicochemical parameters in distance geometry and
+ related three-dimensional quantitative structure-activity relationships: A
+ demonstration using Escherichia coli dihydrofolate reductase inhibitors",
+            author "Arup K. Ghose, Gordon M. Crippen",
+            journal "Journal of Medicinal Chemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 taxonomyID 562,
+      evidence chemicalOrganismNeighbor {
+        neighborName "escherichia coli (e. coli)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 134,
+        article {
+          {
+            pCLID 26569979,
+            relevanceScore 13277,
+            pMID 3882967,
+            dOI "10.1021/jm00381a013",
+            publicationDate "1985-03-01",
+            isReview FALSE,
+            title "Use of physicochemical parameters in distance geometry and
+ related three-dimensional quantitative structure-activity relationships: A
+ demonstration using Escherichia coli dihydrofolate reductase inhibitors",
+            author "Arup K. Ghose, Gordon M. Crippen",
+            journal "Journal of Medicinal Chemistry"
+          }
+        }
+      }
+    }
+  }
+}

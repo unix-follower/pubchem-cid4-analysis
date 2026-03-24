@@ -1,0 +1,160 @@
+LinkDataSet ::= {
+  linkData {
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D005183",
+      evidence chemicalDiseaseNeighbor {
+        neighborName "Failure to Thrive",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2553,
+        article {
+          {
+            pCLID 836409,
+            relevanceScore 255247,
+            pMID 8431960,
+            dOI "10.1007/bf00352006",
+            publicationDate "1993-02-01",
+            isReview FALSE,
+            title "Molecular cloning of the yeast OPI3 gene as a high copy
+ number suppressor of the cho2 mutation",
+            author "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan
+ A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+            journal "Current Genetics",
+            diseaseName "lack of growth"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D010190",
+      evidence chemicalDiseaseNeighbor {
+        neighborName "Pancreatic Neoplasms",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1899,
+        article {
+          {
+            pCLID 851150,
+            relevanceScore 227790,
+            pMID 8446769,
+            dOI "10.1007/bf02576207",
+            publicationDate "1993-12-01",
+            isReview FALSE,
+            title "Glucose tolerance and insulin secretion in experimental
+ pancreatic cancer in the Syrian hamster",
+            author "Bo Ahrén, Åke Andrén-Sandberg",
+            journal "Research in experimental medicine. Zeitschrift fur die
+ gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie",
+            diseaseName "pancreatic cancer"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D018149",
+      evidence chemicalDiseaseNeighbor {
+        neighborName "Glucose Intolerance",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1705,
+        article {
+          {
+            pCLID 851150,
+            relevanceScore 204500,
+            pMID 8446769,
+            dOI "10.1007/bf02576207",
+            publicationDate "1993-12-01",
+            isReview FALSE,
+            title "Glucose tolerance and insulin secretion in experimental
+ pancreatic cancer in the Syrian hamster",
+            author "Bo Ahrén, Åke Andrén-Sandberg",
+            journal "Research in experimental medicine. Zeitschrift fur die
+ gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie",
+            diseaseName "glucose intolerance; glucose tolerance"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D014376",
+      evidence chemicalDiseaseNeighbor {
+        neighborName "Tuberculosis",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1153,
+        article {
+          {
+            pCLID 2599530,
+            relevanceScore 126686,
+            pMID 30511238,
+            dOI "10.1007/s11095-018-2543-x",
+            publicationDate "2018-12-03",
+            isReview FALSE,
+            title "HPMA-PLGA Based Nanoparticles for Effective In Vitro
+ Delivery of Rifampicin",
+            author "Sarita Rani, Avinash Gothwal, Pawan K. Pandey, Devendra S.
+ Chauhan, Praveen K. Pachouri, Umesh D. Gupta, Umesh Gupta",
+            journal "Pharmaceutical Research",
+            diseaseName "tb; tuberculosis"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009369",
+      evidence chemicalDiseaseNeighbor {
+        neighborName "Neoplasms",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 688,
+        article {
+          {
+            pCLID 851150,
+            relevanceScore 68654,
+            pMID 8446769,
+            dOI "10.1007/bf02576207",
+            publicationDate "1993-12-01",
+            isReview FALSE,
+            title "Glucose tolerance and insulin secretion in experimental
+ pancreatic cancer in the Syrian hamster",
+            author "Bo Ahrén, Åke Andrén-Sandberg",
+            journal "Research in experimental medicine. Zeitschrift fur die
+ gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie",
+            diseaseName "cancer"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D006963",
+      evidence chemicalDiseaseNeighbor {
+        neighborName "Hyperphagia",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 469,
+        article {
+          {
+            pCLID 464744,
+            relevanceScore 46780,
+            pMID 23934481,
+            dOI "10.1007/s10482-013-9995-0",
+            publicationDate "2013-08-11",
+            isReview FALSE,
+            title "Bacillus oceani sp. nov., a new slightly halophilic
+ bacterium, isolated from a deep sea sediment environment",
+            author "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You,
+ Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+            journal "Antonie van Leeuwenhoek",
+            diseaseName "polyphasic"
+          }
+        }
+      }
+    }
+  }
+}

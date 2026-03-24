@@ -1,0 +1,610 @@
+LinkDataSet ::= {
+  linkData {
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "cho2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "a3lqw6",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 2,
+        cooccurrenceScore 4538,
+        article {
+          {
+            pCLID 836409,
+            relevanceScore 245427,
+            pMID 8431960,
+            dOI "10.1007/bf00352006",
+            publicationDate "1993-02-01",
+            isReview FALSE,
+            title "Molecular cloning of the yeast OPI3 gene as a high copy
+ number suppressor of the cho2 mutation",
+            author "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan
+ A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+            journal "Current Genetics",
+            geneSymbolName "ebp"
+          },
+          {
+            pCLID 6632714,
+            relevanceScore 208241,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "opi3",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "phosphatidyl-n-methylethanolamine n-methyltransferase",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 2,
+        cooccurrenceScore 4531,
+        article {
+          {
+            pCLID 836409,
+            relevanceScore 245056,
+            pMID 8431960,
+            dOI "10.1007/bf00352006",
+            publicationDate "1993-02-01",
+            isReview FALSE,
+            title "Molecular cloning of the yeast OPI3 gene as a high copy
+ number suppressor of the cho2 mutation",
+            author "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan
+ A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+            journal "Current Genetics"
+          },
+          {
+            pCLID 6632714,
+            relevanceScore 207927,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "isyna1",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "inositol-3-phosphate synthase 1",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3262,
+        article {
+          {
+            pCLID 836409,
+            relevanceScore 326141,
+            pMID 8431960,
+            dOI "10.1007/bf00352006",
+            publicationDate "1993-02-01",
+            isReview FALSE,
+            title "Molecular cloning of the yeast OPI3 gene as a high copy
+ number suppressor of the cho2 mutation",
+            author "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan
+ A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+            journal "Current Genetics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "ebp",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "ebp cholestenol delta-isomerase",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3079,
+        article {
+          {
+            pCLID 836409,
+            relevanceScore 369410,
+            pMID 8431960,
+            dOI "10.1007/bf00352006",
+            publicationDate "1993-02-01",
+            isReview FALSE,
+            title "Molecular cloning of the yeast OPI3 gene as a high copy
+ number suppressor of the cho2 mutation",
+            author "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan
+ A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+            journal "Current Genetics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "pmm2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "phosphomannomutase 2",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 3036,
+        article {
+          {
+            pCLID 836409,
+            relevanceScore 303526,
+            pMID 8431960,
+            dOI "10.1007/bf00352006",
+            publicationDate "1993-02-01",
+            isReview FALSE,
+            title "Molecular cloning of the yeast OPI3 gene as a high copy
+ number suppressor of the cho2 mutation",
+            author "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan
+ A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+            journal "Current Genetics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "osh2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "oxysterol-binding protein homolog 2",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2244,
+        article {
+          {
+            pCLID 6632714,
+            relevanceScore 224327,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "ice2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "interactor of little elongation complex ell subunit 2",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2241,
+        article {
+          {
+            pCLID 6632714,
+            relevanceScore 224010,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "swh1",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "oxysterol-binding protein homolog 1",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2168,
+        article {
+          {
+            pCLID 6632714,
+            relevanceScore 216716,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "hpr",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "haptoglobin-related protein",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2167,
+        article {
+          {
+            pCLID 2599530,
+            relevanceScore 238237,
+            pMID 30511238,
+            dOI "10.1007/s11095-018-2543-x",
+            publicationDate "2018-12-03",
+            isReview FALSE,
+            title "HPMA-PLGA Based Nanoparticles for Effective In Vitro
+ Delivery of Rifampicin",
+            author "Sarita Rani, Avinash Gothwal, Pawan K. Pandey, Devendra S.
+ Chauhan, Praveen K. Pachouri, Umesh D. Gupta, Umesh Gupta",
+            journal "Pharmaceutical Research",
+            geneSymbolName "hpr"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "osh3",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "oxysterol-binding protein homolog 3",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2140,
+        article {
+          {
+            pCLID 6632714,
+            relevanceScore 213890,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "scs2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "vesicle-associated membrane protein-associated protein
+ scs2",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2132,
+        article {
+          {
+            pCLID 6632714,
+            relevanceScore 213134,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "pah1",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "phosphatidate phosphatase pah1",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 2000,
+        article {
+          {
+            pCLID 6632714,
+            relevanceScore 199899,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "psd1",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "phosphatidylserine decarboxylase proenzyme 1,
+ mitochondrial",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1960,
+        article {
+          {
+            pCLID 6632714,
+            relevanceScore 195874,
+            pMID 23519169,
+            dOI "10.1038/embor.2013.36",
+            publicationDate "2013-03-22",
+            isReview FALSE,
+            title "Plasma membrane--endoplasmic reticulum contact sites
+ regulate phosphatidylcholine synthesis",
+            author "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C
+ Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+            journal "The EMBO Reports"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "cdk2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "cyclin dependent kinase 2",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1539,
+        article {
+          {
+            pCLID 1642601,
+            relevanceScore 153824,
+            pMID 15026556,
+            dOI "10.1158/1535-7163.353.3.3",
+            publicationDate "2004-03-01",
+            isReview FALSE,
+            title "Cassette dosing pharmacokinetics of a library of
+ 2,6,9-trisubstituted purine cyclin-dependent kinase 2 inhibitors prepared by
+ parallel synthesis",
+            author "Florence I. Raynaud, Peter M. Fischer, Bernard P. Nutley,
+ Phyllis M. Goddard, David P. Lane, Paul Workman",
+            journal "Molecular Cancer Therapeutics"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "mtr",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "5-methyltetrahydrofolate-homocysteine methyltransferase",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1377,
+        article {
+          {
+            pCLID 171836,
+            relevanceScore 137577,
+            pMID 8002712,
+            dOI "10.1007/bf00303583",
+            publicationDate "1994-04-01",
+            isReview FALSE,
+            title "Microbiological activities of nucleotide loop-modified
+ analogues of vitamin B12",
+            author "Atsuhiko Ishida, Hirokazu Kanefusa, Hidenori Fujita,
+ Tetsuo Toraya",
+            journal "Archives of Microbiology"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "ec:1.17.4.2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "ribonucleoside-triphosphate reductase (thioredoxin)",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1358,
+        article {
+          {
+            pCLID 171836,
+            relevanceScore 135736,
+            pMID 8002712,
+            dOI "10.1007/bf00303583",
+            publicationDate "1994-04-01",
+            isReview FALSE,
+            title "Microbiological activities of nucleotide loop-modified
+ analogues of vitamin B12",
+            author "Atsuhiko Ishida, Hirokazu Kanefusa, Hidenori Fujita,
+ Tetsuo Toraya",
+            journal "Archives of Microbiology"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "ins",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "insulin",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1243,
+        article {
+          {
+            pCLID 851150,
+            relevanceScore 148998,
+            pMID 8446769,
+            dOI "10.1007/bf02576207",
+            publicationDate "1993-12-01",
+            isReview FALSE,
+            title "Glucose tolerance and insulin secretion in experimental
+ pancreatic cancer in the Syrian hamster",
+            author "Bo Ahrén, Åke Andrén-Sandberg",
+            journal "Research in experimental medicine. Zeitschrift fur die
+ gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "glda",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "glycerol dehydrogenase",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 1151,
+        article {
+          {
+            pCLID 15080320,
+            relevanceScore 114987,
+            pMID 6361270,
+            dOI "10.1007/bf02102318",
+            publicationDate "1983-11-01",
+            isReview FALSE,
+            title "Experimental evolution of a novel pathway for glycerol
+ dissimilation in Escherichia coli",
+            author "R. Z. Jin, John C. -T. Tang, E. C. C. Lin",
+            journal "Journal of Molecular Evolution"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "adrb1",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "adrenoceptor beta 1",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 894,
+        article {
+          {
+            pCLID 7311888,
+            relevanceScore 89344,
+            pMID 23538234,
+            dOI "10.1016/j.bmc.2013.02.044",
+            publicationDate "2013-05-01",
+            isReview FALSE,
+            title "Novel hybrids of natural isochroman-4-one bearing
+ N-substituted isopropanolamine as potential antihypertensive candidates",
+            author "Renren Bai, Xiaojing Huang, Xue Yang, Wen Hong, Yiqun
+ Tang, Hequan Yao, Jieyun Jiang, Jie Liu, Mingqin Shen, Xiaoming Wu, Jinyi Xu",
+            journal "Bioorganic & Medicinal Chemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "bdh2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "3-hydroxybutyrate dehydrogenase 2",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 568,
+        article {
+          {
+            pCLID 18380774,
+            relevanceScore 56743,
+            pMID 2222122,
+            dOI "10.1007/bf00248966",
+            publicationDate "1990-08-01",
+            isReview FALSE,
+            title "Purification and characterization of a (R)-2,3-butanediol
+ dehydrogenase from Saccharomyces cerevisiae",
+            author "J�rgen Heidlas, Roland Tressl",
+            journal "Archives of Microbiology"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "dfra1",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "dihydrofolate reductase type 1",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 226,
+        article {
+          {
+            pCLID 26569979,
+            relevanceScore 22502,
+            pMID 3882967,
+            dOI "10.1021/jm00381a013",
+            publicationDate "1985-03-01",
+            isReview FALSE,
+            title "Use of physicochemical parameters in distance geometry and
+ related three-dimensional quantitative structure-activity relationships: A
+ demonstration using Escherichia coli dihydrofolate reductase inhibitors",
+            author "Arup K. Ghose, Gordon M. Crippen",
+            journal "Journal of Medicinal Chemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "s100a10",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "s100 calcium binding protein a10",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 199,
+        article {
+          {
+            pCLID 13370350,
+            relevanceScore 19845,
+            pMID 21375334,
+            dOI "10.1021/jm101212e",
+            publicationDate "2011-03-04",
+            isReview FALSE,
+            title "Design, Synthesis, and Structure−Activity Relationship
+ Exploration of 1-Substituted 4-Aroyl-3-hydroxy-5-phenyl-1H-pyrrol-2(5H)-one
+ Analogues as Inhibitors of the Annexin A2−S100A10 Protein Interaction",
+            author "Tummala R. K. Reddy, Chan Li, Xiaoxia Guo, Helene K.
+ Myrvang, Peter M. Fischer, Lodewijk V. Dekker",
+            journal "Journal of Medicinal Chemistry"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 geneSymbol "anxa2",
+      evidence chemicalGeneSymbolNeighbor {
+        neighborName "annexin a2",
+        orderingByCooccurrenceScore TRUE,
+        articleCount 1,
+        cooccurrenceScore 192,
+        article {
+          {
+            pCLID 13370350,
+            relevanceScore 19127,
+            pMID 21375334,
+            dOI "10.1021/jm101212e",
+            publicationDate "2011-03-04",
+            isReview FALSE,
+            title "Design, Synthesis, and Structure−Activity Relationship
+ Exploration of 1-Substituted 4-Aroyl-3-hydroxy-5-phenyl-1H-pyrrol-2(5H)-one
+ Analogues as Inhibitors of the Annexin A2−S100A10 Protein Interaction",
+            author "Tummala R. K. Reddy, Chan Li, Xiaoxia Guo, Helene K.
+ Myrvang, Peter M. Fischer, Lodewijk V. Dekker",
+            journal "Journal of Medicinal Chemistry"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3050 @@
+{
+  "SourceCategories": {
+    "RecordType": "CID",
+    "RecordNumber": 4,
+    "Categories": [
+      {
+        "Category": "Chemical Vendors",
+        "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=search&db=pcsubstance&term=4[StandardizedCID]+AND+%22Chemical+Vendors%22[SourceCategory]",
+        "Sources": [
+          {
+            "SID": 184014556,
+            "SourceName": "Vitas-M Laboratory",
+            "SourceURL": "http://www.vitasmlab.biz",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Vitas-M%20Laboratory",
+            "RegistryID": "BBL027685",
+            "SourceRecordURL": "http://www.request.vitasmlab.biz/index.php?option=com_search_stk&Itemid=22&stk=BBL027685&?utm_source=pubchem&utm_medium=p_search_link&utm_campaign=pubchem_search&utm_content=pubchem_slink",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 164061621,
+            "SourceName": "Vitas-M Laboratory",
+            "SourceURL": "http://www.vitasmlab.biz",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Vitas-M%20Laboratory",
+            "RegistryID": "STL308732",
+            "SourceRecordURL": "http://www.request.vitasmlab.biz/index.php?option=com_search_stk&Itemid=22&stk=STL308732&?utm_source=pubchem&utm_medium=p_search_link&utm_campaign=pubchem_search&utm_content=pubchem_slink",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 277290848,
+            "SourceName": "MolCore",
+            "SourceURL": "https://www.molcore.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MolCore",
+            "RegistryID": "CS14075",
+            "SourceRecordURL": "https://www.molcore.com/product/2799-17-9",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 446249868,
+            "SourceName": "MolCore",
+            "SourceURL": "https://www.001chemical.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MolCore",
+            "RegistryID": "DY546091",
+            "SourceRecordURL": "https://www.001chemical.com/chem/2799-16-8",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 446275462,
+            "SourceName": "MolCore",
+            "SourceURL": "https://www.001chemical.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MolCore",
+            "RegistryID": "DY571709",
+            "SourceRecordURL": "https://www.001chemical.com/chem/78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 405477241,
+            "SourceName": "MolCore",
+            "SourceURL": "https://www.molcore.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MolCore",
+            "RegistryID": "MC546091",
+            "SourceRecordURL": "https://www.molcore.com/product/2799-16-8",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 405502838,
+            "SourceName": "MolCore",
+            "SourceURL": "https://www.molcore.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MolCore",
+            "RegistryID": "MC571709",
+            "SourceRecordURL": "https://www.molcore.com/product/78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 446139482,
+            "SourceName": "MolCore",
+            "SourceURL": "https://www.001chemical.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MolCore",
+            "RegistryID": "NO14075",
+            "SourceRecordURL": "https://www.001chemical.com/chem/2799-17-9",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 446848917,
+            "SourceName": "Synblock Inc",
+            "SourceURL": "https://www.synblock.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Synblock%20Inc",
+            "RegistryID": "SB44651",
+            "SourceRecordURL": "https://www.synblock.com/product/2799-17-9.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 446848962,
+            "SourceName": "Synblock Inc",
+            "SourceURL": "https://www.synblock.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Synblock%20Inc",
+            "RegistryID": "SB44696",
+            "SourceRecordURL": "https://www.synblock.com/product/2799-16-8.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 471337325,
+            "SourceName": "Synblock Inc",
+            "SourceURL": "https://www.synblock.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Synblock%20Inc",
+            "RegistryID": "SB83757",
+            "SourceRecordURL": "https://www.synblock.com/product/78-96-6.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 508810475,
+            "SourceName": "Aladdin Scientific",
+            "SourceURL": "https://www.aladdinsci.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Aladdin%20Scientific",
+            "RegistryID": "A108441",
+            "SourceRecordURL": "https://www.aladdinsci.com/dl-1-amino-2-propanol-bioactive-small-molecules-by-aladdin-scientific-a108441.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 504750337,
+            "SourceName": "Aladdin Scientific",
+            "SourceURL": "https://www.aladdinsci.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Aladdin%20Scientific",
+            "RegistryID": "A108442",
+            "SourceRecordURL": "https://www.aladdinsci.com/dl-1-amino-2-propanol-bioactive-small-molecules-by-aladdin-scientific-a108442.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 385002962,
+            "SourceName": "eNovation Chemicals",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/eNovation%20Chemicals",
+            "RegistryID": "D633065",
+            "SourceRecordURL": "https://enovationchem.com/PDetailP.asp?PID=D633065",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 496404324,
+            "SourceName": "eNovation Chemicals",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/eNovation%20Chemicals",
+            "RegistryID": "Y1209466",
+            "SourceRecordURL": "https://enovationchem.com/PDetailP.asp?PID=Y1209466",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 521600245,
+            "SourceName": "Enamine",
+            "SourceURL": "https://enaminestore.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Enamine",
+            "RegistryID": "EBC-253118",
+            "SourceRecordURL": "https://ebc.enamine.net/molecule-product/EBC-253118",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 473201752,
+            "SourceName": "Enamine",
+            "SourceURL": "https://enaminestore.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Enamine",
+            "RegistryID": "EN300-20160",
+            "SourceRecordURL": "https://www.enaminestore.com/catalog/EN300-20160",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 475341094,
+            "SourceName": "Enamine",
+            "SourceURL": "https://enaminestore.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Enamine",
+            "RegistryID": "Z104477092",
+            "SourceRecordURL": "https://www.enaminestore.com/catalog/Z104477092",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 374181805,
+            "SourceName": "AA BLOCKS",
+            "SourceURL": "https://www.aablocks.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AA%20BLOCKS",
+            "RegistryID": "AA003R1N",
+            "SourceRecordURL": "https://www.aablocks.com/prod/78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 479831420,
+            "SourceName": "AA BLOCKS",
+            "SourceURL": "https://www.aablocks.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AA%20BLOCKS",
+            "RegistryID": "AA009XMC",
+            "SourceRecordURL": "https://www.aablocks.com/prod/1219795-13-7",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 441630029,
+            "SourceName": "OtavaChemicals",
+            "SourceURL": "https://otavachemicals.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/OtavaChemicals",
+            "RegistryID": "2825298",
+            "SourceRecordURL": "https://search.otavachemicals.com/#!/search?query=2825298&type=code&base=dbb",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 377008779,
+            "SourceName": "LGC Standards",
+            "SourceURL": "https://www.lgcstandards.com/US/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LGC%20Standards",
+            "RegistryID": "DRE-C10216950",
+            "SourceRecordURL": "https://www.lgcstandards.com/GB/en/p/DRE-C10216950",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 517687382,
+            "SourceName": "LGC Standards",
+            "SourceURL": "https://www.lgcstandards.com/US/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LGC%20Standards",
+            "RegistryID": "DRE-CA10216950",
+            "SourceRecordURL": "https://www.lgcstandards.com/US/en/p/DRE-CA10216950",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 485237329,
+            "SourceName": "LGC Standards",
+            "SourceURL": "https://www.lgcstandards.com/US/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LGC%20Standards",
+            "RegistryID": "TRC-A628135",
+            "SourceRecordURL": "https://www.lgcstandards.com/GB/en/p/TRC-A628135",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 495966036,
+            "SourceName": "LGC Standards",
+            "SourceURL": "https://www.lgcstandards.com/US/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LGC%20Standards",
+            "RegistryID": "TRC-A628135-10G",
+            "SourceRecordURL": "https://www.lgcstandards.com/GB/en/p/TRC-A628135-10G",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 495966038,
+            "SourceName": "LGC Standards",
+            "SourceURL": "https://www.lgcstandards.com/US/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LGC%20Standards",
+            "RegistryID": "TRC-A628135-1G",
+            "SourceRecordURL": "https://www.lgcstandards.com/GB/en/p/TRC-A628135-1G",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 495966037,
+            "SourceName": "LGC Standards",
+            "SourceURL": "https://www.lgcstandards.com/US/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LGC%20Standards",
+            "RegistryID": "TRC-A628135-50G",
+            "SourceRecordURL": "https://www.lgcstandards.com/GB/en/p/TRC-A628135-50G",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 507607997,
+            "SourceName": "Accel Scientific",
+            "SourceURL": "https://www.accelsci.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Accel%20Scientific",
+            "RegistryID": "EC003TA7",
+            "SourceRecordURL": "https://www.accelsci.com/pro/78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 347760514,
+            "SourceName": "Alfa Chemistry",
+            "SourceURL": "https://www.alfa-chemistry.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Alfa%20Chemistry",
+            "RegistryID": "6168-72-5",
+            "SourceRecordURL": "https://www.alfa-chemistry.com/dl-alaninol-cas-6168-72-5-item-286975.htm",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 438650297,
+            "SourceName": "Alfa Chemistry",
+            "SourceURL": "https://alfa-chemistry.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Alfa%20Chemistry",
+            "RegistryID": "ACM6168725",
+            "SourceRecordURL": "https://www.alfa-chemistry.com/dl-alaninol-cas-6168-72-5-item-286975.htm",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 445524636,
+            "SourceName": "Alfa Chemistry",
+            "SourceURL": "https://surfactant.alfa-chemistry.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Alfa%20Chemistry",
+            "RegistryID": "ACM6168725-1",
+            "SourceRecordURL": "https://surfactant.alfa-chemistry.com/product/2-amino-1-propanol-cas-6168-72-5-320968.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 438659296,
+            "SourceName": "Alfa Chemistry",
+            "SourceURL": "https://alfa-chemistry.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Alfa%20Chemistry",
+            "RegistryID": "ACM78966",
+            "SourceRecordURL": "https://www.alfa-chemistry.com/amino-2-propanol-cas-78-96-6-item-235022.htm",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 438469953,
+            "SourceName": "Alfa Chemistry",
+            "SourceURL": "https://alfa-chemistry.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Alfa%20Chemistry",
+            "RegistryID": "AP78966",
+            "SourceRecordURL": "https://reagents.alfa-chemistry.com/product/1-amino-2-propanol-cas-78-96-6-16628.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 472654066,
+            "SourceName": "Alfa Chemistry",
+            "SourceURL": "https://reagents.alfa-chemistry.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Alfa%20Chemistry",
+            "RegistryID": "APS78966",
+            "SourceRecordURL": "https://reagents.alfa-chemistry.com/product/1-amino-2-propanol-cas-78-96-6-59495.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 375651578,
+            "SourceName": "Hairui Chemical",
+            "SourceURL": "https://www.hairuichem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Hairui%20Chemical",
+            "RegistryID": "HR124975",
+            "SourceRecordURL": "https://www.hairuichem.com/en/product/2799-17-9.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 375644281,
+            "SourceName": "Hairui Chemical",
+            "SourceURL": "https://www.hairuichem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Hairui%20Chemical",
+            "RegistryID": "RESA03408",
+            "SourceRecordURL": "https://www.hairuichem.com/en/product/78-96-6.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 478242013,
+            "SourceName": "Thoreauchem",
+            "SourceURL": "http://www.thoreauchem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thoreauchem",
+            "RegistryID": "NS42025",
+            "SourceRecordURL": "http://www.thoreauchem.com/prod/126875/",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 87562041,
+            "SourceName": "TCI (Tokyo Chemical Industry)",
+            "SourceURL": "http://www.tcichemicals.com/en/us/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/TCI%20(Tokyo%20Chemical%20Industry)",
+            "RegistryID": "A0406",
+            "SourceRecordURL": "http://www.tcichemicals.com/eshop/en/us/commodity/A0406/index.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 87562699,
+            "SourceName": "TCI (Tokyo Chemical Industry)",
+            "SourceURL": "http://www.tcichemicals.com/en/us/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/TCI%20(Tokyo%20Chemical%20Industry)",
+            "RegistryID": "A1229",
+            "SourceRecordURL": "http://www.tcichemicals.com/eshop/en/us/commodity/A1229/index.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 459194748,
+            "SourceName": "Thermo Fisher Scientific",
+            "SourceURL": "https://www.thermofisher.com/us/en/home.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thermo%20Fisher%20Scientific",
+            "RegistryID": "GID_900000000129140",
+            "SourceRecordURL": "https://www.thermofisher.com/order/catalog/product/218980050",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 459194749,
+            "SourceName": "Thermo Fisher Scientific",
+            "SourceURL": "https://www.thermofisher.com/us/en/home.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thermo%20Fisher%20Scientific",
+            "RegistryID": "GID_900000000129141",
+            "SourceRecordURL": "https://www.thermofisher.com/order/catalog/product/218980250",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 459197208,
+            "SourceName": "Thermo Fisher Scientific",
+            "SourceURL": "https://www.thermofisher.com/us/en/home.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thermo%20Fisher%20Scientific",
+            "RegistryID": "GID_900000000171543",
+            "SourceRecordURL": "https://www.thermofisher.com/order/catalog/product/149650010",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 459197209,
+            "SourceName": "Thermo Fisher Scientific",
+            "SourceURL": "https://www.thermofisher.com/us/en/home.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thermo%20Fisher%20Scientific",
+            "RegistryID": "GID_900000000171544",
+            "SourceRecordURL": "https://www.thermofisher.com/order/catalog/product/149650025",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 459201869,
+            "SourceName": "Thermo Fisher Scientific",
+            "SourceURL": "https://www.thermofisher.com/us/en/home.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thermo%20Fisher%20Scientific",
+            "RegistryID": "GID_900000000228494",
+            "SourceRecordURL": "https://www.thermofisher.com/order/catalog/product/218980010",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 459234813,
+            "SourceName": "Thermo Fisher Scientific",
+            "SourceURL": "https://www.thermofisher.com/us/en/home.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thermo%20Fisher%20Scientific",
+            "RegistryID": "GID_900000007821644",
+            "SourceRecordURL": "https://www.thermofisher.com/order/catalog/product/L15343.0B",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 459234814,
+            "SourceName": "Thermo Fisher Scientific",
+            "SourceURL": "https://www.thermofisher.com/us/en/home.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thermo%20Fisher%20Scientific",
+            "RegistryID": "GID_900000007821645",
+            "SourceRecordURL": "https://www.thermofisher.com/order/catalog/product/L15343.0E",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 459234815,
+            "SourceName": "Thermo Fisher Scientific",
+            "SourceURL": "https://www.thermofisher.com/us/en/home.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thermo%20Fisher%20Scientific",
+            "RegistryID": "GID_900000007821646",
+            "SourceRecordURL": "https://www.thermofisher.com/order/catalog/product/L15343.30",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 203091276,
+            "SourceName": "Debye Scientific Co., Ltd",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Debye%20Scientific%20Co.,%20Ltd",
+            "RegistryID": "DB-013106",
+            "SourceRecordURL": "http://www.debyesci.com/cas_2799-16-8.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 104668918,
+            "SourceName": "AKos Consulting & Solutions",
+            "SourceURL": "http://www.akosgmbh.de/AKosSamples/index.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AKos%20Consulting%20&%20Solutions",
+            "RegistryID": "AKOS000120495",
+            "SourceRecordURL": "http://akoscompounds.de/catalogue/akossamplesretrieval.php?IDNUMBERS=AKOS000120495",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 218605007,
+            "SourceName": "AKos Consulting & Solutions",
+            "SourceURL": "http://www.akosgmbh.de/AKosSamples/index.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AKos%20Consulting%20&%20Solutions",
+            "RegistryID": "AKOS016042334",
+            "SourceRecordURL": "http://akoscompounds.de/catalogue/akossamplesretrieval.php?IDNUMBERS=AKOS016042334",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 513813512,
+            "SourceName": "Veeprho",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Veeprho",
+            "RegistryID": "VL3850067",
+            "SourceRecordURL": "https://veeprho.com/impurities/dl-1-amino-2-propanol/",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 440049494,
+            "SourceName": "001Chemical",
+            "SourceURL": "https://www.001chemical.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/001Chemical",
+            "RegistryID": "DY571709",
+            "SourceRecordURL": "https://www.001chemical.com/chem/78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 494460275,
+            "SourceName": "TargetMol",
+            "SourceURL": "https://www.targetmol.com/contact-us",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/TargetMol",
+            "RegistryID": "T66935",
+            "SourceRecordURL": "https://www.targetmol.com/compound/1-aminopropan-2-ol",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 483516296,
+            "SourceName": "MuseChem",
+            "SourceURL": "https://www.musechem.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MuseChem",
+            "RegistryID": "L013687",
+            "SourceRecordURL": "https://www.musechem.com/product/r-1-amino-2-propanol-2799-16-8/",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 483516340,
+            "SourceName": "MuseChem",
+            "SourceURL": "https://www.musechem.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MuseChem",
+            "RegistryID": "L013731",
+            "SourceRecordURL": "https://www.musechem.com/product/s-1-amino-2-propanol-2799-17-9/",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 355062444,
+            "SourceName": "MuseChem",
+            "SourceURL": "https://www.musechem.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MuseChem",
+            "RegistryID": "M124137",
+            "SourceRecordURL": "https://www.musechem.com/product/M124137.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 355070667,
+            "SourceName": "MuseChem",
+            "SourceURL": "https://www.musechem.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MuseChem",
+            "RegistryID": "R020019",
+            "SourceRecordURL": "https://www.musechem.com/product/R020019.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 316429828,
+            "SourceName": "abcr GmbH",
+            "SourceURL": "http://www.abcr.com/de_en",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/abcr%20GmbH",
+            "RegistryID": "AB171489",
+            "SourceRecordURL": "https://abcr.com/de_en/AB171489",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 446445016,
+            "SourceName": "BenchChem",
+            "SourceURL": "https://www.benchchem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/BenchChem",
+            "RegistryID": "B043004",
+            "SourceRecordURL": "https://www.benchchem.com/product/b043004",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 445872520,
+            "SourceName": "BenchChem",
+            "SourceURL": "https://www.benchchem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/BenchChem",
+            "RegistryID": "B162767",
+            "SourceRecordURL": "https://www.benchchem.com/product/b162767",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 164790200,
+            "SourceName": "Finetech Industry Limited",
+            "SourceURL": "https://www.finetechnology-ind.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Finetech%20Industry%20Limited",
+            "RegistryID": "FT-0605031",
+            "SourceRecordURL": "https://www.finetechnology-ind.com/prod/detail/2799-16-8",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 164790406,
+            "SourceName": "Finetech Industry Limited",
+            "SourceURL": "https://www.finetechnology-ind.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Finetech%20Industry%20Limited",
+            "RegistryID": "FT-0605237",
+            "SourceRecordURL": "https://www.finetechnology-ind.com/prod/detail/2799-17-9",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 164809351,
+            "SourceName": "Finetech Industry Limited",
+            "SourceURL": "https://www.finetechnology-ind.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Finetech%20Industry%20Limited",
+            "RegistryID": "FT-0625381",
+            "SourceRecordURL": "https://www.finetechnology-ind.com/prod/detail/78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 521767227,
+            "SourceName": "Angene Chemical",
+            "SourceURL": "https://www.angenechemical.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Angene%20Chemical",
+            "RegistryID": "AG003R4F",
+            "SourceRecordURL": "https://www.angenesci.com/productshow/AG003R4F.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 174182236,
+            "SourceName": "Angene Chemical",
+            "SourceURL": "http://www.angenechemical.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Angene%20Chemical",
+            "RegistryID": "AGN-PC-0140D2",
+            "SourceRecordURL": "http://www.angenechemical.com/productshow/AGN-PC-0140D2.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 485450955,
+            "SourceName": "Acmec Biochemical",
+            "SourceURL": "http://www.acmec.com.cn/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Acmec%20Biochemical",
+            "RegistryID": "D74260",
+            "SourceRecordURL": "http://www.acmec.com.cn/product/d74260",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 489217305,
+            "SourceName": "Rare Chemicals GmbH, Germany",
+            "SourceURL": "https://www.rarechem.de/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Rare%20Chemicals%20GmbH,%20Germany",
+            "RegistryID": "AL BW 2385",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 463558553,
+            "SourceName": "MedChemexpress MCE",
+            "SourceURL": "https://www.medchemexpress.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MedChemexpress%20MCE",
+            "RegistryID": "HY-W015969",
+            "SourceRecordURL": "https://www.medchemexpress.com/1-aminopropan-2-ol.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 504097432,
+            "SourceName": "MedChemexpress MCE",
+            "SourceURL": "https://www.medchemexpress.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MedChemexpress%20MCE",
+            "RegistryID": "HY-W015969R",
+            "SourceRecordURL": "https://www.medchemexpress.com/1-aminopropan-2-ol-standard.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 375447402,
+            "SourceName": "BLD Pharm",
+            "SourceURL": "https://www.bldpharm.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/BLD%20Pharm",
+            "RegistryID": "BD42025",
+            "SourceRecordURL": "http://www.bldpharm.com/products/78-96-6.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 376248724,
+            "SourceName": "AbaChemScene",
+            "SourceURL": "https://www.chemscene.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AbaChemScene",
+            "RegistryID": "CS-W016685",
+            "SourceRecordURL": "http://www.chemscene.com/78-96-6.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 472987906,
+            "SourceName": "Santa Cruz Biotechnology, Inc.",
+            "SourceURL": "https://www.scbt.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Santa%20Cruz%20Biotechnology,%20Inc.",
+            "RegistryID": "sc-239223",
+            "SourceRecordURL": "https://www.scbt.com/p/amino-2-propanol-78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 472475770,
+            "SourceName": "RR Scientific",
+            "SourceURL": "http://www.rrscientific.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/RR%20Scientific",
+            "RegistryID": "R001086",
+            "SourceRecordURL": "http://www.rrscientific.com/product/info/1086",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 489433131,
+            "SourceName": "AstaTech, Inc.",
+            "SourceURL": "https://www.astatechinc.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AstaTech,%20Inc.",
+            "RegistryID": "G75932",
+            "SourceRecordURL": "https://astatechinc.com/CPSResult.php?CRNO=2026345",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 518801586,
+            "SourceName": "Achemtek",
+            "SourceURL": "http://achemtek.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Achemtek",
+            "RegistryID": "MSK167300",
+            "SourceRecordURL": "http://www.achemtek.com/products/MSK167300",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 518802334,
+            "SourceName": "Achemtek",
+            "SourceURL": "http://achemtek.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Achemtek",
+            "RegistryID": "MSK167300-1000M",
+            "SourceRecordURL": "http://www.achemtek.com/products/MSK167300-1000M",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 470719038,
+            "SourceName": "CymitQuimica",
+            "SourceURL": "https://cymitquimica.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/CymitQuimica",
+            "RegistryID": "CQ_78-96-6",
+            "SourceRecordURL": "https://cymitquimica.com/cas/78-96-6/?cpm_campaign=pubchem",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 444067129,
+            "SourceName": "A2B Chem",
+            "SourceURL": "https://www.a2bchem.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/A2B%20Chem",
+            "RegistryID": "AB74919",
+            "SourceRecordURL": "https://www.a2bchem.com/78-96-6.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 500223123,
+            "SourceName": "InvivoChem",
+            "SourceURL": "https://www.invivochem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/InvivoChem",
+            "RegistryID": "V50199",
+            "SourceRecordURL": "https://www.invivochem.com/1-aminopropan-2-ol.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 463763293,
+            "SourceName": "Yuhao Chemical",
+            "SourceURL": "http://www.chemyuhao.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Yuhao%20Chemical",
+            "RegistryID": "LL0134",
+            "SourceRecordURL": "http://www.chemyuhao.com/78-96-6.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 506068975,
+            "SourceName": "SynHet - Synthetic Heterocycles",
+            "SourceURL": "https://www.synhet.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SynHet%20-%20Synthetic%20Heterocycles",
+            "RegistryID": "CAS-78-96-6",
+            "SourceRecordURL": "https://synhet.com/products/CAS-78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 490647042,
+            "SourceName": "eMolecules",
+            "SourceURL": "https://www.emolecules.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/eMolecules",
+            "RegistryID": "476541",
+            "SourceRecordURL": "https://search.emolecules.com/search/#?querytype=emoleculesid&p=1&query=476541",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 508401482,
+            "SourceName": "AiFChem, an XtalPi Company",
+            "SourceURL": "https://store.aifchem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AiFChem,%20an%20XtalPi%20Company",
+            "RegistryID": "ACNPTV619",
+            "SourceRecordURL": "https://store.aifchem.com/aif/goods/detail/78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 503544552,
+            "SourceName": "AppChem",
+            "SourceURL": "https://www.appchemical.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AppChem",
+            "RegistryID": "AJ74919",
+            "SourceRecordURL": "https://www.appchemical.com/products/78-96-6?cas=78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 505087059,
+            "SourceName": "Chem-Impex",
+            "SourceURL": "http://www.chemimpex.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Chem-Impex",
+            "RegistryID": "16632",
+            "SourceRecordURL": "https://www.chemimpex.com/products/16632",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 505085971,
+            "SourceName": "Chem-Impex",
+            "SourceURL": "http://www.chemimpex.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Chem-Impex",
+            "RegistryID": "16633",
+            "SourceRecordURL": "https://www.chemimpex.com/products/16633",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 434440768,
+            "SourceName": "Chem-Space.com Database",
+            "SourceURL": "https://chem-space.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Chem-Space.com%20Database",
+            "RegistryID": "CSSB00000210904",
+            "SourceRecordURL": "https://chem-space.com/CSSB00000210904",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 516474177,
+            "SourceName": "Biorbyt",
+            "SourceURL": "https://www.biorbyt.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Biorbyt",
+            "RegistryID": "orb1962263",
+            "SourceRecordURL": "https://www.biorbyt.com/1-aminopropan-2-ol-orb1962263.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 522836730,
+            "SourceName": "Biorbyt",
+            "SourceURL": "https://www.biorbyt.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Biorbyt",
+            "RegistryID": "orb3026105",
+            "SourceRecordURL": "https://www.biorbyt.com/1-aminopropan-2-ol-standard-orb3026105.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 254793500,
+            "SourceName": "BOC Sciences",
+            "SourceURL": "https://buildingblock.bocsci.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/BOC%20Sciences",
+            "RegistryID": "78-96-6",
+            "SourceRecordURL": "https://buildingblock.bocsci.com/product/1-amino-2-propanol-cas-78-96-6-407403.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 488371629,
+            "SourceName": "BOC Sciences",
+            "SourceURL": "https://www.bocsci.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/BOC%20Sciences",
+            "RegistryID": "BB074507",
+            "SourceRecordURL": "https://buildingblock.bocsci.com/product/1-amino-2-propanol-cas-78-96-6-407403.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 478265619,
+            "SourceName": "Cooke Chemical Co., Ltd",
+            "SourceURL": "http://www.cookechem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Cooke%20Chemical%20Co.,%20Ltd",
+            "RegistryID": "A0850050",
+            "SourceRecordURL": "http://www.cookechem.com/Detail/A0850050.htm",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 493134802,
+            "SourceName": "Mcule",
+            "SourceURL": "https://mcule.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Mcule",
+            "RegistryID": "MCULE-5694317743",
+            "SourceRecordURL": "https://mcule.com/MCULE-5694317743",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 167377024,
+            "SourceName": "Mcule",
+            "SourceURL": "https://mcule.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Mcule",
+            "RegistryID": "MCULE-6406041538",
+            "SourceRecordURL": "https://mcule.com/MCULE-6406041538",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 310266729,
+            "SourceName": "Glentham Life Sciences Ltd.",
+            "SourceURL": "https://www.glentham.com/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Glentham%20Life%20Sciences%20Ltd.",
+            "RegistryID": "GK2899",
+            "SourceRecordURL": "https://www.glentham.com/en/products/product/GK2899/",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 24846971,
+            "SourceName": "Sigma-Aldrich",
+            "SourceURL": "http://www.sigmaaldrich.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Sigma-Aldrich",
+            "RegistryID": "110248_ALDRICH",
+            "SourceRecordURL": "https://www.sigmaaldrich.com/catalog/product/aldrich/110248?utm_source=pubchem&utm_campaign=pubchem_2017&utm_medium=referral",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 329770447,
+            "SourceName": "Sigma-Aldrich",
+            "SourceURL": "http://www.sigmaaldrich.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Sigma-Aldrich",
+            "RegistryID": "95343_SIAL",
+            "SourceRecordURL": "https://www.sigmaaldrich.com/catalog/product/sial/95343?utm_source=pubchem&utm_campaign=pubchem_2017&utm_medium=referral",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 329830669,
+            "SourceName": "Sigma-Aldrich",
+            "SourceURL": "http://www.sigmaaldrich.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Sigma-Aldrich",
+            "RegistryID": "W396508_ALDRICH",
+            "SourceRecordURL": "https://www.sigmaaldrich.com/catalog/product/aldrich/w396508?utm_source=pubchem&utm_campaign=pubchem_2017&utm_medium=referral",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 491543285,
+            "SourceName": "10X CHEM",
+            "SourceURL": "https://www.10xchem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/10X%20CHEM",
+            "RegistryID": "TX003SA3",
+            "SourceRecordURL": "https://www.10xchem.com/prod/78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 315360770,
+            "SourceName": "Life Chemicals",
+            "SourceURL": "http://www.lifechemicals.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Life%20Chemicals",
+            "RegistryID": "F2190-0369",
+            "SourceRecordURL": "https://shop.lifechemicals.com/1/F2190-0369",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 374061240,
+            "SourceName": "Combi-Blocks",
+            "SourceURL": "http://www.combi-blocks.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Combi-Blocks",
+            "RegistryID": "QE-5268",
+            "SourceRecordURL": "https://www.combi-blocks.com/cgi-bin/find.cgi?QE-5268",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 152250341,
+            "SourceName": "CAPOT",
+            "SourceURL": "https://www.capotchem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/CAPOT",
+            "RegistryID": "5720",
+            "SourceRecordURL": "https://www.capotchem.com/2799-17-9.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 152250340,
+            "SourceName": "CAPOT",
+            "SourceURL": "https://www.capotchem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/CAPOT",
+            "RegistryID": "5721",
+            "SourceRecordURL": "https://www.capotchem.com/2799-16-8.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 381026956,
+            "SourceName": "VladaChem",
+            "SourceURL": "https://www.vladachem.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/VladaChem",
+            "RegistryID": "VL282445-1L",
+            "SourceRecordURL": "https://www.vladachem.com/product.php?products=78-96-6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 522870973,
+            "SourceName": "Quality Control Solutions (QCS Standards)",
+            "SourceURL": "https://qcsrm.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Quality%20Control%20Solutions%20(QCS%20Standards)",
+            "RegistryID": "RG-A263063",
+            "SourceRecordURL": "https://www.qcsrm.com/index.php/Index/products_show?id=RG-A263063",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 464505293,
+            "SourceName": "Starshine Chemical",
+            "SourceURL": "https://www.starshinechemical.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Starshine%20Chemical",
+            "RegistryID": "starbld0694064",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 312598347,
+            "SourceName": "Oakwood Products",
+            "SourceURL": "http://www.oakwoodchemical.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Oakwood%20Products",
+            "RegistryID": "099022",
+            "SourceRecordURL": "http://www.oakwoodchemical.com/ProductsList.aspx?CategoryID=-2&txtSearch=162209&ExtHyperLink=1",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 469619049,
+            "SourceName": "J&H Chemical Co.,ltd",
+            "SourceURL": "http://www.jhechem.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/J&H%20Chemical%20Co.,ltd",
+            "RegistryID": "JH479384",
+            "SourceRecordURL": "http://www.jhechem.com/ProductDetail/479384",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 475731099,
+            "SourceName": "Hunan Chemfish Pharmaceutical Co., Ltd.",
+            "SourceURL": "http://en.chemfish.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Hunan%20Chemfish%20Pharmaceutical%20Co.,%20Ltd.",
+            "RegistryID": "CF105294",
+            "SourceRecordURL": "http://en.chemfish.com/product/10472.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 376260168,
+            "SourceName": "Ambeed",
+            "SourceURL": "https://www.ambeed.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Ambeed",
+            "RegistryID": "A763504",
+            "SourceRecordURL": "https://www.ambeed.com/products/78-96-6.html",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 513785950,
+            "SourceName": "CATO Research Chemicals Inc.",
+            "SourceURL": "https://en.cato-chem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/CATO%20Research%20Chemicals%20Inc.",
+            "RegistryID": "CCHM701454",
+            "SourceRecordURL": "https://en.cato-chem.com/ProInfo.aspx?id=CCHM701454",
+            "SourceCategories": [
+              "Chemical Vendors",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 88832453,
+            "SourceName": "Molport",
+            "SourceURL": "https://www.molport.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Molport",
+            "RegistryID": "MolPort-001-789-469",
+            "SourceRecordURL": "https://www.molport.com/shop/molecule-link/MolPort-001-789-469",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 518217930,
+            "SourceName": "Fluorochem",
+            "SourceURL": "https://fluorochem.co.uk",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Fluorochem",
+            "RegistryID": "F099022",
+            "SourceRecordURL": "https://fluorochem.co.uk/product/F099022",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 404784382,
+            "SourceName": "Sinfoo Biotech",
+            "SourceURL": "http://sinfoobiotech.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Sinfoo%20Biotech",
+            "RegistryID": "S005849",
+            "SourceRecordURL": "http://www.sinfoobiotech.com/product/1009247",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 514144566,
+            "SourceName": "ChemoSapiens",
+            "SourceURL": "https://chemosapiens.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemoSapiens",
+            "RegistryID": "310364",
+            "SourceRecordURL": "https://chemosapiens.com/product/310364",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          }
+        ]
+      },
+      {
+        "Category": "Curation Efforts",
+        "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=search&db=pcsubstance&term=4[StandardizedCID]+AND+%22Curation+Efforts%22[SourceCategory]",
+        "Sources": [
+          {
+            "SID": 252149668,
+            "SourceName": "ChEBI",
+            "SourceURL": "http://www.ebi.ac.uk/chebi/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChEBI",
+            "RegistryID": "CHEBI:19030",
+            "SourceRecordURL": "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:19030",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 103342061,
+            "SourceName": "ChEMBL",
+            "SourceURL": "https://www.ebi.ac.uk/chembl/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChEMBL",
+            "RegistryID": "CHEMBL326602",
+            "SourceRecordURL": "https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL326602",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 134971235,
+            "SourceName": "ChemIDplus",
+            "SourceURL": "https://pubchem.ncbi.nlm.nih.gov/source/ChemIDplus",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemIDplus",
+            "RegistryID": "0000078966",
+            "SourceRecordURL": "https://pubchem.ncbi.nlm.nih.gov/substance/?source=ChemIDplus&sourceid=0000078966",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 385644409,
+            "SourceName": "Egon Willighagen, Department of Bioinformatics - BiGCaT, Maastricht University",
+            "SourceURL": "http://chem-bla-ics.blogspot.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Egon%20Willighagen,%20Department%20of%20Bioinformatics%20-%20BiGCaT,%20Maastricht%20University",
+            "RegistryID": "Q161580",
+            "SourceRecordURL": "https://tools.wmflabs.org/scholia/Q161580",
+            "SourceCategories": [
+              "Curation Efforts"
+            ]
+          },
+          {
+            "SID": 48414956,
+            "SourceName": "EPA DSSTox",
+            "SourceURL": "http://www.epa.gov/ncct/dsstox/sdf_epafhm.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/EPA%20DSSTox",
+            "RegistryID": "21764",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 315672614,
+            "SourceName": "EPA DSSTox",
+            "SourceURL": "https://www.epa.gov/chemical-research/distributed-structure-searchable-toxicity-dsstox-database",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/EPA%20DSSTox",
+            "RegistryID": "DTXSID9021764",
+            "SourceRecordURL": "https://comptox.epa.gov/dashboard/DTXSID9021764",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 198953958,
+            "SourceName": "FDA Global Substance Registration System (GSRS)",
+            "SourceURL": "https://gsrs.ncats.nih.gov/#/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/FDA%20Global%20Substance%20Registration%20System%20(GSRS)",
+            "RegistryID": "UE40BY1BZW",
+            "SourceRecordURL": "https://gsrs.ncats.nih.gov/ginas/app/beta/substances/UE40BY1BZW",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 348281865,
+            "SourceName": "Human Metabolome Database (HMDB)",
+            "SourceURL": "https://hmdb.ca/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Human%20Metabolome%20Database%20(HMDB)",
+            "RegistryID": "HMDB0012136",
+            "SourceRecordURL": "http://www.hmdb.ca/metabolites/HMDB0012136",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 496124720,
+            "SourceName": "IUPAC Digitized pKa Dataset",
+            "SourceURL": "https://github.com/IUPAC/Dissociation-Constants",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/IUPAC%20Digitized%20pKa%20Dataset",
+            "RegistryID": "perrin_supp4093",
+            "SourceCategories": [
+              "Curation Efforts"
+            ]
+          },
+          {
+            "SID": 8066,
+            "SourceName": "KEGG",
+            "SourceURL": "http://www.genome.jp/kegg/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/KEGG",
+            "RegistryID": "C05771",
+            "SourceRecordURL": "http://www.genome.jp/dbget-bin/www_bget?cpd:C05771",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509845925,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL10478084",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/10478084",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508985726,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL1140446",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/1140446",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509974643,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL11898270",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/11898270",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 510482265,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL22283791",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/22283791",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509129632,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL2835744",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/2835744",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509130812,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL2852882",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/2852882",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508920789,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL502679",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/502679",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509376503,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL5688779",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/5688779",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508860252,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL68249",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/68249",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508958987,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL873233",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/873233",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508850818,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL9387",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/9387",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 386480734,
+            "SourceName": "Wikidata",
+            "SourceURL": "https://www.wikidata.org/wiki/Wikidata:Main_Page",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Wikidata",
+            "RegistryID": "Q161580",
+            "SourceRecordURL": "https://scholia.toolforge.org/Q161580",
+            "SourceCategories": [
+              "Curation Efforts"
+            ]
+          }
+        ]
+      },
+      {
+        "Category": "Governmental Organizations",
+        "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=search&db=pcsubstance&term=4[StandardizedCID]+AND+%22Governmental+Organizations%22[SourceCategory]",
+        "Sources": [
+          {
+            "SID": 134971235,
+            "SourceName": "ChemIDplus",
+            "SourceURL": "https://pubchem.ncbi.nlm.nih.gov/source/ChemIDplus",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemIDplus",
+            "RegistryID": "0000078966",
+            "SourceRecordURL": "https://pubchem.ncbi.nlm.nih.gov/substance/?source=ChemIDplus&sourceid=0000078966",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 69716,
+            "SourceName": "DTP/NCI",
+            "SourceURL": "http://dtp.nci.nih.gov/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/DTP/NCI",
+            "RegistryID": "3188",
+            "SourceRecordURL": "http://dtp.nci.nih.gov/dtpstandard/servlet/dwindex?searchtype=NSC&outputformat=html&searchlist=3188",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 48414956,
+            "SourceName": "EPA DSSTox",
+            "SourceURL": "http://www.epa.gov/ncct/dsstox/sdf_epafhm.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/EPA%20DSSTox",
+            "RegistryID": "21764",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 315672614,
+            "SourceName": "EPA DSSTox",
+            "SourceURL": "https://www.epa.gov/chemical-research/distributed-structure-searchable-toxicity-dsstox-database",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/EPA%20DSSTox",
+            "RegistryID": "DTXSID9021764",
+            "SourceRecordURL": "https://comptox.epa.gov/dashboard/DTXSID9021764",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 176255005,
+            "SourceName": "EPA Substance Registry Services",
+            "SourceURL": "https://ofmpub.epa.gov/sor_internet/registry/substreg/LandingPage.do",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/EPA%20Substance%20Registry%20Services",
+            "RegistryID": "7476",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 198953958,
+            "SourceName": "FDA Global Substance Registration System (GSRS)",
+            "SourceURL": "https://gsrs.ncats.nih.gov/#/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/FDA%20Global%20Substance%20Registration%20System%20(GSRS)",
+            "RegistryID": "UE40BY1BZW",
+            "SourceRecordURL": "https://gsrs.ncats.nih.gov/ginas/app/beta/substances/UE40BY1BZW",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 274521308,
+            "SourceName": "Japan Chemical Substance Dictionary (Nikkaji)",
+            "SourceURL": "https://jglobal.jst.go.jp/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Japan%20Chemical%20Substance%20Dictionary%20(Nikkaji)",
+            "RegistryID": "J1.961E",
+            "SourceRecordURL": "https://jglobal.jst.go.jp/en/redirect?Nikkaji_No=J1.961E",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 275333707,
+            "SourceName": "Japan Chemical Substance Dictionary (Nikkaji)",
+            "SourceURL": "https://jglobal.jst.go.jp/en/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Japan%20Chemical%20Substance%20Dictionary%20(Nikkaji)",
+            "RegistryID": "J2.150D",
+            "SourceRecordURL": "https://jglobal.jst.go.jp/en/redirect?Nikkaji_No=J2.150D",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 403031192,
+            "SourceName": "PATENTSCOPE (WIPO)",
+            "SourceURL": "https://www.wipo.int/patentscope/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/PATENTSCOPE%20(WIPO)",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceRecordURL": "https://patentscope.wipo.int/search/en/result.jsf?inchikey=HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 505424941,
+            "SourceName": "PubChem Reference Collection",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/PubChem%20Reference%20Collection",
+            "RegistryID": "429211",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 144212021,
+            "SourceName": "Tox21",
+            "SourceURL": "https://tripod.nih.gov/tox/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Tox21",
+            "RegistryID": "NCGC00257540-01",
+            "SourceRecordURL": "https://tripod.nih.gov/tox/samples",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          }
+        ]
+      },
+      {
+        "Category": "Journal Publishers",
+        "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=search&db=pcsubstance&term=4[StandardizedCID]+AND+%22Journal+Publishers%22[SourceCategory]",
+        "Sources": [
+          {
+            "SID": 341143784,
+            "SourceName": "Springer Nature",
+            "SourceURL": "https://link.springer.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Springer%20Nature",
+            "RegistryID": "5038214-849152236",
+            "SourceCategories": [
+              "Journal Publishers"
+            ]
+          },
+          {
+            "SID": 516647966,
+            "SourceName": "Thieme Chemistry",
+            "SourceURL": "http://www.thieme.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thieme%20Chemistry",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Journal Publishers",
+              "Subscription Services"
+            ]
+          },
+          {
+            "SID": 386233732,
+            "SourceName": "Wiley",
+            "SourceURL": "https://onlinelibrary.wiley.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Wiley",
+            "RegistryID": "51674",
+            "SourceCategories": [
+              "Journal Publishers"
+            ]
+          }
+        ]
+      },
+      {
+        "Category": "Legacy Depositors",
+        "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=search&db=pcsubstance&term=4[StandardizedCID]+AND+%22Legacy+Depositors%22[SourceCategory]",
+        "Sources": [
+          {
+            "SID": 438529491,
+            "SourceName": "3WAY PHARM INC",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/3WAY%20PHARM%20INC",
+            "RegistryID": "SWOT-0094870",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 438609741,
+            "SourceName": "3WAY PHARM INC",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/3WAY%20PHARM%20INC",
+            "RegistryID": "SWOT-03981",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 438574853,
+            "SourceName": "3WAY PHARM INC",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/3WAY%20PHARM%20INC",
+            "RegistryID": "SWOT-74704",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 242070895,
+            "SourceName": "4C Pharma Scientific Inc",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/4C%20Pharma%20Scientific%20Inc",
+            "RegistryID": "4CH-013416",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 103098423,
+            "SourceName": "AAA Chemistry",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AAA%20Chemistry",
+            "RegistryID": "AR-1C1554",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 406860190,
+            "SourceName": "Aaron Chemicals LLC",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Aaron%20Chemicals%20LLC",
+            "RegistryID": "AR003RTF",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 104293566,
+            "SourceName": "ABI Chem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ABI%20Chem",
+            "RegistryID": "AC1L189D",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 117396718,
+            "SourceName": "ABI Chem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ABI%20Chem",
+            "RegistryID": "AC1Q2BVJ",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 117396719,
+            "SourceName": "ABI Chem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ABI%20Chem",
+            "RegistryID": "AC1Q2BVK",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 117612169,
+            "SourceName": "ABI Chem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ABI%20Chem",
+            "RegistryID": "AC1Q76O6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 321908551,
+            "SourceName": "Acadechem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Acadechem",
+            "RegistryID": "ACDS-021506",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 162270229,
+            "SourceName": "Achemica",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Achemica",
+            "RegistryID": "ACMC-1BL70",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 162290611,
+            "SourceName": "Achemica",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Achemica",
+            "RegistryID": "ACMC-209h0d",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 162290612,
+            "SourceName": "Achemica",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Achemica",
+            "RegistryID": "ACMC-209h0e",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 165235470,
+            "SourceName": "ACT Chemical",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ACT%20Chemical",
+            "RegistryID": "ACT02864",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 252350791,
+            "SourceName": "AHH Chemical co.,ltd",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AHH%20Chemical%20co.,ltd",
+            "RegistryID": "MT-52728",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 162187522,
+            "SourceName": "AK Scientific, Inc. (AKSCI)",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AK%20Scientific,%20Inc.%20(AKSCI)",
+            "RegistryID": "V0137",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 378024835,
+            "SourceName": "Alichem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Alichem",
+            "RegistryID": "490016574",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 498255764,
+            "SourceName": "Amadis Chemical",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Amadis%20Chemical",
+            "RegistryID": "A1200277",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 498252735,
+            "SourceName": "Amadis Chemical",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Amadis%20Chemical",
+            "RegistryID": "A1203918",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 126734841,
+            "SourceName": "Amadis Chemical",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Amadis%20Chemical",
+            "RegistryID": "A5358",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 223666749,
+            "SourceName": "AN PharmaTech",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AN%20PharmaTech",
+            "RegistryID": "AN-14800",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 223681546,
+            "SourceName": "AN PharmaTech",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AN%20PharmaTech",
+            "RegistryID": "AN-23971",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 223666748,
+            "SourceName": "AN PharmaTech",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/AN%20PharmaTech",
+            "RegistryID": "AN-9372",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 136993168,
+            "SourceName": "Apexmol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Apexmol",
+            "RegistryID": "AM20100779",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 136375594,
+            "SourceName": "Ark Pharm, Inc.",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Ark%20Pharm,%20Inc.",
+            "RegistryID": "AK-72977",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 163402791,
+            "SourceName": "Ark Pharm, Inc.",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Ark%20Pharm,%20Inc.",
+            "RegistryID": "AK-76466",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 292897124,
+            "SourceName": "Aurora Fine Chemicals LLC",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Aurora%20Fine%20Chemicals%20LLC",
+            "RegistryID": "A00.157.141",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 276935349,
+            "SourceName": "Aurora Fine Chemicals LLC",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Aurora%20Fine%20Chemicals%20LLC",
+            "RegistryID": "K02.095.593",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 383275396,
+            "SourceName": "Bic Biotech",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Bic%20Biotech",
+            "RegistryID": "NSZB-A044517",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 841797,
+            "SourceName": "BIND",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/BIND",
+            "RegistryID": "1849",
+            "SourceCategories": [
+              "Subscription Services"
+            ]
+          },
+          {
+            "SID": 375589919,
+            "SourceName": "BioChemPartner",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/BioChemPartner",
+            "RegistryID": "BCP08083",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 312624392,
+            "SourceName": "Biocore",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Biocore",
+            "RegistryID": "BIE035785",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 312624625,
+            "SourceName": "Biocore",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Biocore",
+            "RegistryID": "BIE035786",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 85165107,
+            "SourceName": "Biological Magnetic Resonance Data Bank (BMRB)",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Biological%20Magnetic%20Resonance%20Data%20Bank%20(BMRB)",
+            "RegistryID": "bmse000305",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 162219495,
+            "SourceName": "Chembase.cn",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Chembase.cn",
+            "RegistryID": "125145",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 6846787,
+            "SourceName": "ChemDB",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemDB",
+            "RegistryID": "3969434",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 3135194,
+            "SourceName": "ChemExper Chemical Directory",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemExper%20Chemical%20Directory",
+            "RegistryID": "sJY@BDfZh@@",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 363900234,
+            "SourceName": "Chemical Carcinogenesis Research Information System (CCRIS)",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Chemical%20Carcinogenesis%20Research%20Information%20System%20(CCRIS)",
+            "RegistryID": "78-96-6",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 349319063,
+            "SourceName": "Chemieliva Pharmaceutical Co., Ltd",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Chemieliva%20Pharmaceutical%20Co.,%20Ltd",
+            "RegistryID": "PBCM0837205",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 126643543,
+            "SourceName": "ChemMol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemMol",
+            "RegistryID": "44015515",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 126663380,
+            "SourceName": "ChemMol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemMol",
+            "RegistryID": "49403716",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 126670000,
+            "SourceName": "ChemMol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemMol",
+            "RegistryID": "49408649",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 126678123,
+            "SourceName": "ChemMol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemMol",
+            "RegistryID": "49416772",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 126576891,
+            "SourceName": "ChemMol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemMol",
+            "RegistryID": "81404419",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 126576892,
+            "SourceName": "ChemMol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemMol",
+            "RegistryID": "81404420",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 241124036,
+            "SourceName": "ChemMol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemMol",
+            "RegistryID": "99133140",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 241144360,
+            "SourceName": "ChemMol",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemMol",
+            "RegistryID": "99153464",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 37458022,
+            "SourceName": "ChemSpider",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemSpider",
+            "RegistryID": "10707314",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 39730304,
+            "SourceName": "ChemSpider",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemSpider",
+            "RegistryID": "11490887",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 31064466,
+            "SourceName": "ChemSpider",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemSpider",
+            "RegistryID": "11659874",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 33490658,
+            "SourceName": "ChemSpider",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemSpider",
+            "RegistryID": "14993572",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 33652789,
+            "SourceName": "ChemSpider",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemSpider",
+            "RegistryID": "15092132",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 24438385,
+            "SourceName": "ChemSpider",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemSpider",
+            "RegistryID": "3",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 162914531,
+            "SourceName": "ChemTik",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemTik",
+            "RegistryID": "CTK5E6214",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 179095323,
+            "SourceName": "Collaborative Drug Discovery, Inc.",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Collaborative%20Drug%20Discovery,%20Inc.",
+            "RegistryID": "4487",
+            "SourceCategories": [
+              "Subscription Services"
+            ]
+          },
+          {
+            "SID": 441568521,
+            "SourceName": "DAOGE BIOPHARMA",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/DAOGE%20BIOPHARMA",
+            "RegistryID": "DG21-12204",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 8150406,
+            "SourceName": "DiscoveryGate",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/DiscoveryGate",
+            "RegistryID": "4",
+            "SourceCategories": [
+              "Subscription Services"
+            ]
+          },
+          {
+            "SID": 318021365,
+            "SourceName": "iChemical Technology USA Inc",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/iChemical%20Technology%20USA%20Inc",
+            "RegistryID": "EBD5139",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 81040431,
+            "SourceName": "ISpharm",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ISpharm",
+            "RegistryID": "I04-0038",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 81040814,
+            "SourceName": "ISpharm",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ISpharm",
+            "RegistryID": "I05-0118",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 92251305,
+            "SourceName": "ISpharm",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ISpharm",
+            "RegistryID": "I05-0352",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 346440608,
+            "SourceName": "King Scientific",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/King%20Scientific",
+            "RegistryID": "KS-00000VP6",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 346694194,
+            "SourceName": "LabNetwork, a WuXi AppTec Company",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LabNetwork,%20a%20WuXi%20AppTec%20Company",
+            "RegistryID": "LN00194716",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 318169444,
+            "SourceName": "labseeker",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/labseeker",
+            "RegistryID": "SC-76913",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 11528348,
+            "SourceName": "LeadScope",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LeadScope",
+            "RegistryID": "LS-1763",
+            "SourceCategories": [
+              "Subscription Services"
+            ]
+          },
+          {
+            "SID": 439953090,
+            "SourceName": "LEAPCHEM",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/LEAPCHEM",
+            "RegistryID": "LP041919",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 252403556,
+            "SourceName": "Molepedia",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Molepedia",
+            "RegistryID": "M90001163P",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 77372966,
+            "SourceName": "NextBio",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NextBio",
+            "RegistryID": "4",
+            "SourceCategories": [
+              "Subscription Services"
+            ]
+          },
+          {
+            "SID": 223774608,
+            "SourceName": "NextMove Software",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NextMove%20Software",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 10516804,
+            "SourceName": "NIST Chemistry WebBook",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NIST%20Chemistry%20WebBook",
+            "RegistryID": "1415461602",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 10516805,
+            "SourceName": "NIST Chemistry WebBook",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NIST%20Chemistry%20WebBook",
+            "RegistryID": "1955113456",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 10536061,
+            "SourceName": "NIST Chemistry WebBook",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NIST%20Chemistry%20WebBook",
+            "RegistryID": "3366652414",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 249897004,
+            "SourceName": "NIST Mass Spectrometry Data Center",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NIST%20Mass%20Spectrometry%20Data%20Center",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 57319881,
+            "SourceName": "NovoSeek",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NovoSeek",
+            "RegistryID": "4",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 316604522,
+            "SourceName": "Parchem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Parchem",
+            "RegistryID": "5811",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 316605027,
+            "SourceName": "Parchem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Parchem",
+            "RegistryID": "7077",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 315446136,
+            "SourceName": "Phion Ltd",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Phion%20Ltd",
+            "RegistryID": "89623739",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 249581555,
+            "SourceName": "Sarchem Laboratories, Inc.",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Sarchem%20Laboratories,%20Inc.",
+            "RegistryID": "S1091",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 142387385,
+            "SourceName": "SCRIPDB",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SCRIPDB",
+            "RegistryID": "US06225341-20010501-C00805_1",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 127324675,
+            "SourceName": "SLING Consortium",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SLING%20Consortium",
+            "RegistryID": "45041-EP2275404A1",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 127324676,
+            "SourceName": "SLING Consortium",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SLING%20Consortium",
+            "RegistryID": "45041-EP2295411A1",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 127324677,
+            "SourceName": "SLING Consortium",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SLING%20Consortium",
+            "RegistryID": "45041-EP2305647A1",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 127324678,
+            "SourceName": "SLING Consortium",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SLING%20Consortium",
+            "RegistryID": "45041-EP2311818A1",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 127324679,
+            "SourceName": "SLING Consortium",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SLING%20Consortium",
+            "RegistryID": "45041-EP2377847A1",
+            "SourceCategories": [
+              "Governmental Organizations"
+            ]
+          },
+          {
+            "SID": 446822915,
+            "SourceName": "THE BioTek",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/THE%20BioTek",
+            "RegistryID": "bt-1211302",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 15194157,
+            "SourceName": "Thomson Pharma",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thomson%20Pharma",
+            "RegistryID": "00060650",
+            "SourceCategories": [
+              "Journal Publishers",
+              "Subscription Services"
+            ]
+          },
+          {
+            "SID": 318692001,
+            "SourceName": "ToxPlanet",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ToxPlanet",
+            "RegistryID": "ToxPlanet-NzgtOTYtNjQ=",
+            "SourceCategories": [
+              "Subscription Services"
+            ]
+          },
+          {
+            "SID": 204380346,
+            "SourceName": "Tractus",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Tractus",
+            "RegistryID": "RTR-031946",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 252273648,
+            "SourceName": "Tractus",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Tractus",
+            "RegistryID": "TRA-0184192",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 252273590,
+            "SourceName": "Tractus",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Tractus",
+            "RegistryID": "TRA0087648",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 206245777,
+            "SourceName": "Vesino Industrial Co., Ltd",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Vesino%20Industrial%20Co.,%20Ltd",
+            "RegistryID": "VC30042",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 384257888,
+            "SourceName": "VWR, Part of Avantor",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/VWR,%20Part%20of%20Avantor",
+            "RegistryID": "200006-376",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 342413491,
+            "SourceName": "Wubei-Biochem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Wubei-Biochem",
+            "RegistryID": "WB008127SU",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 174530782,
+            "SourceName": "Wutech",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Wutech",
+            "RegistryID": "RL05047",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 174549548,
+            "SourceName": "Wutech",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Wutech",
+            "RegistryID": "RP18345",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 441065973,
+            "SourceName": "Yick-Vic Chemicals & Pharmaceuticals (HK) Ltd.",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Yick-Vic%20Chemicals%20&%20Pharmaceuticals%20(HK)%20Ltd.",
+            "RegistryID": "CC-1819A",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 315495787,
+            "SourceName": "Zjartschem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Zjartschem",
+            "RegistryID": "Intermediates-ZCF07363",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 315495788,
+            "SourceName": "Zjartschem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Zjartschem",
+            "RegistryID": "Intermediates-ZCF07364",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          },
+          {
+            "SID": 315661721,
+            "SourceName": "Zjartschem",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Zjartschem",
+            "RegistryID": "Intermediates-ZCF07745",
+            "SourceCategories": [
+              "Chemical Vendors"
+            ]
+          }
+        ]
+      },
+      {
+        "Category": "Research and Development",
+        "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=search&db=pcsubstance&term=4[StandardizedCID]+AND+%22Research+and+Development%22[SourceCategory]",
+        "Sources": [
+          {
+            "SID": 504700691,
+            "SourceName": "Baker Lab, Chemistry Department, The University of North Carolina at Chapel Hill",
+            "SourceURL": "https://tarheels.live/bakerlab/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Baker%20Lab,%20Chemistry%20Department,%20The%20University%20of%20North%20Carolina%20at%20Chapel%20Hill",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 513785950,
+            "SourceName": "CATO Research Chemicals Inc.",
+            "SourceURL": "https://en.cato-chem.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/CATO%20Research%20Chemicals%20Inc.",
+            "RegistryID": "CCHM701454",
+            "SourceRecordURL": "https://en.cato-chem.com/ProInfo.aspx?id=CCHM701454",
+            "SourceCategories": [
+              "Chemical Vendors",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 252149668,
+            "SourceName": "ChEBI",
+            "SourceURL": "http://www.ebi.ac.uk/chebi/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChEBI",
+            "RegistryID": "CHEBI:19030",
+            "SourceRecordURL": "http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:19030",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 103342061,
+            "SourceName": "ChEMBL",
+            "SourceURL": "https://www.ebi.ac.uk/chembl/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChEMBL",
+            "RegistryID": "CHEMBL326602",
+            "SourceRecordURL": "https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL326602",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 134971235,
+            "SourceName": "ChemIDplus",
+            "SourceURL": "https://pubchem.ncbi.nlm.nih.gov/source/ChemIDplus",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ChemIDplus",
+            "RegistryID": "0000078966",
+            "SourceRecordURL": "https://pubchem.ncbi.nlm.nih.gov/substance/?source=ChemIDplus&sourceid=0000078966",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 48414956,
+            "SourceName": "EPA DSSTox",
+            "SourceURL": "http://www.epa.gov/ncct/dsstox/sdf_epafhm.html",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/EPA%20DSSTox",
+            "RegistryID": "21764",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 315672614,
+            "SourceName": "EPA DSSTox",
+            "SourceURL": "https://www.epa.gov/chemical-research/distributed-structure-searchable-toxicity-dsstox-database",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/EPA%20DSSTox",
+            "RegistryID": "DTXSID9021764",
+            "SourceRecordURL": "https://comptox.epa.gov/dashboard/DTXSID9021764",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Governmental Organizations",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 419516768,
+            "SourceName": "Google Patents",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Google%20Patents",
+            "RegistryID": "10649015",
+            "SourceRecordURL": "https://patents.google.com/?q=HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 420123647,
+            "SourceName": "Google Patents",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Google%20Patents",
+            "RegistryID": "11255904",
+            "SourceRecordURL": "https://patents.google.com/?q=VBYYKJJOHHHSME-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 348281865,
+            "SourceName": "Human Metabolome Database (HMDB)",
+            "SourceURL": "https://hmdb.ca/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Human%20Metabolome%20Database%20(HMDB)",
+            "RegistryID": "HMDB0012136",
+            "SourceRecordURL": "http://www.hmdb.ca/metabolites/HMDB0012136",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 127516786,
+            "SourceName": "IBM",
+            "SourceURL": "http://www.almaden.ibm.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/IBM",
+            "RegistryID": "21E00804DE4238CFF391347297AF2C0C",
+            "SourceRecordURL": "http://www.ibm.com/gbs/nih/?sid=21E00804DE4238CFF391347297AF2C0C&ik=BHOREADCWZRPSQ-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 127476245,
+            "SourceName": "IBM",
+            "SourceURL": "http://www.almaden.ibm.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/IBM",
+            "RegistryID": "6C718C3DC3F1659850DAB9D945A39FA7",
+            "SourceRecordURL": "http://www.ibm.com/gbs/nih/?sid=6C718C3DC3F1659850DAB9D945A39FA7&ik=AYGBCWJVPOIYKK-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 129453130,
+            "SourceName": "IBM",
+            "SourceURL": "http://www.almaden.ibm.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/IBM",
+            "RegistryID": "8A37FDB75A555B8E005906E8DB4B1F30",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 129442567,
+            "SourceName": "IBM",
+            "SourceURL": "http://www.almaden.ibm.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/IBM",
+            "RegistryID": "9E2982977155B4D9B93AF0C7DFD8AAF4",
+            "SourceRecordURL": "http://www.ibm.com/gbs/nih/?sid=9E2982977155B4D9B93AF0C7DFD8AAF4&ik=UZJYMIJFEBAQDF-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 129947212,
+            "SourceName": "IBM",
+            "SourceURL": "http://www.almaden.ibm.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/IBM",
+            "RegistryID": "B145C0AF71C734AB9B32A18687CA2477",
+            "SourceRecordURL": "http://www.ibm.com/gbs/nih/?sid=B145C0AF71C734AB9B32A18687CA2477&ik=ZSCNKSZDBDEVHP-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 128126947,
+            "SourceName": "IBM",
+            "SourceURL": "http://www.almaden.ibm.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/IBM",
+            "RegistryID": "F962DF854959BD16BA05508B77137E5C",
+            "SourceRecordURL": "http://www.ibm.com/gbs/nih/?sid=F962DF854959BD16BA05508B77137E5C&ik=HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 8066,
+            "SourceName": "KEGG",
+            "SourceURL": "http://www.genome.jp/kegg/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/KEGG",
+            "RegistryID": "C05771",
+            "SourceRecordURL": "http://www.genome.jp/dbget-bin/www_bget?cpd:C05771",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 404754072,
+            "SourceName": "MassBank Europe",
+            "SourceURL": "https://massbank.eu/MassBank/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MassBank%20Europe",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 363594350,
+            "SourceName": "MassBank of North America (MoNA)",
+            "SourceURL": "https://mona.fiehnlab.ucdavis.edu/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MassBank%20of%20North%20America%20(MoNA)",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceRecordURL": "https://mona.fiehnlab.ucdavis.edu/spectra/browse?query=exists(compound.metaData.name:%27InChIKey%27%20and%20compound.metaData.value:%27HXKKHQJGJAFBHI-UHFFFAOYSA-N%27)",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 500582164,
+            "SourceName": "MolGenie",
+            "SourceURL": "http://molgenie.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/MolGenie",
+            "RegistryID": "190000010433",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 387101891,
+            "SourceName": "NORMAN Suspect List Exchange",
+            "SourceURL": "https://www.norman-network.com/nds/SLE/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NORMAN%20Suspect%20List%20Exchange",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYNA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 387101892,
+            "SourceName": "NORMAN Suspect List Exchange",
+            "SourceURL": "https://www.norman-network.com/nds/SLE/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/NORMAN%20Suspect%20List%20Exchange",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 482249283,
+            "SourceName": "Probes & Drugs portal",
+            "SourceURL": "https://www.probes-drugs.org",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Probes%20&%20Drugs%20portal",
+            "RegistryID": "PD042466",
+            "SourceRecordURL": "https://www.probes-drugs.org/compound/PD042466",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 513248694,
+            "SourceName": "Shanghai Titan Scientific",
+            "SourceURL": "https://www.titansci-group.com/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Shanghai%20Titan%20Scientific",
+            "RegistryID": "Titan-15375",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509845925,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL10478084",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/10478084",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508985726,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL1140446",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/1140446",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509974643,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL11898270",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/11898270",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 510482265,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL22283791",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/22283791",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509129632,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL2835744",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/2835744",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509130812,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL2852882",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/2852882",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508920789,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL502679",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/502679",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 509376503,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL5688779",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/5688779",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508860252,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL68249",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/68249",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508958987,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL873233",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/873233",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 508850818,
+            "SourceName": "SureChEMBL",
+            "SourceURL": "https://www.surechembl.org/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/SureChEMBL",
+            "RegistryID": "SCHEMBL9387",
+            "SourceRecordURL": "https://www.surechembl.org/chemical/9387",
+            "SourceCategories": [
+              "Curation Efforts",
+              "Research and Development"
+            ]
+          },
+          {
+            "SID": 489028864,
+            "SourceName": "ZeroPM - Zero Pollution of Persistent, Mobile Substances",
+            "SourceURL": "https://zeropm.eu/",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/ZeroPM%20-%20Zero%20Pollution%20of%20Persistent,%20Mobile%20Substances",
+            "RegistryID": "ZEROPMID0002693",
+            "SourceCategories": [
+              "Research and Development"
+            ]
+          }
+        ]
+      },
+      {
+        "Category": "Subscription Services",
+        "URL": "https://www.ncbi.nlm.nih.gov/sites/entrez?cmd=search&db=pcsubstance&term=4[StandardizedCID]+AND+%22Subscription+Services%22[SourceCategory]",
+        "Sources": [
+          {
+            "SID": 516647966,
+            "SourceName": "Thieme Chemistry",
+            "SourceURL": "http://www.thieme.com",
+            "SourceDetail": "https://pubchem.ncbi.nlm.nih.gov/source/Thieme%20Chemistry",
+            "RegistryID": "HXKKHQJGJAFBHI-UHFFFAOYSA-N",
+            "SourceCategories": [
+              "Journal Publishers",
+              "Subscription Services"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

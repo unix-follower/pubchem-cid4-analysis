@@ -1,0 +1,5125 @@
+LinkDataSet ::= {
+  linkData {
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D063807",
+      evidence patentChemicalDisease {
+        neighborName "Dandruff",
+        cooccurrenceScore 24900,
+        nPatentFamilies 147,
+        nPatents 176,
+        patentFamily {
+          {
+            patentFamilyId "22840433",
+            relevanceScore 137776,
+            representativePatent "KR-100333424-B1",
+            grantDate "2002-10-25",
+            representativePatentTitle "Anti-dandruff shampoo formulation",
+            otherPatent {
+              "EP-0758879-B1"
+            }
+          },
+          {
+            patentFamilyId "63169715",
+            relevanceScore 123999,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "7767722",
+            relevanceScore 123999,
+            representativePatent "EP-0840593-B1",
+            grantDate "2002-10-02",
+            representativePatentTitle "Oxidation colorants for dyeing
+ keratinic fibers, containing a special combination of alkalisation agents"
+          },
+          {
+            patentFamilyId "37606824",
+            relevanceScore 123999,
+            representativePatent "EP-1962776-B1",
+            grantDate "2012-08-08",
+            representativePatentTitle "Hair bleaching composition"
+          },
+          {
+            patentFamilyId "8228205",
+            relevanceScore 79999,
+            representativePatent "EP-0975312-B1",
+            grantDate "2002-07-31",
+            representativePatentTitle "Compositions containing an antifungal
+ and a phospholipid"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D010787",
+      evidence patentChemicalDisease {
+        neighborName "Photosensitivity Disorders",
+        cooccurrenceScore 14660,
+        nPatentFamilies 222,
+        nPatents 243,
+        patentFamily {
+          {
+            patentFamilyId "17390067",
+            relevanceScore 26910,
+            representativePatent "JP-2593348-B2",
+            grantDate "1997-03-26",
+            representativePatentTitle "Photoconductor"
+          },
+          {
+            patentFamilyId "40829421",
+            relevanceScore 26910,
+            representativePatent "JP-5254775-B2",
+            grantDate "2013-08-07",
+            representativePatentTitle "Wiring board manufacturing method"
+          },
+          {
+            patentFamilyId "17467196",
+            relevanceScore 23400,
+            representativePatent "JP-2649959-B2",
+            grantDate "1997-09-03",
+            representativePatentTitle "Photoconductor"
+          },
+          {
+            patentFamilyId "44151588",
+            relevanceScore 22425,
+            representativePatent "JP-5540687-B2",
+            grantDate "2014-07-02",
+            representativePatentTitle "Electrophotographic photoreceptor,
+ image forming method and image forming apparatus"
+          },
+          {
+            patentFamilyId "26532010",
+            relevanceScore 18559,
+            representativePatent "JP-3949882-B2",
+            grantDate "2007-07-25",
+            representativePatentTitle "Positive photosensitive composition and
+ positive photosensitive lithographic printing plate"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D012871",
+      evidence patentChemicalDisease {
+        neighborName "Skin Diseases",
+        cooccurrenceScore 13521,
+        nPatentFamilies 60,
+        nPatents 75,
+        patentFamily {
+          {
+            patentFamilyId "10801451",
+            relevanceScore 289179,
+            representativePatent "EP-0946139-B1",
+            grantDate "2002-06-05",
+            representativePatentTitle "Pharmaceutical formulation"
+          },
+          {
+            patentFamilyId "8165367",
+            relevanceScore 101213,
+            representativePatent "EP-0455631-B1",
+            grantDate "1993-06-30",
+            representativePatentTitle "Preparation containing salicylic acid
+ for treating desquamative skin diseases"
+          },
+          {
+            patentFamilyId "56117553",
+            relevanceScore 101213,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "26614150",
+            relevanceScore 101213,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "83279351",
+            relevanceScore 101213,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009369",
+      evidence patentChemicalDisease {
+        neighborName "Neoplasms",
+        cooccurrenceScore 12574,
+        nPatentFamilies 92,
+        nPatents 121,
+        patentFamily {
+          {
+            patentFamilyId "8241613",
+            relevanceScore 107110,
+            representativePatent "EP-1222217-B1",
+            grantDate "2005-06-15",
+            representativePatentTitle "Uniform molecular weight polymers"
+          },
+          {
+            patentFamilyId "90245864",
+            relevanceScore 64266,
+            representativePatent "US-11932622-B1",
+            grantDate "2024-03-19",
+            representativePatentTitle "2-(1-(2-hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridine as an anticancer compound"
+          },
+          {
+            patentFamilyId "19844500",
+            relevanceScore 64266,
+            representativePatent "EP-0176151-B1",
+            grantDate "1988-01-20",
+            representativePatentTitle "Detergents containing amides as
+ thickening agents"
+          },
+          {
+            patentFamilyId "26357414",
+            relevanceScore 64266,
+            representativePatent "EP-0316967-B1",
+            grantDate "1992-09-09",
+            representativePatentTitle "Fluorine-containing nitroimidazole
+ derivatives and radiosensitizer comprising the same"
+          },
+          {
+            patentFamilyId "44534559",
+            relevanceScore 64266,
+            representativePatent "EP-2585077-B1",
+            grantDate "2014-09-03",
+            representativePatentTitle "Agent for suppressing the formation of
+ abnormal skin cells caused by exposure to light",
+            otherPatent {
+              "JP-5893013-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001471",
+      evidence patentChemicalDisease {
+        neighborName "Barrett Esophagus",
+        cooccurrenceScore 11318,
+        nPatentFamilies 87,
+        nPatents 87,
+        patentFamily {
+          {
+            patentFamilyId "56367093",
+            relevanceScore 35598,
+            representativePatent "US-10093890-B2",
+            grantDate "2018-10-09",
+            representativePatentTitle "Laundry detergent, fabric softener and
+ cleaning formulations, systems, and water-soluble pouches"
+          },
+          {
+            patentFamilyId "82398647",
+            relevanceScore 35598,
+            representativePatent "KR-102468278-B1",
+            grantDate "2022-11-17",
+            representativePatentTitle "Teaching aid for string instrument"
+          },
+          {
+            patentFamilyId "42350008",
+            relevanceScore 28479,
+            representativePatent "JP-5381068-B2",
+            grantDate "2014-01-08",
+            representativePatentTitle "Organic photoreceptor, image forming
+ method using the same, image forming apparatus and process cartridge"
+          },
+          {
+            patentFamilyId "14458244",
+            relevanceScore 27383,
+            representativePatent "JP-4019440-B2",
+            grantDate "2007-12-12",
+            representativePatentTitle "Conductive paste"
+          },
+          {
+            patentFamilyId "39606217",
+            relevanceScore 25427,
+            representativePatent "JP-4844426-B2",
+            grantDate "2011-12-28",
+            representativePatentTitle "Organic photoreceptor, image forming
+ method and image forming apparatus"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D011565",
+      evidence patentChemicalDisease {
+        neighborName "Psoriasis",
+        cooccurrenceScore 10448,
+        nPatentFamilies 40,
+        nPatents 47,
+        patentFamily {
+          {
+            patentFamilyId "10801451",
+            relevanceScore 300173,
+            representativePatent "EP-0946139-B1",
+            grantDate "2002-06-05",
+            representativePatentTitle "Pharmaceutical formulation"
+          },
+          {
+            patentFamilyId "63169715",
+            relevanceScore 105061,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "56117553",
+            relevanceScore 105061,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "80988350",
+            relevanceScore 87550,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "8228205",
+            relevanceScore 67781,
+            representativePatent "EP-0975312-B1",
+            grantDate "2002-07-31",
+            representativePatentTitle "Compositions containing an antifungal
+ and a phospholipid"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D006967",
+      evidence patentChemicalDisease {
+        neighborName "Hypersensitivity",
+        cooccurrenceScore 10372,
+        nPatentFamilies 88,
+        nPatents 110,
+        patentFamily {
+          {
+            patentFamilyId "88746845",
+            relevanceScore 224425,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "35810377",
+            relevanceScore 89770,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          },
+          {
+            patentFamilyId "53757070",
+            relevanceScore 74808,
+            representativePatent "JP-6173491-B2",
+            grantDate "2017-08-02",
+            representativePatentTitle "Emedastine-containing tape"
+          },
+          {
+            patentFamilyId "10980468",
+            relevanceScore 44885,
+            representativePatent "EP-0105872-B1",
+            grantDate "1988-03-30",
+            representativePatentTitle "Novel cosmetic compositions containing
+ prenylamine and a process for their preparation"
+          },
+          {
+            patentFamilyId "7875371",
+            relevanceScore 44885,
+            representativePatent "EP-1100452-B1",
+            grantDate "2003-10-15",
+            representativePatentTitle "Cosmetic or dermatological water/oil
+ emulsions containing nonionic surfactants and characterized by a silicone
+ emulsifying agent content"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D007057",
+      evidence patentChemicalDisease {
+        neighborName "Ichthyosis",
+        cooccurrenceScore 10285,
+        nPatentFamilies 53,
+        nPatents 59,
+        patentFamily {
+          {
+            patentFamilyId "6384242",
+            relevanceScore 117339,
+            representativePatent "EP-0406623-B1",
+            grantDate "1994-11-30",
+            representativePatentTitle "Polyaspartic acid derivatives as a
+ coating for pharmaceutical forms and foodstuffs"
+          },
+          {
+            patentFamilyId "56117553",
+            relevanceScore 117339,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "42758208",
+            relevanceScore 117339,
+            representativePatent "KR-101081303-B1",
+            grantDate "2011-11-08",
+            representativePatentTitle "Oil type cleanser cosmetic composition
+ and its manufacturing method"
+          },
+          {
+            patentFamilyId "80988350",
+            relevanceScore 97783,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "14548264",
+            relevanceScore 73337,
+            representativePatent "EP-0875241-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Aqueous cosmetic composition containing
+ stably solubilized uric acid and water-soluble polymer and method for stably
+ solubilizing uric acid in aqueous cosmetic composition",
+            otherPatent {
+              "JP-3439067-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D000152",
+      evidence patentChemicalDisease {
+        neighborName "Acne Vulgaris",
+        cooccurrenceScore 10062,
+        nPatentFamilies 58,
+        nPatents 67,
+        patentFamily {
+          {
+            patentFamilyId "27491987",
+            relevanceScore 197829,
+            representativePatent "EP-1401418-B1",
+            grantDate "2008-12-24",
+            representativePatentTitle "Topical treatments using alkanolamines"
+          },
+          {
+            patentFamilyId "63169715",
+            relevanceScore 108806,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "80988350",
+            relevanceScore 90672,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "24986783",
+            relevanceScore 77719,
+            representativePatent "EP-1216696-B1",
+            grantDate "2006-03-08",
+            representativePatentTitle "Method for reducing the appearance of
+ dark circles under the eyes"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 68004,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003876",
+      evidence patentChemicalDisease {
+        neighborName "Dermatitis, Atopic",
+        cooccurrenceScore 9353,
+        nPatentFamilies 47,
+        nPatents 51,
+        patentFamily {
+          {
+            patentFamilyId "6384242",
+            relevanceScore 100043,
+            representativePatent "EP-0406623-B1",
+            grantDate "1994-11-30",
+            representativePatentTitle "Polyaspartic acid derivatives as a
+ coating for pharmaceutical forms and foodstuffs"
+          },
+          {
+            patentFamilyId "53757070",
+            relevanceScore 100043,
+            representativePatent "EP-3100733-B1",
+            grantDate "2018-12-12",
+            representativePatentTitle "Emedastine-containing tape",
+            otherPatent {
+              "KR-101976248-B1"
+            }
+          },
+          {
+            patentFamilyId "56117553",
+            relevanceScore 100043,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "35810377",
+            relevanceScore 100043,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          },
+          {
+            patentFamilyId "80988350",
+            relevanceScore 83369,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D000505",
+      evidence patentChemicalDisease {
+        neighborName "Alopecia",
+        cooccurrenceScore 9185,
+        nPatentFamilies 45,
+        nPatents 46,
+        patentFamily {
+          {
+            patentFamilyId "89899885",
+            relevanceScore 165505,
+            representativePatent "KR-102634996-B1",
+            grantDate "2024-02-08",
+            representativePatentTitle "Shampoo composition with excellent gray
+ hair coverage"
+          },
+          {
+            patentFamilyId "63169715",
+            relevanceScore 115853,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 72408,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "47112702",
+            relevanceScore 53885,
+            representativePatent "KR-101229762-B1",
+            grantDate "2013-02-21",
+            representativePatentTitle "External preparation for promoting hair
+ growth and preventing hair loss"
+          },
+          {
+            patentFamilyId "65040781",
+            relevanceScore 42128,
+            representativePatent "JP-7300988-B2",
+            grantDate "2023-06-30",
+            representativePatentTitle "external composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D007249",
+      evidence patentChemicalDisease {
+        neighborName "Inflammation",
+        cooccurrenceScore 8367,
+        nPatentFamilies 75,
+        nPatents 90,
+        patentFamily {
+          {
+            patentFamilyId "27282377",
+            relevanceScore 77394,
+            representativePatent "EP-0945119-B1",
+            grantDate "2006-05-31",
+            representativePatentTitle "Calcium phosphate cements"
+          },
+          {
+            patentFamilyId "83279351",
+            relevanceScore 77394,
+            representativePatent "KR-102443181-B1",
+            grantDate "2022-09-14",
+            representativePatentTitle "High-functional, weakly acidic
+ cleansing composition containing natural complex extracts"
+          },
+          {
+            patentFamilyId "25487094",
+            relevanceScore 48372,
+            representativePatent "EP-1428023-B1",
+            grantDate "2008-08-27",
+            representativePatentTitle "Methods for predicting drug sensitivity
+ in patients afflicted with an inflammatory disease"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 48372,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "47357200",
+            relevanceScore 42997,
+            representativePatent "JP-5971867-B2",
+            grantDate "2016-08-17",
+            representativePatentTitle "Gallium labeled drug"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003141",
+      evidence patentChemicalDisease {
+        neighborName "Communicable Diseases",
+        cooccurrenceScore 8296,
+        nPatentFamilies 94,
+        nPatents 117,
+        patentFamily {
+          {
+            patentFamilyId "43541418",
+            relevanceScore 94569,
+            representativePatent "EP-2516448-B1",
+            grantDate "2015-04-15",
+            representativePatentTitle "Amine salts of cefdinir"
+          },
+          {
+            patentFamilyId "38476566",
+            relevanceScore 83444,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          },
+          {
+            patentFamilyId "58051103",
+            relevanceScore 70927,
+            representativePatent "US-10654872-B1",
+            grantDate "2020-05-19",
+            representativePatentTitle "Polymorphs of dolutegravir and salts
+ thereof",
+            otherPatent {
+              "US-10597404-B2",
+              "US-10647729-B1"
+            }
+          },
+          {
+            patentFamilyId "90835988",
+            relevanceScore 67550,
+            representativePatent "US-11970475-B1",
+            grantDate "2024-04-30",
+            representativePatentTitle "4-(1-(2-Hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridin-3-ol as an antimicrobial compound"
+          },
+          {
+            patentFamilyId "48698046",
+            relevanceScore 35464,
+            representativePatent "KR-101444877-B1",
+            grantDate "2014-10-01",
+            representativePatentTitle "On-site crosslinked hydrogel composed
+ of gamma-polyglutamic acid and its preparation method",
+            otherPatent {
+              "EP-2797984-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003872",
+      evidence patentChemicalDisease {
+        neighborName "Dermatitis",
+        cooccurrenceScore 7566,
+        nPatentFamilies 53,
+        nPatents 63,
+        patentFamily {
+          {
+            patentFamilyId "56117553",
+            relevanceScore 106885,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "92759138",
+            relevanceScore 71257,
+            representativePatent "KR-102703449-B1",
+            grantDate "2024-09-09",
+            representativePatentTitle "Hair shampoo compositions for improving
+ hair and head skin"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 66803,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "51988814",
+            relevanceScore 59381,
+            representativePatent "EP-3006544-B1",
+            grantDate "2021-05-05",
+            representativePatentTitle "Water-soluble cutting/grinding fluid"
+          },
+          {
+            patentFamilyId "48947769",
+            relevanceScore 58090,
+            representativePatent "EP-2813515-B1",
+            grantDate "2019-07-10",
+            representativePatentTitle "Transdermally delivered hyaluronic
+ acid-protein conjugate"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D012628",
+      evidence patentChemicalDisease {
+        neighborName "Dermatitis, Seborrheic",
+        cooccurrenceScore 7509,
+        nPatentFamilies 29,
+        nPatents 32,
+        patentFamily {
+          {
+            patentFamilyId "63169715",
+            relevanceScore 132669,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "8228205",
+            relevanceScore 85593,
+            representativePatent "EP-0975312-B1",
+            grantDate "2002-07-31",
+            representativePatentTitle "Compositions containing an antifungal
+ and a phospholipid"
+          },
+          {
+            patentFamilyId "8228206",
+            relevanceScore 82918,
+            representativePatent "EP-0963195-B1",
+            grantDate "2002-07-17",
+            representativePatentTitle "Compositions containing an antifungal
+ and a cationic agent"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 82918,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "18940116",
+            relevanceScore 66334,
+            representativePatent "JP-4780849-B2",
+            grantDate "2011-09-28",
+            representativePatentTitle "Water-soluble metalworking fluid
+ composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D012640",
+      evidence patentChemicalDisease {
+        neighborName "Seizures",
+        cooccurrenceScore 7275,
+        nPatentFamilies 16,
+        nPatents 22,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 394353,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "62097675",
+            relevanceScore 98588,
+            representativePatent "JP-6976013-B2",
+            grantDate "2021-12-01",
+            representativePatentTitle "Pyridylimidazole benzodiazepine
+ propionic acid ester compound and its synthesis and use",
+            otherPatent {
+              "US-11919905-B2"
+            }
+          },
+          {
+            patentFamilyId "40589739",
+            relevanceScore 65726,
+            representativePatent "JP-5491421-B2",
+            grantDate "2014-05-14",
+            representativePatentTitle "Process for the preparation of
+ intermediates related to the 5-HT2C agonist (R)
+ -8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine"
+          },
+          {
+            patentFamilyId "26859151",
+            relevanceScore 55026,
+            representativePatent "EP-0042626-B1",
+            grantDate "1986-05-21",
+            representativePatentTitle "Anticonvulsive compositions"
+          },
+          {
+            patentFamilyId "10853415",
+            relevanceScore 21909,
+            representativePatent "JP-4769562-B2",
+            grantDate "2011-09-07",
+            representativePatentTitle "Short-acting benzodiazepines",
+            otherPatent {
+              "JP-4769760-B2",
+              "JP-4769759-B2",
+              "JP-3773792-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D010146",
+      evidence patentChemicalDisease {
+        neighborName "Pain",
+        cooccurrenceScore 6866,
+        nPatentFamilies 34,
+        nPatents 40,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 335965,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 62993,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "24726054",
+            relevanceScore 51687,
+            representativePatent "EP-0205553-B1",
+            grantDate "1993-03-17",
+            representativePatentTitle "Self-lather generating shaving
+ composition"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 45813,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "38833075",
+            relevanceScore 35996,
+            representativePatent "EP-2036909-B1",
+            grantDate "2016-05-04",
+            representativePatentTitle "Quaternary ammonium salt compounds of
+ spirocyclopiperazines, preparation methods and uses thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009422",
+      evidence patentChemicalDisease {
+        neighborName "Nervous System Diseases",
+        cooccurrenceScore 6154,
+        nPatentFamilies 17,
+        nPatents 23,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 433723,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "40589739",
+            relevanceScore 60239,
+            representativePatent "JP-5491421-B2",
+            grantDate "2014-05-14",
+            representativePatentTitle "Process for the preparation of
+ intermediates related to the 5-HT2C agonist (R)
+ -8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 36881,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "8170787",
+            relevanceScore 26773,
+            representativePatent "EP-1345609-B1",
+            grantDate "2005-06-15",
+            representativePatentTitle "Tetrahydro-(benzo or
+ thieno)-azepine-pyrazine and triazine derivatives as mglur 1 antagonists"
+          },
+          {
+            patentFamilyId "37751969",
+            relevanceScore 18072,
+            representativePatent "JP-4887674-B2",
+            grantDate "2012-02-29",
+            representativePatentTitle "Method for producing phospholipid
+ composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003920",
+      evidence patentChemicalDisease {
+        neighborName "Diabetes Mellitus",
+        cooccurrenceScore 6102,
+        nPatentFamilies 57,
+        nPatents 65,
+        patentFamily {
+          {
+            patentFamilyId "56117553",
+            relevanceScore 84699,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "46832286",
+            relevanceScore 52937,
+            representativePatent "EP-2570115-B1",
+            grantDate "2017-09-13",
+            representativePatentTitle "Composition for enhancing transdermal
+ absorption of a drug and patch preparation"
+          },
+          {
+            patentFamilyId "35134380",
+            relevanceScore 47055,
+            representativePatent "JP-5144274-B2",
+            grantDate "2013-02-13",
+            representativePatentTitle "Use of lipoic acid-containing
+ cyclodextrin complex"
+          },
+          {
+            patentFamilyId "48947769",
+            relevanceScore 46032,
+            representativePatent "EP-2813515-B1",
+            grantDate "2019-07-10",
+            representativePatentTitle "Transdermally delivered hyaluronic
+ acid-protein conjugate"
+          },
+          {
+            patentFamilyId "58631191",
+            relevanceScore 29719,
+            representativePatent "US-10093668-B2",
+            grantDate "2018-10-09",
+            representativePatentTitle "Substituted aromatic N-heterocyclic
+ compounds as inhibitors of mitogen-activated protein kinase interacting
+ kinase 1 (Mnk1) and 2 (Mnk2)"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D011618",
+      evidence patentChemicalDisease {
+        neighborName "Psychotic Disorders",
+        cooccurrenceScore 6025,
+        nPatentFamilies 8,
+        nPatents 10,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 495346,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "57442411",
+            relevanceScore 61918,
+            representativePatent "EP-3370735-B1",
+            grantDate "2020-05-13",
+            representativePatentTitle "Polysaccharide-based polymer and its
+ use for the prevention and treatment of the wilson's disease"
+          },
+          {
+            patentFamilyId "23505215",
+            relevanceScore 20469,
+            representativePatent "EP-0095289-B1",
+            grantDate "1986-12-30",
+            representativePatentTitle "Imidazo(1,2-c)pyrazolo(3,4-e)pyrimidine
+s and their production"
+          },
+          {
+            patentFamilyId "25545024",
+            relevanceScore 12384,
+            representativePatent "EP-1054673-B1",
+            grantDate "2004-03-10",
+            representativePatentTitle "Benzoxazine compounds for enhancing
+ synaptic response"
+          },
+          {
+            patentFamilyId "8170787",
+            relevanceScore 5096,
+            representativePatent "EP-1345609-B1",
+            grantDate "2005-06-15",
+            representativePatentTitle "Tetrahydro-(benzo or
+ thieno)-azepine-pyrazine and triazine derivatives as mglur 1 antagonists"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D011537",
+      evidence patentChemicalDisease {
+        neighborName "Pruritus",
+        cooccurrenceScore 5341,
+        nPatentFamilies 44,
+        nPatents 51,
+        patentFamily {
+          {
+            patentFamilyId "56117553",
+            relevanceScore 111596,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 69747,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "27091833",
+            relevanceScore 27899,
+            representativePatent "EP-0564586-B1",
+            grantDate "2002-03-20",
+            representativePatentTitle "Aqueous vaginal douche and related
+ methods"
+          },
+          {
+            patentFamilyId "46551547",
+            relevanceScore 23744,
+            representativePatent "EP-2744907-B1",
+            grantDate "2017-03-22",
+            representativePatentTitle "Method for producing 4-aminobutyric
+ acid from algae"
+          },
+          {
+            patentFamilyId "8223689",
+            relevanceScore 23249,
+            representativePatent "EP-0884997-B1",
+            grantDate "2002-06-05",
+            representativePatentTitle "Compositions containing an antifungal
+ and a sulfur compound"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D004827",
+      evidence patentChemicalDisease {
+        neighborName "Epilepsy",
+        cooccurrenceScore 5241,
+        nPatentFamilies 11,
+        nPatents 11,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 390015,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 53184,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 39797,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "26859151",
+            relevanceScore 13605,
+            representativePatent "EP-0042626-B1",
+            grantDate "1986-05-21",
+            representativePatentTitle "Anticonvulsive compositions"
+          },
+          {
+            patentFamilyId "40677792",
+            relevanceScore 11080,
+            representativePatent "JP-5683965-B2",
+            grantDate "2015-03-11",
+            representativePatentTitle "Derivatives of aminoalkanols, methods
+ for obtaining aminoalkanols and their use"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003728",
+      evidence patentChemicalDisease {
+        neighborName "Dental Calculus",
+        cooccurrenceScore 4987,
+        nPatentFamilies 5,
+        nPatents 9,
+        patentFamily {
+          {
+            patentFamilyId "36940387",
+            relevanceScore 332296,
+            representativePatent "KR-101265569-B1",
+            grantDate "2013-05-21",
+            representativePatentTitle "Biomass-Induced Grinding Aids"
+          },
+          {
+            patentFamilyId "24866431",
+            relevanceScore 132918,
+            representativePatent "JP-2922362-B2",
+            grantDate "1999-07-19",
+            representativePatentTitle "Taste protection, mild oral hygiene
+ composition"
+          },
+          {
+            patentFamilyId "57730673",
+            relevanceScore 17841,
+            representativePatent "US-10568823-B2",
+            grantDate "2020-02-25",
+            representativePatentTitle "Method of strengthening hair fibers and
+ protecting dyed hair color from fading or wash-out",
+            otherPatent {
+              "EP-3319693-B2",
+              "EP-3319693-B1",
+              "US-10945934-B2"
+            }
+          },
+          {
+            patentFamilyId "23174755",
+            relevanceScore 10384,
+            representativePatent "JP-4256258-B2",
+            grantDate "2009-04-22",
+            representativePatentTitle "Ammonia-free alkaline microelectronic
+ cleaning compositions with improved substrate compatibility",
+            otherPatent {
+              "JP-4753986-B2"
+            }
+          },
+          {
+            patentFamilyId "59964764",
+            relevanceScore 5112,
+            representativePatent "JP-6885396-B2",
+            grantDate "2021-06-16",
+            representativePatentTitle "A copolymer, a thickener containing the
+ copolymer, and a cosmetic containing the copolymer."
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D007662",
+      evidence patentChemicalDisease {
+        neighborName "Ketosis",
+        cooccurrenceScore 4960,
+        nPatentFamilies 22,
+        nPatents 31,
+        patentFamily {
+          {
+            patentFamilyId "7649526",
+            relevanceScore 137041,
+            representativePatent "EP-1174495-B1",
+            grantDate "2004-10-13",
+            representativePatentTitle "Soap bar comprising talc, alkali fatty
+ acid and nonionic surfactant, but not comprising alkyl oligoglycosides"
+          },
+          {
+            patentFamilyId "37962710",
+            relevanceScore 114201,
+            representativePatent "KR-101366957-B1",
+            grantDate "2014-02-25",
+            representativePatentTitle "Stripping solution composition and
+ stripping method using the same",
+            otherPatent {
+              "KR-101366904-B1"
+            }
+          },
+          {
+            patentFamilyId "26007724",
+            relevanceScore 68520,
+            representativePatent "EP-1335696-B1",
+            grantDate "2007-09-05",
+            representativePatentTitle "Enzymatic colouring agents"
+          },
+          {
+            patentFamilyId "50030199",
+            relevanceScore 34260,
+            representativePatent "US-10736832-B2",
+            grantDate "2020-08-11",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "EP-2902010-B1",
+              "KR-102348889-B1"
+            }
+          },
+          {
+            patentFamilyId "56024143",
+            relevanceScore 34260,
+            representativePatent "US-10954473-B2",
+            grantDate "2021-03-23",
+            representativePatentTitle "Aqueous surfactant compositions",
+            otherPatent {
+              "KR-102400208-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D014549",
+      evidence patentChemicalDisease {
+        neighborName "Urinary Incontinence",
+        cooccurrenceScore 4502,
+        nPatentFamilies 26,
+        nPatents 31,
+        patentFamily {
+          {
+            patentFamilyId "10775015",
+            relevanceScore 81124,
+            representativePatent "EP-0861340-B1",
+            grantDate "2001-04-25",
+            representativePatentTitle "Process for binding fibrous web"
+          },
+          {
+            patentFamilyId "23829653",
+            relevanceScore 78227,
+            representativePatent "EP-0436514-B1",
+            grantDate "1996-07-31",
+            representativePatentTitle "Polymer compositions and absorbent
+ fibers produced therefrom"
+          },
+          {
+            patentFamilyId "22064326",
+            relevanceScore 62582,
+            representativePatent "EP-1030873-B1",
+            grantDate "2001-09-26",
+            representativePatentTitle "Superabsorbing compositions and
+ processes for preparing same"
+          },
+          {
+            patentFamilyId "22064332",
+            relevanceScore 60843,
+            representativePatent "EP-1032606-B1",
+            grantDate "2003-03-26",
+            representativePatentTitle "Superabsorbing compositions and
+ processes for preparing same"
+          },
+          {
+            patentFamilyId "34826056",
+            relevanceScore 27379,
+            representativePatent "EP-1709117-B1",
+            grantDate "2009-10-28",
+            representativePatentTitle "Fibers and nonwovens comprising
+ polyethylene blends and mixtures"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D002493",
+      evidence patentChemicalDisease {
+        neighborName "Central Nervous System Diseases",
+        cooccurrenceScore 4431,
+        nPatentFamilies 14,
+        nPatents 23,
+        patentFamily {
+          {
+            patentFamilyId "57884679",
+            relevanceScore 123835,
+            representativePatent "JP-6462881-B2",
+            grantDate "2019-01-30",
+            representativePatentTitle "Asenapine-containing patch",
+            otherPatent {
+              "KR-102005202-B1"
+            }
+          },
+          {
+            patentFamilyId "81601328",
+            relevanceScore 103196,
+            representativePatent "JP-7337287-B2",
+            grantDate "2023-09-01",
+            representativePatentTitle "Method for inhibiting decomposition of
+ asenapine"
+          },
+          {
+            patentFamilyId "38610060",
+            relevanceScore 77397,
+            representativePatent "JP-5199997-B2",
+            grantDate "2013-05-15",
+            representativePatentTitle "Process for preparing
+ 8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine and related
+ intermediates",
+            otherPatent {
+              "JP-5833535-B2"
+            }
+          },
+          {
+            patentFamilyId "40589739",
+            relevanceScore 68797,
+            representativePatent "JP-5491421-B2",
+            grantDate "2014-05-14",
+            representativePatentTitle "Process for the preparation of
+ intermediates related to the 5-HT2C agonist (R)
+ -8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 19656,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D008881",
+      evidence patentChemicalDisease {
+        neighborName "Migraine Disorders",
+        cooccurrenceScore 4145,
+        nPatentFamilies 4,
+        nPatents 4,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 400620,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "28459848",
+            relevanceScore 6195,
+            representativePatent "EP-1499304-B1",
+            grantDate "2018-03-07",
+            representativePatentTitle "Liquid compositions for soft
+ sustained-release capsules and method for production thereof"
+          },
+          {
+            patentFamilyId "8170787",
+            relevanceScore 4946,
+            representativePatent "EP-1345609-B1",
+            grantDate "2005-06-15",
+            representativePatentTitle "Tetrahydro-(benzo or
+ thieno)-azepine-pyrazine and triazine derivatives as mglur 1 antagonists"
+          },
+          {
+            patentFamilyId "11369989",
+            relevanceScore 2678,
+            representativePatent "JP-4216330-B2",
+            grantDate "2009-01-28",
+            representativePatentTitle "Use of mono- and bicarboxylic amides in
+ the manufacture of drugs acting at peripheral cannabinoid receptors"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D006261",
+      evidence patentChemicalDisease {
+        neighborName "Headache",
+        cooccurrenceScore 4057,
+        nPatentFamilies 9,
+        nPatents 10,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 228165,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "10801451",
+            relevanceScore 81488,
+            representativePatent "EP-0946139-B1",
+            grantDate "2002-06-05",
+            representativePatentTitle "Pharmaceutical formulation"
+          },
+          {
+            patentFamilyId "73548306",
+            relevanceScore 40744,
+            representativePatent "JP-7376903-B2",
+            grantDate "2023-11-09",
+            representativePatentTitle "Virus inactivators and sanitary
+ materials"
+          },
+          {
+            patentFamilyId "69938350",
+            relevanceScore 28521,
+            representativePatent "KR-102119419-B1",
+            grantDate "2020-06-09",
+            representativePatentTitle "Production method of medicinal plant
+ extract using high shear extracting and medicinal plants extract produced by
+ the method"
+          },
+          {
+            patentFamilyId "52463232",
+            relevanceScore 9835,
+            representativePatent "US-10023686-B2",
+            grantDate "2018-07-17",
+            representativePatentTitle "Fast curing high glass transition
+ temperature epoxy resin system",
+            otherPatent {
+              "EP-3102622-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D059350",
+      evidence patentChemicalDisease {
+        neighborName "Chronic Pain",
+        cooccurrenceScore 4036,
+        nPatentFamilies 8,
+        nPatents 8,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 248599,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 56500,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "38833075",
+            relevanceScore 44393,
+            representativePatent "EP-2036909-B1",
+            grantDate "2016-05-04",
+            representativePatentTitle "Quaternary ammonium salt compounds of
+ spirocyclopiperazines, preparation methods and uses thereof"
+          },
+          {
+            patentFamilyId "76755753",
+            relevanceScore 23018,
+            representativePatent "JP-7352283-B2",
+            grantDate "2023-09-28",
+            representativePatentTitle "Transdermal absorption preparation
+ containing fentanyl citrate"
+          },
+          {
+            patentFamilyId "40755342",
+            relevanceScore 18279,
+            representativePatent "EP-2233138-B1",
+            grantDate "2014-07-23",
+            representativePatentTitle "Tape preparation comprising etodolac in
+ ionic liquid form"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009765",
+      evidence patentChemicalDisease {
+        neighborName "Obesity",
+        cooccurrenceScore 3997,
+        nPatentFamilies 28,
+        nPatents 36,
+        patentFamily {
+          {
+            patentFamilyId "38610060",
+            relevanceScore 60558,
+            representativePatent "JP-5199997-B2",
+            grantDate "2013-05-15",
+            representativePatentTitle "Process for preparing
+ 8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine and related
+ intermediates",
+            otherPatent {
+              "JP-5833535-B2"
+            }
+          },
+          {
+            patentFamilyId "40589739",
+            relevanceScore 53829,
+            representativePatent "JP-5491421-B2",
+            grantDate "2014-05-14",
+            representativePatentTitle "Process for the preparation of
+ intermediates related to the 5-HT2C agonist (R)
+ -8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine"
+          },
+          {
+            patentFamilyId "65359791",
+            relevanceScore 28837,
+            representativePatent "US-10834949-B2",
+            grantDate "2020-11-17",
+            representativePatentTitle "Method of microalgal biomass processing
+ for high-value chemicals production, the resulting composition of butyrogenic
+ algal slowly fermenting dietary fiber, and a way to improve colon health
+ using a slowly fermenting butyrogenic algal dietary fiber",
+            otherPatent {
+              "US-10485253-B2"
+            }
+          },
+          {
+            patentFamilyId "85799943",
+            relevanceScore 25498,
+            representativePatent "KR-102515725-B1",
+            grantDate "2023-03-29",
+            representativePatentTitle "Conditioning shampoo composition
+ containing leaf and stem extracts and method of manufacturing conditioning
+ shampoo using the same"
+          },
+          {
+            patentFamilyId "47904663",
+            relevanceScore 24223,
+            representativePatent "KR-101289077-B1",
+            grantDate "2013-07-22",
+            representativePatentTitle "Extraction of Saponin from Green Tea
+ Seeds"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D012559",
+      evidence patentChemicalDisease {
+        neighborName "Schizophrenia",
+        cooccurrenceScore 3898,
+        nPatentFamilies 14,
+        nPatents 21,
+        patentFamily {
+          {
+            patentFamilyId "57884679",
+            relevanceScore 115185,
+            representativePatent "JP-6462881-B2",
+            grantDate "2019-01-30",
+            representativePatentTitle "Asenapine-containing patch"
+          },
+          {
+            patentFamilyId "81601328",
+            relevanceScore 95987,
+            representativePatent "JP-7337287-B2",
+            grantDate "2023-09-01",
+            representativePatentTitle "Method for inhibiting decomposition of
+ asenapine"
+          },
+          {
+            patentFamilyId "46832286",
+            relevanceScore 71991,
+            representativePatent "EP-2570115-B1",
+            grantDate "2017-09-13",
+            representativePatentTitle "Composition for enhancing transdermal
+ absorption of a drug and patch preparation"
+          },
+          {
+            patentFamilyId "25545024",
+            relevanceScore 46074,
+            representativePatent "EP-1054673-B1",
+            grantDate "2004-03-10",
+            representativePatentTitle "Benzoxazine compounds for enhancing
+ synaptic response"
+          },
+          {
+            patentFamilyId "49237125",
+            relevanceScore 15566,
+            representativePatent "EP-2712612-B1",
+            grantDate "2020-03-25",
+            representativePatentTitle "Patch preparation containing amine
+ oxide and isopropyl myristate"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003294",
+      evidence patentChemicalDisease {
+        neighborName "Seizures, Febrile",
+        cooccurrenceScore 3792,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 379051,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D004487",
+      evidence patentChemicalDisease {
+        neighborName "Edema",
+        cooccurrenceScore 3760,
+        nPatentFamilies 31,
+        nPatents 34,
+        patentFamily {
+          {
+            patentFamilyId "15418921",
+            relevanceScore 90839,
+            representativePatent "JP-2609524-B2",
+            grantDate "1997-05-14",
+            representativePatentTitle "Hydrolysis method of fluorine ion
+ exchange resin membrane"
+          },
+          {
+            patentFamilyId "9287967",
+            relevanceScore 28686,
+            representativePatent "EP-0125957-B1",
+            grantDate "1987-03-04",
+            representativePatentTitle "Process to control the swelling of
+ clays upon contact with sea water"
+          },
+          {
+            patentFamilyId "69938350",
+            relevanceScore 27252,
+            representativePatent "KR-102119419-B1",
+            grantDate "2020-06-09",
+            representativePatentTitle "Production method of medicinal plant
+ extract using high shear extracting and medicinal plants extract produced by
+ the method"
+          },
+          {
+            patentFamilyId "76087596",
+            relevanceScore 19465,
+            representativePatent "JP-7448910-B2",
+            grantDate "2024-03-13",
+            representativePatentTitle "Liquid crystal cells and liquid crystal
+ display devices"
+          },
+          {
+            patentFamilyId "78849410",
+            relevanceScore 17582,
+            representativePatent "JP-7406458-B2",
+            grantDate "2023-12-27",
+            representativePatentTitle "Polarized light-emitting film,
+ polarized light-emitting plate, and display device with polarization function
+ using water-soluble perylene-based dichroic fluorescent dye or its salt"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D005076",
+      evidence patentChemicalDisease {
+        neighborName "Exanthema",
+        cooccurrenceScore 3676,
+        nPatentFamilies 27,
+        nPatents 28,
+        patentFamily {
+          {
+            patentFamilyId "65529887",
+            relevanceScore 118196,
+            representativePatent "JP-7280279-B2",
+            grantDate "2023-05-23",
+            representativePatentTitle "Neutralizer composition"
+          },
+          {
+            patentFamilyId "18626109",
+            relevanceScore 39399,
+            representativePatent "EP-1146148-B1",
+            grantDate "2011-08-24",
+            representativePatentTitle "Cyanide-free pyrophosphoric acid bath
+ for use in copper-tin alloy plating"
+          },
+          {
+            patentFamilyId "36630542",
+            relevanceScore 21888,
+            representativePatent "JP-4754206-B2",
+            grantDate "2011-08-24",
+            representativePatentTitle "Disinfectant composition"
+          },
+          {
+            patentFamilyId "51697781",
+            relevanceScore 20379,
+            representativePatent "JP-6184708-B2",
+            grantDate "2017-08-23",
+            representativePatentTitle "Perm solution and hair conditioner"
+          },
+          {
+            patentFamilyId "72043032",
+            relevanceScore 18468,
+            representativePatent "KR-102196631-B1",
+            grantDate "2020-12-30",
+            representativePatentTitle "Composition for hair dye comprising
+ polymer of cationic polymer and gardenia yellow pigment with increased hair
+ permeability as effective component"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001424",
+      evidence patentChemicalDisease {
+        neighborName "Bacterial Infections",
+        cooccurrenceScore 3608,
+        nPatentFamilies 22,
+        nPatents 25,
+        patentFamily {
+          {
+            patentFamilyId "38476566",
+            relevanceScore 117677,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          },
+          {
+            patentFamilyId "42758208",
+            relevanceScore 100026,
+            representativePatent "KR-101081303-B1",
+            grantDate "2011-11-08",
+            representativePatentTitle "Oil type cleanser cosmetic composition
+ and its manufacturing method"
+          },
+          {
+            patentFamilyId "88746845",
+            relevanceScore 62516,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "72604402",
+            relevanceScore 20839,
+            representativePatent "US-11383988-B2",
+            grantDate "2022-07-12",
+            representativePatentTitle "Oolitic aragonite beads and methods
+ therefor"
+          },
+          {
+            patentFamilyId "36577186",
+            relevanceScore 5954,
+            representativePatent "EP-1828400-B1",
+            grantDate "2012-07-25",
+            representativePatentTitle "Detection of microbe contamination on
+ elastomeric articles"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009181",
+      evidence patentChemicalDisease {
+        neighborName "Mycoses",
+        cooccurrenceScore 3470,
+        nPatentFamilies 19,
+        nPatents 23,
+        patentFamily {
+          {
+            patentFamilyId "27091833",
+            relevanceScore 108566,
+            representativePatent "EP-0564586-B1",
+            grantDate "2002-03-20",
+            representativePatentTitle "Aqueous vaginal douche and related
+ methods"
+          },
+          {
+            patentFamilyId "26142825",
+            relevanceScore 62038,
+            representativePatent "EP-0904060-B1",
+            grantDate "2003-12-10",
+            representativePatentTitle "Antifungal compositions with improved
+ bioavailability"
+          },
+          {
+            patentFamilyId "40395066",
+            relevanceScore 27142,
+            representativePatent "JP-4913687-B2",
+            grantDate "2012-04-11",
+            representativePatentTitle "How to give the nail a desired curved
+ surface"
+          },
+          {
+            patentFamilyId "90835988",
+            relevanceScore 25849,
+            representativePatent "US-11970475-B1",
+            grantDate "2024-04-30",
+            representativePatentTitle "4-(1-(2-Hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridin-3-ol as an antimicrobial compound"
+          },
+          {
+            patentFamilyId "39710151",
+            relevanceScore 24126,
+            representativePatent "JP-4430120-B2",
+            grantDate "2010-03-10",
+            representativePatentTitle "Antimycotic patch"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D006973",
+      evidence patentChemicalDisease {
+        neighborName "Hypertension",
+        cooccurrenceScore 3381,
+        nPatentFamilies 37,
+        nPatents 43,
+        patentFamily {
+          {
+            patentFamilyId "88746845",
+            relevanceScore 59498,
+            representativePatent "KR-102747466-B1",
+            grantDate "2024-12-27",
+            representativePatentTitle "Composition for hair or scalp treatment
+ comprising beer yeast and noni and the method of preparing the same"
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 43271,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "83598062",
+            relevanceScore 16999,
+            representativePatent "KR-102527381-B1",
+            grantDate "2023-05-03",
+            representativePatentTitle "Cosmetic composition for preventing
+ hair loss or promoting hair growth with xanthohumol as the main ingredient"
+          },
+          {
+            patentFamilyId "27798985",
+            relevanceScore 16413,
+            representativePatent "EP-1348684-B1",
+            grantDate "2006-03-08",
+            representativePatentTitle "Method for synthesis of
+ (2S)-indoline-2-carboxylic acid; and use in the synthesis of perindopril"
+          },
+          {
+            patentFamilyId "60202739",
+            relevanceScore 16190,
+            representativePatent "US-10519183-B2",
+            grantDate "2019-12-31",
+            representativePatentTitle "Amine solvate of sodium-glucose linked
+ transporter inhibitor, and preparation method and application thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003371",
+      evidence patentChemicalDisease {
+        neighborName "Cough",
+        cooccurrenceScore 3333,
+        nPatentFamilies 21,
+        nPatents 24,
+        patentFamily {
+          {
+            patentFamilyId "51027029",
+            relevanceScore 58688,
+            representativePatent "JP-5858290-B2",
+            grantDate "2016-02-10",
+            representativePatentTitle "Water-soluble metalworking fluid
+ composition"
+          },
+          {
+            patentFamilyId "18976192",
+            relevanceScore 55599,
+            representativePatent "JP-4075322-B2",
+            grantDate "2008-04-16",
+            representativePatentTitle "Immersion coating apparatus for
+ manufacturing an electrophotographic photosensitive member, an
+ electrophotographic photosensitive member manufacturing apparatus including
+ the same, and a method of manufacturing an electrophotographic photosensitive
+ member using the apparatus"
+          },
+          {
+            patentFamilyId "18940116",
+            relevanceScore 52819,
+            representativePatent "JP-4780849-B2",
+            grantDate "2011-09-28",
+            representativePatentTitle "Water-soluble metalworking fluid
+ composition"
+          },
+          {
+            patentFamilyId "75473000",
+            relevanceScore 48017,
+            representativePatent "KR-102254208-B1",
+            grantDate "2021-05-21",
+            representativePatentTitle "Synthetic pseudo-ceramide complex
+ derived from Jeju natural oil prepared by enzyme catalyst lipase and
+ functional cosmetic raw material including the same"
+          },
+          {
+            patentFamilyId "51530132",
+            relevanceScore 19563,
+            representativePatent "US-10072259-B2",
+            grantDate "2018-09-11",
+            representativePatentTitle "Compositions and methods for nucleic
+ acid extraction",
+            otherPatent {
+              "JP-6325077-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D006527",
+      evidence patentChemicalDisease {
+        neighborName "Hepatolenticular Degeneration",
+        cooccurrenceScore 3295,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "57442411",
+            relevanceScore 329372,
+            representativePatent "EP-3370735-B1",
+            grantDate "2020-05-13",
+            representativePatentTitle "Polysaccharide-based polymer and its
+ use for the prevention and treatment of the wilson's disease"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D014005",
+      evidence patentChemicalDisease {
+        neighborName "Tinea",
+        cooccurrenceScore 3246,
+        nPatentFamilies 13,
+        nPatents 14,
+        patentFamily {
+          {
+            patentFamilyId "17506321",
+            relevanceScore 146345,
+            representativePatent "EP-0186055-B1",
+            grantDate "1990-07-25",
+            representativePatentTitle "Antimycotic gel preparations"
+          },
+          {
+            patentFamilyId "8165367",
+            relevanceScore 36586,
+            representativePatent "EP-0455631-B1",
+            grantDate "1993-06-30",
+            representativePatentTitle "Preparation containing salicylic acid
+ for treating desquamative skin diseases"
+          },
+          {
+            patentFamilyId "33410049",
+            relevanceScore 25232,
+            representativePatent "JP-4370118-B2",
+            grantDate "2009-11-25",
+            representativePatentTitle "Microbial stain and use thereof"
+          },
+          {
+            patentFamilyId "8228205",
+            relevanceScore 23604,
+            representativePatent "EP-0975312-B1",
+            grantDate "2002-07-31",
+            representativePatentTitle "Compositions containing an antifungal
+ and a phospholipid"
+          },
+          {
+            patentFamilyId "8228206",
+            relevanceScore 22866,
+            representativePatent "EP-0963195-B1",
+            grantDate "2002-07-17",
+            representativePatentTitle "Compositions containing an antifungal
+ and a cationic agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D004890",
+      evidence patentChemicalDisease {
+        neighborName "Erythema",
+        cooccurrenceScore 3244,
+        nPatentFamilies 23,
+        nPatents 27,
+        patentFamily {
+          {
+            patentFamilyId "7875371",
+            relevanceScore 59824,
+            representativePatent "EP-1100452-B1",
+            grantDate "2003-10-15",
+            representativePatentTitle "Cosmetic or dermatological water/oil
+ emulsions containing nonionic surfactants and characterized by a silicone
+ emulsifying agent content"
+          },
+          {
+            patentFamilyId "27322049",
+            relevanceScore 39882,
+            representativePatent "JP-3261690-B2",
+            grantDate "2002-03-04",
+            representativePatentTitle "Permanent wave agent 1st agent"
+          },
+          {
+            patentFamilyId "18966699",
+            relevanceScore 37983,
+            representativePatent "EP-1378224-B1",
+            grantDate "2013-05-08",
+            representativePatentTitle "Sugar intake promoters"
+          },
+          {
+            patentFamilyId "7847713",
+            relevanceScore 29912,
+            representativePatent "EP-1024786-B1",
+            grantDate "2002-12-18",
+            representativePatentTitle "Skin compatible hand cleanser,
+ especially a course hand cleanser"
+          },
+          {
+            patentFamilyId "12252012",
+            relevanceScore 29912,
+            representativePatent "JP-3417783-B2",
+            grantDate "2003-06-16",
+            representativePatentTitle "Detergent composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D005334",
+      evidence patentChemicalDisease {
+        neighborName "Fever",
+        cooccurrenceScore 3223,
+        nPatentFamilies 22,
+        nPatents 24,
+        patentFamily {
+          {
+            patentFamilyId "27322049",
+            relevanceScore 136477,
+            representativePatent "JP-3261690-B2",
+            grantDate "2002-03-04",
+            representativePatentTitle "Permanent wave agent 1st agent"
+          },
+          {
+            patentFamilyId "73548306",
+            relevanceScore 36556,
+            representativePatent "JP-7376903-B2",
+            grantDate "2023-11-09",
+            representativePatentTitle "Virus inactivators and sanitary
+ materials"
+          },
+          {
+            patentFamilyId "38476566",
+            relevanceScore 28672,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          },
+          {
+            patentFamilyId "69938350",
+            relevanceScore 25590,
+            representativePatent "KR-102119419-B1",
+            grantDate "2020-06-09",
+            representativePatentTitle "Production method of medicinal plant
+ extract using high shear extracting and medicinal plants extract produced by
+ the method"
+          },
+          {
+            patentFamilyId "44630253",
+            relevanceScore 17060,
+            representativePatent "EP-2591036-B1",
+            grantDate "2014-03-26",
+            representativePatentTitle "Method for producing polyol mixtures"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D000077260",
+      evidence patentChemicalDisease {
+        neighborName "Sleepiness",
+        cooccurrenceScore 3214,
+        nPatentFamilies 4,
+        nPatents 7,
+        patentFamily {
+          {
+            patentFamilyId "57126282",
+            relevanceScore 130833,
+            representativePatent "US-10716763-B2",
+            grantDate "2020-07-21",
+            representativePatentTitle "Transdermal patch containing ropinirole",
+            otherPatent {
+              "JP-6530059-B2"
+            }
+          },
+          {
+            patentFamilyId "53757070",
+            relevanceScore 130833,
+            representativePatent "EP-3100733-B1",
+            grantDate "2018-12-12",
+            representativePatentTitle "Emedastine-containing tape",
+            otherPatent {
+              "KR-101976248-B1",
+              "JP-6173491-B2"
+            }
+          },
+          {
+            patentFamilyId "85799943",
+            relevanceScore 34430,
+            representativePatent "KR-102515725-B1",
+            grantDate "2023-03-29",
+            representativePatentTitle "Conditioning shampoo composition
+ containing leaf and stem extracts and method of manufacturing conditioning
+ shampoo using the same"
+          },
+          {
+            patentFamilyId "73888685",
+            relevanceScore 25160,
+            representativePatent "JP-7621289-B2",
+            grantDate "2025-01-24",
+            representativePatentTitle "Benzodiazepine compounds, their
+ manufacturing process and medicinal effects"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D007251",
+      evidence patentChemicalDisease {
+        neighborName "Influenza, Human",
+        cooccurrenceScore 3205,
+        nPatentFamilies 11,
+        nPatents 12,
+        patentFamily {
+          {
+            patentFamilyId "78868610",
+            relevanceScore 204159,
+            representativePatent "KR-102428140-B1",
+            grantDate "2022-08-08",
+            representativePatentTitle "Deodorizing filter coating composition
+ for air cleaners and deodorizing filter using the same"
+          },
+          {
+            patentFamilyId "43568347",
+            relevanceScore 28072,
+            representativePatent "EP-2512231-B1",
+            grantDate "2016-12-07",
+            representativePatentTitle "Composition in form of a gel for the
+ virucidal disinfection of mammalian skin"
+          },
+          {
+            patentFamilyId "63173601",
+            relevanceScore 23393,
+            representativePatent "JP-6892274-B2",
+            grantDate "2021-06-23",
+            representativePatentTitle "Virus inactivating composition"
+          },
+          {
+            patentFamilyId "25392495",
+            relevanceScore 22458,
+            representativePatent "EP-0993494-B1",
+            grantDate "2005-01-12",
+            representativePatentTitle "Method for making a photodurable
+ aqueous titanium dioxide pigment slurry"
+          },
+          {
+            patentFamilyId "74089189",
+            relevanceScore 11229,
+            representativePatent "KR-102225724-B1",
+            grantDate "2021-03-10",
+            representativePatentTitle "Pharmaceutical compositions for oral
+ administration in the form of syrup or powder comprising a water-soluble
+ active pharmaceutical ingredient"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D007244",
+      evidence patentChemicalDisease {
+        neighborName "Infectious Mononucleosis",
+        cooccurrenceScore 3190,
+        nPatentFamilies 35,
+        nPatents 37,
+        patentFamily {
+          {
+            patentFamilyId "22620518",
+            relevanceScore 22217,
+            representativePatent "EP-1141071-B1",
+            grantDate "2005-09-14",
+            representativePatentTitle "High strength epoxy adhesive and uses
+ thereof"
+          },
+          {
+            patentFamilyId "10513598",
+            relevanceScore 21582,
+            representativePatent "EP-0040869-B1",
+            grantDate "1984-02-29",
+            representativePatentTitle "Aqueous coating powder suspensions,
+ preparation and use"
+          },
+          {
+            patentFamilyId "8234732",
+            relevanceScore 19368,
+            representativePatent "EP-1082391-B1",
+            grantDate "2002-06-12",
+            representativePatentTitle "Thermosetting resinous binder
+ compositions, their preparation and use as coating materials"
+          },
+          {
+            patentFamilyId "10214400",
+            relevanceScore 17168,
+            representativePatent "EP-0000086-B1",
+            grantDate "1982-04-14",
+            representativePatentTitle "Resin binders containing amino groups
+ and process for their preparation"
+          },
+          {
+            patentFamilyId "46565256",
+            relevanceScore 14252,
+            representativePatent "EP-2470581-B1",
+            grantDate "2014-08-13",
+            representativePatentTitle "Amine-epoxy adducts and their use for
+ preparing polyurea and polyurea-polyurethane coatings"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001943",
+      evidence patentChemicalDisease {
+        neighborName "Breast Neoplasms",
+        cooccurrenceScore 3162,
+        nPatentFamilies 27,
+        nPatents 38,
+        patentFamily {
+          {
+            patentFamilyId "10820048",
+            relevanceScore 51725,
+            representativePatent "EP-1019090-B1",
+            grantDate "2004-02-18",
+            representativePatentTitle "Polymeric derivatives of camptothecins"
+          },
+          {
+            patentFamilyId "47357200",
+            relevanceScore 51725,
+            representativePatent "JP-5971867-B2",
+            grantDate "2016-08-17",
+            representativePatentTitle "Gallium labeled drug"
+          },
+          {
+            patentFamilyId "10680097",
+            relevanceScore 35810,
+            representativePatent "JP-3169222-B2",
+            grantDate "2001-05-21",
+            representativePatentTitle "Novel linker for bioactive agents",
+            otherPatent {
+              "EP-0495053-B1"
+            }
+          },
+          {
+            patentFamilyId "69415380",
+            relevanceScore 28214,
+            representativePatent "JP-7201273-B2",
+            grantDate "2023-01-10",
+            representativePatentTitle "Ammonium salt of
+ 3-(3,5-dibromo-4-hydroxybenzylidene)-5-iodo-1,3-dihydroindol-2-one and use
+ thereof",
+            otherPatent {
+              "US-11304930-B2"
+            }
+          },
+          {
+            patentFamilyId "90245864",
+            relevanceScore 23276,
+            representativePatent "US-11932622-B1",
+            grantDate "2024-03-19",
+            representativePatentTitle "2-(1-(2-hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridine as an anticancer compound"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001523",
+      evidence patentChemicalDisease {
+        neighborName "Mental Disorders",
+        cooccurrenceScore 3076,
+        nPatentFamilies 19,
+        nPatents 24,
+        patentFamily {
+          {
+            patentFamilyId "38610060",
+            relevanceScore 68817,
+            representativePatent "JP-5199997-B2",
+            grantDate "2013-05-15",
+            representativePatentTitle "Process for preparing
+ 8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine and related
+ intermediates",
+            otherPatent {
+              "JP-5833535-B2"
+            }
+          },
+          {
+            patentFamilyId "40589739",
+            relevanceScore 61171,
+            representativePatent "JP-5491421-B2",
+            grantDate "2014-05-14",
+            representativePatentTitle "Process for the preparation of
+ intermediates related to the 5-HT2C agonist (R)
+ -8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine"
+          },
+          {
+            patentFamilyId "27322049",
+            relevanceScore 36702,
+            representativePatent "JP-3261690-B2",
+            grantDate "2002-03-04",
+            representativePatentTitle "Permanent wave agent 1st agent"
+          },
+          {
+            patentFamilyId "6080118",
+            relevanceScore 16683,
+            representativePatent "EP-0025528-B1",
+            grantDate "1982-12-29",
+            representativePatentTitle "1-(2-acetylphenylthio)-3-alkylamino-2-p
+ropanols and their acid-addition salts, process for their preparation and
+ medicines containing them"
+          },
+          {
+            patentFamilyId "23370361",
+            relevanceScore 15730,
+            representativePatent "EP-1306085-B1",
+            grantDate "2007-02-14",
+            representativePatentTitle "2-Cyclohexyl-4-phenyl-1H-imidazole
+ derivatives as ligands for the neuropeptide Y5 receptor"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D012878",
+      evidence patentChemicalDisease {
+        neighborName "Skin Neoplasms",
+        cooccurrenceScore 3069,
+        nPatentFamilies 13,
+        nPatents 14,
+        patentFamily {
+          {
+            patentFamilyId "44534559",
+            relevanceScore 115618,
+            representativePatent "EP-2585077-B1",
+            grantDate "2014-09-03",
+            representativePatentTitle "Agent for suppressing the formation of
+ abnormal skin cells caused by exposure to light",
+            otherPatent {
+              "JP-5893013-B2"
+            }
+          },
+          {
+            patentFamilyId "26614150",
+            relevanceScore 115618,
+            representativePatent "JP-3814224-B2",
+            grantDate "2006-08-23",
+            representativePatentTitle "Composition for external use"
+          },
+          {
+            patentFamilyId "75913308",
+            relevanceScore 27528,
+            representativePatent "KR-102250202-B1",
+            grantDate "2021-05-13",
+            representativePatentTitle "Eco-friendly water-soluble cutting oil
+ composition and its manufacturing method"
+          },
+          {
+            patentFamilyId "13065829",
+            relevanceScore 12300,
+            representativePatent "JP-3041011-B2",
+            grantDate "2000-05-15",
+            representativePatentTitle "Manufacturing method of rigid
+ polyurethane foam"
+          },
+          {
+            patentFamilyId "23471574",
+            relevanceScore 5506,
+            representativePatent "JP-2678518-B2",
+            grantDate "1997-11-17",
+            representativePatentTitle "Method for producing polyurethane foam
+ without using inert blowing agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001259",
+      evidence patentChemicalDisease {
+        neighborName "Ataxia",
+        cooccurrenceScore 3035,
+        nPatentFamilies 8,
+        nPatents 13,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 138840,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "57884679",
+            relevanceScore 138840,
+            representativePatent "KR-102005202-B1",
+            grantDate "2019-07-29",
+            representativePatentTitle "Asenapine-containing patch"
+          },
+          {
+            patentFamilyId "57885128",
+            relevanceScore 8167,
+            representativePatent "KR-102005201-B1",
+            grantDate "2019-07-29",
+            representativePatentTitle "Method for manufacturing
+ asenapine-containing patch"
+          },
+          {
+            patentFamilyId "40677792",
+            relevanceScore 7513,
+            representativePatent "JP-5683965-B2",
+            grantDate "2015-03-11",
+            representativePatentTitle "Derivatives of aminoalkanols, methods
+ for obtaining aminoalkanols and their use"
+          },
+          {
+            patentFamilyId "10853415",
+            relevanceScore 6428,
+            representativePatent "JP-4769562-B2",
+            grantDate "2011-09-07",
+            representativePatentTitle "Short-acting benzodiazepines",
+            otherPatent {
+              "JP-4769760-B2",
+              "JP-4769759-B2",
+              "JP-3773792-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D010300",
+      evidence patentChemicalDisease {
+        neighborName "Parkinson Disease",
+        cooccurrenceScore 2931,
+        nPatentFamilies 16,
+        nPatents 23,
+        patentFamily {
+          {
+            patentFamilyId "57126282",
+            relevanceScore 104473,
+            representativePatent "US-10716763-B2",
+            grantDate "2020-07-21",
+            representativePatentTitle "Transdermal patch containing ropinirole",
+            otherPatent {
+              "JP-6530059-B2",
+              "KR-101937073-B1"
+            }
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 47488,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 35535,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "51625444",
+            relevanceScore 28236,
+            representativePatent "US-10544183-B2",
+            grantDate "2020-01-28",
+            representativePatentTitle "Uridine nucleoside derivatives,
+ compositions and methods of use",
+            otherPatent {
+              "JP-6591957-B2"
+            }
+          },
+          {
+            patentFamilyId "44534559",
+            relevanceScore 26118,
+            representativePatent "EP-2585077-B1",
+            grantDate "2014-09-03",
+            representativePatentTitle "Agent for suppressing the formation of
+ abnormal skin cells caused by exposure to light"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D005891",
+      evidence patentChemicalDisease {
+        neighborName "Gingivitis",
+        cooccurrenceScore 2914,
+        nPatentFamilies 6,
+        nPatents 6,
+        patentFamily {
+          {
+            patentFamilyId "69182639",
+            relevanceScore 224176,
+            representativePatent "US-11573228-B2",
+            grantDate "2023-02-07",
+            representativePatentTitle "Biomarkers of neutrophil deregulation
+ as diagnostic for gingivitis"
+          },
+          {
+            patentFamilyId "17894233",
+            relevanceScore 33626,
+            representativePatent "KR-100332615-B1",
+            grantDate "2002-11-16",
+            representativePatentTitle "Oral Gel Composition"
+          },
+          {
+            patentFamilyId "63080546",
+            relevanceScore 16919,
+            representativePatent "US-11517512-B2",
+            grantDate "2022-12-06",
+            representativePatentTitle "Personal care compositions comprising
+ zinc : usnic acid complexes and methods of use"
+          },
+          {
+            patentFamilyId "10980468",
+            relevanceScore 12454,
+            representativePatent "EP-0105872-B1",
+            grantDate "1988-03-30",
+            representativePatentTitle "Novel cosmetic compositions containing
+ prenylamine and a process for their preparation"
+          },
+          {
+            patentFamilyId "19189705",
+            relevanceScore 3681,
+            representativePatent "JP-5348550-B2",
+            grantDate "2013-11-20",
+            representativePatentTitle "Carbon dioxide external composition
+ containing fermentative bacteria"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D008545",
+      evidence patentChemicalDisease {
+        neighborName "Melanoma",
+        cooccurrenceScore 2904,
+        nPatentFamilies 27,
+        nPatents 38,
+        patentFamily {
+          {
+            patentFamilyId "10820048",
+            relevanceScore 57119,
+            representativePatent "EP-1019090-B1",
+            grantDate "2004-02-18",
+            representativePatentTitle "Polymeric derivatives of camptothecins"
+          },
+          {
+            patentFamilyId "69415380",
+            relevanceScore 31156,
+            representativePatent "JP-7201273-B2",
+            grantDate "2023-01-10",
+            representativePatentTitle "Ammonium salt of
+ 3-(3,5-dibromo-4-hydroxybenzylidene)-5-iodo-1,3-dihydroindol-2-one and use
+ thereof",
+            otherPatent {
+              "US-11304930-B2"
+            }
+          },
+          {
+            patentFamilyId "90245864",
+            relevanceScore 25703,
+            representativePatent "US-11932622-B1",
+            grantDate "2024-03-19",
+            representativePatentTitle "2-(1-(2-hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridine as an anticancer compound"
+          },
+          {
+            patentFamilyId "44534559",
+            relevanceScore 25703,
+            representativePatent "EP-2585077-B1",
+            grantDate "2014-09-03",
+            representativePatentTitle "Agent for suppressing the formation of
+ abnormal skin cells caused by exposure to light",
+            otherPatent {
+              "JP-5893013-B2"
+            }
+          },
+          {
+            patentFamilyId "10717411",
+            relevanceScore 25703,
+            representativePatent "JP-3693340-B2",
+            grantDate "2005-09-07",
+            representativePatentTitle "Polymer-bound paclitaxel derivatives"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D000860",
+      evidence patentChemicalDisease {
+        neighborName "Hypoxia",
+        cooccurrenceScore 2883,
+        nPatentFamilies 19,
+        nPatents 26,
+        patentFamily {
+          {
+            patentFamilyId "26357414",
+            relevanceScore 105921,
+            representativePatent "EP-0316967-B1",
+            grantDate "1992-09-09",
+            representativePatentTitle "Fluorine-containing nitroimidazole
+ derivatives and radiosensitizer comprising the same"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 36028,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "27548921",
+            relevanceScore 33100,
+            representativePatent "EP-0294847-B1",
+            grantDate "1994-02-16",
+            representativePatentTitle "Fluorine-containing nitroazole
+ derivatives and radiosensitizer comprising the same"
+          },
+          {
+            patentFamilyId "50894446",
+            relevanceScore 18262,
+            representativePatent "KR-101396250-B1",
+            grantDate "2014-05-19",
+            representativePatentTitle "Cerium-based abrasive particles, slurry
+ containing the same, and manufacturing method thereof"
+          },
+          {
+            patentFamilyId "52592127",
+            relevanceScore 18262,
+            representativePatent "KR-101483450-B1",
+            grantDate "2015-01-22",
+            representativePatentTitle "Method of manufacturing cerium based
+ polishing particle and the cerium based polishing particle thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001161",
+      evidence patentChemicalDisease {
+        neighborName "Arteriosclerosis",
+        cooccurrenceScore 2867,
+        nPatentFamilies 19,
+        nPatents 22,
+        patentFamily {
+          {
+            patentFamilyId "40718194",
+            relevanceScore 72230,
+            representativePatent "EP-3070477-B1",
+            grantDate "2019-02-20",
+            representativePatentTitle "Trimethylamine compounds as risk
+ predictors of cardiovascular disease",
+            otherPatent {
+              "EP-2222220-B1"
+            }
+          },
+          {
+            patentFamilyId "46832286",
+            relevanceScore 69973,
+            representativePatent "EP-2570115-B1",
+            grantDate "2017-09-13",
+            representativePatentTitle "Composition for enhancing transdermal
+ absorption of a drug and patch preparation"
+          },
+          {
+            patentFamilyId "36216269",
+            relevanceScore 31988,
+            representativePatent "EP-1853267-B1",
+            grantDate "2013-01-23",
+            representativePatentTitle "Folic acid-, vitamin b6- and vitamin
+ b12-containing agents and the use thereof",
+            otherPatent {
+              "EP-1853267-B9"
+            }
+          },
+          {
+            patentFamilyId "26576704",
+            relevanceScore 25445,
+            representativePatent "JP-3736405-B2",
+            grantDate "2006-01-18",
+            representativePatentTitle "Amino acid derivatives and antioxidants"
+          },
+          {
+            patentFamilyId "35134380",
+            relevanceScore 15550,
+            representativePatent "JP-5144274-B2",
+            grantDate "2013-02-13",
+            representativePatentTitle "Use of lipoic acid-containing
+ cyclodextrin complex"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D000086382",
+      evidence patentChemicalDisease {
+        neighborName "COVID-19",
+        cooccurrenceScore 2739,
+        nPatentFamilies 2,
+        nPatents 2,
+        patentFamily {
+          {
+            patentFamilyId "78868610",
+            relevanceScore 253832,
+            representativePatent "KR-102428140-B1",
+            grantDate "2022-08-08",
+            representativePatentTitle "Deodorizing filter coating composition
+ for air cleaners and deodorizing filter using the same"
+          },
+          {
+            patentFamilyId "80475148",
+            relevanceScore 19944,
+            representativePatent "KR-102418918-B1",
+            grantDate "2022-07-08",
+            representativePatentTitle "Biodegradable nonwoven fabric improved
+ in flexibility and softness, preparation thereof and biodegradable mask using
+ the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D000544",
+      evidence patentChemicalDisease {
+        neighborName "Alzheimer Disease",
+        cooccurrenceScore 2705,
+        nPatentFamilies 27,
+        nPatents 38,
+        patentFamily {
+          {
+            patentFamilyId "47913634",
+            relevanceScore 44025,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 32944,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "58097889",
+            relevanceScore 30267,
+            representativePatent "US-11382978-B2",
+            grantDate "2022-07-12",
+            representativePatentTitle "Percutaneous absorption composition",
+            otherPatent {
+              "US-10588973-B2"
+            }
+          },
+          {
+            patentFamilyId "36216269",
+            relevanceScore 27673,
+            representativePatent "EP-1853267-B1",
+            grantDate "2013-01-23",
+            representativePatentTitle "Folic acid-, vitamin b6- and vitamin
+ b12-containing agents and the use thereof",
+            otherPatent {
+              "EP-1853267-B9"
+            }
+          },
+          {
+            patentFamilyId "51625444",
+            relevanceScore 26177,
+            representativePatent "US-10544183-B2",
+            grantDate "2020-01-28",
+            representativePatentTitle "Uridine nucleoside derivatives,
+ compositions and methods of use",
+            otherPatent {
+              "JP-6591957-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001714",
+      evidence patentChemicalDisease {
+        neighborName "Bipolar Disorder",
+        cooccurrenceScore 2693,
+        nPatentFamilies 4,
+        nPatents 6,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 263334,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "42235916",
+            relevanceScore 3271,
+            representativePatent "EP-2427457-B1",
+            grantDate "2013-07-17",
+            representativePatentTitle "Isoxazole-pyridine derivatives as gaba
+ modulators",
+            otherPatent {
+              "JP-5481555-B2"
+            }
+          },
+          {
+            patentFamilyId "42291285",
+            relevanceScore 1489,
+            representativePatent "EP-2389383-B1",
+            grantDate "2019-04-24",
+            representativePatentTitle "Bicyclic heterocyclic spiro compounds",
+            otherPatent {
+              "JP-5874878-B2"
+            }
+          },
+          {
+            patentFamilyId "50588910",
+            relevanceScore 1145,
+            representativePatent "EP-2970158-B1",
+            grantDate "2019-02-20",
+            representativePatentTitle "Alkyl-heteroaryl substituted quinone
+ derivatives for treatment of oxidative stress disorders"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D020258",
+      evidence patentChemicalDisease {
+        neighborName "Neurotoxicity Syndromes",
+        cooccurrenceScore 2692,
+        nPatentFamilies 12,
+        nPatents 14,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 139171,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "26357414",
+            relevanceScore 34793,
+            representativePatent "EP-0316967-B1",
+            grantDate "1992-09-09",
+            representativePatentTitle "Fluorine-containing nitroimidazole
+ derivatives and radiosensitizer comprising the same"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 22091,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "21934085",
+            relevanceScore 15463,
+            representativePatent "EP-1009439-B1",
+            grantDate "2003-01-08",
+            representativePatentTitle "Polymer-platinum compounds"
+          },
+          {
+            patentFamilyId "27418962",
+            relevanceScore 11407,
+            representativePatent "EP-0197386-B1",
+            grantDate "1988-11-02",
+            representativePatentTitle "2-(substituted sulfamyl) derivatives of
+ 6-nitrobenzoic acid, process for their preparation and pharmaceutical
+ compositions containing them"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D011471",
+      evidence patentChemicalDisease {
+        neighborName "Prostatic Neoplasms",
+        cooccurrenceScore 2612,
+        nPatentFamilies 20,
+        nPatents 30,
+        patentFamily {
+          {
+            patentFamilyId "90245864",
+            relevanceScore 101413,
+            representativePatent "US-11932622-B1",
+            grantDate "2024-03-19",
+            representativePatentTitle "2-(1-(2-hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridine as an anticancer compound"
+          },
+          {
+            patentFamilyId "69415380",
+            relevanceScore 30731,
+            representativePatent "JP-7201273-B2",
+            grantDate "2023-01-10",
+            representativePatentTitle "Ammonium salt of
+ 3-(3,5-dibromo-4-hydroxybenzylidene)-5-iodo-1,3-dihydroindol-2-one and use
+ thereof",
+            otherPatent {
+              "US-11304930-B2"
+            }
+          },
+          {
+            patentFamilyId "52006907",
+            relevanceScore 27043,
+            representativePatent "JP-6830892-B2",
+            grantDate "2021-02-17",
+            representativePatentTitle "Anti-cancer composition"
+          },
+          {
+            patentFamilyId "52006906",
+            relevanceScore 23862,
+            representativePatent "JP-7174006-B2",
+            grantDate "2022-11-17",
+            representativePatentTitle "anticancer composition"
+          },
+          {
+            patentFamilyId "54197102",
+            relevanceScore 14914,
+            representativePatent "EP-3191134-B1",
+            grantDate "2019-11-20",
+            representativePatentTitle "Anthracycline disulfide intermediates,
+ antibody-drug conjugates and methods",
+            otherPatent {
+              "US-10149913-B2",
+              "US-11090322-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001249",
+      evidence patentChemicalDisease {
+        neighborName "Asthma",
+        cooccurrenceScore 2525,
+        nPatentFamilies 27,
+        nPatents 32,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 98561,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          },
+          {
+            patentFamilyId "25487094",
+            relevanceScore 34222,
+            representativePatent "EP-1428023-B1",
+            grantDate "2008-08-27",
+            representativePatentTitle "Methods for predicting drug sensitivity
+ in patients afflicted with an inflammatory disease"
+          },
+          {
+            patentFamilyId "10834254",
+            relevanceScore 11664,
+            representativePatent "EP-1090023-B1",
+            grantDate "2003-09-10",
+            representativePatentTitle "2-(purin-9-yl)-tetrahydrofuran-3,4-diol
+ derivatives"
+          },
+          {
+            patentFamilyId "25455479",
+            relevanceScore 10140,
+            representativePatent "JP-4523151-B2",
+            grantDate "2010-08-11",
+            representativePatentTitle "Chemokine peptides, variants,
+ derivatives and analogs thereof and their use in methods of inhibiting or
+ increasing inflammatory responses"
+          },
+          {
+            patentFamilyId "16814599",
+            relevanceScore 9298,
+            representativePatent "JP-2681493-B2",
+            grantDate "1997-11-26",
+            representativePatentTitle "Novel ethylenediamine derivative and
+ acid addition salt thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D008107",
+      evidence patentChemicalDisease {
+        neighborName "Liver Diseases",
+        cooccurrenceScore 2515,
+        nPatentFamilies 17,
+        nPatents 23,
+        patentFamily {
+          {
+            patentFamilyId "57126282",
+            relevanceScore 114213,
+            representativePatent "KR-101937073-B1",
+            grantDate "2019-01-09",
+            representativePatentTitle "Transdermal patch containing ropinirole"
+          },
+          {
+            patentFamilyId "6528845",
+            relevanceScore 21964,
+            representativePatent "EP-0947194-B1",
+            grantDate "2002-12-11",
+            representativePatentTitle "Dosage form comprising solid salts of
+ R-alpha-lipoic acid with improved bioavailability",
+            otherPatent {
+              "EP-0702953-B1"
+            }
+          },
+          {
+            patentFamilyId "73888685",
+            relevanceScore 21964,
+            representativePatent "JP-7621289-B2",
+            grantDate "2025-01-24",
+            representativePatentTitle "Benzodiazepine compounds, their
+ manufacturing process and medicinal effects"
+          },
+          {
+            patentFamilyId "40755342",
+            relevanceScore 16796,
+            representativePatent "EP-2233138-B1",
+            grantDate "2014-07-23",
+            representativePatentTitle "Tape preparation comprising etodolac in
+ ionic liquid form"
+          },
+          {
+            patentFamilyId "35134380",
+            relevanceScore 15863,
+            representativePatent "JP-5144274-B2",
+            grantDate "2013-02-13",
+            representativePatentTitle "Use of lipoic acid-containing
+ cyclodextrin complex"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D020795",
+      evidence patentChemicalDisease {
+        neighborName "Photophobia",
+        cooccurrenceScore 2514,
+        nPatentFamilies 22,
+        nPatents 23,
+        patentFamily {
+          {
+            patentFamilyId "17390067",
+            relevanceScore 33887,
+            representativePatent "JP-2593348-B2",
+            grantDate "1997-03-26",
+            representativePatentTitle "Photoconductor"
+          },
+          {
+            patentFamilyId "26387097",
+            relevanceScore 29467,
+            representativePatent "EP-0503602-B1",
+            grantDate "1995-06-14",
+            representativePatentTitle "Method of making lithographic printing
+ plate"
+          },
+          {
+            patentFamilyId "17467196",
+            relevanceScore 29467,
+            representativePatent "JP-2649959-B2",
+            grantDate "1997-09-03",
+            representativePatentTitle "Photoconductor"
+          },
+          {
+            patentFamilyId "17181960",
+            relevanceScore 22591,
+            representativePatent "JP-2593346-B2",
+            grantDate "1997-03-26",
+            representativePatentTitle "Photoconductor"
+          },
+          {
+            patentFamilyId "15959477",
+            relevanceScore 18317,
+            representativePatent "JP-2867039-B2",
+            grantDate "1999-03-08",
+            representativePatentTitle "Electrophotographic photoreceptor"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003110",
+      evidence patentChemicalDisease {
+        neighborName "Colonic Neoplasms",
+        cooccurrenceScore 2496,
+        nPatentFamilies 19,
+        nPatents 28,
+        patentFamily {
+          {
+            patentFamilyId "10820048",
+            relevanceScore 54744,
+            representativePatent "EP-1019090-B1",
+            grantDate "2004-02-18",
+            representativePatentTitle "Polymeric derivatives of camptothecins"
+          },
+          {
+            patentFamilyId "65359791",
+            relevanceScore 29327,
+            representativePatent "US-10834949-B2",
+            grantDate "2020-11-17",
+            representativePatentTitle "Method of microalgal biomass processing
+ for high-value chemicals production, the resulting composition of butyrogenic
+ algal slowly fermenting dietary fiber, and a way to improve colon health
+ using a slowly fermenting butyrogenic algal dietary fiber",
+            otherPatent {
+              "US-10485253-B2"
+            }
+          },
+          {
+            patentFamilyId "10743226",
+            relevanceScore 25932,
+            representativePatent "EP-0673258-B1",
+            grantDate "2003-05-07",
+            representativePatentTitle "Polymer-bound camptothecin derivatives"
+          },
+          {
+            patentFamilyId "90245864",
+            relevanceScore 24635,
+            representativePatent "US-11932622-B1",
+            grantDate "2024-03-19",
+            representativePatentTitle "2-(1-(2-hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridine as an anticancer compound"
+          },
+          {
+            patentFamilyId "53402933",
+            relevanceScore 19708,
+            representativePatent "JP-6282669-B2",
+            grantDate "2018-02-21",
+            representativePatentTitle "Polyacrylic acid (salt) water-absorbing
+ agent and method for producing the same"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003128",
+      evidence patentChemicalDisease {
+        neighborName "Coma",
+        cooccurrenceScore 2452,
+        nPatentFamilies 18,
+        nPatents 25,
+        patentFamily {
+          {
+            patentFamilyId "40828635",
+            relevanceScore 139361,
+            representativePatent "KR-101633388-B1",
+            grantDate "2016-06-24",
+            representativePatentTitle "A Method for Preparing Light Absorption
+ Layer of copper-indium-gallium-sulfur-selenium Thin Film Solar Cells"
+          },
+          {
+            patentFamilyId "62556286",
+            relevanceScore 30089,
+            representativePatent "US-11822238-B2",
+            grantDate "2023-11-21",
+            representativePatentTitle "Extreme ultraviolet photolithography
+ method with developer composition"
+          },
+          {
+            patentFamilyId "55411124",
+            relevanceScore 10507,
+            representativePatent "EP-3245514-B1",
+            grantDate "2019-07-10",
+            representativePatentTitle "Macromolecular conjugates for
+ visualization and separation of proteins and cells"
+          },
+          {
+            patentFamilyId "58347945",
+            relevanceScore 8172,
+            representativePatent "EP-3423555-B1",
+            grantDate "2020-09-30",
+            representativePatentTitle "Compositions containing anionic
+ surfactant and a solvent comprising butanediol"
+          },
+          {
+            patentFamilyId "56084443",
+            relevanceScore 7042,
+            representativePatent "JP-6961659-B2",
+            grantDate "2021-11-05",
+            representativePatentTitle "Detergent composition containing
+ surfactant and propoxylated glycerin",
+            otherPatent {
+              "JP-6640248-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003877",
+      evidence patentChemicalDisease {
+        neighborName "Dermatitis, Contact",
+        cooccurrenceScore 2449,
+        nPatentFamilies 9,
+        nPatents 10,
+        patentFamily {
+          {
+            patentFamilyId "80988350",
+            relevanceScore 111924,
+            representativePatent "KR-102397693-B1",
+            grantDate "2022-05-16",
+            representativePatentTitle "Method of manufacturing cosmetic
+ composition including bamboo stem cell culture extract and cosmetic
+ compostion manufactured by the method"
+          },
+          {
+            patentFamilyId "89899885",
+            relevanceScore 47968,
+            representativePatent "KR-102634996-B1",
+            grantDate "2024-02-08",
+            representativePatentTitle "Shampoo composition with excellent gray
+ hair coverage"
+          },
+          {
+            patentFamilyId "76375516",
+            relevanceScore 31978,
+            representativePatent "US-11517514-B2",
+            grantDate "2022-12-06",
+            representativePatentTitle "Resorcinol-free hair colouring
+ compositions"
+          },
+          {
+            patentFamilyId "54249680",
+            relevanceScore 13324,
+            representativePatent "US-10953021-B2",
+            grantDate "2021-03-23",
+            representativePatentTitle "Topical compositions of flunisolide and
+ methods of treatment",
+            otherPatent {
+              "JP-6473134-B2"
+            }
+          },
+          {
+            patentFamilyId "10980468",
+            relevanceScore 12436,
+            representativePatent "EP-0105872-B1",
+            grantDate "1988-03-30",
+            representativePatentTitle "Novel cosmetic compositions containing
+ prenylamine and a process for their preparation"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D007938",
+      evidence patentChemicalDisease {
+        neighborName "Leukemia",
+        cooccurrenceScore 2423,
+        nPatentFamilies 22,
+        nPatents 31,
+        patentFamily {
+          {
+            patentFamilyId "10820048",
+            relevanceScore 56975,
+            representativePatent "EP-1019090-B1",
+            grantDate "2004-02-18",
+            representativePatentTitle "Polymeric derivatives of camptothecins"
+          },
+          {
+            patentFamilyId "10743226",
+            relevanceScore 26988,
+            representativePatent "EP-0673258-B1",
+            grantDate "2003-05-07",
+            representativePatentTitle "Polymer-bound camptothecin derivatives"
+          },
+          {
+            patentFamilyId "90245864",
+            relevanceScore 25639,
+            representativePatent "US-11932622-B1",
+            grantDate "2024-03-19",
+            representativePatentTitle "2-(1-(2-hydroxypropyl)-4,5-diphenyl-1H-
+imidazol-2-yl)pyridine as an anticancer compound"
+          },
+          {
+            patentFamilyId "10717411",
+            relevanceScore 25639,
+            representativePatent "JP-3693340-B2",
+            grantDate "2005-09-07",
+            representativePatentTitle "Polymer-bound paclitaxel derivatives"
+          },
+          {
+            patentFamilyId "72043032",
+            relevanceScore 16024,
+            representativePatent "KR-102196631-B1",
+            grantDate "2020-12-30",
+            representativePatentTitle "Composition for hair dye comprising
+ polymer of cationic polymer and gardenia yellow pigment with increased hair
+ permeability as effective component"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D014786",
+      evidence patentChemicalDisease {
+        neighborName "Vision Disorders",
+        cooccurrenceScore 2407,
+        nPatentFamilies 21,
+        nPatents 22,
+        patentFamily {
+          {
+            patentFamilyId "32282724",
+            relevanceScore 124610,
+            representativePatent "JP-3970740-B2",
+            grantDate "2007-09-05",
+            representativePatentTitle "Developer composition"
+          },
+          {
+            patentFamilyId "43360267",
+            relevanceScore 20768,
+            representativePatent "JP-5353421-B2",
+            grantDate "2013-11-27",
+            representativePatentTitle "Image forming method, image forming
+ apparatus, color image forming method, and color image forming apparatus"
+          },
+          {
+            patentFamilyId "62115181",
+            relevanceScore 9890,
+            representativePatent "JP-6663337-B2",
+            grantDate "2020-03-11",
+            representativePatentTitle "Image forming device"
+          },
+          {
+            patentFamilyId "45042696",
+            relevanceScore 8535,
+            representativePatent "JP-5556327-B2",
+            grantDate "2014-07-23",
+            representativePatentTitle "Electrophotographic photosensitive
+ member, electrophotographic photosensitive member cartridge, and image
+ forming apparatus"
+          },
+          {
+            patentFamilyId "52123688",
+            relevanceScore 7788,
+            representativePatent "JP-6331630-B2",
+            grantDate "2018-05-30",
+            representativePatentTitle "Electrophotographic photosensitive
+ member, electrophotographic photosensitive member cartridge, and image
+ forming apparatus"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D017029",
+      evidence patentChemicalDisease {
+        neighborName "Epilepsy, Complex Partial",
+        cooccurrenceScore 2404,
+        nPatentFamilies 2,
+        nPatents 2,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 219544,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "40677792",
+            relevanceScore 20790,
+            representativePatent "JP-5683965-B2",
+            grantDate "2015-03-11",
+            representativePatentTitle "Derivatives of aminoalkanols, methods
+ for obtaining aminoalkanols and their use"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D002318",
+      evidence patentChemicalDisease {
+        neighborName "Cardiovascular Diseases",
+        cooccurrenceScore 2389,
+        nPatentFamilies 23,
+        nPatents 26,
+        patentFamily {
+          {
+            patentFamilyId "40718194",
+            relevanceScore 64147,
+            representativePatent "EP-2222220-B1",
+            grantDate "2016-03-16",
+            representativePatentTitle "Trimethylamine compounds as risk
+ predictors of cardiovascular disease",
+            otherPatent {
+              "EP-3070477-B1"
+            }
+          },
+          {
+            patentFamilyId "65359791",
+            relevanceScore 29591,
+            representativePatent "US-10834949-B2",
+            grantDate "2020-11-17",
+            representativePatentTitle "Method of microalgal biomass processing
+ for high-value chemicals production, the resulting composition of butyrogenic
+ algal slowly fermenting dietary fiber, and a way to improve colon health
+ using a slowly fermenting butyrogenic algal dietary fiber",
+            otherPatent {
+              "US-10485253-B2"
+            }
+          },
+          {
+            patentFamilyId "73888685",
+            relevanceScore 19121,
+            representativePatent "JP-7621289-B2",
+            grantDate "2025-01-24",
+            representativePatentTitle "Benzodiazepine compounds, their
+ manufacturing process and medicinal effects"
+          },
+          {
+            patentFamilyId "27798985",
+            relevanceScore 17143,
+            representativePatent "EP-1348684-B1",
+            grantDate "2006-03-08",
+            representativePatentTitle "Method for synthesis of
+ (2S)-indoline-2-carboxylic acid; and use in the synthesis of perindopril"
+          },
+          {
+            patentFamilyId "6080118",
+            relevanceScore 15065,
+            representativePatent "EP-0025528-B1",
+            grantDate "1982-12-29",
+            representativePatentTitle "1-(2-acetylphenylthio)-3-alkylamino-2-p
+ropanols and their acid-addition salts, process for their preparation and
+ medicines containing them"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D004403",
+      evidence patentChemicalDisease {
+        neighborName "Dysentery",
+        cooccurrenceScore 2188,
+        nPatentFamilies 16,
+        nPatents 22,
+        patentFamily {
+          {
+            patentFamilyId "73548306",
+            relevanceScore 38035,
+            representativePatent "JP-7376903-B2",
+            grantDate "2023-11-09",
+            representativePatentTitle "Virus inactivators and sanitary
+ materials"
+          },
+          {
+            patentFamilyId "65359791",
+            relevanceScore 31696,
+            representativePatent "US-10834949-B2",
+            grantDate "2020-11-17",
+            representativePatentTitle "Method of microalgal biomass processing
+ for high-value chemicals production, the resulting composition of butyrogenic
+ algal slowly fermenting dietary fiber, and a way to improve colon health
+ using a slowly fermenting butyrogenic algal dietary fiber",
+            otherPatent {
+              "US-10485253-B2"
+            }
+          },
+          {
+            patentFamilyId "38476566",
+            relevanceScore 29831,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          },
+          {
+            patentFamilyId "36319415",
+            relevanceScore 28026,
+            representativePatent "EP-1824485-B1",
+            grantDate "2012-09-19",
+            representativePatentTitle "Pharmaceutical formulation for
+ increasing solubility of 10-hydroxycamptothecin compounds in non-aqueous
+ polar solvents"
+          },
+          {
+            patentFamilyId "47904663",
+            relevanceScore 26624,
+            representativePatent "KR-101289077-B1",
+            grantDate "2013-07-22",
+            representativePatentTitle "Extraction of Saponin from Green Tea
+ Seeds"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009325",
+      evidence patentChemicalDisease {
+        neighborName "Nausea",
+        cooccurrenceScore 2182,
+        nPatentFamilies 12,
+        nPatents 15,
+        patentFamily {
+          {
+            patentFamilyId "10801451",
+            relevanceScore 85173,
+            representativePatent "EP-0946139-B1",
+            grantDate "2002-06-05",
+            representativePatentTitle "Pharmaceutical formulation"
+          },
+          {
+            patentFamilyId "73548306",
+            relevanceScore 42586,
+            representativePatent "JP-7376903-B2",
+            grantDate "2023-11-09",
+            representativePatentTitle "Virus inactivators and sanitary
+ materials"
+          },
+          {
+            patentFamilyId "20336144",
+            relevanceScore 20559,
+            representativePatent "EP-0011609-B2",
+            grantDate "1988-05-11",
+            representativePatentTitle "Xanthine derivatives and pharmaceutical
+ preparations containing these derivatives for use in the treatment of chronic
+ obstructive airway disease and cardiac disease",
+            otherPatent {
+              "EP-0011609-B1"
+            }
+          },
+          {
+            patentFamilyId "26142825",
+            relevanceScore 17035,
+            representativePatent "EP-0904060-B1",
+            grantDate "2003-12-10",
+            representativePatentTitle "Antifungal compositions with improved
+ bioavailability"
+          },
+          {
+            patentFamilyId "55083477",
+            relevanceScore 13249,
+            representativePatent "JP-6689858-B2",
+            grantDate "2020-04-28",
+            representativePatentTitle "New polyurethane curing agent"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D000088562",
+      evidence patentChemicalDisease {
+        neighborName "Persistent Infection",
+        cooccurrenceScore 2162,
+        nPatentFamilies 13,
+        nPatents 16,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 114244,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "65359791",
+            relevanceScore 34001,
+            representativePatent "US-10834949-B2",
+            grantDate "2020-11-17",
+            representativePatentTitle "Method of microalgal biomass processing
+ for high-value chemicals production, the resulting composition of butyrogenic
+ algal slowly fermenting dietary fiber, and a way to improve colon health
+ using a slowly fermenting butyrogenic algal dietary fiber",
+            otherPatent {
+              "US-10485253-B2"
+            }
+          },
+          {
+            patentFamilyId "92759138",
+            relevanceScore 19041,
+            representativePatent "KR-102703449-B1",
+            grantDate "2024-09-09",
+            representativePatentTitle "Hair shampoo compositions for improving
+ hair and head skin"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 18134,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "11361452",
+            relevanceScore 7693,
+            representativePatent "EP-0550006-B1",
+            grantDate "1999-09-08",
+            representativePatentTitle "Use of N-acyl derivatives of
+ aminoalcohols for the manufacture of a medicament for the treatment of
+ pathologies involving mast cells"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001168",
+      evidence patentChemicalDisease {
+        neighborName "Arthritis",
+        cooccurrenceScore 2155,
+        nPatentFamilies 20,
+        nPatents 25,
+        patentFamily {
+          {
+            patentFamilyId "51454204",
+            relevanceScore 84777,
+            representativePatent "EP-3169367-B1",
+            grantDate "2019-06-05",
+            representativePatentTitle "Poly(beta-amino ester) conjugates for
+ cartilage agent delivery and methods"
+          },
+          {
+            patentFamilyId "35134380",
+            relevanceScore 58873,
+            representativePatent "JP-5144274-B2",
+            grantDate "2013-02-13",
+            representativePatentTitle "Use of lipoic acid-containing
+ cyclodextrin complex"
+          },
+          {
+            patentFamilyId "11361452",
+            relevanceScore 11334,
+            representativePatent "EP-0550006-B1",
+            grantDate "1999-09-08",
+            representativePatentTitle "Use of N-acyl derivatives of
+ aminoalcohols for the manufacture of a medicament for the treatment of
+ pathologies involving mast cells"
+          },
+          {
+            patentFamilyId "47112702",
+            relevanceScore 9479,
+            representativePatent "KR-101229762-B1",
+            grantDate "2013-02-21",
+            representativePatentTitle "External preparation for promoting hair
+ growth and preventing hair loss"
+          },
+          {
+            patentFamilyId "8180408",
+            relevanceScore 7679,
+            representativePatent "EP-1392755-B1",
+            grantDate "2008-12-03",
+            representativePatentTitle "Lipid-polymer-conjugates compositions",
+            otherPatent {
+              "EP-1392756-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D000542",
+      evidence patentChemicalDisease {
+        neighborName "Alveolitis, Extrinsic Allergic",
+        cooccurrenceScore 2128,
+        nPatentFamilies 4,
+        nPatents 6,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 168871,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          },
+          {
+            patentFamilyId "59089763",
+            relevanceScore 24834,
+            representativePatent "EP-3394230-B1",
+            grantDate "2020-10-21",
+            representativePatentTitle "Metalworking fluid",
+            otherPatent {
+              "JP-7030713-B2"
+            }
+          },
+          {
+            patentFamilyId "39636542",
+            relevanceScore 18355,
+            representativePatent "EP-2117300-B1",
+            grantDate "2017-04-19",
+            representativePatentTitle "Aminoalcohol and biocide compositions
+ for aqueous based systems"
+          },
+          {
+            patentFamilyId "25455479",
+            relevanceScore 603,
+            representativePatent "JP-4523151-B2",
+            grantDate "2010-08-11",
+            representativePatentTitle "Chemokine peptides, variants,
+ derivatives and analogs thereof and their use in methods of inhibiting or
+ increasing inflammatory responses"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D050197",
+      evidence patentChemicalDisease {
+        neighborName "Atherosclerosis",
+        cooccurrenceScore 2075,
+        nPatentFamilies 20,
+        nPatents 24,
+        patentFamily {
+          {
+            patentFamilyId "40718194",
+            relevanceScore 67427,
+            representativePatent "EP-3070477-B1",
+            grantDate "2019-02-20",
+            representativePatentTitle "Trimethylamine compounds as risk
+ predictors of cardiovascular disease",
+            otherPatent {
+              "EP-2222220-B1"
+            }
+          },
+          {
+            patentFamilyId "8228898",
+            relevanceScore 50982,
+            representativePatent "EP-1028730-B1",
+            grantDate "2002-04-17",
+            representativePatentTitle "Compositions of lipid lowering agents"
+          },
+          {
+            patentFamilyId "60202739",
+            relevanceScore 17774,
+            representativePatent "US-10519183-B2",
+            grantDate "2019-12-31",
+            representativePatentTitle "Amine solvate of sodium-glucose linked
+ transporter inhibitor, and preparation method and application thereof"
+          },
+          {
+            patentFamilyId "7655916",
+            relevanceScore 13196,
+            representativePatent "EP-1317264-B1",
+            grantDate "2004-07-28",
+            representativePatentTitle "Combination of lipoic acids and
+ conjugated acids for treating diabetic disorders"
+          },
+          {
+            patentFamilyId "62751601",
+            relevanceScore 11548,
+            representativePatent "KR-102615098-B1",
+            grantDate "2023-12-18",
+            representativePatentTitle "Cyclopropyl urea formyl peptide 2
+ receptor and formyl peptide 1 receptor agonist"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003731",
+      evidence patentChemicalDisease {
+        neighborName "Dental Caries",
+        cooccurrenceScore 2071,
+        nPatentFamilies 8,
+        nPatents 8,
+        patentFamily {
+          {
+            patentFamilyId "6384242",
+            relevanceScore 118239,
+            representativePatent "EP-0406623-B1",
+            grantDate "1994-11-30",
+            representativePatentTitle "Polyaspartic acid derivatives as a
+ coating for pharmaceutical forms and foodstuffs"
+          },
+          {
+            patentFamilyId "47904663",
+            relevanceScore 29560,
+            representativePatent "KR-101289077-B1",
+            grantDate "2013-07-22",
+            representativePatentTitle "Extraction of Saponin from Green Tea
+ Seeds"
+          },
+          {
+            patentFamilyId "18609751",
+            relevanceScore 16891,
+            representativePatent "JP-3422964-B2",
+            grantDate "2003-07-07",
+            representativePatentTitle "Method for producing ceramics for
+ medical and dental use, molding composition and kneading agent"
+          },
+          {
+            patentFamilyId "63080546",
+            relevanceScore 14873,
+            representativePatent "US-11517512-B2",
+            grantDate "2022-12-06",
+            representativePatentTitle "Personal care compositions comprising
+ zinc : usnic acid complexes and methods of use"
+          },
+          {
+            patentFamilyId "10980468",
+            relevanceScore 10948,
+            representativePatent "EP-0105872-B1",
+            grantDate "1988-03-30",
+            representativePatentTitle "Novel cosmetic compositions containing
+ prenylamine and a process for their preparation"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D006073",
+      evidence patentChemicalDisease {
+        neighborName "Gout",
+        cooccurrenceScore 2070,
+        nPatentFamilies 8,
+        nPatents 9,
+        patentFamily {
+          {
+            patentFamilyId "46832286",
+            relevanceScore 81485,
+            representativePatent "EP-2570115-B1",
+            grantDate "2017-09-13",
+            representativePatentTitle "Composition for enhancing transdermal
+ absorption of a drug and patch preparation"
+          },
+          {
+            patentFamilyId "47904663",
+            relevanceScore 32594,
+            representativePatent "KR-101289077-B1",
+            grantDate "2013-07-22",
+            representativePatentTitle "Extraction of Saponin from Green Tea
+ Seeds"
+          },
+          {
+            patentFamilyId "42179595",
+            relevanceScore 32594,
+            representativePatent "KR-101415995-B1",
+            grantDate "2014-07-08",
+            representativePatentTitle "Method for preparing green tea saponin,
+ 21-O-angeloyltheasapogenol E3"
+          },
+          {
+            patentFamilyId "69938350",
+            relevanceScore 32594,
+            representativePatent "KR-102119419-B1",
+            grantDate "2020-06-09",
+            representativePatentTitle "Production method of medicinal plant
+ extract using high shear extracting and medicinal plants extract produced by
+ the method"
+          },
+          {
+            patentFamilyId "49237125",
+            relevanceScore 17618,
+            representativePatent "EP-2712612-B1",
+            grantDate "2020-03-25",
+            representativePatentTitle "Patch preparation containing amine
+ oxide and isopropyl myristate",
+            otherPatent {
+              "KR-102190193-B1"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D007037",
+      evidence patentChemicalDisease {
+        neighborName "Hypothyroidism",
+        cooccurrenceScore 2044,
+        nPatentFamilies 4,
+        nPatents 4,
+        patentFamily {
+          {
+            patentFamilyId "56117553",
+            relevanceScore 154052,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "8228898",
+            relevanceScore 18787,
+            representativePatent "EP-1028730-B1",
+            grantDate "2002-04-17",
+            representativePatentTitle "Compositions of lipid lowering agents"
+          },
+          {
+            patentFamilyId "56117554",
+            relevanceScore 18787,
+            representativePatent "EP-3130330-B1",
+            grantDate "2018-09-26",
+            representativePatentTitle "Oil based cleaning product with
+ particulates"
+          },
+          {
+            patentFamilyId "78826360",
+            relevanceScore 12627,
+            representativePatent "US-11400068-B2",
+            grantDate "2022-08-02",
+            representativePatentTitle "Liquid ready-to-use formulation of
+ levothyroxine"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D015431",
+      evidence patentChemicalDisease {
+        neighborName "Weight Loss",
+        cooccurrenceScore 2015,
+        nPatentFamilies 5,
+        nPatents 5,
+        patentFamily {
+          {
+            patentFamilyId "63169715",
+            relevanceScore 130784,
+            representativePatent "US-11690794-B2",
+            grantDate "2023-07-04",
+            representativePatentTitle "Sulfate-free formulations"
+          },
+          {
+            patentFamilyId "9943938",
+            relevanceScore 32696,
+            representativePatent "EP-1556583-B1",
+            grantDate "2006-05-17",
+            representativePatentTitle "Method and composition for reducing
+ wear in a cutting head of a tunnel boring machine"
+          },
+          {
+            patentFamilyId "37452612",
+            relevanceScore 26157,
+            representativePatent "EP-1882029-B1",
+            grantDate "2014-05-07",
+            representativePatentTitle "Structured surfactant compositions"
+          },
+          {
+            patentFamilyId "40587180",
+            relevanceScore 8384,
+            representativePatent "JP-5248986-B2",
+            grantDate "2013-07-31",
+            representativePatentTitle "Copper precursors for thin film
+ deposition"
+          },
+          {
+            patentFamilyId "55361397",
+            relevanceScore 3424,
+            representativePatent "US-11129786-B2",
+            grantDate "2021-09-28",
+            representativePatentTitle "Sulfate-free personal care compositions
+ and methods for using such compositions"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D013342",
+      evidence patentChemicalDisease {
+        neighborName "Stuttering",
+        cooccurrenceScore 2010,
+        nPatentFamilies 5,
+        nPatents 5,
+        patentFamily {
+          {
+            patentFamilyId "53791166",
+            relevanceScore 58507,
+            representativePatent "KR-101575221-B1",
+            grantDate "2015-12-09",
+            representativePatentTitle "Process for producing a co-solvent
+ containing graphite oxide coating liquid and a process for producing a
+ graphite oxide coating"
+          },
+          {
+            patentFamilyId "53791165",
+            relevanceScore 58507,
+            representativePatent "KR-101581451-B1",
+            grantDate "2015-12-30",
+            representativePatentTitle "Oil-based Solvent containing graphite
+ oxide coating agent manufacturing method Graphite oxide coatings
+ manufacturing method"
+          },
+          {
+            patentFamilyId "53791164",
+            relevanceScore 58507,
+            representativePatent "KR-101581449-B1",
+            grantDate "2015-12-30",
+            representativePatentTitle "Amphiphilic Solvent-containing graphite
+ oxide coating agent manufacturing method Graphite oxide coatings
+ manufacturing method"
+          },
+          {
+            patentFamilyId "54427118",
+            relevanceScore 24451,
+            representativePatent "KR-101582834-B1",
+            grantDate "2016-01-08",
+            representativePatentTitle "Manufacturing methods of Non-aqueous
+ Graphene Coating Solution"
+          },
+          {
+            patentFamilyId "61163345",
+            relevanceScore 963,
+            representativePatent "KR-102537274-B1",
+            grantDate "2023-05-25",
+            representativePatentTitle "Amide compounds, pharmaceutical
+ compositions thereof and methods of using them"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D005203",
+      evidence patentChemicalDisease {
+        neighborName "Farmer's Lung",
+        cooccurrenceScore 1997,
+        nPatentFamilies 1,
+        nPatents 2,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 199635,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D006331",
+      evidence patentChemicalDisease {
+        neighborName "Heart Diseases",
+        cooccurrenceScore 1997,
+        nPatentFamilies 15,
+        nPatents 20,
+        patentFamily {
+          {
+            patentFamilyId "20336144",
+            relevanceScore 75462,
+            representativePatent "EP-0011609-B2",
+            grantDate "1988-05-11",
+            representativePatentTitle "Xanthine derivatives and pharmaceutical
+ preparations containing these derivatives for use in the treatment of chronic
+ obstructive airway disease and cardiac disease",
+            otherPatent {
+              "EP-0011609-B1"
+            }
+          },
+          {
+            patentFamilyId "20336145",
+            relevanceScore 37731,
+            representativePatent "EP-0010531-B1",
+            grantDate "1982-06-02",
+            representativePatentTitle "3-alkylxanthines, processes for their
+ preparation and compositions for use in the treatment of chronic obstructive
+ airway disease and cardiac disease"
+          },
+          {
+            patentFamilyId "83598062",
+            relevanceScore 19539,
+            representativePatent "KR-102527381-B1",
+            grantDate "2023-05-03",
+            representativePatentTitle "Cosmetic composition for preventing
+ hair loss or promoting hair growth with xanthohumol as the main ingredient"
+          },
+          {
+            patentFamilyId "6080118",
+            relevanceScore 16579,
+            representativePatent "EP-0025528-B1",
+            grantDate "1982-12-29",
+            representativePatentTitle "1-(2-acetylphenylthio)-3-alkylamino-2-p
+ropanols and their acid-addition salts, process for their preparation and
+ medicines containing them"
+          },
+          {
+            patentFamilyId "50488294",
+            relevanceScore 10521,
+            representativePatent "EP-2910130-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Salty taste-enhancing agent and
+ manufacturing method therefor, and salty taste-enhancing method",
+            otherPatent {
+              "US-12122736-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003015",
+      evidence patentChemicalDisease {
+        neighborName "Clostridium Infections",
+        cooccurrenceScore 1992,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "38476566",
+            relevanceScore 199094,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D010031",
+      evidence patentChemicalDisease {
+        neighborName "Otitis",
+        cooccurrenceScore 1991,
+        nPatentFamilies 4,
+        nPatents 4,
+        patentFamily {
+          {
+            patentFamilyId "56096969",
+            relevanceScore 111056,
+            representativePatent "KR-102376569-B1",
+            grantDate "2022-03-21",
+            representativePatentTitle "Aqueous Surfactant Composition"
+          },
+          {
+            patentFamilyId "50030200",
+            relevanceScore 38870,
+            representativePatent "KR-102348890-B1",
+            grantDate "2022-01-07",
+            representativePatentTitle "Aqueous surfactant compositions"
+          },
+          {
+            patentFamilyId "50030199",
+            relevanceScore 38870,
+            representativePatent "KR-102348889-B1",
+            grantDate "2022-01-07",
+            representativePatentTitle "Aqueous surfactant compositions"
+          },
+          {
+            patentFamilyId "41506672",
+            relevanceScore 10162,
+            representativePatent "EP-2301945-B1",
+            grantDate "2014-10-15",
+            representativePatentTitle "Hydrates of erythromycin salts, the
+ preparation and the use thereof"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009358",
+      evidence patentChemicalDisease {
+        neighborName "Congenital, Hereditary, and Neonatal Diseases and
+ Abnormalities",
+        cooccurrenceScore 1968,
+        nPatentFamilies 8,
+        nPatents 10,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 124744,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "70283750",
+            relevanceScore 47978,
+            representativePatent "US-12187957-B2",
+            grantDate "2025-01-07",
+            representativePatentTitle "Water-based foamed system for
+ perforating zones with low pressure and high temperature"
+          },
+          {
+            patentFamilyId "37935857",
+            relevanceScore 9309,
+            representativePatent "JP-4916689-B2",
+            grantDate "2012-04-18",
+            representativePatentTitle "DNA strand amplification method"
+          },
+          {
+            patentFamilyId "47914976",
+            relevanceScore 7533,
+            representativePatent "US-10012658-B2",
+            grantDate "2018-07-03",
+            representativePatentTitle "Platelet analysis system"
+          },
+          {
+            patentFamilyId "51792513",
+            relevanceScore 4455,
+            representativePatent "US-10285702-B2",
+            grantDate "2019-05-14",
+            representativePatentTitle "Bioresorbable biopolymer anastomosis
+ devices"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009436",
+      evidence patentChemicalDisease {
+        neighborName "Neural Tube Defects",
+        cooccurrenceScore 1965,
+        nPatentFamilies 2,
+        nPatents 3,
+        patentFamily {
+          {
+            patentFamilyId "24517062",
+            relevanceScore 184950,
+            representativePatent "EP-1176138-B1",
+            grantDate "2004-12-01",
+            representativePatentTitle "Active derivatives of valproic acid for
+ the treatment of neurological and psychotic disorders and a method for their
+ preparation"
+          },
+          {
+            patentFamilyId "36216269",
+            relevanceScore 11488,
+            representativePatent "EP-1853267-B1",
+            grantDate "2013-01-23",
+            representativePatentTitle "Folic acid-, vitamin b6- and vitamin
+ b12-containing agents and the use thereof",
+            otherPatent {
+              "EP-1853267-B9"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D014777",
+      evidence patentChemicalDisease {
+        neighborName "Virus Diseases",
+        cooccurrenceScore 1965,
+        nPatentFamilies 18,
+        nPatents 21,
+        patentFamily {
+          {
+            patentFamilyId "48698046",
+            relevanceScore 50135,
+            representativePatent "KR-101444877-B1",
+            grantDate "2014-10-01",
+            representativePatentTitle "On-site crosslinked hydrogel composed
+ of gamma-polyglutamic acid and its preparation method"
+          },
+          {
+            patentFamilyId "73548306",
+            relevanceScore 35811,
+            representativePatent "JP-7376903-B2",
+            grantDate "2023-11-09",
+            representativePatentTitle "Virus inactivators and sanitary
+ materials"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 34105,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "80475148",
+            relevanceScore 14324,
+            representativePatent "KR-102418918-B1",
+            grantDate "2022-07-08",
+            representativePatentTitle "Biodegradable nonwoven fabric improved
+ in flexibility and softness, preparation thereof and biodegradable mask using
+ the same"
+          },
+          {
+            patentFamilyId "25363318",
+            relevanceScore 8953,
+            representativePatent "JP-2562455-B2",
+            grantDate "1996-12-11",
+            representativePatentTitle "Improved osmotic topical pharmaceutical
+ composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D004761",
+      evidence patentChemicalDisease {
+        neighborName "Enterocolitis, Pseudomembranous",
+        cooccurrenceScore 1926,
+        nPatentFamilies 1,
+        nPatents 1,
+        patentFamily {
+          {
+            patentFamilyId "38476566",
+            relevanceScore 192481,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D029424",
+      evidence patentChemicalDisease {
+        neighborName "Pulmonary Disease, Chronic Obstructive",
+        cooccurrenceScore 1864,
+        nPatentFamilies 9,
+        nPatents 11,
+        patentFamily {
+          {
+            patentFamilyId "20336144",
+            relevanceScore 81511,
+            representativePatent "EP-0011609-B2",
+            grantDate "1988-05-11",
+            representativePatentTitle "Xanthine derivatives and pharmaceutical
+ preparations containing these derivatives for use in the treatment of chronic
+ obstructive airway disease and cardiac disease",
+            otherPatent {
+              "EP-0011609-B1"
+            }
+          },
+          {
+            patentFamilyId "10602146",
+            relevanceScore 43775,
+            representativePatent "EP-0256692-B1",
+            grantDate "1992-09-16",
+            representativePatentTitle "6-thioxanthines",
+            otherPatent {
+              "JP-2590120-B2"
+            }
+          },
+          {
+            patentFamilyId "20336145",
+            relevanceScore 40756,
+            representativePatent "EP-0010531-B1",
+            grantDate "1982-06-02",
+            representativePatentTitle "3-alkylxanthines, processes for their
+ preparation and compositions for use in the treatment of chronic obstructive
+ airway disease and cardiac disease"
+          },
+          {
+            patentFamilyId "10834254",
+            relevanceScore 13987,
+            representativePatent "EP-1090023-B1",
+            grantDate "2003-09-10",
+            representativePatentTitle "2-(purin-9-yl)-tetrahydrofuran-3,4-diol
+ derivatives"
+          },
+          {
+            patentFamilyId "22424049",
+            relevanceScore 1711,
+            representativePatent "EP-0720617-B1",
+            grantDate "1998-12-30",
+            representativePatentTitle "Novel urethane-containing aminosteroid
+ compounds"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003291",
+      evidence patentChemicalDisease {
+        neighborName "Conversion Disorder",
+        cooccurrenceScore 1856,
+        nPatentFamilies 13,
+        nPatents 16,
+        patentFamily {
+          {
+            patentFamilyId "38610060",
+            relevanceScore 90002,
+            representativePatent "JP-5199997-B2",
+            grantDate "2013-05-15",
+            representativePatentTitle "Process for preparing
+ 8-chloro-1-methyl-2,3,4,5-tetrahydro-1H-3-benzazepine and related
+ intermediates",
+            otherPatent {
+              "JP-5833535-B2"
+            }
+          },
+          {
+            patentFamilyId "12660850",
+            relevanceScore 34287,
+            representativePatent "EP-0385714-B1",
+            grantDate "1993-09-22",
+            representativePatentTitle "method for regeneration of catalyst for
+ producing aziridine compounds"
+          },
+          {
+            patentFamilyId "84538571",
+            relevanceScore 10435,
+            representativePatent "KR-102628430-B1",
+            grantDate "2024-01-23",
+            representativePatentTitle "Method for production of ultra-highly
+ purified propylene glycol monomethyl ether acetate"
+          },
+          {
+            patentFamilyId "39331140",
+            relevanceScore 8781,
+            representativePatent "EP-2065350-B1",
+            grantDate "2011-02-23",
+            representativePatentTitle "Dispersion aid for hydraulic setting
+ systems"
+          },
+          {
+            patentFamilyId "36725371",
+            relevanceScore 6316,
+            representativePatent "JP-4857546-B2",
+            grantDate "2012-01-18",
+            representativePatentTitle "Method for producing triarylamine
+ compound"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D003288",
+      evidence patentChemicalDisease {
+        neighborName "Contusions",
+        cooccurrenceScore 1844,
+        nPatentFamilies 9,
+        nPatents 11,
+        patentFamily {
+          {
+            patentFamilyId "53791166",
+            relevanceScore 47031,
+            representativePatent "KR-101575221-B1",
+            grantDate "2015-12-09",
+            representativePatentTitle "Process for producing a co-solvent
+ containing graphite oxide coating liquid and a process for producing a
+ graphite oxide coating"
+          },
+          {
+            patentFamilyId "53791165",
+            relevanceScore 47031,
+            representativePatent "KR-101581451-B1",
+            grantDate "2015-12-30",
+            representativePatentTitle "Oil-based Solvent containing graphite
+ oxide coating agent manufacturing method Graphite oxide coatings
+ manufacturing method"
+          },
+          {
+            patentFamilyId "53791164",
+            relevanceScore 47031,
+            representativePatent "KR-101581449-B1",
+            grantDate "2015-12-30",
+            representativePatentTitle "Amphiphilic Solvent-containing graphite
+ oxide coating agent manufacturing method Graphite oxide coatings
+ manufacturing method"
+          },
+          {
+            patentFamilyId "51454204",
+            relevanceScore 13506,
+            representativePatent "EP-3169367-B1",
+            grantDate "2019-06-05",
+            representativePatentTitle "Poly(beta-amino ester) conjugates for
+ cartilage agent delivery and methods"
+          },
+          {
+            patentFamilyId "48531337",
+            relevanceScore 9827,
+            representativePatent "JP-5977934-B2",
+            grantDate "2016-08-24",
+            representativePatentTitle "Hair dye composition"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D012874",
+      evidence patentChemicalDisease {
+        neighborName "Skin Diseases, Infectious",
+        cooccurrenceScore 1843,
+        nPatentFamilies 10,
+        nPatents 13,
+        patentFamily {
+          {
+            patentFamilyId "44276339",
+            relevanceScore 70002,
+            representativePatent "EP-2566448-B1",
+            grantDate "2015-06-17",
+            representativePatentTitle "Efervescent formulations comprising
+ cefdinir"
+          },
+          {
+            patentFamilyId "38476566",
+            relevanceScore 39217,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          },
+          {
+            patentFamilyId "32679936",
+            relevanceScore 17074,
+            representativePatent "JP-5096663-B2",
+            grantDate "2012-12-12",
+            representativePatentTitle "Pyrithione biocide enhanced by zinc
+ metal ions and organic amines"
+          },
+          {
+            patentFamilyId "8867548",
+            relevanceScore 14286,
+            representativePatent "JP-3787566-B2",
+            grantDate "2006-06-21",
+            representativePatentTitle "Cosmetic composition for caring for
+ male skin and hair"
+          },
+          {
+            patentFamilyId "74560929",
+            relevanceScore 12281,
+            representativePatent "KR-102214282-B1",
+            grantDate "2021-02-10",
+            representativePatentTitle "Method for preparing shampoo
+ composition for improving scalp"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D009784",
+      evidence patentChemicalDisease {
+        neighborName "Occupational Diseases",
+        cooccurrenceScore 1840,
+        nPatentFamilies 1,
+        nPatents 2,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 183931,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D008659",
+      evidence patentChemicalDisease {
+        neighborName "Metabolic Diseases",
+        cooccurrenceScore 1839,
+        nPatentFamilies 12,
+        nPatents 16,
+        patentFamily {
+          {
+            patentFamilyId "56117553",
+            relevanceScore 112420,
+            representativePatent "EP-3130329-B1",
+            grantDate "2018-08-15",
+            representativePatentTitle "Oil based cleaning product"
+          },
+          {
+            patentFamilyId "6528845",
+            relevanceScore 21619,
+            representativePatent "EP-0947194-B1",
+            grantDate "2002-12-11",
+            representativePatentTitle "Dosage form comprising solid salts of
+ R-alpha-lipoic acid with improved bioavailability",
+            otherPatent {
+              "EP-0702953-B1"
+            }
+          },
+          {
+            patentFamilyId "56117554",
+            relevanceScore 13710,
+            representativePatent "EP-3130330-B1",
+            grantDate "2018-09-26",
+            representativePatentTitle "Oil based cleaning product with
+ particulates"
+          },
+          {
+            patentFamilyId "60202739",
+            relevanceScore 9230,
+            representativePatent "US-10519183-B2",
+            grantDate "2019-12-31",
+            representativePatentTitle "Amine solvate of sodium-glucose linked
+ transporter inhibitor, and preparation method and application thereof"
+          },
+          {
+            patentFamilyId "6502345",
+            relevanceScore 7206,
+            representativePatent "JP-3404435-B2",
+            grantDate "2003-05-06",
+            representativePatentTitle "Inclusion compound, method for
+ producing chewable or effervescent tablet, and granule, and chewable or
+ effervescent tablet"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D011051",
+      evidence patentChemicalDisease {
+        neighborName "Poliomyelitis",
+        cooccurrenceScore 1825,
+        nPatentFamilies 11,
+        nPatents 11,
+        patentFamily {
+          {
+            patentFamilyId "42327192",
+            relevanceScore 51628,
+            representativePatent "JP-5274996-B2",
+            grantDate "2013-08-28",
+            representativePatentTitle "Method for producing flexible
+ polyurethane foam"
+          },
+          {
+            patentFamilyId "43568347",
+            relevanceScore 35494,
+            representativePatent "EP-2512231-B1",
+            grantDate "2016-12-07",
+            representativePatentTitle "Composition in form of a gel for the
+ virucidal disinfection of mammalian skin"
+          },
+          {
+            patentFamilyId "35207650",
+            relevanceScore 20576,
+            representativePatent "JP-4477606-B2",
+            grantDate "2010-06-09",
+            representativePatentTitle "Water repellent aqueous curable
+ composition"
+          },
+          {
+            patentFamilyId "52354928",
+            relevanceScore 15432,
+            representativePatent "JP-6170444-B2",
+            grantDate "2017-07-26",
+            representativePatentTitle "Oil-in-water silicone emulsion
+ composition"
+          },
+          {
+            patentFamilyId "53041202",
+            relevanceScore 11637,
+            representativePatent "JP-6760435-B2",
+            grantDate "2020-09-23",
+            representativePatentTitle "Binder for printing ink, laminated ink
+ composition for flexible packaging and printed matter"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001172",
+      evidence patentChemicalDisease {
+        neighborName "Arthritis, Rheumatoid",
+        cooccurrenceScore 1797,
+        nPatentFamilies 20,
+        nPatents 26,
+        patentFamily {
+          {
+            patentFamilyId "47913634",
+            relevanceScore 45759,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "25487094",
+            relevanceScore 34955,
+            representativePatent "EP-1428023-B1",
+            grantDate "2008-08-27",
+            representativePatentTitle "Methods for predicting drug sensitivity
+ in patients afflicted with an inflammatory disease"
+          },
+          {
+            patentFamilyId "54540762",
+            relevanceScore 22880,
+            representativePatent "EP-3325480-B1",
+            grantDate "2020-04-22",
+            representativePatentTitle "5-substituted-7-[4-(substituted)
+ benzyl]amino-3-isopropylpyrazolo (4,3-d) pyrimidines as medicaments"
+          },
+          {
+            patentFamilyId "40755342",
+            relevanceScore 14804,
+            representativePatent "EP-2233138-B1",
+            grantDate "2014-07-23",
+            representativePatentTitle "Tape preparation comprising etodolac in
+ ionic liquid form"
+          },
+          {
+            patentFamilyId "11361452",
+            relevanceScore 10767,
+            representativePatent "EP-0550006-B1",
+            grantDate "1999-09-08",
+            representativePatentTitle "Use of N-acyl derivatives of
+ aminoalcohols for the manufacture of a medicament for the treatment of
+ pathologies involving mast cells"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D005901",
+      evidence patentChemicalDisease {
+        neighborName "Glaucoma",
+        cooccurrenceScore 1786,
+        nPatentFamilies 10,
+        nPatents 13,
+        patentFamily {
+          {
+            patentFamilyId "47913634",
+            relevanceScore 53640,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "51625444",
+            relevanceScore 31894,
+            representativePatent "US-10544183-B2",
+            grantDate "2020-01-28",
+            representativePatentTitle "Uridine nucleoside derivatives,
+ compositions and methods of use",
+            otherPatent {
+              "JP-6591957-B2"
+            }
+          },
+          {
+            patentFamilyId "23528163",
+            relevanceScore 29502,
+            representativePatent "EP-0411704-B1",
+            grantDate "1995-01-11",
+            representativePatentTitle "Substituted aromatic sulfonamides as
+ antiglaucoma agents",
+            otherPatent {
+              "JP-3050397-B2"
+            }
+          },
+          {
+            patentFamilyId "92759138",
+            relevanceScore 19668,
+            representativePatent "KR-102703449-B1",
+            grantDate "2024-09-09",
+            representativePatentTitle "Hair shampoo compositions for improving
+ hair and head skin"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 18732,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D011014",
+      evidence patentChemicalDisease {
+        neighborName "Pneumonia",
+        cooccurrenceScore 1784,
+        nPatentFamilies 8,
+        nPatents 9,
+        patentFamily {
+          {
+            patentFamilyId "35810377",
+            relevanceScore 116560,
+            representativePatent "JP-5619791-B2",
+            grantDate "2014-11-05",
+            representativePatentTitle "Use of formaldehyde and
+ formaldehyde-releasing compounds in compositions for controlling mycobacteria",
+            otherPatent {
+              "JP-5019413-B2"
+            }
+          },
+          {
+            patentFamilyId "38476566",
+            relevanceScore 32650,
+            representativePatent "JP-5389023-B2",
+            grantDate "2014-01-15",
+            representativePatentTitle "Lantibiotic type compounds with
+ antibacterial activity"
+          },
+          {
+            patentFamilyId "74560929",
+            relevanceScore 10225,
+            representativePatent "KR-102214282-B1",
+            grantDate "2021-02-10",
+            representativePatentTitle "Method for preparing shampoo
+ composition for improving scalp"
+          },
+          {
+            patentFamilyId "41506672",
+            relevanceScore 7618,
+            representativePatent "EP-2301945-B1",
+            grantDate "2014-10-15",
+            representativePatentTitle "Hydrates of erythromycin salts, the
+ preparation and the use thereof"
+          },
+          {
+            patentFamilyId "36577186",
+            relevanceScore 6938,
+            representativePatent "EP-1828400-B1",
+            grantDate "2012-07-25",
+            representativePatentTitle "Detection of microbe contamination on
+ elastomeric articles"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D001327",
+      evidence patentChemicalDisease {
+        neighborName "Autoimmune Diseases",
+        cooccurrenceScore 1773,
+        nPatentFamilies 19,
+        nPatents 29,
+        patentFamily {
+          {
+            patentFamilyId "51659008",
+            relevanceScore 44767,
+            representativePatent "EP-2968504-B1",
+            grantDate "2019-12-18",
+            representativePatentTitle "Compositions and methods for inducing
+ apoptosis",
+            otherPatent {
+              "KR-102384693-B1",
+              "US-10251906-B2",
+              "JP-6814824-B2"
+            }
+          },
+          {
+            patentFamilyId "47913634",
+            relevanceScore 44767,
+            representativePatent "JP-6251241-B2",
+            grantDate "2017-12-20",
+            representativePatentTitle "Production of alkanolamides and
+ amidoamines by microorganisms and their use"
+          },
+          {
+            patentFamilyId "90039837",
+            relevanceScore 12627,
+            representativePatent "JP-7520397-B2",
+            grantDate "2024-07-23",
+            representativePatentTitle "Stem cell culture supernatant and its
+ manufacturing method"
+          },
+          {
+            patentFamilyId "25455479",
+            relevanceScore 10132,
+            representativePatent "JP-4523151-B2",
+            grantDate "2010-08-11",
+            representativePatentTitle "Chemokine peptides, variants,
+ derivatives and analogs thereof and their use in methods of inhibiting or
+ increasing inflammatory responses"
+          },
+          {
+            patentFamilyId "51454204",
+            relevanceScore 10101,
+            representativePatent "EP-3169367-B1",
+            grantDate "2019-06-05",
+            representativePatentTitle "Poly(beta-amino ester) conjugates for
+ cartilage agent delivery and methods"
+          }
+        }
+      }
+    },
+    {
+      iD_1 cID 4,
+      iD_2 meSH "D006333",
+      evidence patentChemicalDisease {
+        neighborName "Heart Failure",
+        cooccurrenceScore 1758,
+        nPatentFamilies 22,
+        nPatents 27,
+        patentFamily {
+          {
+            patentFamilyId "40718194",
+            relevanceScore 43156,
+            representativePatent "EP-2222220-B1",
+            grantDate "2016-03-16",
+            representativePatentTitle "Trimethylamine compounds as risk
+ predictors of cardiovascular disease",
+            otherPatent {
+              "EP-3070477-B1"
+            }
+          },
+          {
+            patentFamilyId "27798985",
+            relevanceScore 18453,
+            representativePatent "EP-1348684-B1",
+            grantDate "2006-03-08",
+            representativePatentTitle "Method for synthesis of
+ (2S)-indoline-2-carboxylic acid; and use in the synthesis of perindopril"
+          },
+          {
+            patentFamilyId "11368280",
+            relevanceScore 16988,
+            representativePatent "EP-0804179-B1",
+            grantDate "1999-07-14",
+            representativePatentTitle "Use of n-acyl derivatives of
+ aminoalcohols in the manufacture of a medicament for practising
+ neuroprotective action in neuropathological states connected with
+ excitotoxicity"
+          },
+          {
+            patentFamilyId "22424049",
+            relevanceScore 14561,
+            representativePatent "EP-0720617-B1",
+            grantDate "1998-12-30",
+            representativePatentTitle "Novel urethane-containing aminosteroid
+ compounds"
+          },
+          {
+            patentFamilyId "28459642",
+            relevanceScore 12445,
+            representativePatent "EP-1354876-B1",
+            grantDate "2005-04-27",
+            representativePatentTitle "Method for synthesis of
+ (2S,3aS,7aS)-perhydroindole-2-carboxylic acid and esters thereof; and use in
+ the synthesis of perindopril"
+          }
+        }
+      }
+    }
+  }
+}

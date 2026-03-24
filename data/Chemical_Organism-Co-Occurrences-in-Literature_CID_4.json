@@ -1,0 +1,872 @@
+{
+  "LinkDataSet": {
+    "LinkData": [
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 1053381
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "osteospermum ecklonis",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3969,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 396825,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 49054
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "antennaria dioica",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3969,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 396825,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 1436938
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "xerochrysum subundulatum",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3969,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 396825,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 113639
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "argyranthemum pinnatifidum",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3969,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 396825,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 227193
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "commidendrum rugosum",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3969,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 396825,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 49065
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "antennaria plantaginifolia",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3969,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 396825,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 159672
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "electranthera mutica",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3924,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 392299,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 92915
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "onopordum acanthium",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3694,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 369334,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 41650
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "tarchonanthus camphoratus",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 3670,
+            "Article": [
+              {
+                "PCLID": 688307048,
+                "RelevanceScore": 366856,
+                "DOI": "10.1016/0031-9422(88)80301-7",
+                "PublicationDate": "1988-01-01",
+                "IsReview": false,
+                "Title": "1-Amino-2-propanol, a natural product from the compositae",
+                "Author": "Laura S.R. Brown, David O. Gray",
+                "Journal": "Phytochemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 9606
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "homo sapiens (human)",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 6,
+            "CooccurrenceScore": 2637,
+            "Article": [
+              {
+                "PCLID": 33297933,
+                "RelevanceScore": 73263,
+                "PMID": 4274990,
+                "PublicationDate": "1974-05-01",
+                "IsReview": false,
+                "Title": "Occupational health case report. No. 8. Monoisopropanolamine",
+                "Author": "R L Hervin, J B Lucas",
+                "Journal": "Journal of occupational medicine. : official publication of the Industrial Medical Association"
+              },
+              {
+                "PCLID": 15996138,
+                "RelevanceScore": 73263,
+                "PMID": 17583405,
+                "DOI": "10.1016/j.fct.2007.05.003",
+                "PublicationDate": "2007-10-01",
+                "IsReview": false,
+                "Title": "Pharmacokinetics and bioavailability of diisopropanolamine (DIPA) in rats following intravenous or dermal application",
+                "Author": "S.A. Saghir, S.W. Frantz, M.W. Spence, R.J. Nolan, E.R. Lowe, D.L. Rick, M.J. Bartels",
+                "Journal": "Food and chemical toxicology : an international journal published for the British Industrial Biological Research Association"
+              },
+              {
+                "PCLID": 17293949,
+                "RelevanceScore": 73263,
+                "PMID": 15282789,
+                "DOI": "10.1002/rcm.1531",
+                "PublicationDate": "2004-06-16",
+                "IsReview": false,
+                "Title": "Determination of alkanolamines in cattails ( Typha latifolia ) utilizing electrospray ionization with selected reaction monitoring and ion‐exchange chromatography",
+                "Author": "Kerry M. Peru, John V. Headley, William J. Doucette",
+                "Journal": "Rapid communications in mass spectrometry : RCM"
+              },
+              {
+                "PCLID": 5596569,
+                "RelevanceScore": 34189,
+                "PMID": 6192074,
+                "DOI": "10.1007/bf00289484",
+                "PublicationDate": "1983-07-01",
+                "IsReview": false,
+                "Title": "Variability in the phenotypic expression of abnormal sarcosine metabolism in a family",
+                "Author": "Ellen S. Kang, J. Seyer, T. A. Todd, C. Herrera",
+                "Journal": "Human Genetics"
+              },
+              {
+                "PCLID": 213496787,
+                "RelevanceScore": 5398,
+                "DOI": "10.1007/s11306-012-0464-y",
+                "PublicationDate": "2012-09-29",
+                "IsReview": false,
+                "Title": "Physiological and environmental parameters associated with mass spectrometry-based salivary metabolomic profiles",
+                "Author": "Masahiro Sugimoto, Juri Saruta, Chisa Matsuki, Masahiro To, Hiromi Onuma, Miku Kaneko, Tomoyoshi Soga, Masaru Tomita, Keiichi Tsukinoki",
+                "Journal": "Metabolomics"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 10036
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "mesocricetus auratus (golden hamster)",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 2205,
+            "Article": [
+              {
+                "PCLID": 851150,
+                "RelevanceScore": 242440,
+                "PMID": 8446769,
+                "DOI": "10.1007/bf02576207",
+                "PublicationDate": "1993-12-01",
+                "IsReview": false,
+                "Title": "Glucose tolerance and insulin secretion in experimental pancreatic cancer in the Syrian hamster",
+                "Author": "Bo Ahrén, Åke Andrén-Sandberg",
+                "Journal": "Research in experimental medicine. Zeitschrift fur die gesamte experimentelle Medizin einschliesslich experimenteller Chirurgie",
+                "OrganismName": "syrian golden hamster; syrian hamster"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 559292
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "saccharomyces cerevisiae s288c",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 2,
+            "CooccurrenceScore": 2097,
+            "Article": [
+              {
+                "PCLID": 6632714,
+                "RelevanceScore": 109343,
+                "PMID": 23519169,
+                "DOI": "10.1038/embor.2013.36",
+                "PublicationDate": "2013-03-22",
+                "IsReview": false,
+                "Title": "Plasma membrane--endoplasmic reticulum contact sites regulate phosphatidylcholine synthesis",
+                "Author": "Shabnam Tavassoli, Jesse T Chao, Barry P Young, Ruud C Cox, William A Prinz, Anton I P M de Kroon, Christopher J R Loewen",
+                "Journal": "The EMBO Reports"
+              },
+              {
+                "PCLID": 836409,
+                "RelevanceScore": 100231,
+                "PMID": 8431960,
+                "DOI": "10.1007/bf00352006",
+                "PublicationDate": "1993-02-01",
+                "IsReview": false,
+                "Title": "Molecular cloning of the yeast OPI3 gene as a high copy number suppressor of the cho2 mutation",
+                "Author": "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+                "Journal": "Current Genetics"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 84588
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "parasynechococcus marenigrum wh 8102",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 1881,
+            "Article": [
+              {
+                "PCLID": 6502454,
+                "RelevanceScore": 187970,
+                "PMID": 17019606,
+                "DOI": "10.1007/s00203-006-0167-8",
+                "PublicationDate": "2006-09-22",
+                "IsReview": false,
+                "Title": "Identification of glycine betaine as compatible solute in Synechococcus sp. WH8102 and characterization of its N-methyltransferase genes involved in betaine synthesis",
+                "Author": "Wei-Dong Lu, Zhen-Ming Chi, Chuan-Dong Su",
+                "Journal": "Archives of Microbiology"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 45202
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "unidentified plasmid",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 1736,
+            "Article": [
+              {
+                "PCLID": 836409,
+                "RelevanceScore": 190807,
+                "PMID": 8431960,
+                "DOI": "10.1007/bf00352006",
+                "PublicationDate": "1993-02-01",
+                "IsReview": false,
+                "Title": "Molecular cloning of the yeast OPI3 gene as a high copy number suppressor of the cho2 mutation",
+                "Author": "Wilfried Preitschopf, Hannes Lückl, Eric Summers, Susan A. Henry, Fritz Paltauf, Sepp D. Kohlwein",
+                "Journal": "Current Genetics",
+                "OrganismName": "plasmid"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 28039
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "lactobacillus leichmannii",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 1635,
+            "Article": [
+              {
+                "PCLID": 171836,
+                "RelevanceScore": 179725,
+                "PMID": 8002712,
+                "DOI": "10.1007/bf00303583",
+                "PublicationDate": "1994-04-01",
+                "IsReview": false,
+                "Title": "Microbiological activities of nucleotide loop-modified analogues of vitamin B12",
+                "Author": "Atsuhiko Ishida, Hirokazu Kanefusa, Hidenori Fujita, Tetsuo Toraya",
+                "Journal": "Archives of Microbiology",
+                "OrganismName": "l. leichmannii; lactobacillus leichmannii"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 1773
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "mycobacterium tuberculosis",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 1391,
+            "Article": [
+              {
+                "PCLID": 2599530,
+                "RelevanceScore": 152855,
+                "PMID": 30511238,
+                "DOI": "10.1007/s11095-018-2543-x",
+                "PublicationDate": "2018-12-03",
+                "IsReview": false,
+                "Title": "HPMA-PLGA Based Nanoparticles for Effective In Vitro Delivery of Rifampicin",
+                "Author": "Sarita Rani, Avinash Gothwal, Pawan K. Pandey, Devendra S. Chauhan, Praveen K. Pachouri, Umesh D. Gupta, Umesh Gupta",
+                "Journal": "Pharmaceutical Research",
+                "OrganismName": "mtb; mycobacterium tuberculosis"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 1653776
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "halalkalibacter oceani",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 878,
+            "Article": [
+              {
+                "PCLID": 464744,
+                "RelevanceScore": 96491,
+                "PMID": 23934481,
+                "DOI": "10.1007/s10482-013-9995-0",
+                "PublicationDate": "2013-08-11",
+                "IsReview": false,
+                "Title": "Bacillus oceani sp. nov., a new slightly halophilic bacterium, isolated from a deep sea sediment environment",
+                "Author": "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You, Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+                "Journal": "Antonie van Leeuwenhoek",
+                "OrganismName": "bacillus oceani"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 135735
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "priestia endophytica",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 791,
+            "Article": [
+              {
+                "PCLID": 464744,
+                "RelevanceScore": 79013,
+                "PMID": 23934481,
+                "DOI": "10.1007/s10482-013-9995-0",
+                "PublicationDate": "2013-08-11",
+                "IsReview": false,
+                "Title": "Bacillus oceani sp. nov., a new slightly halophilic bacterium, isolated from a deep sea sediment environment",
+                "Author": "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You, Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+                "Journal": "Antonie van Leeuwenhoek",
+                "OrganismName": "bacillus endophyticus"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 2747269
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "halophilic bacterium",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 669,
+            "Article": [
+              {
+                "PCLID": 464744,
+                "RelevanceScore": 73458,
+                "PMID": 23934481,
+                "DOI": "10.1007/s10482-013-9995-0",
+                "PublicationDate": "2013-08-11",
+                "IsReview": false,
+                "Title": "Bacillus oceani sp. nov., a new slightly halophilic bacterium, isolated from a deep sea sediment environment",
+                "Author": "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You, Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+                "Journal": "Antonie van Leeuwenhoek",
+                "OrganismName": "halophilic bacterium"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 511145
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "escherichia coli str. k-12 substr. mg1655",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 634,
+            "Article": [
+              {
+                "PCLID": 15080320,
+                "RelevanceScore": 63321,
+                "PMID": 6361270,
+                "DOI": "10.1007/bf02102318",
+                "PublicationDate": "1983-11-01",
+                "IsReview": false,
+                "Title": "Experimental evolution of a novel pathway for glycerol dissimilation in Escherichia coli",
+                "Author": "R. Z. Jin, John C. -T. Tang, E. C. C. Lin",
+                "Journal": "Journal of Molecular Evolution"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 2
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "bacteria (bacteria)",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 626,
+            "Article": [
+              {
+                "PCLID": 171836,
+                "RelevanceScore": 68695,
+                "PMID": 8002712,
+                "DOI": "10.1007/bf00303583",
+                "PublicationDate": "1994-04-01",
+                "IsReview": false,
+                "Title": "Microbiological activities of nucleotide loop-modified analogues of vitamin B12",
+                "Author": "Atsuhiko Ishida, Hirokazu Kanefusa, Hidenori Fujita, Tetsuo Toraya",
+                "Journal": "Archives of Microbiology",
+                "OrganismName": "bacterium"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 10090
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "mus musculus (house mouse)",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 603,
+            "Article": [
+              {
+                "PCLID": 1642601,
+                "RelevanceScore": 60154,
+                "PMID": 15026556,
+                "DOI": "10.1158/1535-7163.353.3.3",
+                "PublicationDate": "2004-03-01",
+                "IsReview": false,
+                "Title": "Cassette dosing pharmacokinetics of a library of 2,6,9-trisubstituted purine cyclin-dependent kinase 2 inhibitors prepared by parallel synthesis",
+                "Author": "Florence I. Raynaud, Peter M. Fischer, Bernard P. Nutley, Phyllis M. Goddard, David P. Lane, Paul Workman",
+                "Journal": "Molecular Cancer Therapeutics"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 1386
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "bacillus (bacillus rrna group 1)",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 452,
+            "Article": [
+              {
+                "PCLID": 464744,
+                "RelevanceScore": 49635,
+                "PMID": 23934481,
+                "DOI": "10.1007/s10482-013-9995-0",
+                "PublicationDate": "2013-08-11",
+                "IsReview": false,
+                "Title": "Bacillus oceani sp. nov., a new slightly halophilic bacterium, isolated from a deep sea sediment environment",
+                "Author": "Yu-Juan Liu, Li-Juan Long, Xiao-Fang Huang, Zhi-Qing You, Fa-Zuo Wang, Jie Li, Chang-Jin Kim, Xin-Peng Tian, Si Zhang",
+                "Journal": "Antonie van Leeuwenhoek",
+                "OrganismName": "bacillus"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 10116
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "rattus norvegicus (norway rat)",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 380,
+            "Article": [
+              {
+                "PCLID": 7311888,
+                "RelevanceScore": 37909,
+                "PMID": 23538234,
+                "DOI": "10.1016/j.bmc.2013.02.044",
+                "PublicationDate": "2013-05-01",
+                "IsReview": false,
+                "Title": "Novel hybrids of natural isochroman-4-one bearing N-substituted isopropanolamine as potential antihypertensive candidates",
+                "Author": "Renren Bai, Xiaojing Huang, Xue Yang, Wen Hong, Yiqun Tang, Hequan Yao, Jieyun Jiang, Jie Liu, Mingqin Shen, Xiaoming Wu, Jinyi Xu",
+                "Journal": "Bioorganic & Medicinal Chemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 3193
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "embryophyta (land plants)",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 355,
+            "Article": [
+              {
+                "PCLID": 2586670,
+                "RelevanceScore": 35379,
+                "PMID": 28988386,
+                "DOI": "10.1007/s11030-017-9787-y",
+                "PublicationDate": "2017-10-07",
+                "IsReview": true,
+                "Title": "Perspectives on medicinal properties of natural phenolic monoterpenoids and their hybrids",
+                "Author": "Jamatsing D. Rajput, Suresh D. Bagul, Umesh D. Pete, Chetan M. Zade, Subhash B. Padhye, Ratnamala S. Bendre",
+                "Journal": "Molecular Diversity",
+                "OrganismName": "plants"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 5691
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "trypanosoma brucei",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 204,
+            "Article": [
+              {
+                "PCLID": 22979057,
+                "RelevanceScore": 20314,
+                "PMID": 30589893,
+                "DOI": "10.1371/journal.ppat.1007475",
+                "PublicationDate": "2018-12-27",
+                "IsReview": false,
+                "Title": "Gluconeogenesis using glycerol as a substrate in bloodstream-form Trypanosoma brucei",
+                "Author": "Julie Kovářová, Rupa Nagar, Joana Faria, Michael A. J. Ferguson, Michael P. Barrett, David Horn",
+                "Journal": "PLOS Pathogens"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 622
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "shigella dysenteriae",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 175,
+            "Article": [
+              {
+                "PCLID": 26569979,
+                "RelevanceScore": 17449,
+                "PMID": 3882967,
+                "DOI": "10.1021/jm00381a013",
+                "PublicationDate": "1985-03-01",
+                "IsReview": false,
+                "Title": "Use of physicochemical parameters in distance geometry and related three-dimensional quantitative structure-activity relationships: A demonstration using Escherichia coli dihydrofolate reductase inhibitors",
+                "Author": "Arup K. Ghose, Gordon M. Crippen",
+                "Journal": "Journal of Medicinal Chemistry"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "ID_1": {
+          "CID": 4
+        },
+        "ID_2": {
+          "TaxonomyID": 562
+        },
+        "Evidence": {
+          "ChemicalOrganismNeighbor": {
+            "NeighborName": "escherichia coli (e. coli)",
+            "OrderingByCooccurrenceScore": true,
+            "ArticleCount": 1,
+            "CooccurrenceScore": 134,
+            "Article": [
+              {
+                "PCLID": 26569979,
+                "RelevanceScore": 13277,
+                "PMID": 3882967,
+                "DOI": "10.1021/jm00381a013",
+                "PublicationDate": "1985-03-01",
+                "IsReview": false,
+                "Title": "Use of physicochemical parameters in distance geometry and related three-dimensional quantitative structure-activity relationships: A demonstration using Escherichia coli dihydrofolate reductase inhibitors",
+                "Author": "Arup K. Ghose, Gordon M. Crippen",
+                "Journal": "Journal of Medicinal Chemistry"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
