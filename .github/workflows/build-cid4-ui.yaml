@@ -1,6 +1,7 @@
 name: Build cid4-ui on nextjs
 on:
   pull_request:
+    paths: cid4-ui/*
     types:
       - opened
       - reopened

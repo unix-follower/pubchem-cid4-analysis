@@ -1,6 +1,7 @@
 name: Build cid4-angular-ui
 on:
   pull_request:
+    paths: cid4-angular-ui/*
     types:
       - opened
       - reopened
