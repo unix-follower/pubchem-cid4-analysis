@@ -1,0 +1,47 @@
+name: Build python app
+on:
+  pull_request:
+    paths: py/*
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+    inputs:
+      python-version:
+        description: Desired python version
+        required: false
+        default: "3.13.12"
+
+env:
+  PYTHON_VERSION: ${{ inputs.python-version || '3.13.12' }}
+
+jobs:
+  build:
+    runs-on:
+      - ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+        
+      - name: Install dependencies
+        working-directory: py
+        shell: bash
+        run: pip install uv
+
+      - name: Check code formatting
+        working-directory: py
+        shell: bash
+        run: uv tool run ruff check
+
+      - name: Build python app
+        working-directory: py
+        shell: bash
+        run: uv build

@@ -46,6 +46,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-sbt-
 
+      - name: Check scala formatting
+        working-directory: scala
+        shell: bash
+        run: sbt scalafmtCheckAll
+
       - name: Build scala app
         working-directory: scala
         shell: bash

@@ -12,14 +12,26 @@ The dataset contains:
 ---
 
 ## 1. Mathematics
-
 ### Algebra
 | Exercise | Data used |
 |---|---|
-| Compute molecular weight: $M = 3(12.011) + 9(1.008) + 14.007 + 15.999$ | `out/cid4-sdf-extracted.json` → per-atom mass values |
 | Write and balance chemical equations for reactions of the amino alcohol | Atom counts from Conformer3D_COMPOUND_CID_4.json |
 | Set operations on taxonomy IDs: union/intersection of mammal vs bird taxon ID sets | `pubchem_cid_4_consolidatedcompoundtaxonomy.csv` → `Taxonomy_ID` column |
 | Polynomial: fit a degree-2 polynomial to `Activity_Value` vs `BioAssay_AID` (numerical index) | `pubchem_cid_4_bioactivity.csv` |
+
+3C = 3 * 12.011 = 36.033
+9H = 9 * 1.008 = 9.072
+1N = 14.007
+1O = 15.999
+
+Average molecular weight Mₐᵥ₉ = ∑ₑ nₑ ⋅ m̄ₑ
+MW = 36.033 + 9.072 + 14.007 + 15.999 = 75.111
+
+M_exact = ∑ₑ nₑ ⋅ mₑ^mono
+​where:
+nₑ is the count of element e
+mₑ^mono is the monoisotopic mass of element e
+
 
 ### Linear Algebra
 | Exercise | Data used |
