@@ -1,6 +1,7 @@
 {
   "dependencies": [
     "armadillo",
-    "gtest"
+    "gtest",
+    "nlohmann-json"
   ]
 }

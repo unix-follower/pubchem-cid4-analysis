@@ -9,6 +9,7 @@ C++ implementation for analyzing PubChem compound CID 4 (1-Amino-2-propanol). Pa
 ## Build System
 
 Uses CMake 4.3.0+ with vcpkg for dependency management.
+RDKit is supplied separately from a micromamba or conda environment and discovered via `PUBCHEM_RDKIT_PREFIX`.
 
 ### Building
 
@@ -17,9 +18,11 @@ Uses CMake 4.3.0+ with vcpkg for dependency management.
 ./build.sh
 
 # Manual build steps
+micromamba create -y -p ./.micromamba/rdkit -c conda-forge librdkit-dev libboost-devel
+export PUBCHEM_RDKIT_PREFIX="$PWD/.micromamba/rdkit"
 vcpkg install                 # Install dependencies from vcpkg.json
-cmake --preset=default        # Configure with vcpkg toolchain
-cmake --build build           # Build project
+cmake --preset=vcpkg          # Configure with vcpkg toolchain and external RDKit
+cmake --build --preset=vcpkg  # Build project
 
 # Run the application
 ./build/app
@@ -29,7 +32,7 @@ cmake --build build           # Build project
 
 ```bash
 # Run all tests
-ctest --test-dir build --output-on-failure
+ctest --preset=vcpkg
 
 # Or run the test executable directly
 ./build/tests
@@ -46,7 +49,7 @@ Tests are located in `test/` directory and use GoogleTest framework. The test ex
 ### CMake Presets
 
 - **vcpkg preset**: Uses vcpkg toolchain, Ninja generator, builds to `build/` directory
-- **default preset**: Inherits from vcpkg, sets `VCPKG_ROOT` environment variable (defined in `CMakeUserPresets.json`)
+- **PUBCHEM_RDKIT_PREFIX**: Optional environment variable pointing to the micromamba or conda prefix that contains RDKit and Boost development packages
 
 The `CMakeUserPresets.json` file is user-specific and contains the local vcpkg root path. When setting up on a new machine, ensure `VCPKG_ROOT` points to your vcpkg installation.
 
