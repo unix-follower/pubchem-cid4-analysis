@@ -18,10 +18,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install clang-format
+      - name: Install clang tooling
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format
+          sudo apt-get install -y clang-format clang-tidy
 
       - name: Check C++ formatting
         run: |
@@ -53,6 +53,18 @@ jobs:
       - name: Export RDKit prefix
         shell: bash -el {0}
         run: echo "PUBCHEM_RDKIT_PREFIX=$MAMBA_ROOT_PREFIX/envs/rdkit" >> "$GITHUB_ENV"
+
+      - name: Configure CMake
+        working-directory: cpp
+        shell: bash
+        run: cmake --preset=vcpkg
+
+      - name: Check C++ static analysis
+        working-directory: cpp
+        shell: bash
+        run: |
+          find src test -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
+            | xargs -0 clang-tidy -p build
 
       - name: Run CMake consuming CMakePreset.json and run vcpkg to build packages
         uses: lukka/run-cmake@v10

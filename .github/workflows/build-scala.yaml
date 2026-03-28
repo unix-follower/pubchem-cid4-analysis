@@ -3,7 +3,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/build-scala.yaml
-      - scala/*
+      - scala/**
     types:
       - opened
       - reopened
@@ -47,6 +47,19 @@ jobs:
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt') }}
           restore-keys: |
             ${{ runner.os }}-sbt-
+
+      - name: Cache Coursier artifacts
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/coursier
+          key: ${{ runner.os }}-coursier-${{ hashFiles('scala/project/plugins.sbt', 'scala/build.sbt', 'scala/.scalafix.conf') }}
+          restore-keys: |
+            ${{ runner.os }}-coursier-
+
+      - name: Check Scalafix
+        working-directory: scala
+        shell: bash
+        run: sbt "scalafixAll --check"
 
       - name: Check scala formatting
         working-directory: scala

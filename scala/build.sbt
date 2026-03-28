@@ -4,12 +4,14 @@ ThisBuild / scalaVersion := "3.8.2"
 ThisBuild / version := "1.0.0"
 ThisBuild / organization := "org.example"
 ThisBuild / organizationName := "pubchem_cid4_analysis"
+ThisBuild / semanticdbEnabled := true
 
 val logbackVersion = "1.5.32"
 
 lazy val root = (project in file("."))
   .settings(
       name := "cid4-analysis",
+      scalacOptions += "-Wunused:imports",
       libraryDependencies ++= Seq(
         "org.slf4j" % "slf4j-api" % "2.0.17",
         "ch.qos.logback" % "logback-core" % logbackVersion,
