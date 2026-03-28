@@ -1,7 +1,9 @@
 name: Build cid4-ui on nextjs
 on:
   pull_request:
-    paths: cid4-ui/*
+    paths:
+      - .github/workflows/build-cid4-ui.yaml
+      - cid4-ui/*
     types:
       - opened
       - reopened

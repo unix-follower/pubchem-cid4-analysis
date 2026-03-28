@@ -1,7 +1,9 @@
 name: Build scala app
 on:
   pull_request:
-    paths: scala/*
+    paths:
+      - .github/workflows/build-scala.yaml
+      - scala/*
     types:
       - opened
       - reopened

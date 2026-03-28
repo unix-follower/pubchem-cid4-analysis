@@ -1,7 +1,9 @@
 name: Build python app
 on:
   pull_request:
-    paths: py/*
+    paths:
+      - .github/workflows/build-py.yaml
+      - py/*
     types:
       - opened
       - reopened

@@ -1,7 +1,9 @@
 name: Build C++ app
 on:
   pull_request:
-    paths: cpp/*
+    paths:
+      - .github/workflows/build-cpp.yaml
+      - cpp/**
     types:
       - opened
       - reopened
@@ -26,6 +28,21 @@ jobs:
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgGitCommitId: fc349a7b35348173d4d24621ae04ad80e2375957
+
+      - name: Setup micromamba RDKit environment
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: rdkit
+          create-args: >-
+            -c conda-forge
+            librdkit-dev
+            libboost-devel
+          cache-environment: true
+          init-shell: bash
+
+      - name: Export RDKit prefix
+        shell: bash -el {0}
+        run: echo "PUBCHEM_RDKIT_PREFIX=$MAMBA_ROOT_PREFIX/envs/rdkit" >> "$GITHUB_ENV"
 
       - name: Run CMake consuming CMakePreset.json and run vcpkg to build packages
         uses: lukka/run-cmake@v10
