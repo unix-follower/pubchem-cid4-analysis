@@ -1,6 +1,7 @@
 package org.example.model
 
-import com.fasterxml.jackson.annotation.{JsonCreator, JsonProperty}
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonCreator
 final case class Conformer3DCompoundDto(@JsonProperty("PC_Compounds") pcCompounds: Seq[PcCompound])

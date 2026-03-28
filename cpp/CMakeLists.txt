@@ -1,4 +1,18 @@
 cmake_minimum_required(VERSION 4.3.0)
+
+if(APPLE AND NOT CMAKE_OSX_SYSROOT)
+	execute_process(
+		COMMAND xcrun --sdk macosx --show-sdk-path
+		OUTPUT_VARIABLE PUBCHEM_MACOS_SDK_PATH
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		ERROR_QUIET
+	)
+
+	if(PUBCHEM_MACOS_SDK_PATH)
+		set(CMAKE_OSX_SYSROOT "${PUBCHEM_MACOS_SDK_PATH}" CACHE STRING "macOS SDK path" FORCE)
+	endif()
+endif()
+
 project(pubchem_cid4_analysis VERSION 1.0.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 23)

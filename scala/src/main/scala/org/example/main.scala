@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.scala.DefaultScalaModule
 
-import java.io.{File, FileInputStream}
-import java.nio.file.{Files, Path}
+import java.io.File
+import java.io.FileInputStream
+import java.nio.file.Files
+import java.nio.file.Path
 
 private val logger = LoggerFactory.getLogger(this.getClass)
 
