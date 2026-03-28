@@ -2,12 +2,10 @@
 
 #include <numeric>
 
-namespace pubchem
-{
+namespace pubchem {
 double averageOrZero(const std::vector<double>& values)
 {
-    if (values.empty())
-    {
+    if (values.empty()) {
         return 0.0;
     }
 
@@ -20,8 +18,9 @@ std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirect
     return dataDirectory / "out";
 }
 
-std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory, const std::filesystem::path& sourceFile)
+std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory,
+                                     const std::filesystem::path& sourceFile)
 {
     return outputDirectory / (sourceFile.filename().string() + ".json");
 }
-}
+} // namespace pubchem

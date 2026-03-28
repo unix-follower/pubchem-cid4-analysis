@@ -15,11 +15,9 @@
 #include <GraphMol/FileParsers/MolSupplier.h>
 #include <nlohmann/json.hpp>
 
-namespace
-{
-class SdfReadError : public std::runtime_error
-{
-public:
+namespace {
+class SdfReadError : public std::runtime_error {
+  public:
     using std::runtime_error::runtime_error;
 };
 
@@ -30,8 +28,7 @@ std::filesystem::path defaultDataDir()
 
 std::filesystem::path resolveDataDir()
 {
-    if (const char* value = std::getenv("DATA_DIR"); value != nullptr && *value != '\0')
-    {
+    if (const char* value = std::getenv("DATA_DIR"); value != nullptr && *value != '\0') {
         return std::filesystem::path(value);
     }
 
@@ -40,26 +37,25 @@ std::filesystem::path resolveDataDir()
 
 std::string hybridizationToString(const RDKit::Atom::HybridizationType hybridization)
 {
-    switch (hybridization)
-    {
-        case RDKit::Atom::HybridizationType::UNSPECIFIED:
-            return "UNSPECIFIED";
-        case RDKit::Atom::HybridizationType::S:
-            return "S";
-        case RDKit::Atom::HybridizationType::SP:
-            return "SP";
-        case RDKit::Atom::HybridizationType::SP2:
-            return "SP2";
-        case RDKit::Atom::HybridizationType::SP3:
-            return "SP3";
-        case RDKit::Atom::HybridizationType::SP2D:
-            return "SP2D";
-        case RDKit::Atom::HybridizationType::SP3D:
-            return "SP3D";
-        case RDKit::Atom::HybridizationType::SP3D2:
-            return "SP3D2";
-        case RDKit::Atom::HybridizationType::OTHER:
-            return "OTHER";
+    switch (hybridization) {
+    case RDKit::Atom::HybridizationType::UNSPECIFIED:
+        return "UNSPECIFIED";
+    case RDKit::Atom::HybridizationType::S:
+        return "S";
+    case RDKit::Atom::HybridizationType::SP:
+        return "SP";
+    case RDKit::Atom::HybridizationType::SP2:
+        return "SP2";
+    case RDKit::Atom::HybridizationType::SP3:
+        return "SP3";
+    case RDKit::Atom::HybridizationType::SP2D:
+        return "SP2D";
+    case RDKit::Atom::HybridizationType::SP3D:
+        return "SP3D";
+    case RDKit::Atom::HybridizationType::SP3D2:
+        return "SP3D2";
+    case RDKit::Atom::HybridizationType::OTHER:
+        return "OTHER";
     }
 
     return "UNKNOWN";
@@ -73,19 +69,16 @@ pubchem::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
     std::vector<double> exactMasses;
     std::vector<pubchem::AtomRecord> atoms;
 
-    while (!supplier.atEnd())
-    {
+    while (!supplier.atEnd()) {
         std::unique_ptr<RDKit::ROMol> molecule(supplier.next());
-        if (!molecule)
-        {
+        if (!molecule) {
             continue;
         }
 
         molecularWeights.push_back(RDKit::Descriptors::calcAMW(*molecule));
         exactMasses.push_back(RDKit::Descriptors::calcExactMW(*molecule));
 
-        for (const RDKit::Atom* atom : molecule->atoms())
-        {
+        for (const RDKit::Atom* atom : molecule->atoms()) {
             atoms.push_back(pubchem::AtomRecord{
                 .index = static_cast<int>(atom->getIdx()),
                 .bondCount = static_cast<int>(atom->getDegree()),
@@ -102,8 +95,7 @@ pubchem::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
         }
     }
 
-    if (molecularWeights.empty())
-    {
+    if (molecularWeights.empty()) {
         throw SdfReadError("No valid molecules were read from the SDF file");
     }
 
@@ -119,8 +111,7 @@ pubchem::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
 nlohmann::json toJson(const pubchem::AnalysisResult& result)
 {
     nlohmann::json atoms = nlohmann::json::array();
-    for (const auto& atom : result.atoms)
-    {
+    for (const auto& atom : result.atoms) {
         atoms.push_back({
             {"index", atom.index},
             {"bondCount", atom.bondCount},
@@ -144,14 +135,15 @@ nlohmann::json toJson(const pubchem::AnalysisResult& result)
         {"atoms", atoms},
     };
 }
-}
+} // namespace
 
 int main(int argc, char* argv[])
 {
-    try
-    {
+    try {
         const std::filesystem::path dataDir = resolveDataDir();
-        const std::filesystem::path sourceFile = argc > 1 ? std::filesystem::path(argv[1]) : std::filesystem::path("Conformer3D_COMPOUND_CID_4(1).sdf");
+        const std::filesystem::path sourceFile =
+            argc > 1 ? std::filesystem::path(argv[1])
+                     : std::filesystem::path("Conformer3D_COMPOUND_CID_4(1).sdf");
         const std::filesystem::path sdfPath = dataDir / sourceFile;
 
         const pubchem::AnalysisResult result = analyzeSdf(sdfPath);
@@ -167,8 +159,7 @@ int main(int argc, char* argv[])
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
         std::cout << "Atom records written to: " << outputPath << '\n';
     }
-    catch (const std::exception& error)
-    {
+    catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
         return 1;
     }

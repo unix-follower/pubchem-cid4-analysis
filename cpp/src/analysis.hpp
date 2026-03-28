@@ -5,10 +5,8 @@
 #include <string>
 #include <vector>
 
-namespace pubchem
-{
-struct AtomRecord
-{
+namespace pubchem {
+struct AtomRecord {
     int index;
     int bondCount;
     int charge;
@@ -22,8 +20,7 @@ struct AtomRecord
     std::string hybridization;
 };
 
-struct AnalysisResult
-{
+struct AnalysisResult {
     std::string sourceFile;
     double averageMolecularWeight;
     double exactMolecularMass;
@@ -33,5 +30,6 @@ struct AnalysisResult
 
 double averageOrZero(const std::vector<double>& values);
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory);
-std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory, const std::filesystem::path& sourceFile);
-}
+std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory,
+                                     const std::filesystem::path& sourceFile);
+} // namespace pubchem
