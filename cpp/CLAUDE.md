@@ -80,6 +80,12 @@ Defined in `.editorconfig`:
 - Function braces: new line
 - Namespace braces: same line
 
+##Format code
+```shell
+find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -exec clang-format -style=file -i {} \;
+find test -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -exec clang-format -style=file -i {} \;
+```
+
 ## C++ Standard
 
 Project uses C++23 (`CMAKE_CXX_STANDARD 23`).

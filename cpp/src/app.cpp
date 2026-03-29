@@ -22,9 +22,9 @@ class SdfReadError : public std::runtime_error {
 };
 
 struct CommandLineOptions {
-        std::filesystem::path sdfFile = "Conformer3D_COMPOUND_CID_4(1).sdf";
-        std::filesystem::path adjacencyJsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
-        std::string adjacencyMethod = "armadillo";
+    std::filesystem::path sdfFile = "Conformer3D_COMPOUND_CID_4(1).sdf";
+    std::filesystem::path adjacencyJsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
+    std::string adjacencyMethod = "armadillo";
 };
 
 std::filesystem::path defaultDataDir()
@@ -69,7 +69,8 @@ std::string hybridizationToString(const RDKit::Atom::HybridizationType hybridiza
 
 void printUsage(std::ostream& output)
 {
-    output << "Usage: app [--sdf <file>] [--json <file>] [--method <arrays|armadillo|boost-graph>]\n";
+    output
+        << "Usage: app [--sdf <file>] [--json <file>] [--method <arrays|armadillo|boost-graph>]\n";
 }
 
 CommandLineOptions parseArguments(int argc, char* argv[])
@@ -209,7 +210,8 @@ int main(int argc, char* argv[])
 
         const pubchem::AnalysisResult result = analyzeSdf(sdfPath);
         const std::filesystem::path outputDir = pubchem::outputDirectoryFor(dataDir);
-        const std::filesystem::path outputPath = pubchem::outputJsonPath(outputDir, options.sdfFile);
+        const std::filesystem::path outputPath =
+            pubchem::outputJsonPath(outputDir, options.sdfFile);
 
         const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
         const pubchem::NormalizedAdjacencyInput adjacencyInput =

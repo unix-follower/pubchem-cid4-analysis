@@ -24,7 +24,11 @@ private def newJsonMapper() =
     .addModule(DefaultScalaModule())
     .build()
 
-private def writeAdjacencyMatrix(dataDirectory: String, sourceFileName: String, adjacencyMatrix: AdjacencyMatrix): Path =
+private def writeAdjacencyMatrix(
+    dataDirectory: String,
+    sourceFileName: String,
+    adjacencyMatrix: AdjacencyMatrix
+): Path =
   val outDirectory = Path.of(dataDirectory, "out")
   Files.createDirectories(outDirectory)
 
@@ -60,7 +64,9 @@ def readJson(method: String) = {
     val outputPath = writeAdjacencyMatrix(dataDirectory, jsonPath.getFileName.toString, adjacencyMatrix)
 
     logger.info(s"Adjacency matrix method: ${adjacencyMatrix.method}")
-    logger.info(s"Adjacency matrix size: ${adjacencyMatrix.values.size}x${adjacencyMatrix.values.headOption.map(_.size).getOrElse(0)}")
+    logger.info(
+      s"Adjacency matrix size: ${adjacencyMatrix.values.size}x${adjacencyMatrix.values.headOption.map(_.size).getOrElse(0)}"
+    )
     logger.info(s"Adjacency matrix output: $outputPath")
   }
 }

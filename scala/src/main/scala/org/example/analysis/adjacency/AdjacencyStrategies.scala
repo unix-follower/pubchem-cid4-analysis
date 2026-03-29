@@ -26,7 +26,7 @@ object AdjacencyMatrixStrategy:
 
   def resolve(method: String): AdjacencyMatrixStrategy =
     AdjacencyMethod.parse(method) match
-      case Right(value) => implementations(value)
+      case Right(value)       => implementations(value)
       case Left(errorMessage) => throw IllegalArgumentException(errorMessage)
 
 object ArraysAdjacencyMatrixStrategy extends AdjacencyMatrixStrategy:
@@ -50,7 +50,9 @@ object GuavaAdjacencyMatrixStrategy extends AdjacencyMatrixStrategy:
     }
 
     val matrix =
-      Array.tabulate(input.size, input.size)((rowIndex, columnIndex) => graph.edgeValueOrDefault(rowIndex, columnIndex, 0))
+      Array.tabulate(input.size, input.size)((rowIndex, columnIndex) =>
+        graph.edgeValueOrDefault(rowIndex, columnIndex, 0)
+      )
     MatrixOps.freeze(input, matrix, method)
 
 object TinkerPopAdjacencyMatrixStrategy extends AdjacencyMatrixStrategy:

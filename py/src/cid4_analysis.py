@@ -1,5 +1,5 @@
-import logging as log
 import json
+import logging as log
 from functools import reduce
 from pathlib import Path
 
@@ -11,8 +11,8 @@ from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
 import env_utils
 import fs_utils as fs
 import log_settings
-from constants import ARR_1ST_IDX as IDX1, UTF_8
-
+from constants import ARR_1ST_IDX as IDX1
+from constants import UTF_8
 
 CONFORMER_ATOM_COUNT = 14
 
