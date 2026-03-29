@@ -3,7 +3,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/build-py.yaml
-      - py/*
+      - py/**
     types:
       - opened
       - reopened

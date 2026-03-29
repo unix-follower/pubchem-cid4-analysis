@@ -31,6 +31,10 @@ cmake --build --preset=vcpkg  # Build project
 ./build/app --method arrays
 ./build/app --method armadillo
 ./build/app --method boost-graph
+
+# Run with an explicit eigendecomposition method
+./build/app --eigenmethod armadillo
+./build/app --eigenmethod boost
 ```
 
 ### Testing
@@ -94,7 +98,7 @@ Project uses C++23 (`CMAKE_CXX_STANDARD 23`).
 
 Since this is an educational project, implementations typically involve:
 
-1. **Linear algebra operations**: Build adjacency matrices, feature matrices, compute eigenvalues/eigenvectors (use Armadillo)
+1. **Linear algebra operations**: Build adjacency matrices, feature matrices, compute eigenvalues/eigenvectors
 2. **Graph algorithms**: Molecular graph (14 atoms, 13 bonds) - BFS, DFS, shortest path, Laplacian
 3. **Data parsing**: Read JSON/CSV/SDF files, extract molecular properties
 4. **Statistical analysis**: Mean, variance, distributions on bioactivity data
@@ -102,7 +106,9 @@ Since this is an educational project, implementations typically involve:
 
 The main executable is `app` (built from `src/app.cpp`). Add new implementation files as needed and update `CMakeLists.txt` to link them.
 
-The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. Keep the shared output model library-agnostic if additional graph strategies are added later.
+The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. The eigendecomposition flow exposes a separate `--eigenmethod` selector with `armadillo` and `boost`.
+
+Use Armadillo as the default eigensolver. The `boost` eigendecomposition path uses `boost-ublas` for matrix representation together with an in-repo symmetric solver implementation, so keep the JSON output contract library-agnostic.
 
 ## CI/CD
 
