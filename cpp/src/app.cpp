@@ -26,6 +26,7 @@ struct CommandLineOptions {
     std::filesystem::path adjacencyJsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
     std::string adjacencyMethod = "armadillo";
     std::string eigenMethod = "armadillo";
+    std::string laplacianMethod = "armadillo";
 };
 
 std::filesystem::path defaultDataDir()
@@ -71,7 +72,7 @@ std::string hybridizationToString(const RDKit::Atom::HybridizationType hybridiza
 void printUsage(std::ostream& output)
 {
     output << "Usage: app [--sdf <file>] [--json <file>] [--method <arrays|armadillo|boost-graph>]"
-           << " [--eigenmethod <armadillo|boost>]\n";
+           << " [--eigenmethod <armadillo|boost>] [--laplacian-method <armadillo|boost>]\n";
 }
 
 CommandLineOptions parseArguments(int argc, char* argv[])
@@ -113,6 +114,12 @@ CommandLineOptions parseArguments(int argc, char* argv[])
         if (argument == "--eigenmethod") {
             options.eigenMethod =
                 pubchem::parseEigendecompositionMethod(readValue("--eigenmethod"));
+            continue;
+        }
+
+        if (argument == "--laplacian-method") {
+            options.laplacianMethod =
+                pubchem::parseLaplacianMethod(readValue("--laplacian-method"));
             continue;
         }
 
@@ -217,6 +224,42 @@ nlohmann::json toJson(const pubchem::EigendecompositionResult& eigendecompositio
         {"eigenvectors", eigendecomposition.eigenvectors},
     };
 }
+
+nlohmann::json toJson(const pubchem::LaplacianAnalysisResult& laplacianAnalysis)
+{
+    return {
+        {"sourceFile", laplacianAnalysis.sourceFile},
+        {"method", laplacianAnalysis.method},
+        {"atomIds", laplacianAnalysis.atomIds},
+        {"degreeVector", laplacianAnalysis.degreeVector},
+        {"laplacianMatrix", laplacianAnalysis.laplacianMatrix},
+        {"laplacianEigenvalues", laplacianAnalysis.laplacianEigenvalues},
+        {"laplacianEigenvectors", laplacianAnalysis.laplacianEigenvectors},
+        {"nullSpace",
+         {
+             {"eigenvalues", laplacianAnalysis.nullSpace.eigenvalues},
+             {"eigenvectors", laplacianAnalysis.nullSpace.eigenvectors},
+             {"tolerance", laplacianAnalysis.nullSpace.tolerance},
+             {"numZeroEigenvalues", laplacianAnalysis.nullSpace.numZeroEigenvalues},
+             {"smallestNonZeroEigenvalue", laplacianAnalysis.nullSpace.smallestNonZeroEigenvalue},
+         }},
+        {"connectedComponents",
+         {
+             {"labels", laplacianAnalysis.connectedComponents.labels},
+             {"numComponents", laplacianAnalysis.connectedComponents.numComponents},
+             {"componentAtomIds", laplacianAnalysis.connectedComponents.componentAtomIds},
+             {"verificationBoostGraphCount",
+              laplacianAnalysis.connectedComponents.verificationBoostGraphCount},
+         }},
+        {"metadata",
+         {
+             {"atomCount", laplacianAnalysis.metadata.atomCount},
+             {"bondCount", laplacianAnalysis.metadata.bondCount},
+             {"laplacianRank", laplacianAnalysis.metadata.laplacianRank},
+             {"graphIsConnected", laplacianAnalysis.metadata.graphIsConnected},
+         }},
+    };
+}
 } // namespace
 
 int main(int argc, char* argv[])
@@ -243,6 +286,10 @@ int main(int argc, char* argv[])
         const std::filesystem::path eigendecompositionOutputPath =
             pubchem::eigendecompositionOutputJsonPath(
                 outputDir, options.adjacencyJsonFile, eigendecomposition.method);
+        const pubchem::LaplacianAnalysisResult laplacianAnalysis =
+            pubchem::buildLaplacianAnalysis(adjacencyMatrix, options.laplacianMethod);
+        const std::filesystem::path laplacianOutputPath = pubchem::laplacianOutputJsonPath(
+            outputDir, options.adjacencyJsonFile, laplacianAnalysis.method);
 
         std::filesystem::create_directories(outputDir);
 
@@ -255,6 +302,9 @@ int main(int argc, char* argv[])
         std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
         eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
 
+        std::ofstream laplacianOutput(laplacianOutputPath);
+        laplacianOutput << std::setw(2) << toJson(laplacianAnalysis) << '\n';
+
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
         std::cout << "Atom records written to: " << outputPath << '\n';
@@ -262,6 +312,8 @@ int main(int argc, char* argv[])
         std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
         std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';
         std::cout << "Eigendecomposition written to: " << eigendecompositionOutputPath << '\n';
+        std::cout << "Laplacian method: " << laplacianAnalysis.method << '\n';
+        std::cout << "Laplacian analysis written to: " << laplacianOutputPath << '\n';
     }
     catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

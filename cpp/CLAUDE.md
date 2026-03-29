@@ -35,6 +35,10 @@ cmake --build --preset=vcpkg  # Build project
 # Run with an explicit eigendecomposition method
 ./build/app --eigenmethod armadillo
 ./build/app --eigenmethod boost
+
+# Run with an explicit Laplacian analysis method
+./build/app --laplacian-method armadillo
+./build/app --laplacian-method boost
 ```
 
 ### Testing
@@ -106,9 +110,11 @@ Since this is an educational project, implementations typically involve:
 
 The main executable is `app` (built from `src/app.cpp`). Add new implementation files as needed and update `CMakeLists.txt` to link them.
 
-The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. The eigendecomposition flow exposes a separate `--eigenmethod` selector with `armadillo` and `boost`.
+The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. The eigendecomposition flow exposes a separate `--eigenmethod` selector with `armadillo` and `boost`. The Laplacian flow also exposes a strategy selector with `--laplacian-method <armadillo|boost>`.
 
 Use Armadillo as the default eigensolver. The `boost` eigendecomposition path uses `boost-ublas` for matrix representation together with an in-repo symmetric solver implementation, so keep the JSON output contract library-agnostic.
+
+Use the same strategy split for Laplacian analysis. The Laplacian artifact is written separately from the adjacency and eigendecomposition outputs so downstream consumers can inspect degree values, null-space basis vectors, and connected-component metadata independently.
 
 ## CI/CD
 

@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
+from scipy import linalg
 
 import env_utils
 import fs_utils as fs
@@ -16,6 +17,7 @@ from constants import ARR_1ST_IDX as IDX1
 from constants import UTF_8
 
 CONFORMER_ATOM_COUNT = 14
+NULL_SPACE_TOLERANCE = 1e-10
 
 
 def reduce_mol_weights(mol_weights: list[float]) -> float:
@@ -75,6 +77,110 @@ def build_adjacency_matrix(filename: str) -> pd.DataFrame:
 def compute_adjacency_spectrum(adjacency_matrix: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     adjacency_array = adjacency_matrix.to_numpy(dtype=np.float64)
     return np.linalg.eigh(adjacency_array)
+
+
+def build_degree_matrix(adjacency_matrix: pd.DataFrame) -> pd.DataFrame:
+    degree_values = adjacency_matrix.sum(axis=1).to_numpy(dtype=np.float64)
+    return pd.DataFrame(
+        np.diag(degree_values),
+        index=adjacency_matrix.index,
+        columns=adjacency_matrix.columns,
+    )
+
+
+def build_laplacian_matrix(adjacency_matrix: pd.DataFrame) -> pd.DataFrame:
+    degree_matrix = build_degree_matrix(adjacency_matrix)
+    return degree_matrix - adjacency_matrix.astype(np.float64)
+
+
+def compute_laplacian_spectrum(laplacian_matrix: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+    laplacian_array = laplacian_matrix.to_numpy(dtype=np.float64)
+    return np.linalg.eigh(laplacian_array)
+
+
+def compute_laplacian_null_space(
+    laplacian_matrix: pd.DataFrame,
+    tolerance: float = NULL_SPACE_TOLERANCE,
+) -> np.ndarray:
+    laplacian_array = laplacian_matrix.to_numpy(dtype=np.float64)
+    return linalg.null_space(laplacian_array, rcond=tolerance)
+
+
+def build_graph_from_adjacency_matrix(adjacency_matrix: pd.DataFrame) -> nx.Graph:
+    return nx.from_pandas_adjacency(adjacency_matrix, create_using=nx.Graph)
+
+
+def extract_connected_components(
+    adjacency_matrix: pd.DataFrame,
+    null_space_vectors: np.ndarray,
+) -> dict:
+    graph = build_graph_from_adjacency_matrix(adjacency_matrix)
+    atom_ids = adjacency_matrix.index.tolist()
+    components = [sorted(component) for component in nx.connected_components(graph)]
+    component_by_atom_id = {
+        atom_id: component_index for component_index, component in enumerate(components) for atom_id in component
+    }
+    assignment = [component_by_atom_id[atom_id] for atom_id in atom_ids]
+    null_space_dimension = int(null_space_vectors.shape[1])
+
+    if null_space_dimension != len(components):
+        raise ValueError("Null-space dimension does not match NetworkX connected-components count")
+
+    return {
+        "count": len(components),
+        "assignment": assignment,
+        "components_atom_ids": components,
+        "verification_networkx_count": len(components),
+    }
+
+
+def write_laplacian_analysis(
+    filename: str,
+    adjacency_matrix: pd.DataFrame,
+    tolerance: float = NULL_SPACE_TOLERANCE,
+):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    atom_ids = adjacency_matrix.index.tolist()
+    degree_matrix = build_degree_matrix(adjacency_matrix)
+    laplacian_matrix = build_laplacian_matrix(adjacency_matrix)
+    laplacian_eigenvalues, laplacian_eigenvectors = compute_laplacian_spectrum(laplacian_matrix)
+    null_space_vectors = compute_laplacian_null_space(laplacian_matrix, tolerance=tolerance)
+    connected_components = extract_connected_components(adjacency_matrix, null_space_vectors)
+    output_path = Path(out_dir) / f"{Path(filename).stem}.laplacian_analysis.json"
+
+    laplacian_array = laplacian_matrix.to_numpy(dtype=np.float64)
+    positive_eigenvalues = laplacian_eigenvalues[laplacian_eigenvalues > tolerance]
+    smallest_nonzero_eigenvalue = float(positive_eigenvalues[0]) if positive_eigenvalues.size > 0 else 0.0
+    bond_count = int(np.count_nonzero(np.triu(adjacency_matrix.to_numpy(dtype=np.float64), k=1)))
+
+    with output_path.open("w", encoding=UTF_8) as file:
+        json.dump(
+            {
+                "atom_ids": atom_ids,
+                "degree_matrix": degree_matrix.values.tolist(),
+                "laplacian_matrix": laplacian_matrix.values.tolist(),
+                "laplacian_eigenvalues": laplacian_eigenvalues.tolist(),
+                "laplacian_eigenvectors": laplacian_eigenvectors.tolist(),
+                "null_space": {
+                    "basis_vectors": null_space_vectors.tolist(),
+                    "dimension": int(null_space_vectors.shape[1]),
+                    "tolerance_used": tolerance,
+                    "smallest_nonzero_eigenvalue": smallest_nonzero_eigenvalue,
+                },
+                "connected_components": connected_components,
+                "metadata": {
+                    "atom_count": len(atom_ids),
+                    "bond_count": bond_count,
+                    "laplacian_rank": int(np.linalg.matrix_rank(laplacian_array, tol=tolerance)),
+                    "graph_is_connected": connected_components["count"] == 1,
+                },
+            },
+            file,
+            indent=2,
+        )
+
+    log.info("Laplacian analysis written to %s", output_path)
 
 
 def write_adjacency_matrix(filename: str) -> pd.DataFrame:
@@ -172,6 +278,7 @@ def main():
     process_sdf_file(sdf_filename)
     adjacency_matrix = write_adjacency_matrix(json_filename)
     write_adjacency_spectrum(json_filename, adjacency_matrix)
+    write_laplacian_analysis(json_filename, adjacency_matrix)
 
 
 if __name__ == "__main__":
