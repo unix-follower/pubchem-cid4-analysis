@@ -2,6 +2,8 @@ package org.example
 
 import org.example.analysis.adjacency.AdjacencyMatrix
 import org.example.analysis.adjacency.AdjacencyMatrixService
+import org.example.analysis.spectrum.EigendecompositionResult
+import org.example.analysis.spectrum.EigendecompositionService
 import org.example.model.Conformer3DCompoundDto
 import org.example.utils as fsUtils
 import org.openscience.cdk.DefaultChemObjectBuilder
@@ -38,6 +40,20 @@ private def writeAdjacencyMatrix(
   newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, adjacencyMatrix)
   outputPath
 
+private def writeAdjacencySpectrum(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: EigendecompositionResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName =
+    s"${sourceFileName.stripSuffix(".json")}.${result.adjacencyMethod}.eigendecomposition.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result)
+  outputPath
+
 def readJson(method: String) = {
   val dataDirectory = fsUtils.getDataDir()
   if (dataDirectory == null) {
@@ -62,12 +78,16 @@ def readJson(method: String) = {
   firstCompound.foreach { compound =>
     val adjacencyMatrix = AdjacencyMatrixService.build(compound, method)
     val outputPath = writeAdjacencyMatrix(dataDirectory, jsonPath.getFileName.toString, adjacencyMatrix)
+    val eigendecomposition = EigendecompositionService.compute(adjacencyMatrix)
+    val eigendecompositionOutputPath =
+      writeAdjacencySpectrum(dataDirectory, jsonPath.getFileName.toString, eigendecomposition)
 
     logger.info(s"Adjacency matrix method: ${adjacencyMatrix.method}")
     logger.info(
       s"Adjacency matrix size: ${adjacencyMatrix.values.size}x${adjacencyMatrix.values.headOption.map(_.size).getOrElse(0)}"
     )
     logger.info(s"Adjacency matrix output: $outputPath")
+    logger.info(s"Adjacency eigendecomposition output: $eigendecompositionOutputPath")
   }
 }
 

@@ -4,6 +4,7 @@ from functools import reduce
 from pathlib import Path
 
 import networkx as nx
+import numpy as np
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
@@ -71,7 +72,12 @@ def build_adjacency_matrix(filename: str) -> pd.DataFrame:
     return adjacency_matrix
 
 
-def write_adjacency_matrix(filename: str):
+def compute_adjacency_spectrum(adjacency_matrix: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+    adjacency_array = adjacency_matrix.to_numpy(dtype=np.float64)
+    return np.linalg.eigh(adjacency_array)
+
+
+def write_adjacency_matrix(filename: str) -> pd.DataFrame:
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
     adjacency_matrix = build_adjacency_matrix(filename)
@@ -88,6 +94,27 @@ def write_adjacency_matrix(filename: str):
         )
 
     log.info("Adjacency matrix written to %s", output_path)
+    return adjacency_matrix
+
+
+def write_adjacency_spectrum(filename: str, adjacency_matrix: pd.DataFrame):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    eigenvalues, eigenvectors = compute_adjacency_spectrum(adjacency_matrix)
+    output_path = Path(out_dir) / f"{Path(filename).stem}.eigendecomposition.json"
+
+    with output_path.open("w", encoding=UTF_8) as file:
+        json.dump(
+            {
+                "atom_ids": adjacency_matrix.index.tolist(),
+                "eigenvalues": eigenvalues.tolist(),
+                "eigenvectors": eigenvectors.tolist(),
+            },
+            file,
+            indent=2,
+        )
+
+    log.info("Adjacency eigendecomposition written to %s", output_path)
 
 
 def write_image(sdf_file_path: str, out_img_filepath: str):
@@ -143,7 +170,8 @@ def main():
     sdf_filename = "Conformer3D_COMPOUND_CID_4(1).sdf"
     json_filename = "Conformer3D_COMPOUND_CID_4(1).json"
     process_sdf_file(sdf_filename)
-    write_adjacency_matrix(json_filename)
+    adjacency_matrix = write_adjacency_matrix(json_filename)
+    write_adjacency_spectrum(json_filename, adjacency_matrix)
 
 
 if __name__ == "__main__":

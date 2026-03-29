@@ -25,6 +25,7 @@ struct CommandLineOptions {
     std::filesystem::path sdfFile = "Conformer3D_COMPOUND_CID_4(1).sdf";
     std::filesystem::path adjacencyJsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
     std::string adjacencyMethod = "armadillo";
+    std::string eigenMethod = "armadillo";
 };
 
 std::filesystem::path defaultDataDir()
@@ -69,8 +70,8 @@ std::string hybridizationToString(const RDKit::Atom::HybridizationType hybridiza
 
 void printUsage(std::ostream& output)
 {
-    output
-        << "Usage: app [--sdf <file>] [--json <file>] [--method <arrays|armadillo|boost-graph>]\n";
+    output << "Usage: app [--sdf <file>] [--json <file>] [--method <arrays|armadillo|boost-graph>]"
+           << " [--eigenmethod <armadillo|boost>]\n";
 }
 
 CommandLineOptions parseArguments(int argc, char* argv[])
@@ -106,6 +107,12 @@ CommandLineOptions parseArguments(int argc, char* argv[])
 
         if (argument == "--method") {
             options.adjacencyMethod = pubchem::parseAdjacencyMethod(readValue("--method"));
+            continue;
+        }
+
+        if (argument == "--eigenmethod") {
+            options.eigenMethod =
+                pubchem::parseEigendecompositionMethod(readValue("--eigenmethod"));
             continue;
         }
 
@@ -199,6 +206,17 @@ nlohmann::json toJson(const pubchem::AdjacencyMatrix& adjacencyMatrix)
         {"adjacencyMatrix", adjacencyMatrix.values},
     };
 }
+
+nlohmann::json toJson(const pubchem::EigendecompositionResult& eigendecomposition)
+{
+    return {
+        {"sourceFile", eigendecomposition.sourceFile},
+        {"method", eigendecomposition.method},
+        {"atomIds", eigendecomposition.atomIds},
+        {"eigenvalues", eigendecomposition.eigenvalues},
+        {"eigenvectors", eigendecomposition.eigenvectors},
+    };
+}
 } // namespace
 
 int main(int argc, char* argv[])
@@ -220,6 +238,11 @@ int main(int argc, char* argv[])
             adjacencyInput, options.adjacencyJsonFile.filename().string(), options.adjacencyMethod);
         const std::filesystem::path adjacencyOutputPath = pubchem::adjacencyOutputJsonPath(
             outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
+        const pubchem::EigendecompositionResult eigendecomposition =
+            pubchem::buildEigendecomposition(adjacencyMatrix, options.eigenMethod);
+        const std::filesystem::path eigendecompositionOutputPath =
+            pubchem::eigendecompositionOutputJsonPath(
+                outputDir, options.adjacencyJsonFile, eigendecomposition.method);
 
         std::filesystem::create_directories(outputDir);
 
@@ -229,11 +252,16 @@ int main(int argc, char* argv[])
         std::ofstream adjacencyOutput(adjacencyOutputPath);
         adjacencyOutput << std::setw(2) << toJson(adjacencyMatrix) << '\n';
 
+        std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
+        eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
+
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
         std::cout << "Atom records written to: " << outputPath << '\n';
         std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
         std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
+        std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';
+        std::cout << "Eigendecomposition written to: " << eigendecompositionOutputPath << '\n';
     }
     catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
