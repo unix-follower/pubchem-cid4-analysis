@@ -1,5 +1,7 @@
 package org.example
 
+import org.example.analysis.adjacency.AdjacencyMatrix
+import org.example.analysis.adjacency.AdjacencyMatrixService
 import org.example.model.Conformer3DCompoundDto
 import org.example.utils as fsUtils
 import org.openscience.cdk.DefaultChemObjectBuilder
@@ -17,7 +19,26 @@ import java.nio.file.Path
 
 private val logger = LoggerFactory.getLogger(this.getClass)
 
-def readJson = {
+private def newJsonMapper() =
+  JsonMapper.builder()
+    .addModule(DefaultScalaModule())
+    .build()
+
+private def writeAdjacencyMatrix(
+    dataDirectory: String,
+    sourceFileName: String,
+    adjacencyMatrix: AdjacencyMatrix
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName =
+    s"${sourceFileName.stripSuffix(".json")}.${adjacencyMatrix.method}.adjacency_matrix.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, adjacencyMatrix)
+  outputPath
+
+def readJson(method: String) = {
   val dataDirectory = fsUtils.getDataDir()
   if (dataDirectory == null) {
     throw new IllegalStateException("Env variable DATA_DIR is not set")
@@ -25,9 +46,7 @@ def readJson = {
 
   val jsonPath = Path.of(s"$dataDirectory/Conformer3D_COMPOUND_CID_4(1).json")
 
-  val jsonMapper = JsonMapper.builder()
-    .addModule(DefaultScalaModule())
-    .build()
+  val jsonMapper = newJsonMapper()
 
   val dto = jsonMapper.readValue(Files.readAllBytes(jsonPath), classOf[Conformer3DCompoundDto])
 
@@ -39,6 +58,17 @@ def readJson = {
   logger.info(s"Loaded $compoundCount compound(s) from $jsonPath")
   logger.info(s"First compound atoms: $atomCount")
   logger.info(s"First compound conformers: $conformerCount")
+
+  firstCompound.foreach { compound =>
+    val adjacencyMatrix = AdjacencyMatrixService.build(compound, method)
+    val outputPath = writeAdjacencyMatrix(dataDirectory, jsonPath.getFileName.toString, adjacencyMatrix)
+
+    logger.info(s"Adjacency matrix method: ${adjacencyMatrix.method}")
+    logger.info(
+      s"Adjacency matrix size: ${adjacencyMatrix.values.size}x${adjacencyMatrix.values.headOption.map(_.size).getOrElse(0)}"
+    )
+    logger.info(s"Adjacency matrix output: $outputPath")
+  }
 }
 
 private def readSdf(): Unit =
@@ -72,6 +102,6 @@ private def readSdf(): Unit =
   logger.info(f"Exact molecular mass: $averageExactMW")
 
 @main
-def main(): Unit =
-  readJson
+def main(method: String = "jgrapht"): Unit =
+  readJson(method)
   readSdf()

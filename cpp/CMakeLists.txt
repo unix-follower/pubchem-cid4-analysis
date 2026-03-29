@@ -29,6 +29,7 @@ if(PUBCHEM_RDKIT_PREFIX)
 endif()
 
 find_package(Armadillo CONFIG REQUIRED)
+find_package(Boost REQUIRED COMPONENTS graph)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(RDKit CONFIG REQUIRED)
 
@@ -38,7 +39,15 @@ if(PUBCHEM_RDKIT_PREFIX AND EXISTS "${PUBCHEM_RDKIT_PREFIX}/lib")
 endif()
 
 add_library(analysis_core src/analysis.cpp)
-target_include_directories(analysis_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(
+	analysis_core
+	PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src
+	PRIVATE ${ARMADILLO_INCLUDE_DIRS}
+)
+target_link_libraries(
+	analysis_core
+	PUBLIC ${ARMADILLO_LIBRARIES} Boost::graph nlohmann_json::nlohmann_json
+)
 
 add_executable(app src/app.cpp)
 set_target_properties(app PROPERTIES OUTPUT_NAME app)
@@ -46,12 +55,9 @@ target_compile_definitions(app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT
 if(pubchem_rdkit_rpath)
 	set_target_properties(app PROPERTIES BUILD_RPATH "${pubchem_rdkit_rpath}" INSTALL_RPATH "${pubchem_rdkit_rpath}")
 endif()
-target_include_directories(app PRIVATE ${ARMADILLO_INCLUDE_DIRS})
 target_link_libraries(app
 	PRIVATE
 		analysis_core
-		${ARMADILLO_LIBRARIES}
-		nlohmann_json::nlohmann_json
 		RDKit::Descriptors
 		RDKit::FileParsers
 		RDKit::GraphMol

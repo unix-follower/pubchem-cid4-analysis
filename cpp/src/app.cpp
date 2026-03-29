@@ -21,6 +21,12 @@ class SdfReadError : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
 
+struct CommandLineOptions {
+    std::filesystem::path sdfFile = "Conformer3D_COMPOUND_CID_4(1).sdf";
+    std::filesystem::path adjacencyJsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
+    std::string adjacencyMethod = "armadillo";
+};
+
 std::filesystem::path defaultDataDir()
 {
     return std::filesystem::path(PUBCHEM_DEFAULT_DATA_DIR);
@@ -59,6 +65,54 @@ std::string hybridizationToString(const RDKit::Atom::HybridizationType hybridiza
     }
 
     return "UNKNOWN";
+}
+
+void printUsage(std::ostream& output)
+{
+    output
+        << "Usage: app [--sdf <file>] [--json <file>] [--method <arrays|armadillo|boost-graph>]\n";
+}
+
+CommandLineOptions parseArguments(int argc, char* argv[])
+{
+    CommandLineOptions options;
+
+    for (int index = 1; index < argc; ++index) {
+        const std::string argument = argv[index];
+
+        if (argument == "--help") {
+            printUsage(std::cout);
+            std::exit(0);
+        }
+
+        auto readValue = [&](const std::string_view flagName) -> std::string {
+            if (index + 1 >= argc) {
+                throw std::invalid_argument("Missing value for " + std::string(flagName));
+            }
+
+            ++index;
+            return argv[index];
+        };
+
+        if (argument == "--sdf") {
+            options.sdfFile = readValue("--sdf");
+            continue;
+        }
+
+        if (argument == "--json") {
+            options.adjacencyJsonFile = readValue("--json");
+            continue;
+        }
+
+        if (argument == "--method") {
+            options.adjacencyMethod = pubchem::parseAdjacencyMethod(readValue("--method"));
+            continue;
+        }
+
+        throw std::invalid_argument("Unknown argument: " + argument);
+    }
+
+    return options;
 }
 
 pubchem::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
@@ -135,32 +189,55 @@ nlohmann::json toJson(const pubchem::AnalysisResult& result)
         {"atoms", atoms},
     };
 }
+
+nlohmann::json toJson(const pubchem::AdjacencyMatrix& adjacencyMatrix)
+{
+    return {
+        {"sourceFile", adjacencyMatrix.sourceFile},
+        {"method", adjacencyMatrix.method},
+        {"atomIds", adjacencyMatrix.atomIds},
+        {"adjacencyMatrix", adjacencyMatrix.values},
+    };
+}
 } // namespace
 
 int main(int argc, char* argv[])
 {
     try {
+        const CommandLineOptions options = parseArguments(argc, argv);
         const std::filesystem::path dataDir = resolveDataDir();
-        const std::filesystem::path sourceFile =
-            argc > 1 ? std::filesystem::path(argv[1])
-                     : std::filesystem::path("Conformer3D_COMPOUND_CID_4(1).sdf");
-        const std::filesystem::path sdfPath = dataDir / sourceFile;
+        const std::filesystem::path sdfPath = dataDir / options.sdfFile;
 
         const pubchem::AnalysisResult result = analyzeSdf(sdfPath);
         const std::filesystem::path outputDir = pubchem::outputDirectoryFor(dataDir);
-        const std::filesystem::path outputPath = pubchem::outputJsonPath(outputDir, sourceFile);
+        const std::filesystem::path outputPath =
+            pubchem::outputJsonPath(outputDir, options.sdfFile);
+
+        const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
+        const pubchem::NormalizedAdjacencyInput adjacencyInput =
+            pubchem::loadAdjacencyInput(adjacencyJsonPath);
+        const pubchem::AdjacencyMatrix adjacencyMatrix = pubchem::buildAdjacencyMatrix(
+            adjacencyInput, options.adjacencyJsonFile.filename().string(), options.adjacencyMethod);
+        const std::filesystem::path adjacencyOutputPath = pubchem::adjacencyOutputJsonPath(
+            outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
 
         std::filesystem::create_directories(outputDir);
 
         std::ofstream output(outputPath);
         output << std::setw(2) << toJson(result) << '\n';
 
+        std::ofstream adjacencyOutput(adjacencyOutputPath);
+        adjacencyOutput << std::setw(2) << toJson(adjacencyMatrix) << '\n';
+
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
         std::cout << "Atom records written to: " << outputPath << '\n';
+        std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
+        std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
     }
     catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
+        printUsage(std::cerr);
         return 1;
     }
 
