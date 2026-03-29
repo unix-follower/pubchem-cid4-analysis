@@ -1,7 +1,9 @@
 {
   "dependencies": [
     "armadillo",
+    "boost-graph",
     "gtest",
-    "nlohmann-json"
+    "nlohmann-json",
+    "boost-iostreams"
   ]
 }

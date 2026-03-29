@@ -26,6 +26,11 @@ cmake --build --preset=vcpkg  # Build project
 
 # Run the application
 ./build/app
+
+# Run with an explicit adjacency method
+./build/app --method arrays
+./build/app --method armadillo
+./build/app --method boost-graph
 ```
 
 ### Testing
@@ -90,6 +95,8 @@ Since this is an educational project, implementations typically involve:
 5. **Machine learning**: Feature engineering from molecular descriptors, regression/classification
 
 The main executable is `app` (built from `src/app.cpp`). Add new implementation files as needed and update `CMakeLists.txt` to link them.
+
+The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. Keep the shared output model library-agnostic if additional graph strategies are added later.
 
 ## CI/CD
 
