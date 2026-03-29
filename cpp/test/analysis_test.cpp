@@ -3,6 +3,7 @@
 #include "analysis.hpp"
 
 #include <cmath>
+#include <numeric>
 #include <stdexcept>
 
 namespace {
@@ -32,6 +33,26 @@ std::vector<std::vector<double>> multiplyMatrices(const std::vector<std::vector<
     }
 
     return product;
+}
+
+std::vector<double> rowSums(const std::vector<std::vector<double>>& matrix)
+{
+    std::vector<double> sums;
+    sums.reserve(matrix.size());
+    for (const auto& row : matrix) {
+        sums.push_back(std::accumulate(row.begin(), row.end(), 0.0));
+    }
+
+    return sums;
+}
+
+void expectSymmetric(const std::vector<std::vector<double>>& matrix)
+{
+    for (std::size_t rowIndex = 0; rowIndex < matrix.size(); ++rowIndex) {
+        for (std::size_t columnIndex = 0; columnIndex < matrix[rowIndex].size(); ++columnIndex) {
+            EXPECT_NEAR(matrix[rowIndex][columnIndex], matrix[columnIndex][rowIndex], 1.0e-8);
+        }
+    }
 }
 
 std::vector<std::vector<double>> toDoubleMatrix(const std::vector<std::vector<int>>& values)
@@ -240,4 +261,65 @@ TEST(EigendecompositionStrategiesTest, BoostMatchesArmadilloEigenvalues)
     }
 
     expectReconstructionMatches(adjacencyMatrix, boostResult);
+}
+
+TEST(LaplacianHelpersTest, SupportedMethodsIncludeArmadilloAndBoost)
+{
+    EXPECT_EQ(pubchem::supportedLaplacianMethods(),
+              (std::vector<std::string>{"armadillo", "boost"}));
+}
+
+TEST(LaplacianHelpersTest, ParseMethodRejectsUnsupportedValues)
+{
+    EXPECT_THROW(static_cast<void>(pubchem::parseLaplacianMethod("lapack")), std::invalid_argument);
+}
+
+TEST(LaplacianHelpersTest, OutputPathIncludesMethodSuffix)
+{
+    const auto path =
+        pubchem::laplacianOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "boost");
+    EXPECT_EQ(path.filename().string(),
+              "Conformer3D_COMPOUND_CID_4(1).boost.laplacian_analysis.json");
+}
+
+TEST(LaplacianStrategiesTest, ArmadilloProducesValidLaplacianAnalysis)
+{
+    const auto result = pubchem::buildLaplacianAnalysis(sampleSpectrumMatrix(), "armadillo");
+
+    EXPECT_EQ(result.method, "armadillo");
+    EXPECT_EQ(result.degreeVector, (std::vector<double>{1.0, 3.0, 2.0}));
+    ASSERT_EQ(result.laplacianMatrix.size(), 3U);
+    EXPECT_EQ(result.laplacianMatrix.front().size(), 3U);
+    expectSymmetric(result.laplacianMatrix);
+    for (const auto sum : rowSums(result.laplacianMatrix)) {
+        EXPECT_NEAR(sum, 0.0, 1.0e-8);
+    }
+    ASSERT_EQ(result.laplacianEigenvalues.size(), 3U);
+    EXPECT_NEAR(result.laplacianEigenvalues.front(), 0.0, 1.0e-8);
+    EXPECT_EQ(result.nullSpace.numZeroEigenvalues, 1U);
+    EXPECT_EQ(result.connectedComponents.numComponents, 1U);
+    EXPECT_EQ(result.connectedComponents.labels, (std::vector<int>{0, 0, 0}));
+    EXPECT_TRUE(result.metadata.graphIsConnected);
+}
+
+TEST(LaplacianStrategiesTest, BoostMatchesArmadilloLaplacianEigenvalues)
+{
+    const auto adjacencyMatrix = sampleSpectrumMatrix();
+    const auto armadilloResult = pubchem::buildLaplacianAnalysis(adjacencyMatrix, "armadillo");
+    const auto boostResult = pubchem::buildLaplacianAnalysis(adjacencyMatrix, "boost");
+
+    EXPECT_EQ(boostResult.method, "boost");
+    EXPECT_EQ(boostResult.degreeVector, armadilloResult.degreeVector);
+    EXPECT_EQ(boostResult.connectedComponents.labels, armadilloResult.connectedComponents.labels);
+    ASSERT_EQ(boostResult.laplacianEigenvalues.size(), armadilloResult.laplacianEigenvalues.size());
+    for (std::size_t index = 0; index < armadilloResult.laplacianEigenvalues.size(); ++index) {
+        EXPECT_NEAR(boostResult.laplacianEigenvalues[index],
+                    armadilloResult.laplacianEigenvalues[index],
+                    1.0e-8);
+    }
+    expectSymmetric(boostResult.laplacianMatrix);
+    for (const auto sum : rowSums(boostResult.laplacianMatrix)) {
+        EXPECT_NEAR(sum, 0.0, 1.0e-8);
+    }
+    EXPECT_EQ(boostResult.nullSpace.numZeroEigenvalues, 1U);
 }

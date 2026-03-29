@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <armadillo>
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/connected_components.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
@@ -22,6 +23,11 @@ using Json = nlohmann::json;
 class AdjacencyInputError : public std::invalid_argument {
   public:
     using std::invalid_argument::invalid_argument;
+};
+
+class LaplacianAnalysisError : public std::runtime_error {
+  public:
+    using std::runtime_error::runtime_error;
 };
 
 struct EigenComponents {
@@ -96,6 +102,216 @@ UblasMatrix toUblasMatrix(const AdjacencyMatrix& matrix)
     }
 
     return values;
+}
+
+arma::mat toArmadilloMatrix(const std::vector<std::vector<double>>& matrixValues)
+{
+    arma::mat values(matrixValues.size(), matrixValues.size(), arma::fill::zeros);
+    for (std::size_t rowIndex = 0; rowIndex < matrixValues.size(); ++rowIndex) {
+        for (std::size_t columnIndex = 0; columnIndex < matrixValues[rowIndex].size();
+             ++columnIndex) {
+            values(rowIndex, columnIndex) = matrixValues[rowIndex][columnIndex];
+        }
+    }
+
+    return values;
+}
+
+std::vector<std::vector<double>> toVectorMatrix(const arma::mat& matrix)
+{
+    std::vector<std::vector<double>> values(matrix.n_rows, std::vector<double>(matrix.n_cols, 0.0));
+    for (std::size_t rowIndex = 0; rowIndex < matrix.n_rows; ++rowIndex) {
+        for (std::size_t columnIndex = 0; columnIndex < matrix.n_cols; ++columnIndex) {
+            values[rowIndex][columnIndex] = matrix(rowIndex, columnIndex);
+        }
+    }
+
+    return values;
+}
+
+std::vector<std::vector<double>> toDoubleMatrix(const AdjacencyMatrix& matrix)
+{
+    std::vector<std::vector<double>> values(matrix.values.size(),
+                                            std::vector<double>(matrix.values.size(), 0.0));
+    for (std::size_t rowIndex = 0; rowIndex < matrix.values.size(); ++rowIndex) {
+        for (std::size_t columnIndex = 0; columnIndex < matrix.values[rowIndex].size();
+             ++columnIndex) {
+            values[rowIndex][columnIndex] =
+                static_cast<double>(matrix.values[rowIndex][columnIndex]);
+        }
+    }
+
+    return values;
+}
+
+std::vector<double> computeDegreeVector(const std::vector<std::vector<double>>& adjacencyValues)
+{
+    std::vector<double> degreeVector;
+    degreeVector.reserve(adjacencyValues.size());
+    for (const auto& row : adjacencyValues) {
+        degreeVector.push_back(std::accumulate(row.begin(), row.end(), 0.0));
+    }
+
+    return degreeVector;
+}
+
+std::vector<std::vector<double>> buildLaplacianMatrixValues(const AdjacencyMatrix& matrix)
+{
+    const auto adjacencyValues = toDoubleMatrix(matrix);
+    const auto degreeVector = computeDegreeVector(adjacencyValues);
+    std::vector<std::vector<double>> laplacianValues(
+        adjacencyValues.size(), std::vector<double>(adjacencyValues.size(), 0.0));
+
+    for (std::size_t rowIndex = 0; rowIndex < adjacencyValues.size(); ++rowIndex) {
+        for (std::size_t columnIndex = 0; columnIndex < adjacencyValues[rowIndex].size();
+             ++columnIndex) {
+            const double degreeContribution =
+                rowIndex == columnIndex ? degreeVector[rowIndex] : 0.0;
+            laplacianValues[rowIndex][columnIndex] =
+                degreeContribution - adjacencyValues[rowIndex][columnIndex];
+        }
+    }
+
+    return laplacianValues;
+}
+
+NullSpaceBasis buildNullSpaceBasis(const EigenComponents& components, const double zeroTolerance)
+{
+    std::vector<std::size_t> zeroIndices;
+    for (std::size_t index = 0; index < components.eigenvalues.size(); ++index) {
+        if (std::abs(components.eigenvalues[index]) < zeroTolerance) {
+            zeroIndices.push_back(index);
+        }
+    }
+
+    std::vector<std::vector<double>> nullSpaceEigenvectors(
+        components.eigenvectors.size(), std::vector<double>(zeroIndices.size(), 0.0));
+    for (std::size_t columnIndex = 0; columnIndex < zeroIndices.size(); ++columnIndex) {
+        const std::size_t sourceColumn = zeroIndices[columnIndex];
+        for (std::size_t rowIndex = 0; rowIndex < components.eigenvectors.size(); ++rowIndex) {
+            nullSpaceEigenvectors[rowIndex][columnIndex] =
+                components.eigenvectors[rowIndex][sourceColumn];
+        }
+    }
+
+    const auto smallestNonZero =
+        std::find_if(components.eigenvalues.begin(),
+                     components.eigenvalues.end(),
+                     [&](const double value) { return value > zeroTolerance; });
+
+    return NullSpaceBasis{
+        .eigenvalues =
+            [&] {
+                std::vector<double> values;
+                values.reserve(zeroIndices.size());
+                for (const auto index : zeroIndices) {
+                    values.push_back(components.eigenvalues[index]);
+                }
+                return values;
+            }(),
+        .eigenvectors = std::move(nullSpaceEigenvectors),
+        .tolerance = zeroTolerance,
+        .numZeroEigenvalues = zeroIndices.size(),
+        .smallestNonZeroEigenvalue =
+            smallestNonZero == components.eigenvalues.end() ? 0.0 : *smallestNonZero,
+    };
+}
+
+ConnectedComponentsResult buildConnectedComponentsResult(const AdjacencyMatrix& matrix)
+{
+    using Graph = boost::adjacency_list<boost::vecS,
+                                        boost::vecS,
+                                        boost::undirectedS,
+                                        boost::no_property,
+                                        boost::property<boost::edge_weight_t, int>>;
+
+    Graph graph(matrix.values.size());
+    for (std::size_t rowIndex = 0; rowIndex < matrix.values.size(); ++rowIndex) {
+        for (std::size_t columnIndex = rowIndex + 1; columnIndex < matrix.values[rowIndex].size();
+             ++columnIndex) {
+            const int weight = matrix.values[rowIndex][columnIndex];
+            if (weight > 0) {
+                boost::add_edge(static_cast<Graph::vertices_size_type>(rowIndex),
+                                static_cast<Graph::vertices_size_type>(columnIndex),
+                                weight,
+                                graph);
+            }
+        }
+    }
+
+    std::vector<int> labels(matrix.values.size(), 0);
+    const auto numComponents =
+        static_cast<std::size_t>(boost::connected_components(graph, labels.data()));
+    std::vector<std::vector<int>> componentAtomIds(numComponents);
+    for (std::size_t index = 0; index < labels.size(); ++index) {
+        componentAtomIds[static_cast<std::size_t>(labels[index])].push_back(matrix.atomIds[index]);
+    }
+
+    for (auto& component : componentAtomIds) {
+        std::sort(component.begin(), component.end());
+    }
+
+    return ConnectedComponentsResult{
+        .labels = std::move(labels),
+        .numComponents = numComponents,
+        .componentAtomIds = std::move(componentAtomIds),
+        .verificationBoostGraphCount = numComponents,
+    };
+}
+
+std::size_t countBonds(const AdjacencyMatrix& matrix)
+{
+    std::size_t bondCount = 0;
+    for (std::size_t rowIndex = 0; rowIndex < matrix.values.size(); ++rowIndex) {
+        for (std::size_t columnIndex = rowIndex + 1; columnIndex < matrix.values[rowIndex].size();
+             ++columnIndex) {
+            if (matrix.values[rowIndex][columnIndex] > 0) {
+                ++bondCount;
+            }
+        }
+    }
+
+    return bondCount;
+}
+
+LaplacianAnalysisResult
+makeLaplacianAnalysisResult(const AdjacencyMatrix& matrix,
+                            const std::string_view method,
+                            const std::vector<double>& degreeVector,
+                            std::vector<std::vector<double>> laplacianMatrix,
+                            EigenComponents components,
+                            const double zeroTolerance)
+{
+    const NullSpaceBasis nullSpace = buildNullSpaceBasis(components, zeroTolerance);
+    const ConnectedComponentsResult connectedComponents = buildConnectedComponentsResult(matrix);
+    if (nullSpace.numZeroEigenvalues != connectedComponents.numComponents) {
+        throw LaplacianAnalysisError(
+            "Null-space dimension does not match Boost.Graph connected-components count");
+    }
+
+    const std::size_t laplacianRank =
+        std::count_if(components.eigenvalues.begin(),
+                      components.eigenvalues.end(),
+                      [&](const double value) { return std::abs(value) >= zeroTolerance; });
+
+    return LaplacianAnalysisResult{
+        .sourceFile = matrix.sourceFile,
+        .method = std::string(method),
+        .atomIds = matrix.atomIds,
+        .degreeVector = degreeVector,
+        .laplacianMatrix = std::move(laplacianMatrix),
+        .laplacianEigenvalues = std::move(components.eigenvalues),
+        .laplacianEigenvectors = std::move(components.eigenvectors),
+        .nullSpace = nullSpace,
+        .connectedComponents = connectedComponents,
+        .metadata =
+            LaplacianMetadata{
+                .atomCount = matrix.atomIds.size(),
+                .bondCount = countBonds(matrix),
+                .laplacianRank = laplacianRank,
+                .graphIsConnected = connectedComponents.numComponents == 1,
+            },
+    };
 }
 
 EigenComponents jacobiEigenDecomposition(UblasMatrix matrix)
@@ -331,6 +547,67 @@ class BoostEigendecompositionStrategy final : public EigendecompositionStrategy 
     }
 };
 
+class ArmadilloLaplacianAnalysisStrategy final : public LaplacianAnalysisStrategy {
+  public:
+    [[nodiscard]] std::string_view method() const noexcept override
+    {
+        return "armadillo";
+    }
+
+    [[nodiscard]] LaplacianAnalysisResult analyze(const AdjacencyMatrix& matrix,
+                                                  const double zeroTolerance) const override
+    {
+        const auto laplacianMatrix = buildLaplacianMatrixValues(matrix);
+        const auto degreeVector = computeDegreeVector(toDoubleMatrix(matrix));
+        const arma::mat values = toArmadilloMatrix(laplacianMatrix);
+
+        arma::vec eigenvalues;
+        arma::mat eigenvectors;
+        if (!arma::eig_sym(eigenvalues, eigenvectors, values)) {
+            throw LaplacianAnalysisError(
+                "Armadillo failed to compute Laplacian eigendecomposition");
+        }
+
+        EigenComponents components{
+            .eigenvalues = std::vector<double>(eigenvalues.begin(), eigenvalues.end()),
+            .eigenvectors = toVectorMatrix(eigenvectors),
+        };
+
+        return makeLaplacianAnalysisResult(
+            matrix, method(), degreeVector, laplacianMatrix, std::move(components), zeroTolerance);
+    }
+};
+
+class BoostLaplacianAnalysisStrategy final : public LaplacianAnalysisStrategy {
+  public:
+    [[nodiscard]] std::string_view method() const noexcept override
+    {
+        return "boost";
+    }
+
+    [[nodiscard]] LaplacianAnalysisResult analyze(const AdjacencyMatrix& matrix,
+                                                  const double zeroTolerance) const override
+    {
+        const auto laplacianMatrix = buildLaplacianMatrixValues(matrix);
+        const auto degreeVector = computeDegreeVector(toDoubleMatrix(matrix));
+
+        UblasMatrix values(laplacianMatrix.size(), laplacianMatrix.size());
+        for (std::size_t rowIndex = 0; rowIndex < laplacianMatrix.size(); ++rowIndex) {
+            for (std::size_t columnIndex = 0; columnIndex < laplacianMatrix[rowIndex].size();
+                 ++columnIndex) {
+                values(rowIndex, columnIndex) = laplacianMatrix[rowIndex][columnIndex];
+            }
+        }
+
+        return makeLaplacianAnalysisResult(matrix,
+                                           method(),
+                                           degreeVector,
+                                           laplacianMatrix,
+                                           jacobiEigenDecomposition(std::move(values)),
+                                           zeroTolerance);
+    }
+};
+
 const AdjacencyMatrixStrategy& resolveAdjacencyStrategy(const std::string_view method)
 {
     static const ArraysAdjacencyMatrixStrategy arraysStrategy;
@@ -355,6 +632,19 @@ const EigendecompositionStrategy& resolveEigendecompositionStrategy(const std::s
     static const BoostEigendecompositionStrategy boostStrategy;
 
     const std::string normalizedMethod = parseEigendecompositionMethod(method);
+    if (normalizedMethod == boostStrategy.method()) {
+        return boostStrategy;
+    }
+
+    return armadilloStrategy;
+}
+
+const LaplacianAnalysisStrategy& resolveLaplacianAnalysisStrategy(const std::string_view method)
+{
+    static const ArmadilloLaplacianAnalysisStrategy armadilloStrategy;
+    static const BoostLaplacianAnalysisStrategy boostStrategy;
+
+    const std::string normalizedMethod = parseLaplacianMethod(method);
     if (normalizedMethod == boostStrategy.method()) {
         return boostStrategy;
     }
@@ -420,6 +710,24 @@ std::string parseEigendecompositionMethod(const std::string_view method)
     }
 
     throw std::invalid_argument("Unsupported eigendecomposition method '" + normalizedMethod +
+                                "'. Supported values: armadillo, boost");
+}
+
+std::vector<std::string> supportedLaplacianMethods()
+{
+    return {"armadillo", "boost"};
+}
+
+std::string parseLaplacianMethod(const std::string_view method)
+{
+    const std::string normalizedMethod(method);
+    for (const auto& supportedMethod : supportedLaplacianMethods()) {
+        if (normalizedMethod == supportedMethod) {
+            return supportedMethod;
+        }
+    }
+
+    throw std::invalid_argument("Unsupported Laplacian method '" + normalizedMethod +
                                 "'. Supported values: armadillo, boost");
 }
 
@@ -497,6 +805,13 @@ EigendecompositionResult buildEigendecomposition(const AdjacencyMatrix& matrix,
     return resolveEigendecompositionStrategy(method).compute(matrix);
 }
 
+LaplacianAnalysisResult buildLaplacianAnalysis(const AdjacencyMatrix& matrix,
+                                               const std::string_view method,
+                                               const double zeroTolerance)
+{
+    return resolveLaplacianAnalysisStrategy(method).analyze(matrix, zeroTolerance);
+}
+
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory)
 {
     return dataDirectory / "out";
@@ -522,5 +837,13 @@ std::filesystem::path eigendecompositionOutputJsonPath(const std::filesystem::pa
 {
     return outputDirectory /
            (sourceFile.stem().string() + "." + std::string(method) + ".eigendecomposition.json");
+}
+
+std::filesystem::path laplacianOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                              const std::filesystem::path& sourceFile,
+                                              const std::string_view method)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + "." + std::string(method) + ".laplacian_analysis.json");
 }
 } // namespace pubchem

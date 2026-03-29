@@ -60,6 +60,41 @@ struct EigendecompositionResult {
     std::vector<std::vector<double>> eigenvectors;
 };
 
+struct NullSpaceBasis {
+    std::vector<double> eigenvalues;
+    std::vector<std::vector<double>> eigenvectors;
+    double tolerance;
+    std::size_t numZeroEigenvalues;
+    double smallestNonZeroEigenvalue;
+};
+
+struct ConnectedComponentsResult {
+    std::vector<int> labels;
+    std::size_t numComponents;
+    std::vector<std::vector<int>> componentAtomIds;
+    std::size_t verificationBoostGraphCount;
+};
+
+struct LaplacianMetadata {
+    std::size_t atomCount;
+    std::size_t bondCount;
+    std::size_t laplacianRank;
+    bool graphIsConnected;
+};
+
+struct LaplacianAnalysisResult {
+    std::string sourceFile;
+    std::string method;
+    std::vector<int> atomIds;
+    std::vector<double> degreeVector;
+    std::vector<std::vector<double>> laplacianMatrix;
+    std::vector<double> laplacianEigenvalues;
+    std::vector<std::vector<double>> laplacianEigenvectors;
+    NullSpaceBasis nullSpace;
+    ConnectedComponentsResult connectedComponents;
+    LaplacianMetadata metadata;
+};
+
 class AdjacencyMatrixStrategy {
   public:
     virtual ~AdjacencyMatrixStrategy() = default;
@@ -77,17 +112,31 @@ class EigendecompositionStrategy {
     [[nodiscard]] virtual EigendecompositionResult compute(const AdjacencyMatrix& matrix) const = 0;
 };
 
+class LaplacianAnalysisStrategy {
+  public:
+    virtual ~LaplacianAnalysisStrategy() = default;
+
+    [[nodiscard]] virtual std::string_view method() const noexcept = 0;
+    [[nodiscard]] virtual LaplacianAnalysisResult analyze(const AdjacencyMatrix& matrix,
+                                                          double zeroTolerance) const = 0;
+};
+
 double averageOrZero(const std::vector<double>& values);
 std::vector<std::string> supportedAdjacencyMethods();
 std::string parseAdjacencyMethod(std::string_view method);
 std::vector<std::string> supportedEigendecompositionMethods();
 std::string parseEigendecompositionMethod(std::string_view method);
+std::vector<std::string> supportedLaplacianMethods();
+std::string parseLaplacianMethod(std::string_view method);
 NormalizedAdjacencyInput loadAdjacencyInput(const std::filesystem::path& jsonPath);
 AdjacencyMatrix buildAdjacencyMatrix(const NormalizedAdjacencyInput& input,
                                      std::string_view sourceFile,
                                      std::string_view method);
 EigendecompositionResult buildEigendecomposition(const AdjacencyMatrix& matrix,
                                                  std::string_view method);
+LaplacianAnalysisResult buildLaplacianAnalysis(const AdjacencyMatrix& matrix,
+                                               std::string_view method,
+                                               double zeroTolerance = 1.0e-10);
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory);
 std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory,
                                      const std::filesystem::path& sourceFile);
@@ -97,4 +146,7 @@ std::filesystem::path adjacencyOutputJsonPath(const std::filesystem::path& outpu
 std::filesystem::path eigendecompositionOutputJsonPath(const std::filesystem::path& outputDirectory,
                                                        const std::filesystem::path& sourceFile,
                                                        std::string_view method);
+std::filesystem::path laplacianOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                              const std::filesystem::path& sourceFile,
+                                              std::string_view method);
 } // namespace pubchem
