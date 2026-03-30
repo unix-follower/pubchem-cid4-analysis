@@ -265,7 +265,7 @@ LaplacianAnalysisResult buildLaplacianAnalysis(const AdjacencyMatrix& matrix,
                                                double zeroTolerance = 1.0e-10);
 DistanceMatrixResult buildDistanceMatrix(const DistanceMatrixInput& input, std::string_view method);
 BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixResult& distanceMatrix,
-                                                        const AdjacencyMatrix& adjacencyMatrix);
+                                                         const AdjacencyMatrix& adjacencyMatrix);
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory);
 std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory,
                                      const std::filesystem::path& sourceFile);

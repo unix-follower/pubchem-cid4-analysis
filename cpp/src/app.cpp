@@ -411,7 +411,9 @@ int main(int argc, char* argv[])
             pubchem::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
         const std::filesystem::path bondedDistanceOutputPath =
             pubchem::bondedDistanceOutputJsonPath(
-                outputDir, options.adjacencyJsonFile, bondedDistanceAnalysis.metadata.sourceDistanceMethod);
+                outputDir,
+                options.adjacencyJsonFile,
+                bondedDistanceAnalysis.metadata.sourceDistanceMethod);
         const std::filesystem::path adjacencyOutputPath = pubchem::adjacencyOutputJsonPath(
             outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
         const pubchem::EigendecompositionResult eigendecomposition =

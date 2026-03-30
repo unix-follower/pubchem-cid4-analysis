@@ -13,9 +13,9 @@
 #include <iomanip>
 #include <limits>
 #include <map>
-#include <set>
 #include <numeric>
 #include <optional>
+#include <set>
 #include <sstream>
 #include <stdexcept>
 
@@ -454,7 +454,7 @@ double computePercentile(std::vector<double> values, const double percentile)
 }
 
 void validateBondedDistanceAlignment(const DistanceMatrixResult& distanceMatrix,
-                                    const AdjacencyMatrix& adjacencyMatrix)
+                                     const AdjacencyMatrix& adjacencyMatrix)
 {
     if (distanceMatrix.atomIds != adjacencyMatrix.atomIds) {
         throw DistanceAnalysisError(
@@ -462,8 +462,7 @@ void validateBondedDistanceAlignment(const DistanceMatrixResult& distanceMatrix,
     }
 
     if (distanceMatrix.distanceMatrix.size() != adjacencyMatrix.values.size()) {
-        throw DistanceAnalysisError(
-            "Distance matrix and adjacency matrix must have the same size");
+        throw DistanceAnalysisError("Distance matrix and adjacency matrix must have the same size");
     }
 }
 
@@ -484,7 +483,8 @@ std::vector<BondedAtomPair> bondedAtomPairsFromAdjacency(const AdjacencyMatrix& 
     }
 
     if (pairs.empty()) {
-        throw DistanceAnalysisError("Expected at least one bonded atom pair in the adjacency matrix");
+        throw DistanceAnalysisError(
+            "Expected at least one bonded atom pair in the adjacency matrix");
     }
 
     return pairs;
@@ -522,11 +522,11 @@ BondedDistanceStatistics summarizePairDistances(const std::vector<AtomPairDistan
     };
 }
 
-BondedDistanceAnalysisResult makeBondedDistanceAnalysisResult(
-    const DistanceMatrixResult& distanceMatrix,
-    std::vector<BondedAtomPair> bondedAtomPairs,
-    std::vector<AtomPairDistance> bondedPairDistances,
-    std::vector<AtomPairDistance> nonbondedPairDistances)
+BondedDistanceAnalysisResult
+makeBondedDistanceAnalysisResult(const DistanceMatrixResult& distanceMatrix,
+                                 std::vector<BondedAtomPair> bondedAtomPairs,
+                                 std::vector<AtomPairDistance> bondedPairDistances,
+                                 std::vector<AtomPairDistance> nonbondedPairDistances)
 {
     const BondedDistanceStatistics bondedDistances = summarizePairDistances(bondedPairDistances);
     const BondedDistanceStatistics nonbondedDistances =
@@ -1706,7 +1706,7 @@ DistanceMatrixResult buildDistanceMatrix(const DistanceMatrixInput& input,
 }
 
 BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixResult& distanceMatrix,
-                                                        const AdjacencyMatrix& adjacencyMatrix)
+                                                         const AdjacencyMatrix& adjacencyMatrix)
 {
     validateBondedDistanceAlignment(distanceMatrix, adjacencyMatrix);
 
@@ -1740,11 +1740,10 @@ BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixRes
     const std::size_t expectedPairCount =
         distanceMatrix.atomIds.size() * (distanceMatrix.atomIds.size() - 1U) / 2U;
     if (bondedPairDistances.size() + nonbondedPairDistances.size() != expectedPairCount) {
-        throw DistanceAnalysisError("Expected " + std::to_string(expectedPairCount) +
-                                    " unique atom pairs, partitioned " +
-                                    std::to_string(bondedPairDistances.size() +
-                                                   nonbondedPairDistances.size()) +
-                                    " instead");
+        throw DistanceAnalysisError(
+            "Expected " + std::to_string(expectedPairCount) + " unique atom pairs, partitioned " +
+            std::to_string(bondedPairDistances.size() + nonbondedPairDistances.size()) +
+            " instead");
     }
 
     return makeBondedDistanceAnalysisResult(distanceMatrix,
@@ -1800,8 +1799,8 @@ std::filesystem::path bondedDistanceOutputJsonPath(const std::filesystem::path& 
                                                    const std::filesystem::path& sourceFile,
                                                    const std::string_view distanceMethod)
 {
-    return outputDirectory / (sourceFile.stem().string() + "." +
-                              std::string(distanceMethod) + ".bonded_distance_analysis.json");
+    return outputDirectory / (sourceFile.stem().string() + "." + std::string(distanceMethod) +
+                              ".bonded_distance_analysis.json");
 }
 
 std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,

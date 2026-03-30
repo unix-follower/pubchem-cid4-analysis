@@ -1,7 +1,7 @@
 package org.example.analysis.distance
 
-import org.example.analysis.adjacency.AdjacencyMatrix
 import org.apache.commons.math3.stat.descriptive.rank.Percentile
+import org.example.analysis.adjacency.AdjacencyMatrix
 
 final case class BondedDistanceStatistics(
     count: Int,

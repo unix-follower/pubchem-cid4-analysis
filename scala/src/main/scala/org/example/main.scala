@@ -5,8 +5,8 @@ import org.example.analysis.adjacency.AdjacencyMatrixService
 import org.example.analysis.bioactivity.BioactivityAnalysisResult
 import org.example.analysis.bioactivity.BioactivityService
 import org.example.analysis.distance.BondedDistanceAnalysisResult
-import org.example.analysis.distance.DistanceMatrixResult
 import org.example.analysis.distance.BondedDistanceAnalysisService
+import org.example.analysis.distance.DistanceMatrixResult
 import org.example.analysis.distance.DistanceMatrixService
 import org.example.analysis.spectrum.EigendecompositionResult
 import org.example.analysis.spectrum.EigendecompositionService
