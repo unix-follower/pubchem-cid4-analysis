@@ -4,6 +4,8 @@ import org.example.analysis.adjacency.AdjacencyMatrix
 import org.example.analysis.adjacency.AdjacencyMatrixService
 import org.example.analysis.bioactivity.BioactivityAnalysisResult
 import org.example.analysis.bioactivity.BioactivityService
+import org.example.analysis.bioactivity.HillDoseResponseAnalysisResult
+import org.example.analysis.bioactivity.HillDoseResponseService
 import org.example.analysis.distance.BondAngleAnalysisResult
 import org.example.analysis.distance.BondAngleAnalysisService
 import org.example.analysis.distance.BondedDistanceAnalysisResult
@@ -157,6 +159,43 @@ private def writeBioactivityPlot(
   val outputPath = outDirectory.resolve(outputFileName)
   BioactivityService.writePlot(result, outputPath)
 
+private def writeHillDoseResponseSummary(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: HillDoseResponseAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.hill_dose_response.summary.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result.summary)
+  outputPath
+
+private def writeHillDoseResponseRows(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: HillDoseResponseAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.hill_dose_response.csv"
+  val outputPath = outDirectory.resolve(outputFileName)
+  HillDoseResponseService.writeCsv(result, outputPath)
+
+private def writeHillDoseResponsePlot(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: HillDoseResponseAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.hill_dose_response.png"
+  val outputPath = outDirectory.resolve(outputFileName)
+  HillDoseResponseService.writePlot(result, outputPath)
+
 def readJson(method: String, distanceSource: String) = {
   val dataDirectory = fsUtils.getDataDir()
   if (dataDirectory == null) {
@@ -200,12 +239,19 @@ def readJson(method: String, distanceSource: String) = {
     val laplacianOutputPath =
       writeLaplacianAnalysis(dataDirectory, jsonPath.getFileName.toString, laplacianAnalysis)
     val bioactivityAnalysis = BioactivityService.analyze(bioactivityPath)
+    val hillDoseResponseAnalysis = HillDoseResponseService.analyze(bioactivityPath)
     val bioactivityRowsOutputPath =
       writeBioactivityFilteredRows(dataDirectory, bioactivityPath.getFileName.toString, bioactivityAnalysis)
     val bioactivitySummaryOutputPath =
       writeBioactivitySummary(dataDirectory, bioactivityPath.getFileName.toString, bioactivityAnalysis)
     val bioactivityPlotOutputPath =
       writeBioactivityPlot(dataDirectory, bioactivityPath.getFileName.toString, bioactivityAnalysis)
+    val hillDoseResponseRowsOutputPath =
+      writeHillDoseResponseRows(dataDirectory, bioactivityPath.getFileName.toString, hillDoseResponseAnalysis)
+    val hillDoseResponseSummaryOutputPath =
+      writeHillDoseResponseSummary(dataDirectory, bioactivityPath.getFileName.toString, hillDoseResponseAnalysis)
+    val hillDoseResponsePlotOutputPath =
+      writeHillDoseResponsePlot(dataDirectory, bioactivityPath.getFileName.toString, hillDoseResponseAnalysis)
 
     logger.info(s"Adjacency matrix method: ${adjacencyMatrix.method}")
     logger.info(
@@ -221,6 +267,9 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Bioactivity filtered rows output: $bioactivityRowsOutputPath")
     logger.info(s"Bioactivity summary output: $bioactivitySummaryOutputPath")
     logger.info(s"Bioactivity plot output: $bioactivityPlotOutputPath")
+    logger.info(s"Hill dose-response rows output: $hillDoseResponseRowsOutputPath")
+    logger.info(s"Hill dose-response summary output: $hillDoseResponseSummaryOutputPath")
+    logger.info(s"Hill dose-response plot output: $hillDoseResponsePlotOutputPath")
   }
 }
 

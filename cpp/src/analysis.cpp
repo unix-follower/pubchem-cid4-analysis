@@ -27,6 +27,7 @@ namespace {
 using Json = nlohmann::json;
 
 constexpr double kAngleVectorTolerance = 1.0e-10;
+constexpr double kMinimumPositiveConcentration = 1.0e-6;
 
 class AdjacencyInputError : public std::invalid_argument {
   public:
@@ -62,6 +63,31 @@ std::string formatDouble(const double value)
     std::ostringstream stream;
     stream << std::setprecision(15) << value;
     return stream.str();
+}
+
+std::string formatCompactDouble(const double value)
+{
+    std::ostringstream stream;
+    stream << std::setprecision(4) << value;
+    return stream.str();
+}
+
+std::string trimWhitespace(std::string value)
+{
+    const auto first =
+        std::find_if_not(value.begin(), value.end(), [](const unsigned char character) {
+            return std::isspace(character) != 0;
+        });
+    const auto last =
+        std::find_if_not(value.rbegin(), value.rend(), [](const unsigned char character) {
+            return std::isspace(character) != 0;
+        }).base();
+
+    if (first >= last) {
+        return {};
+    }
+
+    return std::string(first, last);
 }
 
 std::vector<std::vector<std::string>> parseCsvRecords(std::istream& input)
@@ -137,22 +163,24 @@ std::string stripUtf8Bom(std::string value)
 
 std::string normalizeActivityType(std::string value)
 {
+    value = trimWhitespace(std::move(value));
     std::transform(value.begin(), value.end(), value.begin(), [](const unsigned char character) {
         return static_cast<char>(std::toupper(character));
     });
     return value;
 }
 
-std::optional<double> parsePositiveDouble(const std::string& value)
+std::optional<double> parseDouble(const std::string& value)
 {
-    if (value.empty()) {
+    const std::string trimmedValue = trimWhitespace(value);
+    if (trimmedValue.empty()) {
         return std::nullopt;
     }
 
     try {
         std::size_t parsedCharacters = 0;
-        const double parsedValue = std::stod(value, &parsedCharacters);
-        if (parsedCharacters != value.size() || parsedValue <= 0.0) {
+        const double parsedValue = std::stod(trimmedValue, &parsedCharacters);
+        if (parsedCharacters != trimmedValue.size()) {
             return std::nullopt;
         }
         return parsedValue;
@@ -160,6 +188,16 @@ std::optional<double> parsePositiveDouble(const std::string& value)
     catch (const std::exception&) {
         return std::nullopt;
     }
+}
+
+std::optional<double> parsePositiveDouble(const std::string& value)
+{
+    const auto parsedValue = parseDouble(value);
+    if (!parsedValue.has_value() || *parsedValue <= 0.0) {
+        return std::nullopt;
+    }
+
+    return parsedValue;
 }
 
 double computeMedian(std::vector<double> values)
@@ -206,6 +244,66 @@ BioactivityMeasurement buildMeasurement(const std::vector<std::string>& row,
     };
 }
 
+std::string valueAtOrEmpty(const std::vector<std::string>& row,
+                           const std::optional<std::size_t> index)
+{
+    if (!index.has_value() || *index >= row.size()) {
+        return {};
+    }
+    return row[*index];
+}
+
+std::optional<std::size_t>
+optionalColumnIndex(const std::map<std::string, std::size_t>& headerIndex,
+                    const std::string_view fieldName)
+{
+    const auto iterator = headerIndex.find(std::string(fieldName));
+    if (iterator == headerIndex.end()) {
+        return std::nullopt;
+    }
+    return iterator->second;
+}
+
+void writeCsvTable(const std::vector<std::string>& headers,
+                   const std::vector<std::vector<std::string>>& rows,
+                   const std::filesystem::path& outputPath,
+                   const std::string_view context)
+{
+    std::ofstream output(outputPath);
+    if (!output) {
+        throw BioactivityAnalysisError("Could not open " + std::string(context) + ": " +
+                                       outputPath.string());
+    }
+
+    const auto writeCsvRow = [&](const std::vector<std::string>& row) {
+        for (std::size_t index = 0; index < row.size(); ++index) {
+            if (index > 0) {
+                output << ',';
+            }
+            const bool requiresQuotes = row[index].find_first_of(",\"\n\r") != std::string::npos;
+            if (requiresQuotes) {
+                output << '"';
+                for (const char character : row[index]) {
+                    if (character == '"') {
+                        output << '"';
+                    }
+                    output << character;
+                }
+                output << '"';
+            }
+            else {
+                output << row[index];
+            }
+        }
+        output << '\n';
+    };
+
+    writeCsvRow(headers);
+    for (const auto& row : rows) {
+        writeCsvRow(row);
+    }
+}
+
 std::pair<double, double> expandedDomain(const double minValue, const double maxValue)
 {
     if (std::abs(minValue - maxValue) < 1.0e-12) {
@@ -230,6 +328,50 @@ std::vector<double> geometricSpace(const double start, const double end, const s
         values.push_back(std::pow(10.0, logStart + t * (logEnd - logStart)));
     }
     return values;
+}
+
+double hillResponse(const double concentration,
+                    const double halfMaximalConcentration,
+                    const double hillCoefficient)
+{
+    const double numerator = std::pow(concentration, hillCoefficient);
+    const double denominator = std::pow(halfMaximalConcentration, hillCoefficient) + numerator;
+    return numerator / denominator;
+}
+
+double hillResponseFirstDerivative(const double concentration,
+                                   const double halfMaximalConcentration,
+                                   const double hillCoefficient)
+{
+    const double numerator = hillCoefficient * std::pow(halfMaximalConcentration, hillCoefficient) *
+                             std::pow(concentration, hillCoefficient - 1.0);
+    const double denominator = std::pow(std::pow(halfMaximalConcentration, hillCoefficient) +
+                                            std::pow(concentration, hillCoefficient),
+                                        2.0);
+    return numerator / denominator;
+}
+
+double hillResponseSecondDerivative(const double concentration,
+                                    const double halfMaximalConcentration,
+                                    const double hillCoefficient)
+{
+    const double halfMaximalPower = std::pow(halfMaximalConcentration, hillCoefficient);
+    const double concentrationPower = std::pow(concentration, hillCoefficient);
+    const double numerator = hillCoefficient * halfMaximalPower *
+                             std::pow(concentration, hillCoefficient - 2.0) *
+                             (((hillCoefficient - 1.0) * halfMaximalPower) -
+                              ((hillCoefficient + 1.0) * concentrationPower));
+    const double denominator = std::pow(halfMaximalPower + concentrationPower, 3.0);
+    return numerator / denominator;
+}
+
+std::optional<double> hillLinearInflectionScale(const double hillCoefficient)
+{
+    if (hillCoefficient <= 1.0) {
+        return std::nullopt;
+    }
+
+    return std::pow((hillCoefficient - 1.0) / (hillCoefficient + 1.0), 1.0 / hillCoefficient);
 }
 
 std::string escapeXml(std::string value)
@@ -1661,39 +1803,439 @@ BioactivityAnalysisResult buildBioactivityAnalysis(const std::filesystem::path& 
 void writeBioactivityFilteredCsv(const BioactivityAnalysisResult& result,
                                  const std::filesystem::path& outputPath)
 {
+    writeCsvTable(result.headers, result.filteredRows, outputPath, "bioactivity CSV output path");
+}
+
+HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
+                                                             const double hillCoefficient)
+{
+    if (hillCoefficient <= 0.0) {
+        throw BioactivityAnalysisError("Hill coefficient must be positive");
+    }
+
+    std::ifstream input(csvPath);
+    if (!input) {
+        throw BioactivityAnalysisError("Could not open bioactivity input file: " +
+                                       csvPath.string());
+    }
+
+    auto records = parseCsvRecords(input);
+    if (records.empty()) {
+        throw BioactivityAnalysisError("Bioactivity CSV is empty: " + csvPath.string());
+    }
+
+    auto headers = records.front();
+    if (!headers.empty()) {
+        headers.front() = stripUtf8Bom(headers.front());
+    }
+    records.erase(records.begin());
+
+    std::map<std::string, std::size_t> headerIndex;
+    for (std::size_t index = 0; index < headers.size(); ++index) {
+        headerIndex.emplace(headers[index], index);
+    }
+
+    for (const std::string_view requiredHeader :
+         {"Bioactivity_ID", "BioAssay_AID", "Activity_Type", "Activity_Value"}) {
+        if (!headerIndex.contains(std::string(requiredHeader))) {
+            throw BioactivityAnalysisError("Bioactivity CSV is missing required column: " +
+                                           std::string(requiredHeader));
+        }
+    }
+
+    const std::size_t baseHeaderCount = headers.size();
+    const std::size_t activityTypeIndex = headerIndex.at("Activity_Type");
+    const std::size_t activityValueIndex = headerIndex.at("Activity_Value");
+    const std::optional<std::size_t> targetNameIndex =
+        optionalColumnIndex(headerIndex, "Target_Name");
+    const std::optional<std::size_t> hasDoseResponseCurveIndex =
+        optionalColumnIndex(headerIndex, "Has_Dose_Response_Curve");
+
+    headers.push_back("hill_coefficient_n");
+    headers.push_back("inferred_K_activity_value");
+    headers.push_back("midpoint_concentration");
+    headers.push_back("midpoint_response");
+    headers.push_back("midpoint_first_derivative");
+    headers.push_back("log10_midpoint_concentration");
+    headers.push_back("linear_inflection_concentration");
+    headers.push_back("linear_inflection_response");
+    headers.push_back("fit_status");
+    headers.push_back("analysis_mode");
+
+    std::map<std::string, std::size_t> augmentedHeaderIndex;
+    for (std::size_t index = 0; index < headers.size(); ++index) {
+        augmentedHeaderIndex.emplace(headers[index], index);
+    }
+
+    std::size_t numericValueCount = 0;
+    std::size_t positiveValueCount = 0;
+    std::size_t rowsFlaggedHasDoseResponseCurve = 0;
+    std::size_t retainedRowsFlaggedHasDoseResponseCurve = 0;
+    std::set<long long> retainedBioassayIds;
+    std::map<std::string, std::size_t> activityTypeCounts;
+    std::vector<double> inferredKValues;
+    std::vector<double> midpointFirstDerivatives;
+    std::vector<std::vector<std::string>> retainedRows;
+
+    const auto inflectionScale = hillLinearInflectionScale(hillCoefficient);
+
+    for (auto& row : records) {
+        if (row.size() < baseHeaderCount) {
+            row.resize(baseHeaderCount);
+        }
+
+        const auto numericActivityValue = parseDouble(row[activityValueIndex]);
+        if (numericActivityValue.has_value()) {
+            ++numericValueCount;
+        }
+
+        const bool hasPositiveActivityValue =
+            numericActivityValue.has_value() && *numericActivityValue > 0.0;
+        if (hasPositiveActivityValue) {
+            ++positiveValueCount;
+        }
+
+        const auto hasDoseResponseCurveValue =
+            parseDouble(valueAtOrEmpty(row, hasDoseResponseCurveIndex));
+        const bool isFlaggedHasDoseResponseCurve = hasDoseResponseCurveValue.has_value() &&
+                                                   std::llround(*hasDoseResponseCurveValue) == 1LL;
+        if (isFlaggedHasDoseResponseCurve) {
+            ++rowsFlaggedHasDoseResponseCurve;
+        }
+
+        if (!hasPositiveActivityValue) {
+            continue;
+        }
+
+        row.resize(headers.size());
+        row[activityValueIndex] = formatDouble(*numericActivityValue);
+
+        const double inferredK = *numericActivityValue;
+        const double midpointConcentration = inferredK;
+        const double midpointResponse = 0.5;
+        const double midpointFirstDerivative =
+            hillResponseFirstDerivative(midpointConcentration, inferredK, hillCoefficient);
+        const double log10MidpointConcentration = std::log10(midpointConcentration);
+
+        row[augmentedHeaderIndex.at("hill_coefficient_n")] = formatDouble(hillCoefficient);
+        row[augmentedHeaderIndex.at("inferred_K_activity_value")] = formatDouble(inferredK);
+        row[augmentedHeaderIndex.at("midpoint_concentration")] =
+            formatDouble(midpointConcentration);
+        row[augmentedHeaderIndex.at("midpoint_response")] = formatDouble(midpointResponse);
+        row[augmentedHeaderIndex.at("midpoint_first_derivative")] =
+            formatDouble(midpointFirstDerivative);
+        row[augmentedHeaderIndex.at("log10_midpoint_concentration")] =
+            formatDouble(log10MidpointConcentration);
+        row[augmentedHeaderIndex.at("linear_inflection_concentration")] = "";
+        row[augmentedHeaderIndex.at("linear_inflection_response")] = "";
+
+        if (inflectionScale.has_value()) {
+            const double linearInflectionConcentration = inferredK * *inflectionScale;
+            const double linearInflectionResponse =
+                hillResponse(linearInflectionConcentration, inferredK, hillCoefficient);
+            row[augmentedHeaderIndex.at("linear_inflection_concentration")] =
+                formatDouble(linearInflectionConcentration);
+            row[augmentedHeaderIndex.at("linear_inflection_response")] =
+                formatDouble(linearInflectionResponse);
+        }
+
+        row[augmentedHeaderIndex.at("fit_status")] = "reference_curve_inferred_from_activity_value";
+        row[augmentedHeaderIndex.at("analysis_mode")] = "reference_curve";
+
+        const std::string activityTypeLabel = [&]() {
+            const std::string value = trimWhitespace(row[activityTypeIndex]);
+            return value.empty() ? std::string("Unknown") : value;
+        }();
+        ++activityTypeCounts[activityTypeLabel];
+
+        if (isFlaggedHasDoseResponseCurve) {
+            ++retainedRowsFlaggedHasDoseResponseCurve;
+        }
+
+        retainedBioassayIds.insert(parseRequiredLong(row, headerIndex, "BioAssay_AID"));
+        inferredKValues.push_back(inferredK);
+        midpointFirstDerivatives.push_back(midpointFirstDerivative);
+        retainedRows.push_back(std::move(row));
+    }
+
+    if (retainedRows.empty()) {
+        throw BioactivityAnalysisError("No positive numeric Activity_Value rows were found in " +
+                                       csvPath.filename().string());
+    }
+
+    std::stable_sort(
+        retainedRows.begin(), retainedRows.end(), [&](const auto& left, const auto& right) {
+            const double leftK =
+                std::stod(left.at(augmentedHeaderIndex.at("inferred_K_activity_value")));
+            const double rightK =
+                std::stod(right.at(augmentedHeaderIndex.at("inferred_K_activity_value")));
+            if (std::abs(leftK - rightK) > 1.0e-12) {
+                return leftK < rightK;
+            }
+
+            return parseRequiredLong(left, headerIndex, "BioAssay_AID") <
+                   parseRequiredLong(right, headerIndex, "BioAssay_AID");
+        });
+
+    std::vector<HillDoseResponseRepresentativeRow> representativeRows;
+    std::set<std::size_t> representativePositions{
+        0U, retainedRows.size() / 2U, retainedRows.size() - 1U};
+    representativeRows.reserve(representativePositions.size());
+    for (const std::size_t position : representativePositions) {
+        const auto& row = retainedRows[position];
+        const std::string targetName = trimWhitespace(valueAtOrEmpty(row, targetNameIndex));
+        representativeRows.push_back(HillDoseResponseRepresentativeRow{
+            .bioactivityId = parseRequiredLong(row, headerIndex, "Bioactivity_ID"),
+            .bioAssayAid = parseRequiredLong(row, headerIndex, "BioAssay_AID"),
+            .activityType =
+                [&]() {
+                    const std::string value = trimWhitespace(row.at(activityTypeIndex));
+                    return value.empty() ? std::string("Unknown") : value;
+                }(),
+            .targetName = targetName.empty() ? std::string("Unknown") : targetName,
+            .activityValue = std::stod(row.at(activityValueIndex)),
+            .inferredKActivityValue =
+                std::stod(row.at(augmentedHeaderIndex.at("inferred_K_activity_value"))),
+            .log10MidpointConcentration =
+                std::stod(row.at(augmentedHeaderIndex.at("log10_midpoint_concentration"))),
+        });
+    }
+
+    std::vector<HillDoseResponseActivityTypeCount> activityTypeCountRows;
+    activityTypeCountRows.reserve(activityTypeCounts.size());
+    for (const auto& [activityType, count] : activityTypeCounts) {
+        activityTypeCountRows.push_back(HillDoseResponseActivityTypeCount{
+            .activityType = activityType,
+            .count = count,
+        });
+    }
+    std::stable_sort(activityTypeCountRows.begin(),
+                     activityTypeCountRows.end(),
+                     [](const auto& left, const auto& right) {
+                         if (left.count != right.count) {
+                             return left.count > right.count;
+                         }
+                         return left.activityType < right.activityType;
+                     });
+
+    std::optional<HillDoseResponseLinearInflectionSummary> linearInflectionSummary;
+    if (inflectionScale.has_value()) {
+        linearInflectionSummary = HillDoseResponseLinearInflectionSummary{
+            .formula = "c* = K * ((n - 1)/(n + 1))^(1/n)",
+            .responseFormula = "f(c*) = (n - 1)/(2n)",
+            .relativeToK = *inflectionScale,
+            .normalizedResponse = (hillCoefficient - 1.0) / (2.0 * hillCoefficient),
+        };
+    }
+
+    return HillDoseResponseAnalysisResult{
+        .sourceFile = csvPath.filename().string(),
+        .headers = std::move(headers),
+        .rows = std::move(retainedRows),
+        .rowCounts =
+            HillDoseResponseRowCounts{
+                .totalRows = records.size(),
+                .rowsWithNumericActivityValue = numericValueCount,
+                .rowsWithPositiveActivityValue = positiveValueCount,
+                .rowsFlaggedHasDoseResponseCurve = rowsFlaggedHasDoseResponseCurve,
+                .retainedRows = inferredKValues.size(),
+                .retainedRowsFlaggedHasDoseResponseCurve = retainedRowsFlaggedHasDoseResponseCurve,
+                .retainedUniqueBioassays = retainedBioassayIds.size(),
+            },
+        .statistics =
+            HillDoseResponseStatistics{
+                .activityValueAsInferredK =
+                    HillDoseResponseStatistic{
+                        .min = *std::min_element(inferredKValues.begin(), inferredKValues.end()),
+                        .median = computeMedian(inferredKValues),
+                        .max = *std::max_element(inferredKValues.begin(), inferredKValues.end()),
+                    },
+                .midpointFirstDerivative =
+                    HillDoseResponseStatistic{
+                        .min = *std::min_element(midpointFirstDerivatives.begin(),
+                                                 midpointFirstDerivatives.end()),
+                        .median = computeMedian(midpointFirstDerivatives),
+                        .max = *std::max_element(midpointFirstDerivatives.begin(),
+                                                 midpointFirstDerivatives.end()),
+                    },
+            },
+        .activityTypeCounts = std::move(activityTypeCountRows),
+        .analysis =
+            HillDoseResponseSummary{
+                .model = "normalized Hill equation",
+                .equation = "f(c) = c^n / (K^n + c^n)",
+                .firstDerivative = "f'(c) = n K^n c^(n-1) / (K^n + c^n)^2",
+                .secondDerivative =
+                    "f''(c) = n K^n c^(n-2) * ((n - 1)K^n - (n + 1)c^n) / (K^n + c^n)^3",
+                .referenceHillCoefficientN = hillCoefficient,
+                .parameterInterpretation =
+                    "Activity_Value is treated as an inferred K parameter because this dataset "
+                    "provides potency-style summary values rather than raw concentration-response "
+                    "observations for CID 4.",
+                .midpointInLogConcentrationSpace =
+                    HillDoseResponseMidpointSummary{
+                        .condition = "c = K",
+                        .response = 0.5,
+                        .interpretation =
+                            "The Hill curve is centered at c = K in log-concentration space.",
+                    },
+                .linearConcentrationInflection = linearInflectionSummary,
+                .fitStatus = "reference_curve_inferred_from_activity_value",
+                .representativeRows = std::move(representativeRows),
+                .notes =
+                    {
+                        "No nonlinear dose-response fitting was performed because the CSV does not "
+                        "contain raw per-concentration response series for CID 4.",
+                        "Rows with positive numeric Activity_Value are modeled as reference Hill "
+                        "curves using Activity_Value as the inferred half-maximal scale K.",
+                    },
+            },
+    };
+}
+
+void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
+                              const std::filesystem::path& outputPath)
+{
+    writeCsvTable(result.headers, result.rows, outputPath, "Hill dose-response CSV output path");
+}
+
+void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
+                                  const std::filesystem::path& outputPath)
+{
+    if (result.analysis.representativeRows.empty()) {
+        throw BioactivityAnalysisError("Hill plot requires at least one representative row");
+    }
+
     std::ofstream output(outputPath);
     if (!output) {
-        throw BioactivityAnalysisError("Could not open bioactivity CSV output path: " +
+        throw BioactivityAnalysisError("Could not open Hill plot output path: " +
                                        outputPath.string());
     }
 
-    auto writeCsvRow = [&](const std::vector<std::string>& row) {
-        for (std::size_t index = 0; index < row.size(); ++index) {
-            if (index > 0) {
-                output << ',';
-            }
-            const bool requiresQuotes = row[index].find_first_of(",\"\n\r") != std::string::npos;
-            if (requiresQuotes) {
-                output << '"';
-                for (const char character : row[index]) {
-                    if (character == '"') {
-                        output << '"';
-                    }
-                    output << character;
-                }
-                output << '"';
-            }
-            else {
-                output << row[index];
-            }
-        }
-        output << '\n';
+    std::vector<double> representativeKValues;
+    representativeKValues.reserve(result.analysis.representativeRows.size());
+    for (const auto& row : result.analysis.representativeRows) {
+        representativeKValues.push_back(row.inferredKActivityValue);
+    }
+
+    const double minK =
+        *std::min_element(representativeKValues.begin(), representativeKValues.end());
+    const double maxK =
+        *std::max_element(representativeKValues.begin(), representativeKValues.end());
+    const double minConcentration = std::max(minK / 100.0, kMinimumPositiveConcentration);
+    const double maxConcentration = maxK * 100.0;
+    const auto curveX = geometricSpace(minConcentration, maxConcentration, 400U);
+
+    constexpr double width = 1280.0;
+    constexpr double height = 720.0;
+    constexpr double left = 100.0;
+    constexpr double right = 80.0;
+    constexpr double top = 70.0;
+    constexpr double bottom = 90.0;
+    constexpr double plotMinY = -0.02;
+    constexpr double plotMaxY = 1.02;
+    const double plotWidth = width - left - right;
+    const double plotHeight = height - top - bottom;
+    const double logMinX = std::log10(minConcentration);
+    const double logMaxX = std::log10(maxConcentration);
+
+    auto xToSvg = [&](const double xValue) {
+        return left + (std::log10(xValue) - logMinX) / (logMaxX - logMinX) * plotWidth;
+    };
+    auto yToSvg = [&](const double yValue) {
+        return top + (plotMaxY - yValue) / (plotMaxY - plotMinY) * plotHeight;
     };
 
-    writeCsvRow(result.headers);
-    for (const auto& row : result.filteredRows) {
-        writeCsvRow(row);
+    output << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width << "\" height=\""
+           << height << "\" viewBox=\"0 0 " << width << ' ' << height << "\">\n";
+    output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
+    output << "<rect x=\"" << left << "\" y=\"" << top << "\" width=\"" << plotWidth
+           << "\" height=\"" << plotHeight << "\" fill=\"#f8fafc\" stroke=\"#cbd5e1\"/>\n";
+
+    std::set<double> xTicks{minConcentration, maxConcentration};
+    for (const auto& row : result.analysis.representativeRows) {
+        xTicks.insert(row.inferredKActivityValue);
     }
+
+    for (const double xTick : xTicks) {
+        const double x = xToSvg(xTick);
+        output << "<line x1=\"" << x << "\" y1=\"" << top << "\" x2=\"" << x << "\" y2=\""
+               << top + plotHeight << "\" stroke=\"#cbd5e1\" stroke-dasharray=\"4 6\"/>\n";
+        output << svgText(x - 22.0, top + plotHeight + 28.0, formatCompactDouble(xTick)) << '\n';
+    }
+
+    for (const double yTick : std::vector<double>{0.0, 0.25, 0.5, 0.75, 1.0}) {
+        const double y = yToSvg(yTick);
+        output << "<line x1=\"" << left << "\" y1=\"" << y << "\" x2=\"" << left + plotWidth
+               << "\" y2=\"" << y << "\" stroke=\"#cbd5e1\" stroke-dasharray=\"4 6\"/>\n";
+        output << svgText(40.0, y + 5.0, formatCompactDouble(yTick)) << '\n';
+    }
+
+    const std::vector<std::string> colors{"#1d4ed8", "#ea580c", "#059669"};
+    for (std::size_t rowIndex = 0; rowIndex < result.analysis.representativeRows.size();
+         ++rowIndex) {
+        const auto& representativeRow = result.analysis.representativeRows[rowIndex];
+        const std::string& color = colors[rowIndex % colors.size()];
+
+        std::ostringstream polyline;
+        for (std::size_t pointIndex = 0; pointIndex < curveX.size(); ++pointIndex) {
+            if (pointIndex > 0) {
+                polyline << ' ';
+            }
+            polyline << xToSvg(curveX[pointIndex]) << ','
+                     << yToSvg(hillResponse(curveX[pointIndex],
+                                            representativeRow.inferredKActivityValue,
+                                            result.analysis.referenceHillCoefficientN));
+        }
+
+        output << "<polyline fill=\"none\" stroke=\"" << color << "\" stroke-width=\"4\" points=\""
+               << polyline.str() << "\"/>\n";
+        output << "<line x1=\"" << xToSvg(representativeRow.inferredKActivityValue) << "\" y1=\""
+               << top << "\" x2=\"" << xToSvg(representativeRow.inferredKActivityValue)
+               << "\" y2=\"" << top + plotHeight << "\" stroke=\"" << color
+               << "\" stroke-dasharray=\"8 8\" stroke-width=\"2\" stroke-opacity=\"0.7\"/>\n";
+    }
+
+    output << svgText(width / 2.0 - 280.0,
+                      35.0,
+                      "Reference Hill Curves Inferred from Activity_Value (n = " +
+                          formatCompactDouble(result.analysis.referenceHillCoefficientN) + ")",
+                      "font-size=\"28\" font-weight=\"700\"")
+           << '\n';
+    output << svgText(width / 2.0 - 160.0,
+                      height - 25.0,
+                      "Concentration c (same units as Activity_Value)",
+                      "font-size=\"22\" font-weight=\"600\"")
+           << '\n';
+    output << "<g transform=\"translate(30 " << (top + plotHeight / 2.0 + 80.0)
+           << ") rotate(-90)\">\n";
+    output << svgText(0.0, 0.0, "Normalized response f(c)", "font-size=\"22\" font-weight=\"600\"")
+           << '\n';
+    output << "</g>\n";
+
+    const double legendX = width - 520.0;
+    const double legendY = top + 16.0;
+    const double legendHeight = 32.0 + (result.analysis.representativeRows.size() * 28.0);
+    output << "<rect x=\"" << legendX << "\" y=\"" << legendY << "\" width=\"440\" height=\""
+           << legendHeight << "\" fill=\"#ffffff\" stroke=\"#cbd5e1\"/>\n";
+
+    for (std::size_t rowIndex = 0; rowIndex < result.analysis.representativeRows.size();
+         ++rowIndex) {
+        const auto& representativeRow = result.analysis.representativeRows[rowIndex];
+        const std::string& color = colors[rowIndex % colors.size()];
+        const double y = legendY + 24.0 + (rowIndex * 28.0);
+        output << "<line x1=\"" << legendX + 20.0 << "\" y1=\"" << y << "\" x2=\"" << legendX + 68.0
+               << "\" y2=\"" << y << "\" stroke=\"" << color << "\" stroke-width=\"4\"/>\n";
+        output << svgText(legendX + 82.0,
+                          y + 5.0,
+                          "AID " + std::to_string(representativeRow.bioAssayAid) + " | " +
+                              representativeRow.activityType + " | K=" +
+                              formatCompactDouble(representativeRow.inferredKActivityValue))
+               << '\n';
+    }
+
+    output << "</svg>\n";
 }
 
 void writeBioactivityPlotSvg(const BioactivityAnalysisResult& result,
@@ -1998,5 +2540,23 @@ std::filesystem::path bioactivityPlotSvgPath(const std::filesystem::path& output
                                              const std::filesystem::path& sourceFile)
 {
     return outputDirectory / (sourceFile.stem().string() + ".ic50_pic50.svg");
+}
+
+std::filesystem::path hillDoseResponseCsvPath(const std::filesystem::path& outputDirectory,
+                                              const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".hill_dose_response.csv");
+}
+
+std::filesystem::path hillDoseResponseSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                                      const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".hill_dose_response.summary.json");
+}
+
+std::filesystem::path hillDoseResponsePlotSvgPath(const std::filesystem::path& outputDirectory,
+                                                  const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".hill_dose_response.svg");
 }
 } // namespace pubchem

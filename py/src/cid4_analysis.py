@@ -16,11 +16,12 @@ import fs_utils as fs
 import log_settings
 from constants import ARR_1ST_IDX as IDX1
 from constants import UTF_8
-from matplotlib_utils import plot_pic50_transform
+from matplotlib_utils import plot_hill_reference_curves, plot_pic50_transform
 
 CONFORMER_ATOM_COUNT = 14
 NULL_SPACE_TOLERANCE = 1e-10
 ANGLE_VECTOR_TOLERANCE = 1e-10
+DEFAULT_HILL_COEFFICIENT = 1.0
 
 
 def reduce_mol_weights(mol_weights: list[float]) -> float:
@@ -256,6 +257,192 @@ def summarize_bond_angles(angle_records: list[dict[str, float | int]]) -> dict:
         "q75_angle_degrees": float(quantiles[2]),
         "max_angle_degrees": float(angle_values.max()),
     }
+
+
+def build_hill_reference_dataframe(
+    bioactivity_df: pd.DataFrame,
+    hill_coefficient: float = DEFAULT_HILL_COEFFICIENT,
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    if hill_coefficient <= 0:
+        raise ValueError("Hill coefficient must be positive")
+
+    activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
+    has_curve_series = pd.to_numeric(bioactivity_df["Has_Dose_Response_Curve"], errors="coerce").fillna(0).astype(int)
+    positive_numeric_mask = activity_value.notna() & (activity_value > 0)
+
+    hill_df = bioactivity_df.loc[positive_numeric_mask].copy()
+    hill_df["Activity_Value"] = activity_value.loc[positive_numeric_mask]
+    hill_df["Has_Dose_Response_Curve"] = has_curve_series.loc[positive_numeric_mask]
+    hill_df["Activity_Type"] = hill_df["Activity_Type"].astype("string").str.strip().fillna("Unknown")
+    hill_df["Target_Name"] = hill_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
+    hill_df["hill_coefficient_n"] = float(hill_coefficient)
+    hill_df["inferred_K_activity_value"] = hill_df["Activity_Value"].astype(np.float64)
+    hill_df["midpoint_concentration"] = hill_df["inferred_K_activity_value"]
+    hill_df["midpoint_response"] = 0.5
+    hill_df["midpoint_first_derivative"] = hill_response_first_derivative(
+        hill_df["midpoint_concentration"].to_numpy(dtype=np.float64),
+        hill_df["inferred_K_activity_value"].to_numpy(dtype=np.float64),
+        hill_coefficient,
+    )
+    hill_df["log10_midpoint_concentration"] = np.log10(hill_df["midpoint_concentration"])
+    hill_df["linear_inflection_concentration"] = np.nan
+    hill_df["linear_inflection_response"] = np.nan
+    hill_df["fit_status"] = "reference_curve_inferred_from_activity_value"
+    hill_df["analysis_mode"] = "reference_curve"
+
+    if hill_coefficient > 1.0:
+        inflection_scale = ((hill_coefficient - 1.0) / (hill_coefficient + 1.0)) ** (1.0 / hill_coefficient)
+        hill_df["linear_inflection_concentration"] = hill_df["inferred_K_activity_value"] * inflection_scale
+        hill_df["linear_inflection_response"] = hill_response(
+            hill_df["linear_inflection_concentration"].to_numpy(dtype=np.float64),
+            hill_df["inferred_K_activity_value"].to_numpy(dtype=np.float64),
+            hill_coefficient,
+        )
+
+    hill_df = hill_df.sort_values(by=["inferred_K_activity_value", "BioAssay_AID"], ascending=[True, True]).reset_index(
+        drop=True
+    )
+
+    counts = {
+        "total_rows": int(len(bioactivity_df)),
+        "rows_with_numeric_activity_value": int(activity_value.notna().sum()),
+        "rows_with_positive_activity_value": int(positive_numeric_mask.sum()),
+        "rows_flagged_has_dose_response_curve": int((has_curve_series == 1).sum()),
+        "retained_rows": int(len(hill_df)),
+        "retained_rows_flagged_has_dose_response_curve": int((hill_df["Has_Dose_Response_Curve"] == 1).sum()),
+        "retained_unique_bioassays": int(hill_df["BioAssay_AID"].nunique()),
+    }
+
+    if hill_df.empty:
+        raise ValueError("No positive numeric Activity_Value rows were found in the bioactivity dataset")
+
+    return hill_df, counts
+
+
+def hill_response(
+    concentration: np.ndarray, half_maximal_concentration: np.ndarray | float, hill_coefficient: float
+) -> np.ndarray:
+    concentration_array = np.asarray(concentration, dtype=np.float64)
+    half_maximal_array = np.asarray(half_maximal_concentration, dtype=np.float64)
+    numerator = concentration_array**hill_coefficient
+    denominator = (half_maximal_array**hill_coefficient) + numerator
+    return numerator / denominator
+
+
+def hill_response_first_derivative(
+    concentration: np.ndarray,
+    half_maximal_concentration: np.ndarray | float,
+    hill_coefficient: float,
+) -> np.ndarray:
+    concentration_array = np.asarray(concentration, dtype=np.float64)
+    half_maximal_array = np.asarray(half_maximal_concentration, dtype=np.float64)
+    numerator = (
+        hill_coefficient * (half_maximal_array**hill_coefficient) * (concentration_array ** (hill_coefficient - 1.0))
+    )
+    denominator = ((half_maximal_array**hill_coefficient) + (concentration_array**hill_coefficient)) ** 2
+    return numerator / denominator
+
+
+def hill_response_second_derivative(
+    concentration: np.ndarray,
+    half_maximal_concentration: np.ndarray | float,
+    hill_coefficient: float,
+) -> np.ndarray:
+    concentration_array = np.asarray(concentration, dtype=np.float64)
+    half_maximal_array = np.asarray(half_maximal_concentration, dtype=np.float64)
+    numerator = (
+        hill_coefficient
+        * (half_maximal_array**hill_coefficient)
+        * (concentration_array ** (hill_coefficient - 2.0))
+        * (
+            ((hill_coefficient - 1.0) * (half_maximal_array**hill_coefficient))
+            - ((hill_coefficient + 1.0) * (concentration_array**hill_coefficient))
+        )
+    )
+    denominator = ((half_maximal_array**hill_coefficient) + (concentration_array**hill_coefficient)) ** 3
+    return numerator / denominator
+
+
+def summarize_hill_reference_analysis(hill_df: pd.DataFrame, counts: dict[str, int], hill_coefficient: float) -> dict:
+    inferred_k_values = hill_df["inferred_K_activity_value"].to_numpy(dtype=np.float64)
+    midpoint_derivatives = hill_df["midpoint_first_derivative"].to_numpy(dtype=np.float64)
+    representative_positions = sorted({0, len(hill_df) // 2, len(hill_df) - 1})
+    representative_rows = hill_df.iloc[representative_positions]
+    activity_type_counts = {
+        str(key): int(value) for key, value in hill_df["Activity_Type"].value_counts(dropna=False).items()
+    }
+
+    linear_inflection = None
+    if hill_coefficient > 1.0:
+        response_at_inflection = float((hill_coefficient - 1.0) / (2.0 * hill_coefficient))
+        linear_inflection = {
+            "formula": "c* = K * ((n - 1)/(n + 1))^(1/n)",
+            "response_formula": "f(c*) = (n - 1)/(2n)",
+            "relative_to_K": float(((hill_coefficient - 1.0) / (hill_coefficient + 1.0)) ** (1.0 / hill_coefficient)),
+            "normalized_response": response_at_inflection,
+        }
+
+    return {
+        "row_counts": counts,
+        "statistics": {
+            "activity_value_as_inferred_K": {
+                "min": float(inferred_k_values.min()),
+                "median": float(np.median(inferred_k_values)),
+                "max": float(inferred_k_values.max()),
+            },
+            "midpoint_first_derivative": {
+                "min": float(midpoint_derivatives.min()),
+                "median": float(np.median(midpoint_derivatives)),
+                "max": float(midpoint_derivatives.max()),
+            },
+        },
+        "activity_type_counts": activity_type_counts,
+        "analysis": {
+            "model": "normalized Hill equation",
+            "equation": "f(c) = c^n / (K^n + c^n)",
+            "first_derivative": "f'(c) = n K^n c^(n-1) / (K^n + c^n)^2",
+            "second_derivative": ("f''(c) = n K^n c^(n-2) * ((n - 1)K^n - (n + 1)c^n) / (K^n + c^n)^3"),
+            "reference_hill_coefficient_n": float(hill_coefficient),
+            "parameter_interpretation": (
+                "Activity_Value is treated as an inferred K parameter because this dataset provides potency-style "
+                "summary values rather than raw concentration-response observations for CID 4."
+            ),
+            "midpoint_in_log_concentration_space": {
+                "condition": "c = K",
+                "response": 0.5,
+                "interpretation": "The Hill curve is centered at c = K in log-concentration space.",
+            },
+            "linear_concentration_inflection": linear_inflection,
+            "fit_status": "reference_curve_inferred_from_activity_value",
+            "representative_rows": [
+                {
+                    "Bioactivity_ID": int(row["Bioactivity_ID"]),
+                    "BioAssay_AID": int(row["BioAssay_AID"]),
+                    "Activity_Type": str(row["Activity_Type"]),
+                    "Target_Name": str(row["Target_Name"]),
+                    "Activity_Value": float(row["Activity_Value"]),
+                    "inferred_K_activity_value": float(row["inferred_K_activity_value"]),
+                    "log10_midpoint_concentration": float(row["log10_midpoint_concentration"]),
+                }
+                for _, row in representative_rows.iterrows()
+            ],
+            "notes": [
+                "No nonlinear dose-response fitting was performed because the CSV does not contain raw per-concentration response series for CID 4.",
+                "Rows with positive numeric Activity_Value are modeled as reference Hill curves using Activity_Value as the inferred half-maximal scale K.",
+            ],
+        },
+    }
+
+
+def select_hill_plot_representatives(hill_df: pd.DataFrame) -> tuple[np.ndarray, list[str]]:
+    representative_positions = sorted({0, len(hill_df) // 2, len(hill_df) - 1})
+    representative_rows = hill_df.iloc[representative_positions]
+    representative_k_values = representative_rows["inferred_K_activity_value"].to_numpy(dtype=np.float64)
+    representative_labels = [
+        f"AID {int(row['BioAssay_AID'])} | {str(row['Activity_Type'])} | K={float(row['inferred_K_activity_value']):.4g}"
+        for _, row in representative_rows.iterrows()
+    ]
+    return representative_k_values, representative_labels
 
 
 def load_bioactivity_dataframe(filename: str) -> pd.DataFrame:
@@ -626,6 +813,35 @@ def write_bioactivity_analysis(filename: str):
     log.info("Bioactivity pIC50 plot written to %s", plot_output_path)
 
 
+def write_hill_dose_response_analysis(filename: str, hill_coefficient: float = DEFAULT_HILL_COEFFICIENT):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    bioactivity_df = load_bioactivity_dataframe(filename)
+    hill_df, counts = build_hill_reference_dataframe(bioactivity_df, hill_coefficient=hill_coefficient)
+    summary = summarize_hill_reference_analysis(hill_df, counts, hill_coefficient)
+    output_stem = Path(filename).stem
+    records_output_path = Path(out_dir) / f"{output_stem}.hill_dose_response.csv"
+    summary_output_path = Path(out_dir) / f"{output_stem}.hill_dose_response.summary.json"
+    plot_output_path = Path(out_dir) / f"{output_stem}.hill_dose_response.png"
+
+    hill_df.to_csv(records_output_path, index=False)
+
+    with summary_output_path.open("w", encoding=UTF_8) as file:
+        json.dump(summary, file, indent=2)
+
+    representative_k_values, representative_labels = select_hill_plot_representatives(hill_df)
+    plot_hill_reference_curves(
+        representative_k_values,
+        representative_labels,
+        hill_coefficient=hill_coefficient,
+        out_file_path=str(plot_output_path),
+    )
+
+    log.info("Hill dose-response rows written to %s", records_output_path)
+    log.info("Hill dose-response summary written to %s", summary_output_path)
+    log.info("Hill dose-response plot written to %s", plot_output_path)
+
+
 def write_adjacency_matrix(filename: str) -> pd.DataFrame:
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
@@ -727,6 +943,7 @@ def main():
     write_adjacency_spectrum(json_filename, adjacency_matrix)
     write_laplacian_analysis(json_filename, adjacency_matrix)
     write_bioactivity_analysis(bioactivity_filename)
+    write_hill_dose_response_analysis(bioactivity_filename)
 
 
 if __name__ == "__main__":

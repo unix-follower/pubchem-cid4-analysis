@@ -59,3 +59,37 @@ def plot_pic50_transform(
     plt.tight_layout()
     plt.savefig(out_file_path, dpi=200)
     plt.close()
+
+
+def plot_hill_reference_curves(
+    representative_k_values: np.ndarray,
+    representative_labels: list[str],
+    hill_coefficient: float,
+    out_file_path: str,
+):
+    if representative_k_values.size == 0:
+        raise ValueError("Hill reference-curve plot requires at least one inferred K value")
+
+    min_k = float(np.min(representative_k_values))
+    max_k = float(np.max(representative_k_values))
+    concentration_grid = np.geomspace(max(min_k / 100.0, 1e-6), max_k * 100.0, 400)
+
+    plt.figure(figsize=(10, 6))
+
+    for k_value, label in zip(representative_k_values, representative_labels, strict=True):
+        response_curve = (concentration_grid**hill_coefficient) / (
+            (k_value**hill_coefficient) + (concentration_grid**hill_coefficient)
+        )
+        plt.plot(concentration_grid, response_curve, linewidth=2, label=label)
+        plt.axvline(k_value, linestyle="--", linewidth=1, alpha=0.7)
+
+    plt.xscale("log")
+    plt.ylim(-0.02, 1.02)
+    plt.xlabel("Concentration c (same units as Activity_Value)")
+    plt.ylabel("Normalized response f(c)")
+    plt.title(f"Reference Hill Curves Inferred from Activity_Value (n = {hill_coefficient:g})")
+    plt.grid(True, which="both", linestyle="--", linewidth=0.6, alpha=0.5)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(out_file_path, dpi=200)
+    plt.close()
