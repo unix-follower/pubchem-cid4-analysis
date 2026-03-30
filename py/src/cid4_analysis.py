@@ -427,8 +427,10 @@ def summarize_hill_reference_analysis(hill_df: pd.DataFrame, counts: dict[str, i
                 for _, row in representative_rows.iterrows()
             ],
             "notes": [
-                "No nonlinear dose-response fitting was performed because the CSV does not contain raw per-concentration response series for CID 4.",
-                "Rows with positive numeric Activity_Value are modeled as reference Hill curves using Activity_Value as the inferred half-maximal scale K.",
+                "No nonlinear dose-response fitting was performed because "
+                "the CSV does not contain raw per-concentration response series for CID 4.",
+                "Rows with positive numeric Activity_Value are modeled as reference Hill curves "
+                "using Activity_Value as the inferred half-maximal scale K.",
             ],
         },
     }
