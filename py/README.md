@@ -10,6 +10,14 @@ The standard Python run now also writes bioactivity artifacts from `pubchem_cid_
 - summary JSON with row counts and descriptive statistics
 - a PNG plot of $y = -\log_{10}(x)$ across the observed IC50 range
 
+The same run now also writes a manual gradient-descent analysis from the atom feature matrix derived from `Conformer3D_COMPOUND_CID_4(1).sdf` into `data/out`:
+- a CSV trace of per-epoch weight, gradient, summed squared error, and MSE for the no-intercept model $\hat{y} = wx$
+- a summary JSON documenting the hand-derived gradient $\frac{\partial}{\partial w}\sum_i(y_i - wx_i)^2 = 2\sum_i x_i(wx_i - y_i)$ with atom mass as the feature and atomic number as the target
+- a PNG loss curve across epochs
+- a PNG scatter/fit plot for atom mass versus atomic number under the learned weight
+
+This gradient-descent example is intentionally educational rather than general-purpose: it uses the 14 atom rows of the CID 4 conformer as the full dataset, treats `mass` as the single feature, treats `atomicNumber` as the target, optimizes a one-parameter no-intercept regression, and reports the closed-form least-squares solution alongside the iterative result as a numerical check.
+
 The same run now also writes Hill/sigmoidal dose-response reference artifacts from `pubchem_cid_4_bioactivity.csv` into `data/out`:
 - a CSV of positive numeric `Activity_Value` rows interpreted as inferred Hill-scale parameters $K$
 - a summary JSON documenting the normalized Hill model $f(c) = \frac{c^n}{K^n + c^n}$, its derivatives, and midpoint / inflection interpretation

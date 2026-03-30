@@ -49,6 +49,11 @@ class BioactivityAnalysisError : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
 
+class GradientDescentAnalysisError : public std::runtime_error {
+    public:
+        using std::runtime_error::runtime_error;
+};
+
 struct EigenComponents {
     std::vector<double> eigenvalues;
     std::vector<std::vector<double>> eigenvectors;
@@ -372,6 +377,49 @@ std::optional<double> hillLinearInflectionScale(const double hillCoefficient)
     }
 
     return std::pow((hillCoefficient - 1.0) / (hillCoefficient + 1.0), 1.0 / hillCoefficient);
+}
+
+double computeSumSquaredError(const std::vector<double>& xValues,
+                              const std::vector<double>& yValues,
+                              const double weight)
+{
+    double loss = 0.0;
+    for (std::size_t index = 0; index < xValues.size(); ++index) {
+        const double residual = yValues[index] - (weight * xValues[index]);
+        loss += residual * residual;
+    }
+
+    return loss;
+}
+
+double computeMeanSquaredError(const std::vector<double>& xValues,
+                               const std::vector<double>& yValues,
+                               const double weight)
+{
+    return computeSumSquaredError(xValues, yValues, weight) /
+           static_cast<double>(xValues.size());
+}
+
+double computeSumSquaredErrorGradient(const std::vector<double>& xValues,
+                                      const std::vector<double>& yValues,
+                                      const double weight)
+{
+    double gradient = 0.0;
+    for (std::size_t index = 0; index < xValues.size(); ++index) {
+        gradient += xValues[index] * ((weight * xValues[index]) - yValues[index]);
+    }
+
+    return 2.0 * gradient;
+}
+
+double finiteDifferenceGradient(const std::vector<double>& xValues,
+                                const std::vector<double>& yValues,
+                                const double weight,
+                                const double epsilon = 1.0e-6)
+{
+    const double forwardLoss = computeSumSquaredError(xValues, yValues, weight + epsilon);
+    const double backwardLoss = computeSumSquaredError(xValues, yValues, weight - epsilon);
+    return (forwardLoss - backwardLoss) / (2.0 * epsilon);
 }
 
 std::string escapeXml(std::string value)
@@ -2238,6 +2286,348 @@ void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
     output << "</svg>\n";
 }
 
+GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<AtomRecord>& atoms,
+                                                           const std::string_view sourceFile,
+                                                           const double learningRate,
+                                                           const std::size_t epochs,
+                                                           const double initialWeight)
+{
+    if (atoms.empty()) {
+        throw GradientDescentAnalysisError(
+            "Gradient descent requires at least one atom record with mass and atomic number");
+    }
+    if (learningRate <= 0.0) {
+        throw GradientDescentAnalysisError("Gradient descent learning rate must be positive");
+    }
+    if (epochs == 0U) {
+        throw GradientDescentAnalysisError("Gradient descent epochs must be greater than zero");
+    }
+
+    std::vector<GradientDescentAtomRow> atomRows;
+    atomRows.reserve(atoms.size());
+    std::vector<double> xValues;
+    xValues.reserve(atoms.size());
+    std::vector<double> yValues;
+    yValues.reserve(atoms.size());
+
+    for (const auto& atom : atoms) {
+        atomRows.push_back(GradientDescentAtomRow{
+            .index = atom.index,
+            .symbol = atom.symbol,
+            .mass = atom.mass,
+            .atomicNumber = atom.atomicNumber,
+        });
+        xValues.push_back(atom.mass);
+        yValues.push_back(static_cast<double>(atom.atomicNumber));
+    }
+
+    const double denominator = std::transform_reduce(xValues.begin(),
+                                                     xValues.end(),
+                                                     xValues.begin(),
+                                                     0.0,
+                                                     std::plus<>(),
+                                                     std::multiplies<>());
+    if (std::abs(denominator) < 1.0e-12) {
+        throw GradientDescentAnalysisError(
+            "Gradient descent closed-form solution is undefined when all masses are zero");
+    }
+
+    std::vector<GradientDescentTraceRow> traceRows;
+    traceRows.reserve(epochs + 1U);
+
+    double weight = initialWeight;
+    for (std::size_t epoch = 0; epoch <= epochs; ++epoch) {
+        const double sumSquaredError = computeSumSquaredError(xValues, yValues, weight);
+        const double meanSquaredError = computeMeanSquaredError(xValues, yValues, weight);
+        const double gradient = computeSumSquaredErrorGradient(xValues, yValues, weight);
+
+        traceRows.push_back(GradientDescentTraceRow{
+            .epoch = epoch,
+            .weight = weight,
+            .gradient = gradient,
+            .sumSquaredError = sumSquaredError,
+            .meanSquaredError = meanSquaredError,
+        });
+
+        if (epoch < epochs) {
+            weight -= learningRate * gradient;
+        }
+    }
+
+    const double numerator = std::transform_reduce(xValues.begin(),
+                                                   xValues.end(),
+                                                   yValues.begin(),
+                                                   0.0,
+                                                   std::plus<>(),
+                                                   std::multiplies<>());
+    const double closedFormWeight = numerator / denominator;
+    const auto bestTraceRow = std::min_element(
+        traceRows.begin(), traceRows.end(), [](const auto& left, const auto& right) {
+            return left.meanSquaredError < right.meanSquaredError;
+        });
+    const auto [minMass, maxMass] = std::minmax_element(xValues.begin(), xValues.end());
+    const auto [minAtomicNumber, maxAtomicNumber] =
+        std::minmax_element(yValues.begin(), yValues.end());
+
+    GradientDescentSummary summary{
+        .dataset =
+            GradientDescentDatasetSummary{
+                .rowCount = atomRows.size(),
+                .feature = "mass",
+                .target = "atomicNumber",
+                .featureMatrixShape = {static_cast<int>(atomRows.size()), 1},
+                .massRange = {*minMass, *maxMass},
+                .atomicNumberRange = {static_cast<int>(*minAtomicNumber),
+                                      static_cast<int>(*maxAtomicNumber)},
+                .atomRows = std::move(atomRows),
+            },
+        .model =
+            GradientDescentModelSummary{
+                .predictionEquation = "y_hat = w * x",
+                .objectiveName = "sum_squared_error",
+                .objectiveEquation = "L(w) = sum_i (y_i - w x_i)^2",
+                .meanSquaredErrorEquation = "MSE(w) = (1 / n) * sum_i (y_i - w x_i)^2",
+                .gradientEquation =
+                    "dL/dw = sum_i -2 x_i (y_i - w x_i) = 2 sum_i x_i (w x_i - y_i)",
+                .featureName = "atom mass",
+                .targetName = "atomic number",
+            },
+        .optimization =
+            GradientDescentOptimizationSummary{
+                .initialWeight = initialWeight,
+                .finalWeight = traceRows.back().weight,
+                .learningRate = learningRate,
+                .epochs = epochs,
+                .closedFormWeight = closedFormWeight,
+                .initialSumSquaredError = traceRows.front().sumSquaredError,
+                .finalSumSquaredError = traceRows.back().sumSquaredError,
+                .initialMeanSquaredError = traceRows.front().meanSquaredError,
+                .finalMeanSquaredError = traceRows.back().meanSquaredError,
+                .weightErrorVsClosedForm = traceRows.back().weight - closedFormWeight,
+                .gradientChecks =
+                    GradientCheckSummary{
+                        .initialWeight =
+                            GradientCheck{
+                                .analytic =
+                                    computeSumSquaredErrorGradient(xValues, yValues, initialWeight),
+                                .finiteDifference =
+                                    finiteDifferenceGradient(xValues, yValues, initialWeight),
+                            },
+                        .finalWeight =
+                            GradientCheck{
+                                .analytic = computeSumSquaredErrorGradient(
+                                    xValues, yValues, traceRows.back().weight),
+                                .finiteDifference = finiteDifferenceGradient(
+                                    xValues, yValues, traceRows.back().weight),
+                            },
+                    },
+                .lossTrace =
+                    GradientDescentLossTraceSummary{
+                        .monotonicNonincreasingMeanSquaredError =
+                            std::adjacent_find(
+                                traceRows.begin(),
+                                traceRows.end(),
+                                [](const auto& left, const auto& right) {
+                                    return right.meanSquaredError >
+                                           left.meanSquaredError + 1.0e-12;
+                                }) == traceRows.end(),
+                        .bestEpoch = bestTraceRow->epoch,
+                    },
+            },
+    };
+
+    return GradientDescentAnalysisResult{
+        .sourceFile = std::string(sourceFile),
+        .headers = {"epoch", "weight", "gradient", "sum_squared_error", "mse"},
+        .traceRows = std::move(traceRows),
+        .summary = std::move(summary),
+    };
+}
+
+void writeGradientDescentCsv(const GradientDescentAnalysisResult& result,
+                             const std::filesystem::path& outputPath)
+{
+    std::vector<std::vector<std::string>> rows;
+    rows.reserve(result.traceRows.size());
+    for (const auto& row : result.traceRows) {
+        rows.push_back({std::to_string(row.epoch),
+                        formatDouble(row.weight),
+                        formatDouble(row.gradient),
+                        formatDouble(row.sumSquaredError),
+                        formatDouble(row.meanSquaredError)});
+    }
+
+    writeCsvTable(result.headers, rows, outputPath, "gradient descent CSV output path");
+}
+
+void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result,
+                                     const std::filesystem::path& outputPath)
+{
+    if (result.traceRows.empty()) {
+        throw GradientDescentAnalysisError(
+            "Gradient descent loss plot requires at least one optimization step");
+    }
+
+    std::ofstream output(outputPath);
+    if (!output) {
+        throw GradientDescentAnalysisError("Could not open gradient descent loss plot output path: " +
+                                           outputPath.string());
+    }
+
+    constexpr double width = 1280.0;
+    constexpr double height = 720.0;
+    constexpr double left = 100.0;
+    constexpr double right = 60.0;
+    constexpr double top = 70.0;
+    constexpr double bottom = 90.0;
+    const double plotWidth = width - left - right;
+    const double plotHeight = height - top - bottom;
+    const double maxEpoch = static_cast<double>(result.traceRows.back().epoch);
+
+    double minMse = result.traceRows.front().meanSquaredError;
+    double maxMse = result.traceRows.front().meanSquaredError;
+    for (const auto& row : result.traceRows) {
+        minMse = std::min(minMse, row.meanSquaredError);
+        maxMse = std::max(maxMse, row.meanSquaredError);
+    }
+    const auto [plotMinMse, plotMaxMse] = expandedDomain(minMse, maxMse);
+
+    auto xToSvg = [&](const double epoch) {
+        if (maxEpoch <= 0.0) {
+            return left;
+        }
+        return left + (epoch / maxEpoch) * plotWidth;
+    };
+    auto yToSvg = [&](const double mse) {
+        return top + (plotMaxMse - mse) / (plotMaxMse - plotMinMse) * plotHeight;
+    };
+
+    std::ostringstream polyline;
+    for (std::size_t index = 0; index < result.traceRows.size(); ++index) {
+        if (index > 0U) {
+            polyline << ' ';
+        }
+        polyline << xToSvg(static_cast<double>(result.traceRows[index].epoch)) << ','
+                 << yToSvg(result.traceRows[index].meanSquaredError);
+    }
+
+    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width
+           << "\" height=\"" << height << "\" viewBox=\"0 0 " << width << ' ' << height
+           << "\">\n";
+    output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
+    output << svgText(left,
+                      40.0,
+                      "Manual Gradient Descent MSE Trace",
+                      "font-size=\"24\" font-weight=\"700\"")
+           << '\n';
+    output << "<line x1=\"" << left << "\" y1=\"" << top + plotHeight << "\" x2=\""
+           << left + plotWidth << "\" y2=\"" << top + plotHeight
+           << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
+    output << "<line x1=\"" << left << "\" y1=\"" << top << "\" x2=\"" << left
+           << "\" y2=\"" << top + plotHeight << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
+    output << "<polyline fill=\"none\" stroke=\"#0f766e\" stroke-width=\"3\" points=\""
+           << polyline.str() << "\"/>\n";
+    output << svgText(width / 2.0 - 20.0,
+                      height - 25.0,
+                      "Epoch",
+                      "font-size=\"18\" font-weight=\"600\"")
+           << '\n';
+    output << svgText(20.0,
+                      height / 2.0,
+                      "MSE",
+                      "font-size=\"18\" font-weight=\"600\" transform=\"rotate(-90 20 " +
+                          formatCompactDouble(height / 2.0) + ")\"")
+           << '\n';
+    output << svgText(left, top + plotHeight + 35.0, "0") << '\n';
+    output << svgText(left + plotWidth - 35.0,
+                      top + plotHeight + 35.0,
+                      std::to_string(result.traceRows.back().epoch))
+           << '\n';
+    output << svgText(25.0, top + 5.0, formatCompactDouble(plotMaxMse)) << '\n';
+    output << svgText(25.0, top + plotHeight + 5.0, formatCompactDouble(plotMinMse)) << '\n';
+    output << "</svg>\n";
+}
+
+void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
+                                    const std::filesystem::path& outputPath)
+{
+    if (result.summary.dataset.atomRows.empty()) {
+        throw GradientDescentAnalysisError(
+            "Gradient descent fit plot requires at least one atom feature row");
+    }
+
+    std::ofstream output(outputPath);
+    if (!output) {
+        throw GradientDescentAnalysisError("Could not open gradient descent fit plot output path: " +
+                                           outputPath.string());
+    }
+
+    constexpr double width = 1280.0;
+    constexpr double height = 720.0;
+    constexpr double left = 100.0;
+    constexpr double right = 80.0;
+    constexpr double top = 70.0;
+    constexpr double bottom = 90.0;
+    const double plotWidth = width - left - right;
+    const double plotHeight = height - top - bottom;
+    const double maxMass = result.summary.dataset.massRange[1] * 1.05;
+    const double maxAtomicNumber =
+        static_cast<double>(result.summary.dataset.atomicNumberRange[1]) * 1.05;
+    const double finalWeight = result.summary.optimization.finalWeight;
+
+    auto xToSvg = [&](const double mass) { return left + (mass / maxMass) * plotWidth; };
+    auto yToSvg = [&](const double atomicNumber) {
+        return top + (maxAtomicNumber - atomicNumber) / maxAtomicNumber * plotHeight;
+    };
+
+    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width
+           << "\" height=\"" << height << "\" viewBox=\"0 0 " << width << ' ' << height
+           << "\">\n";
+    output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
+    output << svgText(left,
+                      40.0,
+                      "Manual Gradient Descent Fit: Mass to Atomic Number",
+                      "font-size=\"24\" font-weight=\"700\"")
+           << '\n';
+    output << "<line x1=\"" << left << "\" y1=\"" << top + plotHeight << "\" x2=\""
+           << left + plotWidth << "\" y2=\"" << top + plotHeight
+           << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
+    output << "<line x1=\"" << left << "\" y1=\"" << top << "\" x2=\"" << left
+           << "\" y2=\"" << top + plotHeight << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
+
+    const double lineX1 = 0.0;
+    const double lineY1 = 0.0;
+    const double lineX2 = maxMass;
+    const double lineY2 = finalWeight * maxMass;
+    output << "<line x1=\"" << xToSvg(lineX1) << "\" y1=\"" << yToSvg(lineY1)
+           << "\" x2=\"" << xToSvg(lineX2) << "\" y2=\"" << yToSvg(lineY2)
+           << "\" stroke=\"#b91c1c\" stroke-width=\"3\"/>\n";
+
+    for (const auto& atomRow : result.summary.dataset.atomRows) {
+        output << "<circle cx=\"" << xToSvg(atomRow.mass) << "\" cy=\""
+               << yToSvg(static_cast<double>(atomRow.atomicNumber))
+               << "\" r=\"6\" fill=\"#4f46e5\" stroke=\"#111827\" stroke-width=\"1\"/>\n";
+    }
+
+    output << svgText(width / 2.0 - 40.0,
+                      height - 25.0,
+                      "Atom mass",
+                      "font-size=\"18\" font-weight=\"600\"")
+           << '\n';
+    output << svgText(20.0,
+                      height / 2.0,
+                      "Atomic number",
+                      "font-size=\"18\" font-weight=\"600\" transform=\"rotate(-90 20 " +
+                          formatCompactDouble(height / 2.0) + ")\"")
+           << '\n';
+    output << svgText(left + plotWidth - 220.0,
+                      top + 30.0,
+                      "y_hat = " + formatCompactDouble(finalWeight) + "x",
+                      "font-size=\"18\" font-weight=\"600\"")
+           << '\n';
+    output << "</svg>\n";
+}
+
 void writeBioactivityPlotSvg(const BioactivityAnalysisResult& result,
                              const std::filesystem::path& outputPath)
 {
@@ -2558,5 +2948,33 @@ std::filesystem::path hillDoseResponsePlotSvgPath(const std::filesystem::path& o
                                                   const std::filesystem::path& sourceFile)
 {
     return outputDirectory / (sourceFile.stem().string() + ".hill_dose_response.svg");
+}
+
+std::filesystem::path gradientDescentCsvPath(const std::filesystem::path& outputDirectory,
+                                             const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".mass_to_atomic_number_gradient_descent.csv");
+}
+
+std::filesystem::path gradientDescentSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                                     const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".mass_to_atomic_number_gradient_descent.summary.json");
+}
+
+std::filesystem::path gradientDescentLossPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                                     const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".mass_to_atomic_number_gradient_descent.loss.svg");
+}
+
+std::filesystem::path gradientDescentFitPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                                    const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".mass_to_atomic_number_gradient_descent.fit.svg");
 }
 } // namespace pubchem

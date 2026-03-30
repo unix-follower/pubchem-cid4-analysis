@@ -145,7 +145,7 @@ CommandLineOptions parseArguments(int argc, char* argv[])
 
 pubchem::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
 {
-    RDKit::v1::SDMolSupplier supplier(sdfPath.string(), true, true, true);
+    RDKit::v1::SDMolSupplier supplier(sdfPath.string(), true, false, true);
 
     std::vector<double> molecularWeights;
     std::vector<double> exactMasses;
@@ -417,6 +417,62 @@ nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
             {"pIC50", bioactivity.analysis.weakestRetainedMeasurement.pIC50}}}}},
     };
 }
+
+nlohmann::json toJson(const pubchem::GradientDescentAnalysisResult& gradientDescent)
+{
+        nlohmann::json atomRows = nlohmann::json::array();
+        for (const auto& atomRow : gradientDescent.summary.dataset.atomRows) {
+                atomRows.push_back({{"index", atomRow.index},
+                                                        {"symbol", atomRow.symbol},
+                                                        {"mass", atomRow.mass},
+                                                        {"atomicNumber", atomRow.atomicNumber}});
+        }
+
+        const auto& optimization = gradientDescent.summary.optimization;
+        return {
+                {"sourceFile", gradientDescent.sourceFile},
+                {"dataset",
+                 {{"rowCount", gradientDescent.summary.dataset.rowCount},
+                    {"feature", gradientDescent.summary.dataset.feature},
+                    {"target", gradientDescent.summary.dataset.target},
+                    {"featureMatrixShape", gradientDescent.summary.dataset.featureMatrixShape},
+                    {"massRange", gradientDescent.summary.dataset.massRange},
+                    {"atomicNumberRange", gradientDescent.summary.dataset.atomicNumberRange},
+                    {"atomRows", atomRows}}},
+                {"model",
+                 {{"predictionEquation", gradientDescent.summary.model.predictionEquation},
+                    {"objectiveName", gradientDescent.summary.model.objectiveName},
+                    {"objectiveEquation", gradientDescent.summary.model.objectiveEquation},
+                    {"mseEquation", gradientDescent.summary.model.meanSquaredErrorEquation},
+                    {"gradientEquation", gradientDescent.summary.model.gradientEquation},
+                    {"featureName", gradientDescent.summary.model.featureName},
+                    {"targetName", gradientDescent.summary.model.targetName}}},
+                {"optimization",
+                 {{"initialWeight", optimization.initialWeight},
+                    {"finalWeight", optimization.finalWeight},
+                    {"learningRate", optimization.learningRate},
+                    {"epochs", optimization.epochs},
+                    {"closedFormWeight", optimization.closedFormWeight},
+                    {"initialSumSquaredError", optimization.initialSumSquaredError},
+                    {"finalSumSquaredError", optimization.finalSumSquaredError},
+                    {"initialMse", optimization.initialMeanSquaredError},
+                    {"finalMse", optimization.finalMeanSquaredError},
+                    {"weightErrorVsClosedForm", optimization.weightErrorVsClosedForm},
+                    {"gradientChecks",
+                     {{"initialWeight",
+                         {{"analytic", optimization.gradientChecks.initialWeight.analytic},
+                            {"finiteDifference",
+                             optimization.gradientChecks.initialWeight.finiteDifference}}},
+                        {"finalWeight",
+                         {{"analytic", optimization.gradientChecks.finalWeight.analytic},
+                            {"finiteDifference",
+                             optimization.gradientChecks.finalWeight.finiteDifference}}}}},
+                    {"lossTrace",
+                     {{"monotonicNonincreasingMse",
+                         optimization.lossTrace.monotonicNonincreasingMeanSquaredError},
+                        {"bestEpoch", optimization.lossTrace.bestEpoch}}}}},
+        };
+}
 } // namespace
 
 nlohmann::json toJson(const pubchem::HillDoseResponseAnalysisResult& hillAnalysis)
@@ -556,6 +612,17 @@ int main(int argc, char* argv[])
             pubchem::hillDoseResponseSummaryJsonPath(outputDir, options.bioactivityFile);
         const std::filesystem::path hillDoseResponsePlotOutputPath =
             pubchem::hillDoseResponsePlotSvgPath(outputDir, options.bioactivityFile);
+        const pubchem::GradientDescentAnalysisResult gradientDescentAnalysis =
+            pubchem::buildGradientDescentAnalysis(result.atoms,
+                                                 options.sdfFile.filename().string());
+        const std::filesystem::path gradientDescentCsvOutputPath =
+            pubchem::gradientDescentCsvPath(outputDir, options.sdfFile);
+        const std::filesystem::path gradientDescentSummaryOutputPath =
+            pubchem::gradientDescentSummaryJsonPath(outputDir, options.sdfFile);
+        const std::filesystem::path gradientDescentLossPlotOutputPath =
+            pubchem::gradientDescentLossPlotSvgPath(outputDir, options.sdfFile);
+        const std::filesystem::path gradientDescentFitPlotOutputPath =
+            pubchem::gradientDescentFitPlotSvgPath(outputDir, options.sdfFile);
 
         std::filesystem::create_directories(outputDir);
 
@@ -595,6 +662,16 @@ int main(int argc, char* argv[])
         pubchem::writeHillDoseResponsePlotSvg(hillDoseResponseAnalysis,
                                               hillDoseResponsePlotOutputPath);
 
+        pubchem::writeGradientDescentCsv(gradientDescentAnalysis, gradientDescentCsvOutputPath);
+
+        std::ofstream gradientDescentSummaryOutput(gradientDescentSummaryOutputPath);
+        gradientDescentSummaryOutput << std::setw(2) << toJson(gradientDescentAnalysis) << '\n';
+
+        pubchem::writeGradientDescentLossPlotSvg(gradientDescentAnalysis,
+                             gradientDescentLossPlotOutputPath);
+        pubchem::writeGradientDescentFitPlotSvg(gradientDescentAnalysis,
+                            gradientDescentFitPlotOutputPath);
+
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
         std::cout << "Atom records written to: " << outputPath << '\n';
@@ -617,6 +694,14 @@ int main(int argc, char* argv[])
                   << '\n';
         std::cout << "Hill dose-response plot written to: " << hillDoseResponsePlotOutputPath
                   << '\n';
+        std::cout << "Gradient descent trace written to: " << gradientDescentCsvOutputPath
+                  << '\n';
+        std::cout << "Gradient descent summary written to: "
+                  << gradientDescentSummaryOutputPath << '\n';
+        std::cout << "Gradient descent loss plot written to: "
+                  << gradientDescentLossPlotOutputPath << '\n';
+        std::cout << "Gradient descent fit plot written to: "
+                  << gradientDescentFitPlotOutputPath << '\n';
     }
     catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

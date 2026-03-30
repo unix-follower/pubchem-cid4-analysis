@@ -320,6 +320,84 @@ struct HillDoseResponseAnalysisResult {
     HillDoseResponseSummary analysis;
 };
 
+struct GradientDescentAtomRow {
+    int index;
+    std::string symbol;
+    double mass;
+    int atomicNumber;
+};
+
+struct GradientDescentTraceRow {
+    std::size_t epoch;
+    double weight;
+    double gradient;
+    double sumSquaredError;
+    double meanSquaredError;
+};
+
+struct GradientCheck {
+    double analytic;
+    double finiteDifference;
+};
+
+struct GradientCheckSummary {
+    GradientCheck initialWeight;
+    GradientCheck finalWeight;
+};
+
+struct GradientDescentLossTraceSummary {
+    bool monotonicNonincreasingMeanSquaredError;
+    std::size_t bestEpoch;
+};
+
+struct GradientDescentDatasetSummary {
+    std::size_t rowCount;
+    std::string feature;
+    std::string target;
+    std::vector<int> featureMatrixShape;
+    std::vector<double> massRange;
+    std::vector<int> atomicNumberRange;
+    std::vector<GradientDescentAtomRow> atomRows;
+};
+
+struct GradientDescentModelSummary {
+    std::string predictionEquation;
+    std::string objectiveName;
+    std::string objectiveEquation;
+    std::string meanSquaredErrorEquation;
+    std::string gradientEquation;
+    std::string featureName;
+    std::string targetName;
+};
+
+struct GradientDescentOptimizationSummary {
+    double initialWeight;
+    double finalWeight;
+    double learningRate;
+    std::size_t epochs;
+    double closedFormWeight;
+    double initialSumSquaredError;
+    double finalSumSquaredError;
+    double initialMeanSquaredError;
+    double finalMeanSquaredError;
+    double weightErrorVsClosedForm;
+    GradientCheckSummary gradientChecks;
+    GradientDescentLossTraceSummary lossTrace;
+};
+
+struct GradientDescentSummary {
+    GradientDescentDatasetSummary dataset;
+    GradientDescentModelSummary model;
+    GradientDescentOptimizationSummary optimization;
+};
+
+struct GradientDescentAnalysisResult {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::vector<GradientDescentTraceRow> traceRows;
+    GradientDescentSummary summary;
+};
+
 class AdjacencyMatrixStrategy {
   public:
     virtual ~AdjacencyMatrixStrategy() = default;
@@ -375,6 +453,18 @@ void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
                               const std::filesystem::path& outputPath);
 void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
                                   const std::filesystem::path& outputPath);
+GradientDescentAnalysisResult buildGradientDescentAnalysis(
+    const std::vector<AtomRecord>& atoms,
+    std::string_view sourceFile,
+    double learningRate = 5.0e-5,
+    std::size_t epochs = 250U,
+    double initialWeight = 0.0);
+void writeGradientDescentCsv(const GradientDescentAnalysisResult& result,
+                             const std::filesystem::path& outputPath);
+void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result,
+                                     const std::filesystem::path& outputPath);
+void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
+                                    const std::filesystem::path& outputPath);
 AdjacencyMatrix buildAdjacencyMatrix(const NormalizedAdjacencyInput& input,
                                      std::string_view sourceFile,
                                      std::string_view method);
@@ -421,4 +511,12 @@ std::filesystem::path hillDoseResponseSummaryJsonPath(const std::filesystem::pat
                                                       const std::filesystem::path& sourceFile);
 std::filesystem::path hillDoseResponsePlotSvgPath(const std::filesystem::path& outputDirectory,
                                                   const std::filesystem::path& sourceFile);
+std::filesystem::path gradientDescentCsvPath(const std::filesystem::path& outputDirectory,
+                                             const std::filesystem::path& sourceFile);
+std::filesystem::path gradientDescentSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                                     const std::filesystem::path& sourceFile);
+std::filesystem::path gradientDescentLossPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                                     const std::filesystem::path& sourceFile);
+std::filesystem::path gradientDescentFitPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                                    const std::filesystem::path& sourceFile);
 } // namespace pubchem

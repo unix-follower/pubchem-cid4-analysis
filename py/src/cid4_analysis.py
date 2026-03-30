@@ -16,12 +16,19 @@ import fs_utils as fs
 import log_settings
 from constants import ARR_1ST_IDX as IDX1
 from constants import UTF_8
-from matplotlib_utils import plot_hill_reference_curves, plot_pic50_transform
+from matplotlib_utils import (
+    plot_gradient_descent_fit,
+    plot_gradient_descent_loss_curve,
+    plot_hill_reference_curves,
+    plot_pic50_transform,
+)
 
 CONFORMER_ATOM_COUNT = 14
 NULL_SPACE_TOLERANCE = 1e-10
 ANGLE_VECTOR_TOLERANCE = 1e-10
 DEFAULT_HILL_COEFFICIENT = 1.0
+DEFAULT_GRADIENT_DESCENT_LEARNING_RATE = 5e-5
+DEFAULT_GRADIENT_DESCENT_EPOCHS = 250
 
 
 def reduce_mol_weights(mol_weights: list[float]) -> float:
@@ -256,6 +263,198 @@ def summarize_bond_angles(angle_records: list[dict[str, float | int]]) -> dict:
         "median_angle_degrees": float(quantiles[1]),
         "q75_angle_degrees": float(quantiles[2]),
         "max_angle_degrees": float(angle_values.max()),
+    }
+
+
+def extract_atom_feature_matrix(molecules: list[Chem.Mol]) -> pd.DataFrame:
+    atom_data: list[dict[str, object]] = []
+
+    for molecule_index, mol in enumerate(molecules):
+        for atom in mol.GetAtoms():
+            atom_data.append(
+                {
+                    "moleculeIndex": molecule_index,
+                    "index": atom.GetIdx(),
+                    "bondCount": atom.GetDegree(),
+                    "charge": atom.GetFormalCharge(),
+                    "implicitHydrogenCount": atom.GetNumImplicitHs(),
+                    "totalHydrogenCount": atom.GetTotalNumHs(),
+                    "atomicNumber": atom.GetAtomicNum(),
+                    "symbol": atom.GetSymbol(),
+                    "valency": atom.GetValence(which=ValenceType.EXPLICIT),
+                    "isAromatic": atom.GetIsAromatic(),
+                    "mass": atom.GetMass(),
+                    "hybridization": str(atom.GetHybridization()),
+                    "properties": atom.GetPropsAsDict(),
+                }
+            )
+
+    atom_feature_df = pd.DataFrame(atom_data)
+    if atom_feature_df.empty:
+        raise ValueError("Expected at least one atom when building the atom feature matrix")
+
+    return atom_feature_df
+
+
+def build_atom_gradient_descent_dataset(atom_feature_df: pd.DataFrame) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
+    required_columns = {"index", "symbol", "mass", "atomicNumber"}
+    missing_columns = required_columns.difference(atom_feature_df.columns)
+    if missing_columns:
+        raise ValueError(f"Atom feature matrix is missing required columns: {sorted(missing_columns)}")
+
+    dataset_df = atom_feature_df.loc[:, ["index", "symbol", "mass", "atomicNumber"]].copy()
+    dataset_df["mass"] = pd.to_numeric(dataset_df["mass"], errors="coerce")
+    dataset_df["atomicNumber"] = pd.to_numeric(dataset_df["atomicNumber"], errors="coerce")
+    dataset_df = dataset_df.dropna(subset=["mass", "atomicNumber"]).reset_index(drop=True)
+
+    if dataset_df.empty:
+        raise ValueError("Atom feature matrix did not contain any numeric mass/atomic-number rows")
+
+    x_values = dataset_df["mass"].to_numpy(dtype=np.float64)
+    y_values = dataset_df["atomicNumber"].to_numpy(dtype=np.float64)
+    return x_values, y_values, dataset_df
+
+
+def compute_gradient_descent_predictions(x_values: np.ndarray, weight: float) -> np.ndarray:
+    return weight * x_values
+
+
+def compute_sum_squared_error(x_values: np.ndarray, y_values: np.ndarray, weight: float) -> float:
+    residuals = y_values - compute_gradient_descent_predictions(x_values, weight)
+    return float(np.sum(residuals**2))
+
+
+def compute_mean_squared_error(x_values: np.ndarray, y_values: np.ndarray, weight: float) -> float:
+    residuals = y_values - compute_gradient_descent_predictions(x_values, weight)
+    return float(np.mean(residuals**2))
+
+
+def compute_sum_squared_error_gradient(x_values: np.ndarray, y_values: np.ndarray, weight: float) -> float:
+    return float(2.0 * np.sum(x_values * ((weight * x_values) - y_values)))
+
+
+def finite_difference_gradient(
+    x_values: np.ndarray,
+    y_values: np.ndarray,
+    weight: float,
+    epsilon: float = 1e-6,
+) -> float:
+    forward_loss = compute_sum_squared_error(x_values, y_values, weight + epsilon)
+    backward_loss = compute_sum_squared_error(x_values, y_values, weight - epsilon)
+    return float((forward_loss - backward_loss) / (2.0 * epsilon))
+
+
+def run_manual_gradient_descent(
+    x_values: np.ndarray,
+    y_values: np.ndarray,
+    learning_rate: float = DEFAULT_GRADIENT_DESCENT_LEARNING_RATE,
+    epochs: int = DEFAULT_GRADIENT_DESCENT_EPOCHS,
+    initial_weight: float = 0.0,
+) -> tuple[pd.DataFrame, dict[str, float | int]]:
+    if learning_rate <= 0.0:
+        raise ValueError("Gradient descent learning rate must be positive")
+    if epochs <= 0:
+        raise ValueError("Gradient descent epochs must be positive")
+
+    weight = float(initial_weight)
+    trace_records: list[dict[str, float | int]] = []
+
+    for epoch in range(epochs + 1):
+        sse_loss = compute_sum_squared_error(x_values, y_values, weight)
+        mse_loss = compute_mean_squared_error(x_values, y_values, weight)
+        gradient = compute_sum_squared_error_gradient(x_values, y_values, weight)
+        trace_records.append(
+            {
+                "epoch": epoch,
+                "weight": weight,
+                "gradient": gradient,
+                "sum_squared_error": sse_loss,
+                "mse": mse_loss,
+            }
+        )
+
+        if epoch < epochs:
+            weight = weight - (learning_rate * gradient)
+
+    closed_form_weight = float(np.sum(x_values * y_values) / np.sum(x_values**2))
+    summary = {
+        "initial_weight": float(initial_weight),
+        "final_weight": float(trace_records[-1]["weight"]),
+        "learning_rate": float(learning_rate),
+        "epochs": int(epochs),
+        "closed_form_weight": closed_form_weight,
+        "initial_sum_squared_error": float(trace_records[0]["sum_squared_error"]),
+        "final_sum_squared_error": float(trace_records[-1]["sum_squared_error"]),
+        "initial_mse": float(trace_records[0]["mse"]),
+        "final_mse": float(trace_records[-1]["mse"]),
+    }
+    return pd.DataFrame(trace_records), summary
+
+
+def summarize_atom_gradient_descent_analysis(
+    dataset_df: pd.DataFrame,
+    trace_df: pd.DataFrame,
+    training_summary: dict[str, float | int],
+) -> dict:
+    x_values = dataset_df["mass"].to_numpy(dtype=np.float64)
+    y_values = dataset_df["atomicNumber"].to_numpy(dtype=np.float64)
+    initial_weight = float(training_summary["initial_weight"])
+    final_weight = float(training_summary["final_weight"])
+    initial_gradient = compute_sum_squared_error_gradient(x_values, y_values, initial_weight)
+    final_gradient = compute_sum_squared_error_gradient(x_values, y_values, final_weight)
+
+    return {
+        "dataset": {
+            "row_count": int(len(dataset_df)),
+            "feature": "mass",
+            "target": "atomicNumber",
+            "feature_matrix_shape": [int(len(dataset_df)), 1],
+            "mass_range": [float(dataset_df["mass"].min()), float(dataset_df["mass"].max())],
+            "atomic_number_range": [
+                int(dataset_df["atomicNumber"].min()),
+                int(dataset_df["atomicNumber"].max()),
+            ],
+            "atom_rows": [
+                {
+                    "index": int(row["index"]),
+                    "symbol": str(row["symbol"]),
+                    "mass": float(row["mass"]),
+                    "atomicNumber": int(row["atomicNumber"]),
+                }
+                for _, row in dataset_df.iterrows()
+            ],
+        },
+        "model": {
+            "prediction_equation": "y_hat = w * x",
+            "objective_name": "sum_squared_error",
+            "objective_equation": "L(w) = sum_i (y_i - w x_i)^2",
+            "mse_equation": "MSE(w) = (1 / n) * sum_i (y_i - w x_i)^2",
+            "gradient_equation": "dL/dw = sum_i -2 x_i (y_i - w x_i) = 2 sum_i x_i (w x_i - y_i)",
+            "feature_name": "atom mass",
+            "target_name": "atomic number",
+        },
+        "optimization": {
+            **training_summary,
+            "weight_error_vs_closed_form": float(
+                training_summary["final_weight"] - training_summary["closed_form_weight"]
+            ),
+            "gradient_checks": {
+                "initial_weight": {
+                    "analytic": float(initial_gradient),
+                    "finite_difference": float(finite_difference_gradient(x_values, y_values, initial_weight)),
+                },
+                "final_weight": {
+                    "analytic": float(final_gradient),
+                    "finite_difference": float(finite_difference_gradient(x_values, y_values, final_weight)),
+                },
+            },
+            "loss_trace": {
+                "monotonic_nonincreasing_mse": bool(
+                    np.all(np.diff(trace_df["mse"].to_numpy(dtype=np.float64)) <= 1e-12)
+                ),
+                "best_epoch": int(trace_df.loc[trace_df["mse"].idxmin(), "epoch"]),
+            },
+        },
     }
 
 
@@ -894,7 +1093,7 @@ def write_image(sdf_file_path: str, out_img_filepath: str):
     Draw.MolToFile(ms[IDX1], out_img_filepath)
 
 
-def process_sdf_file(filename: str):
+def process_sdf_file(filename: str) -> pd.DataFrame:
     work_directory = env_utils.get_data_dir()
     sdf_file_path = resolve_data_path(filename)
     molecules = load_sdf_molecules(filename)
@@ -906,31 +1105,58 @@ def process_sdf_file(filename: str):
 
     out_dir = get_output_directory(work_directory)
 
-    atom_data = []
-
-    for mol in molecules:
-        for atom in mol.GetAtoms():
-            atom_properties = {
-                "index": atom.GetIdx(),
-                "bondCount": atom.GetDegree(),
-                "charge": atom.GetFormalCharge(),
-                "implicitHydrogenCount": atom.GetNumImplicitHs(),
-                "totalHydrogenCount": atom.GetTotalNumHs(),
-                "atomicNumber": atom.GetAtomicNum(),
-                "symbol": atom.GetSymbol(),
-                "valency": atom.GetValence(which=ValenceType.EXPLICIT),
-                "isAromatic": atom.GetIsAromatic(),
-                "mass": atom.GetMass(),
-                "hybridization": str(atom.GetHybridization()),
-                "properties": atom.GetPropsAsDict(),
-            }
-            atom_data.append(atom_properties)
-
-    df = pd.DataFrame(atom_data)
+    df = extract_atom_feature_matrix(molecules)
     df.to_json(f"{out_dir}/{filename}.json")
 
     out_img_filepath = f"{out_dir}/{filename.split('.')[IDX1]}.png"
     write_image(str(sdf_file_path), out_img_filepath)
+    return df
+
+
+def write_atom_gradient_descent_analysis(
+    sdf_filename: str,
+    atom_feature_df: pd.DataFrame | None = None,
+    learning_rate: float = DEFAULT_GRADIENT_DESCENT_LEARNING_RATE,
+    epochs: int = DEFAULT_GRADIENT_DESCENT_EPOCHS,
+):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    feature_df = atom_feature_df if atom_feature_df is not None else process_sdf_file(sdf_filename)
+    x_values, y_values, dataset_df = build_atom_gradient_descent_dataset(feature_df)
+    trace_df, training_summary = run_manual_gradient_descent(
+        x_values,
+        y_values,
+        learning_rate=learning_rate,
+        epochs=epochs,
+    )
+    summary = summarize_atom_gradient_descent_analysis(dataset_df, trace_df, training_summary)
+    output_stem = Path(sdf_filename).stem
+    trace_output_path = Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.csv"
+    summary_output_path = Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.summary.json"
+    loss_plot_output_path = Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.loss.png"
+    fit_plot_output_path = Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.fit.png"
+
+    trace_df.to_csv(trace_output_path, index=False)
+
+    with summary_output_path.open("w", encoding=UTF_8) as file:
+        json.dump(summary, file, indent=2)
+
+    plot_gradient_descent_loss_curve(
+        trace_df["epoch"].to_numpy(dtype=np.int64),
+        trace_df["mse"].to_numpy(dtype=np.float64),
+        str(loss_plot_output_path),
+    )
+    plot_gradient_descent_fit(
+        dataset_df["mass"].to_numpy(dtype=np.float64),
+        dataset_df["atomicNumber"].to_numpy(dtype=np.float64),
+        float(training_summary["final_weight"]),
+        str(fit_plot_output_path),
+    )
+
+    log.info("Atom gradient-descent trace written to %s", trace_output_path)
+    log.info("Atom gradient-descent summary written to %s", summary_output_path)
+    log.info("Atom gradient-descent loss plot written to %s", loss_plot_output_path)
+    log.info("Atom gradient-descent fit plot written to %s", fit_plot_output_path)
 
 
 def main():
@@ -938,7 +1164,8 @@ def main():
     sdf_filename = "Conformer3D_COMPOUND_CID_4(1).sdf"
     json_filename = "Conformer3D_COMPOUND_CID_4(1).json"
     bioactivity_filename = "pubchem_cid_4_bioactivity.csv"
-    process_sdf_file(sdf_filename)
+    atom_feature_df = process_sdf_file(sdf_filename)
+    write_atom_gradient_descent_analysis(sdf_filename, atom_feature_df=atom_feature_df)
     write_distance_matrix(sdf_filename, json_filename)
     write_bonded_distance_analysis(sdf_filename, json_filename)
     write_bonded_angle_analysis(sdf_filename, json_filename)
