@@ -7,11 +7,14 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
+#include <cctype>
 #include <cmath>
 #include <fstream>
+#include <iomanip>
 #include <limits>
 #include <map>
 #include <numeric>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 
@@ -36,6 +39,11 @@ class DistanceAnalysisError : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
 
+class BioactivityAnalysisError : public std::runtime_error {
+  public:
+    using std::runtime_error::runtime_error;
+};
+
 struct EigenComponents {
     std::vector<double> eigenvalues;
     std::vector<std::vector<double>> eigenvectors;
@@ -44,6 +52,211 @@ struct EigenComponents {
 using UblasMatrix = boost::numeric::ublas::matrix<double>;
 
 std::vector<int> jsonToIntVector(const Json& value, std::string_view fieldName);
+
+std::string formatDouble(const double value)
+{
+    std::ostringstream stream;
+    stream << std::setprecision(15) << value;
+    return stream.str();
+}
+
+std::vector<std::vector<std::string>> parseCsvRecords(std::istream& input)
+{
+    std::vector<std::vector<std::string>> records;
+    std::vector<std::string> row;
+    std::string field;
+    bool inQuotes = false;
+
+    char character = '\0';
+    while (input.get(character)) {
+        if (inQuotes) {
+            if (character == '"') {
+                if (input.peek() == '"') {
+                    field.push_back('"');
+                    input.get();
+                }
+                else {
+                    inQuotes = false;
+                }
+            }
+            else {
+                field.push_back(character);
+            }
+            continue;
+        }
+
+        if (character == '"') {
+            inQuotes = true;
+            continue;
+        }
+
+        if (character == ',') {
+            row.push_back(field);
+            field.clear();
+            continue;
+        }
+
+        if (character == '\r' || character == '\n') {
+            if (character == '\r' && input.peek() == '\n') {
+                input.get();
+            }
+            row.push_back(field);
+            field.clear();
+            records.push_back(row);
+            row.clear();
+            continue;
+        }
+
+        field.push_back(character);
+    }
+
+    if (inQuotes) {
+        throw BioactivityAnalysisError("CSV input ended inside a quoted field");
+    }
+
+    if (!field.empty() || !row.empty()) {
+        row.push_back(field);
+        records.push_back(row);
+    }
+
+    return records;
+}
+
+std::string stripUtf8Bom(std::string value)
+{
+    constexpr char utf8Bom[] = "\xEF\xBB\xBF";
+    if (value.rfind(utf8Bom, 0) == 0) {
+        value.erase(0, 3);
+    }
+    return value;
+}
+
+std::string normalizeActivityType(std::string value)
+{
+    std::transform(value.begin(), value.end(), value.begin(), [](const unsigned char character) {
+        return static_cast<char>(std::toupper(character));
+    });
+    return value;
+}
+
+std::optional<double> parsePositiveDouble(const std::string& value)
+{
+    if (value.empty()) {
+        return std::nullopt;
+    }
+
+    try {
+        std::size_t parsedCharacters = 0;
+        const double parsedValue = std::stod(value, &parsedCharacters);
+        if (parsedCharacters != value.size() || parsedValue <= 0.0) {
+            return std::nullopt;
+        }
+        return parsedValue;
+    }
+    catch (const std::exception&) {
+        return std::nullopt;
+    }
+}
+
+double computeMedian(std::vector<double> values)
+{
+    if (values.empty()) {
+        throw BioactivityAnalysisError("Cannot compute median of an empty data set");
+    }
+
+    std::sort(values.begin(), values.end());
+    const std::size_t middle = values.size() / 2;
+    if (values.size() % 2U == 0U) {
+        return (values[middle - 1] + values[middle]) / 2.0;
+    }
+    return values[middle];
+}
+
+long long parseRequiredLong(const std::vector<std::string>& row,
+                            const std::map<std::string, std::size_t>& headerIndex,
+                            const std::string_view fieldName)
+{
+    const auto iterator = headerIndex.find(std::string(fieldName));
+    if (iterator == headerIndex.end() || iterator->second >= row.size()) {
+        throw BioactivityAnalysisError("Bioactivity row is missing required field " +
+                                       std::string(fieldName));
+    }
+
+    try {
+        return std::stoll(row[iterator->second]);
+    }
+    catch (const std::exception& error) {
+        throw BioactivityAnalysisError("Could not parse " + std::string(fieldName) +
+                                       " as an integer: " + error.what());
+    }
+}
+
+BioactivityMeasurement buildMeasurement(const std::vector<std::string>& row,
+                                        const std::map<std::string, std::size_t>& headerIndex)
+{
+    return BioactivityMeasurement{
+        .bioactivityId = parseRequiredLong(row, headerIndex, "Bioactivity_ID"),
+        .bioAssayAid = parseRequiredLong(row, headerIndex, "BioAssay_AID"),
+        .ic50Um = std::stod(row.at(headerIndex.at("IC50_uM"))),
+        .pIC50 = std::stod(row.at(headerIndex.at("pIC50"))),
+    };
+}
+
+std::pair<double, double> expandedDomain(const double minValue, const double maxValue)
+{
+    if (std::abs(minValue - maxValue) < 1.0e-12) {
+        return {std::max(minValue / 10.0, 1.0e-6), maxValue * 10.0};
+    }
+
+    return {minValue, maxValue};
+}
+
+std::vector<double> geometricSpace(const double start, const double end, const std::size_t count)
+{
+    if (count < 2U) {
+        return {start};
+    }
+
+    const double logStart = std::log10(start);
+    const double logEnd = std::log10(end);
+    std::vector<double> values;
+    values.reserve(count);
+    for (std::size_t index = 0; index < count; ++index) {
+        const double t = static_cast<double>(index) / static_cast<double>(count - 1U);
+        values.push_back(std::pow(10.0, logStart + t * (logEnd - logStart)));
+    }
+    return values;
+}
+
+std::string escapeXml(std::string value)
+{
+    const std::pair<std::string_view, std::string_view> replacements[] = {
+        {"&", "&amp;"}, {"<", "&lt;"}, {">", "&gt;"}, {"\"", "&quot;"}};
+    for (const auto& [from, to] : replacements) {
+        std::size_t position = 0;
+        while ((position = value.find(from, position)) != std::string::npos) {
+            value.replace(position, from.size(), to);
+            position += to.size();
+        }
+    }
+    return value;
+}
+
+std::string svgText(const double x,
+                    const double y,
+                    const std::string& text,
+                    const std::string_view extraAttributes = {})
+{
+    std::ostringstream stream;
+    stream << "<text x=\"" << x << "\" y=\"" << y << "\""
+           << " font-family=\"Helvetica, Arial, sans-serif\" font-size=\"14\""
+           << " fill=\"#111827\"";
+    if (!extraAttributes.empty()) {
+        stream << ' ' << extraAttributes;
+    }
+    stream << '>' << escapeXml(text) << "</text>";
+    return stream.str();
+}
 
 std::vector<std::vector<double>> identityMatrix(const std::size_t size)
 {
@@ -1036,6 +1249,304 @@ NormalizedAdjacencyInput loadAdjacencyInput(const std::filesystem::path& jsonPat
     };
 }
 
+BioactivityAnalysisResult buildBioactivityAnalysis(const std::filesystem::path& csvPath)
+{
+    std::ifstream input(csvPath);
+    if (!input) {
+        throw BioactivityAnalysisError("Could not open bioactivity input file: " +
+                                       csvPath.string());
+    }
+
+    auto records = parseCsvRecords(input);
+    if (records.empty()) {
+        throw BioactivityAnalysisError("Bioactivity CSV is empty: " + csvPath.string());
+    }
+
+    auto headers = records.front();
+    if (!headers.empty()) {
+        headers.front() = stripUtf8Bom(headers.front());
+    }
+    records.erase(records.begin());
+
+    std::map<std::string, std::size_t> headerIndex;
+    for (std::size_t index = 0; index < headers.size(); ++index) {
+        headerIndex.emplace(headers[index], index);
+    }
+
+    for (const std::string_view requiredHeader :
+         {"Bioactivity_ID", "BioAssay_AID", "Activity_Type", "Activity_Value"}) {
+        if (!headerIndex.contains(std::string(requiredHeader))) {
+            throw BioactivityAnalysisError("Bioactivity CSV is missing required column: " +
+                                           std::string(requiredHeader));
+        }
+    }
+
+    std::size_t numericValueCount = 0;
+    std::size_t ic50TypeCount = 0;
+    std::vector<std::vector<std::string>> filteredRows;
+    std::vector<double> ic50Values;
+    std::vector<double> pic50Values;
+
+    const auto activityTypeIndex = headerIndex.at("Activity_Type");
+    const auto activityValueIndex = headerIndex.at("Activity_Value");
+
+    for (auto& row : records) {
+        if (row.size() < headers.size()) {
+            row.resize(headers.size());
+        }
+
+        const std::string normalizedActivityType =
+            activityTypeIndex < row.size() ? normalizeActivityType(row[activityTypeIndex]) : "";
+        const auto activityValue = activityValueIndex < row.size()
+                                       ? parsePositiveDouble(row[activityValueIndex])
+                                       : std::nullopt;
+
+        if (activityValue.has_value()) {
+            ++numericValueCount;
+        }
+        if (normalizedActivityType == "IC50") {
+            ++ic50TypeCount;
+        }
+
+        if (normalizedActivityType != "IC50" || !activityValue.has_value()) {
+            continue;
+        }
+
+        const double pIC50 = -std::log10(*activityValue);
+        row[activityValueIndex] = formatDouble(*activityValue);
+        row.push_back(formatDouble(*activityValue));
+        row.push_back(formatDouble(pIC50));
+        filteredRows.push_back(row);
+        ic50Values.push_back(*activityValue);
+        pic50Values.push_back(pIC50);
+    }
+
+    if (filteredRows.empty()) {
+        throw BioactivityAnalysisError("No positive numeric IC50 rows were found in " +
+                                       csvPath.filename().string());
+    }
+
+    headers.push_back("IC50_uM");
+    headers.push_back("pIC50");
+    headerIndex["IC50_uM"] = headers.size() - 2U;
+    headerIndex["pIC50"] = headers.size() - 1U;
+
+    std::stable_sort(
+        filteredRows.begin(), filteredRows.end(), [&](const auto& left, const auto& right) {
+            return std::stod(left.at(headerIndex.at("pIC50"))) >
+                   std::stod(right.at(headerIndex.at("pIC50")));
+        });
+
+    const auto strongestRow = *std::max_element(
+        filteredRows.begin(), filteredRows.end(), [&](const auto& left, const auto& right) {
+            return std::stod(left.at(headerIndex.at("pIC50"))) <
+                   std::stod(right.at(headerIndex.at("pIC50")));
+        });
+    const auto weakestRow = *std::min_element(
+        filteredRows.begin(), filteredRows.end(), [&](const auto& left, const auto& right) {
+            return std::stod(left.at(headerIndex.at("pIC50"))) <
+                   std::stod(right.at(headerIndex.at("pIC50")));
+        });
+
+    return BioactivityAnalysisResult{
+        .sourceFile = csvPath.filename().string(),
+        .headers = std::move(headers),
+        .filteredRows = std::move(filteredRows),
+        .rowCounts =
+            BioactivityRowCounts{
+                .totalRows = records.size(),
+                .rowsWithNumericActivityValue = numericValueCount,
+                .rowsWithIc50ActivityType = ic50TypeCount,
+                .retainedIc50Rows = ic50Values.size(),
+                .droppedRows = records.size() - ic50Values.size(),
+            },
+        .statistics =
+            BioactivityStatistics{
+                .ic50Um =
+                    BioactivityStatistic{
+                        .min = *std::min_element(ic50Values.begin(), ic50Values.end()),
+                        .median = computeMedian(ic50Values),
+                        .max = *std::max_element(ic50Values.begin(), ic50Values.end()),
+                    },
+                .pIC50 =
+                    BioactivityStatistic{
+                        .min = *std::min_element(pic50Values.begin(), pic50Values.end()),
+                        .median = computeMedian(pic50Values),
+                        .max = *std::max_element(pic50Values.begin(), pic50Values.end()),
+                    },
+            },
+        .analysis =
+            BioactivitySummary{
+                .transform = "pIC50 = -log10(IC50_uM)",
+                .interpretation = "Lower IC50 values map to higher pIC50 values, so potency "
+                                  "increases as the curve rises.",
+                .observedIc50DomainUm = {*std::min_element(ic50Values.begin(), ic50Values.end()),
+                                         *std::max_element(ic50Values.begin(), ic50Values.end())},
+                .strongestRetainedMeasurement = buildMeasurement(strongestRow, headerIndex),
+                .weakestRetainedMeasurement = buildMeasurement(weakestRow, headerIndex),
+            },
+    };
+}
+
+void writeBioactivityFilteredCsv(const BioactivityAnalysisResult& result,
+                                 const std::filesystem::path& outputPath)
+{
+    std::ofstream output(outputPath);
+    if (!output) {
+        throw BioactivityAnalysisError("Could not open bioactivity CSV output path: " +
+                                       outputPath.string());
+    }
+
+    auto writeCsvRow = [&](const std::vector<std::string>& row) {
+        for (std::size_t index = 0; index < row.size(); ++index) {
+            if (index > 0) {
+                output << ',';
+            }
+            const bool requiresQuotes = row[index].find_first_of(",\"\n\r") != std::string::npos;
+            if (requiresQuotes) {
+                output << '"';
+                for (const char character : row[index]) {
+                    if (character == '"') {
+                        output << '"';
+                    }
+                    output << character;
+                }
+                output << '"';
+            }
+            else {
+                output << row[index];
+            }
+        }
+        output << '\n';
+    };
+
+    writeCsvRow(result.headers);
+    for (const auto& row : result.filteredRows) {
+        writeCsvRow(row);
+    }
+}
+
+void writeBioactivityPlotSvg(const BioactivityAnalysisResult& result,
+                             const std::filesystem::path& outputPath)
+{
+    std::ofstream output(outputPath);
+    if (!output) {
+        throw BioactivityAnalysisError("Could not open bioactivity plot output path: " +
+                                       outputPath.string());
+    }
+
+    const std::size_t ic50Index = result.headers.size() - 2U;
+    const std::size_t pIC50Index = result.headers.size() - 1U;
+    std::vector<double> observedIc50;
+    std::vector<double> observedPIC50;
+    observedIc50.reserve(result.filteredRows.size());
+    observedPIC50.reserve(result.filteredRows.size());
+    for (const auto& row : result.filteredRows) {
+        observedIc50.push_back(std::stod(row.at(ic50Index)));
+        observedPIC50.push_back(std::stod(row.at(pIC50Index)));
+    }
+
+    const auto [minIc50, maxIc50] =
+        expandedDomain(*std::min_element(observedIc50.begin(), observedIc50.end()),
+                       *std::max_element(observedIc50.begin(), observedIc50.end()));
+    const auto curveX = geometricSpace(minIc50, maxIc50, 200U);
+
+    std::vector<double> curveY;
+    curveY.reserve(curveX.size());
+    for (const double value : curveX) {
+        curveY.push_back(-std::log10(value));
+    }
+
+    const double minY = *std::min_element(curveY.begin(), curveY.end());
+    const double maxY = *std::max_element(curveY.begin(), curveY.end());
+    const double yPadding = std::max((maxY - minY) * 0.08, 0.05);
+    const double plotMinY = minY - yPadding;
+    const double plotMaxY = maxY + yPadding;
+    const double logMinX = std::log10(minIc50);
+    const double logMaxX = std::log10(maxIc50);
+
+    constexpr double width = 1200.0;
+    constexpr double height = 720.0;
+    constexpr double left = 100.0;
+    constexpr double right = 60.0;
+    constexpr double top = 70.0;
+    constexpr double bottom = 90.0;
+    const double plotWidth = width - left - right;
+    const double plotHeight = height - top - bottom;
+
+    auto xToSvg = [&](const double xValue) {
+        return left + (std::log10(xValue) - logMinX) / (logMaxX - logMinX) * plotWidth;
+    };
+    auto yToSvg = [&](const double yValue) {
+        return top + (plotMaxY - yValue) / (plotMaxY - plotMinY) * plotHeight;
+    };
+
+    output << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width << "\" height=\""
+           << height << "\" viewBox=\"0 0 " << width << ' ' << height << "\">\n";
+    output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
+    output << "<rect x=\"" << left << "\" y=\"" << top << "\" width=\"" << plotWidth
+           << "\" height=\"" << plotHeight << "\" fill=\"#f8fafc\" stroke=\"#cbd5e1\"/>\n";
+
+    for (const double xTick : std::vector<double>{minIc50, observedIc50.front(), maxIc50}) {
+        const double x = xToSvg(xTick);
+        output << "<line x1=\"" << x << "\" y1=\"" << top << "\" x2=\"" << x << "\" y2=\""
+               << top + plotHeight << "\" stroke=\"#cbd5e1\" stroke-dasharray=\"4 6\"/>\n";
+        output << svgText(x - 18.0, top + plotHeight + 28.0, formatDouble(xTick));
+        output << '\n';
+    }
+
+    for (int index = 0; index <= 4; ++index) {
+        const double yValue = plotMinY + (plotMaxY - plotMinY) * static_cast<double>(index) / 4.0;
+        const double y = yToSvg(yValue);
+        output << "<line x1=\"" << left << "\" y1=\"" << y << "\" x2=\"" << left + plotWidth
+               << "\" y2=\"" << y << "\" stroke=\"#cbd5e1\" stroke-dasharray=\"4 6\"/>\n";
+        output << svgText(28.0, y + 5.0, formatDouble(yValue));
+        output << '\n';
+    }
+
+    std::ostringstream polyline;
+    for (std::size_t index = 0; index < curveX.size(); ++index) {
+        if (index > 0) {
+            polyline << ' ';
+        }
+        polyline << xToSvg(curveX[index]) << ',' << yToSvg(curveY[index]);
+    }
+    output << "<polyline fill=\"none\" stroke=\"#1d4ed8\" stroke-width=\"3\" points=\""
+           << polyline.str() << "\"/>\n";
+
+    for (std::size_t index = 0; index < observedIc50.size(); ++index) {
+        output << "<circle cx=\"" << xToSvg(observedIc50[index]) << "\" cy=\""
+               << yToSvg(observedPIC50[index])
+               << "\" r=\"6\" fill=\"#f59e0b\" stroke=\"#111827\" stroke-width=\"1\"/>\n";
+    }
+
+    output << svgText(width / 2.0 - 190.0,
+                      35.0,
+                      "pIC50 Transform Across Observed IC50 Range",
+                      "font-size=\"28\" font-weight=\"700\"")
+           << '\n';
+    output << svgText(width / 2.0 - 40.0,
+                      height - 25.0,
+                      "IC50 (uM)",
+                      "font-size=\"22\" font-weight=\"600\"")
+           << '\n';
+    output << "<g transform=\"translate(30 " << (top + plotHeight / 2.0 + 40.0)
+           << ") rotate(-90)\">\n";
+    output << svgText(0.0, 0.0, "pIC50", "font-size=\"22\" font-weight=\"600\"") << '\n';
+    output << "</g>\n";
+    output << "<rect x=\"" << (width - 265.0) << "\" y=\"" << (top + 10.0)
+           << "\" width=\"220\" height=\"84\" fill=\"#ffffff\" stroke=\"#cbd5e1\"/>\n";
+    output << "<line x1=\"" << (width - 245.0) << "\" y1=\"" << (top + 34.0) << "\" x2=\""
+           << (width - 195.0) << "\" y2=\"" << (top + 34.0)
+           << "\" stroke=\"#1d4ed8\" stroke-width=\"3\"/>\n";
+    output << svgText(width - 180.0, top + 40.0, "y = -log10(x)") << '\n';
+    output << "<circle cx=\"" << (width - 220.0) << "\" cy=\"" << (top + 66.0)
+           << "\" r=\"6\" fill=\"#f59e0b\" stroke=\"#111827\" stroke-width=\"1\"/>\n";
+    output << svgText(width - 180.0, top + 72.0, "Observed IC50 rows") << '\n';
+    output << "</svg>\n";
+}
+
 AdjacencyMatrix buildAdjacencyMatrix(const NormalizedAdjacencyInput& input,
                                      const std::string_view sourceFile,
                                      const std::string_view method)
@@ -1103,5 +1614,23 @@ std::filesystem::path distanceOutputJsonPath(const std::filesystem::path& output
 {
     return outputDirectory /
            (sourceFile.stem().string() + "." + std::string(method) + ".distance_matrix.json");
+}
+
+std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,
+                                                 const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".ic50_pic50.csv");
+}
+
+std::filesystem::path bioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                                 const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".ic50_pic50.summary.json");
+}
+
+std::filesystem::path bioactivityPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                             const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".ic50_pic50.svg");
 }
 } // namespace pubchem

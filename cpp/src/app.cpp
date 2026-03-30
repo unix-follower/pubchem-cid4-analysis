@@ -24,6 +24,7 @@ class SdfReadError : public std::runtime_error {
 struct CommandLineOptions {
     std::filesystem::path sdfFile = "Conformer3D_COMPOUND_CID_4(1).sdf";
     std::filesystem::path adjacencyJsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
+    std::filesystem::path bioactivityFile = "pubchem_cid_4_bioactivity.csv";
     std::string adjacencyMethod = "armadillo";
     std::string eigenMethod = "armadillo";
     std::string laplacianMethod = "armadillo";
@@ -72,7 +73,8 @@ std::string hybridizationToString(const RDKit::Atom::HybridizationType hybridiza
 
 void printUsage(std::ostream& output)
 {
-    output << "Usage: app [--sdf <file>] [--json <file>] [--method <arrays|armadillo|boost-graph>]"
+    output << "Usage: app [--sdf <file>] [--json <file>] [--bioactivity <file>]"
+           << " [--method <arrays|armadillo|boost-graph>]"
            << " [--eigenmethod <armadillo|boost>] [--laplacian-method <armadillo|boost>]"
            << " [--distance-method <json|sdf>]\n";
 }
@@ -105,6 +107,11 @@ CommandLineOptions parseArguments(int argc, char* argv[])
 
         if (argument == "--json") {
             options.adjacencyJsonFile = readValue("--json");
+            continue;
+        }
+
+        if (argument == "--bioactivity") {
+            options.bioactivityFile = readValue("--bioactivity");
             continue;
         }
 
@@ -284,6 +291,42 @@ nlohmann::json toJson(const pubchem::DistanceMatrixResult& distanceMatrix)
          }},
     };
 }
+
+nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
+{
+    return {
+        {"sourceFile", bioactivity.sourceFile},
+        {"rowCounts",
+         {{"totalRows", bioactivity.rowCounts.totalRows},
+          {"rowsWithNumericActivityValue", bioactivity.rowCounts.rowsWithNumericActivityValue},
+          {"rowsWithIc50ActivityType", bioactivity.rowCounts.rowsWithIc50ActivityType},
+          {"retainedIc50Rows", bioactivity.rowCounts.retainedIc50Rows},
+          {"droppedRows", bioactivity.rowCounts.droppedRows}}},
+        {"statistics",
+         {{"ic50Um",
+           {{"min", bioactivity.statistics.ic50Um.min},
+            {"median", bioactivity.statistics.ic50Um.median},
+            {"max", bioactivity.statistics.ic50Um.max}}},
+          {"pIC50",
+           {{"min", bioactivity.statistics.pIC50.min},
+            {"median", bioactivity.statistics.pIC50.median},
+            {"max", bioactivity.statistics.pIC50.max}}}}},
+        {"analysis",
+         {{"transform", bioactivity.analysis.transform},
+          {"interpretation", bioactivity.analysis.interpretation},
+          {"observedIc50DomainUm", bioactivity.analysis.observedIc50DomainUm},
+          {"strongestRetainedMeasurement",
+           {{"bioactivityId", bioactivity.analysis.strongestRetainedMeasurement.bioactivityId},
+            {"bioAssayAid", bioactivity.analysis.strongestRetainedMeasurement.bioAssayAid},
+            {"ic50Um", bioactivity.analysis.strongestRetainedMeasurement.ic50Um},
+            {"pIC50", bioactivity.analysis.strongestRetainedMeasurement.pIC50}}},
+          {"weakestRetainedMeasurement",
+           {{"bioactivityId", bioactivity.analysis.weakestRetainedMeasurement.bioactivityId},
+            {"bioAssayAid", bioactivity.analysis.weakestRetainedMeasurement.bioAssayAid},
+            {"ic50Um", bioactivity.analysis.weakestRetainedMeasurement.ic50Um},
+            {"pIC50", bioactivity.analysis.weakestRetainedMeasurement.pIC50}}}}},
+    };
+}
 } // namespace
 
 int main(int argc, char* argv[])
@@ -299,6 +342,7 @@ int main(int argc, char* argv[])
             pubchem::outputJsonPath(outputDir, options.sdfFile);
 
         const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
+        const std::filesystem::path bioactivityCsvPath = dataDir / options.bioactivityFile;
         const pubchem::NormalizedAdjacencyInput adjacencyInput =
             pubchem::loadAdjacencyInput(adjacencyJsonPath);
         const pubchem::DistanceMatrixInput distanceInput{
@@ -323,6 +367,14 @@ int main(int argc, char* argv[])
             pubchem::buildLaplacianAnalysis(adjacencyMatrix, options.laplacianMethod);
         const std::filesystem::path laplacianOutputPath = pubchem::laplacianOutputJsonPath(
             outputDir, options.adjacencyJsonFile, laplacianAnalysis.method);
+        const pubchem::BioactivityAnalysisResult bioactivityAnalysis =
+            pubchem::buildBioactivityAnalysis(bioactivityCsvPath);
+        const std::filesystem::path bioactivityCsvOutputPath =
+            pubchem::bioactivityFilteredCsvPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path bioactivitySummaryOutputPath =
+            pubchem::bioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path bioactivityPlotOutputPath =
+            pubchem::bioactivityPlotSvgPath(outputDir, options.bioactivityFile);
 
         std::filesystem::create_directories(outputDir);
 
@@ -341,6 +393,13 @@ int main(int argc, char* argv[])
         std::ofstream laplacianOutput(laplacianOutputPath);
         laplacianOutput << std::setw(2) << toJson(laplacianAnalysis) << '\n';
 
+        pubchem::writeBioactivityFilteredCsv(bioactivityAnalysis, bioactivityCsvOutputPath);
+
+        std::ofstream bioactivitySummaryOutput(bioactivitySummaryOutputPath);
+        bioactivitySummaryOutput << std::setw(2) << toJson(bioactivityAnalysis) << '\n';
+
+        pubchem::writeBioactivityPlotSvg(bioactivityAnalysis, bioactivityPlotOutputPath);
+
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
         std::cout << "Atom records written to: " << outputPath << '\n';
@@ -352,6 +411,9 @@ int main(int argc, char* argv[])
         std::cout << "Eigendecomposition written to: " << eigendecompositionOutputPath << '\n';
         std::cout << "Laplacian method: " << laplacianAnalysis.method << '\n';
         std::cout << "Laplacian analysis written to: " << laplacianOutputPath << '\n';
+        std::cout << "Bioactivity rows written to: " << bioactivityCsvOutputPath << '\n';
+        std::cout << "Bioactivity summary written to: " << bioactivitySummaryOutputPath << '\n';
+        std::cout << "Bioactivity plot written to: " << bioactivityPlotOutputPath << '\n';
     }
     catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

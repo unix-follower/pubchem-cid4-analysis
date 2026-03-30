@@ -43,6 +43,9 @@ cmake --build --preset=vcpkg  # Build project
 # Run with an explicit distance-matrix source method
 ./build/app --distance-method json
 ./build/app --distance-method sdf
+
+# Run with an explicit bioactivity CSV path
+./build/app --bioactivity pubchem_cid_4_bioactivity.csv
 ```
 
 ### Testing
@@ -123,6 +126,8 @@ Use Armadillo as the default eigensolver. The `boost` eigendecomposition path us
 Use the same strategy split for Laplacian analysis. The Laplacian artifact is written separately from the adjacency and eigendecomposition outputs so downstream consumers can inspect degree values, null-space basis vectors, and connected-component metadata independently.
 
 The distance-matrix artifact is also written separately from the atom-record, adjacency, eigendecomposition, and Laplacian outputs so downstream consumers can compare geometric distances without coupling to graph structure choices.
+
+The bioactivity flow now reads `pubchem_cid_4_bioactivity.csv`, filters to positive numeric `Activity_Type == IC50` rows, computes `pIC50 = -log10(IC50_uM)`, and writes three additive artifacts under `data/out`: a filtered CSV, a summary JSON file, and an SVG plot of the transform curve over the observed IC50 range.
 
 ## CI/CD
 

@@ -17,12 +17,14 @@ lazy val root = (project in file("."))
         "ch.qos.logback" % "logback-core" % logbackVersion,
         "ch.qos.logback" % "logback-classic" % logbackVersion,
         "org.apache.commons" % "commons-math3" % "3.6.1",
+        "org.apache.commons" % "commons-csv" % "1.14.1",
         "tools.jackson.module" %% "jackson-module-scala" % "3.1.0",
         "org.openscience.cdk" % "cdk-bundle" % "2.12",
         "com.google.guava" % "guava" % "33.5.0-jre",
         "org.jgrapht" % "jgrapht-core" % "1.5.2",
         "org.apache.tinkerpop" % "gremlin-core" % "3.8.0",
         "org.apache.tinkerpop" % "tinkergraph-gremlin" % "3.8.0",
-        "org.scala-graph" %% "graph-core" % "2.0.3"
+        "org.scala-graph" %% "graph-core" % "2.0.3",
+        "org.knowm.xchart" % "xchart" % "3.8.8"
       )
   )

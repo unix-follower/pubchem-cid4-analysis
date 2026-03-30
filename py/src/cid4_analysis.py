@@ -13,6 +13,7 @@ from scipy import linalg
 import env_utils
 import fs_utils as fs
 import log_settings
+from matplotlib_utils import plot_pic50_transform
 from constants import ARR_1ST_IDX as IDX1
 from constants import UTF_8
 
@@ -80,6 +81,76 @@ def build_distance_matrix(coordinates: np.ndarray) -> np.ndarray:
     distance_matrix = np.linalg.norm(deltas, axis=2)
     np.fill_diagonal(distance_matrix, 0.0)
     return distance_matrix
+
+
+def load_bioactivity_dataframe(filename: str) -> pd.DataFrame:
+    return pd.read_csv(resolve_data_path(filename))
+
+
+def build_pic50_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
+    activity_type = bioactivity_df["Activity_Type"].astype("string").str.strip().str.upper()
+    activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
+    positive_numeric_mask = activity_value.notna() & (activity_value > 0)
+    retained_mask = activity_type.eq("IC50") & positive_numeric_mask
+
+    pic50_df = bioactivity_df.loc[retained_mask].copy()
+    pic50_df["Activity_Value"] = activity_value.loc[retained_mask]
+    pic50_df["IC50_uM"] = pic50_df["Activity_Value"]
+    pic50_df["pIC50"] = -np.log10(pic50_df["IC50_uM"])
+    pic50_df = pic50_df.sort_values(by="pIC50", ascending=False).reset_index(drop=True)
+
+    counts = {
+        "total_rows": int(len(bioactivity_df)),
+        "rows_with_numeric_activity_value": int(positive_numeric_mask.sum()),
+        "rows_with_ic50_activity_type": int(activity_type.eq("IC50").sum()),
+        "retained_ic50_rows": int(len(pic50_df)),
+        "dropped_rows": int(len(bioactivity_df) - len(pic50_df)),
+    }
+
+    if pic50_df.empty:
+        raise ValueError("No positive numeric IC50 rows were found in the bioactivity dataset")
+
+    return pic50_df, counts
+
+
+def summarize_pic50_analysis(pic50_df: pd.DataFrame, counts: dict[str, int]) -> dict:
+    ic50_values = pic50_df["IC50_uM"]
+    pic50_values = pic50_df["pIC50"]
+    strongest_row = pic50_df.loc[pic50_values.idxmax()]
+    weakest_row = pic50_df.loc[pic50_values.idxmin()]
+
+    return {
+        "row_counts": counts,
+        "statistics": {
+            "ic50_uM": {
+                "min": float(ic50_values.min()),
+                "median": float(ic50_values.median()),
+                "max": float(ic50_values.max()),
+            },
+            "pIC50": {
+                "min": float(pic50_values.min()),
+                "median": float(pic50_values.median()),
+                "max": float(pic50_values.max()),
+            },
+        },
+        "analysis": {
+            "transform": "pIC50 = -log10(IC50_uM)",
+            "interpretation": "Lower IC50 values map to higher pIC50 values, so potency increases as the curve rises.",
+            "observed_ic50_domain_uM": [float(ic50_values.min()), float(ic50_values.max())],
+            "strongest_retained_measurement": {
+                "Bioactivity_ID": int(strongest_row["Bioactivity_ID"]),
+                "BioAssay_AID": int(strongest_row["BioAssay_AID"]),
+                "IC50_uM": float(strongest_row["IC50_uM"]),
+                "pIC50": float(strongest_row["pIC50"]),
+            },
+            "weakest_retained_measurement": {
+                "Bioactivity_ID": int(weakest_row["Bioactivity_ID"]),
+                "BioAssay_AID": int(weakest_row["BioAssay_AID"]),
+                "IC50_uM": float(weakest_row["IC50_uM"]),
+                "pIC50": float(weakest_row["pIC50"]),
+            },
+        },
+    }
 
 
 def build_adjacency_matrix(filename: str) -> pd.DataFrame:
@@ -259,6 +330,33 @@ def write_distance_matrix(sdf_filename: str, json_filename: str):
     log.info("Distance matrix written to %s", output_path)
 
 
+def write_bioactivity_analysis(filename: str):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    bioactivity_df = load_bioactivity_dataframe(filename)
+    pic50_df, counts = build_pic50_dataframe(bioactivity_df)
+    summary = summarize_pic50_analysis(pic50_df, counts)
+    output_stem = Path(filename).stem
+    filtered_output_path = Path(out_dir) / f"{output_stem}.ic50_pic50.csv"
+    summary_output_path = Path(out_dir) / f"{output_stem}.ic50_pic50.summary.json"
+    plot_output_path = Path(out_dir) / f"{output_stem}.ic50_pic50.png"
+
+    pic50_df.to_csv(filtered_output_path, index=False)
+
+    with summary_output_path.open("w", encoding=UTF_8) as file:
+        json.dump(summary, file, indent=2)
+
+    plot_pic50_transform(
+        pic50_df["IC50_uM"].to_numpy(dtype=np.float64),
+        pic50_df["pIC50"].to_numpy(dtype=np.float64),
+        str(plot_output_path),
+    )
+
+    log.info("Bioactivity pIC50 rows written to %s", filtered_output_path)
+    log.info("Bioactivity pIC50 summary written to %s", summary_output_path)
+    log.info("Bioactivity pIC50 plot written to %s", plot_output_path)
+
+
 def write_adjacency_matrix(filename: str) -> pd.DataFrame:
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
@@ -351,11 +449,13 @@ def main():
     log_settings.configure_logging()
     sdf_filename = "Conformer3D_COMPOUND_CID_4(1).sdf"
     json_filename = "Conformer3D_COMPOUND_CID_4(1).json"
+    bioactivity_filename = "pubchem_cid_4_bioactivity.csv"
     process_sdf_file(sdf_filename)
     write_distance_matrix(sdf_filename, json_filename)
     adjacency_matrix = write_adjacency_matrix(json_filename)
     write_adjacency_spectrum(json_filename, adjacency_matrix)
     write_laplacian_analysis(json_filename, adjacency_matrix)
+    write_bioactivity_analysis(bioactivity_filename)
 
 
 if __name__ == "__main__":
