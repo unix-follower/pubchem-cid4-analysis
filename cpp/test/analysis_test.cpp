@@ -3,8 +3,11 @@
 #include "analysis.hpp"
 
 #include <cmath>
+#include <filesystem>
+#include <fstream>
 #include <numeric>
 #include <stdexcept>
+#include <string>
 
 namespace {
 pubchem::AdjacencyMatrix sampleSpectrumMatrix()
@@ -92,6 +95,63 @@ void expectReconstructionMatches(const pubchem::AdjacencyMatrix& adjacencyMatrix
         }
     }
 }
+
+std::filesystem::path writeTempFile(const std::string& fileName, const std::string& contents)
+{
+    const auto directory = std::filesystem::temp_directory_path() / "pubchem-cid4-analysis-tests";
+    std::filesystem::create_directories(directory);
+    const auto filePath = directory / fileName;
+    std::ofstream output(filePath);
+    output << contents;
+    return filePath;
+}
+
+pubchem::DistanceMatrixInput sampleDistanceInput(const std::filesystem::path& jsonPath,
+                                                 const std::filesystem::path& sdfPath)
+{
+    return pubchem::DistanceMatrixInput{
+        .atomIds = {1, 2, 3},
+        .jsonPath = jsonPath,
+        .sdfPath = sdfPath,
+    };
+}
+
+std::filesystem::path repositoryRoot()
+{
+    return std::filesystem::path(__FILE__).parent_path().parent_path().parent_path();
+}
+
+std::string sampleDistanceJson()
+{
+    return R"json({
+    "PC_Compounds": [
+        {
+            "atoms": {
+                "aid": [1, 2, 3],
+                "element": [6, 1, 1]
+            },
+            "bonds": {
+                "aid1": [1, 1],
+                "aid2": [2, 3],
+                "order": [1, 1]
+            },
+            "coords": [
+                {
+                    "aid": [2, 1, 3],
+                    "conformers": [
+                        {
+                            "x": [3.0, 0.0, 0.0],
+                            "y": [0.0, 0.0, 4.0],
+                            "z": [0.0, 0.0, 0.0]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+})json";
+}
+
 } // namespace
 
 TEST(AnalysisHelpersTest, AverageReturnsZeroForEmptyInput)
@@ -322,4 +382,69 @@ TEST(LaplacianStrategiesTest, BoostMatchesArmadilloLaplacianEigenvalues)
         EXPECT_NEAR(sum, 0.0, 1.0e-8);
     }
     EXPECT_EQ(boostResult.nullSpace.numZeroEigenvalues, 1U);
+}
+
+TEST(DistanceHelpersTest, SupportedMethodsIncludeJsonAndSdf)
+{
+    EXPECT_EQ(pubchem::supportedDistanceMethods(), (std::vector<std::string>{"json", "sdf"}));
+}
+
+TEST(DistanceHelpersTest, ParseMethodRejectsUnsupportedValues)
+{
+    EXPECT_THROW(static_cast<void>(pubchem::parseDistanceMethod("rdkit")), std::invalid_argument);
+}
+
+TEST(DistanceHelpersTest, OutputPathIncludesMethodSuffix)
+{
+    const auto path =
+        pubchem::distanceOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
+    EXPECT_EQ(path.filename().string(), "Conformer3D_COMPOUND_CID_4(1).json.distance_matrix.json");
+}
+
+TEST(DistanceStrategiesTest, JsonBuildsExpectedDistanceMatrix)
+{
+    const auto jsonPath = writeTempFile("distance-sample.json", sampleDistanceJson());
+    const auto sdfPath = jsonPath;
+
+    const auto result =
+        pubchem::buildDistanceMatrix(sampleDistanceInput(jsonPath, sdfPath), "json");
+
+    EXPECT_EQ(result.method, "json");
+    EXPECT_EQ(result.atomIds, (std::vector<int>{1, 2, 3}));
+    EXPECT_EQ(
+        result.xyzCoordinates,
+        (std::vector<std::vector<double>>{{0.0, 0.0, 0.0}, {3.0, 0.0, 0.0}, {0.0, 4.0, 0.0}}));
+    EXPECT_EQ(
+        result.distanceMatrix,
+        (std::vector<std::vector<double>>{{0.0, 3.0, 4.0}, {3.0, 0.0, 5.0}, {4.0, 5.0, 0.0}}));
+    EXPECT_EQ(result.metadata.atomCount, 3U);
+    EXPECT_EQ(result.metadata.coordinateDimension, 3U);
+}
+
+TEST(DistanceStrategiesTest, SdfMatchesJsonDistanceMatrix)
+{
+    const auto dataDirectory = repositoryRoot() / "data";
+    const auto jsonPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).json";
+    const auto sdfPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).sdf";
+    const auto adjacencyInput = pubchem::loadAdjacencyInput(jsonPath);
+    const auto input = pubchem::DistanceMatrixInput{
+        .atomIds = adjacencyInput.atomIds,
+        .jsonPath = jsonPath,
+        .sdfPath = sdfPath,
+    };
+
+    const auto jsonResult = pubchem::buildDistanceMatrix(input, "json");
+    const auto sdfResult = pubchem::buildDistanceMatrix(input, "sdf");
+
+    EXPECT_EQ(sdfResult.method, "sdf");
+    EXPECT_EQ(sdfResult.atomIds, jsonResult.atomIds);
+    EXPECT_EQ(sdfResult.xyzCoordinates, jsonResult.xyzCoordinates);
+    EXPECT_EQ(sdfResult.distanceMatrix, jsonResult.distanceMatrix);
+    expectSymmetric(sdfResult.distanceMatrix);
+    for (const auto sum : rowSums(sdfResult.distanceMatrix)) {
+        EXPECT_GT(sum, 0.0);
+    }
+    for (std::size_t index = 0; index < sdfResult.distanceMatrix.size(); ++index) {
+        EXPECT_DOUBLE_EQ(sdfResult.distanceMatrix[index][index], 0.0);
+    }
 }

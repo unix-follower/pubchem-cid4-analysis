@@ -2,6 +2,8 @@ package org.example
 
 import org.example.analysis.adjacency.AdjacencyMatrix
 import org.example.analysis.adjacency.AdjacencyMatrixService
+import org.example.analysis.distance.DistanceMatrixResult
+import org.example.analysis.distance.DistanceMatrixService
 import org.example.analysis.spectrum.EigendecompositionResult
 import org.example.analysis.spectrum.EigendecompositionService
 import org.example.analysis.spectrum.LaplacianAnalysisResult
@@ -70,13 +72,28 @@ private def writeLaplacianAnalysis(
   newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result)
   outputPath
 
-def readJson(method: String) = {
+private def writeDistanceMatrix(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: DistanceMatrixResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName =
+    s"${sourceFileName.stripSuffix(".json")}.${result.sourceMethod}.distance_matrix.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result)
+  outputPath
+
+def readJson(method: String, distanceSource: String) = {
   val dataDirectory = fsUtils.getDataDir()
   if (dataDirectory == null) {
     throw new IllegalStateException("Env variable DATA_DIR is not set")
   }
 
   val jsonPath = Path.of(s"$dataDirectory/Conformer3D_COMPOUND_CID_4(1).json")
+  val sdfPath = Path.of(s"$dataDirectory/Conformer3D_COMPOUND_CID_4(1).sdf")
 
   val jsonMapper = newJsonMapper()
 
@@ -92,6 +109,9 @@ def readJson(method: String) = {
   logger.info(s"First compound conformers: $conformerCount")
 
   firstCompound.foreach { compound =>
+    val distanceMatrix = DistanceMatrixService.analyze(compound, jsonPath, sdfPath, distanceSource)
+    val distanceMatrixOutputPath =
+      writeDistanceMatrix(dataDirectory, jsonPath.getFileName.toString, distanceMatrix)
     val adjacencyMatrix = AdjacencyMatrixService.build(compound, method)
     val outputPath = writeAdjacencyMatrix(dataDirectory, jsonPath.getFileName.toString, adjacencyMatrix)
     val eigendecomposition = EigendecompositionService.compute(adjacencyMatrix)
@@ -105,6 +125,8 @@ def readJson(method: String) = {
     logger.info(
       s"Adjacency matrix size: ${adjacencyMatrix.values.size}x${adjacencyMatrix.values.headOption.map(_.size).getOrElse(0)}"
     )
+    logger.info(s"Distance matrix source: ${distanceMatrix.sourceMethod}")
+    logger.info(s"Distance matrix output: $distanceMatrixOutputPath")
     logger.info(s"Adjacency matrix output: $outputPath")
     logger.info(s"Adjacency eigendecomposition output: $eigendecompositionOutputPath")
     logger.info(s"Laplacian analysis output: $laplacianOutputPath")
@@ -142,6 +164,6 @@ private def readSdf(): Unit =
   logger.info(f"Exact molecular mass: $averageExactMW")
 
 @main
-def main(method: String = "jgrapht"): Unit =
-  readJson(method)
+def main(method: String = "jgrapht", distanceSource: String = "json"): Unit =
+  readJson(method, distanceSource)
   readSdf()

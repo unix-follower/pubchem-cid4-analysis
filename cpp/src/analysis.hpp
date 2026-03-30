@@ -95,6 +95,27 @@ struct LaplacianAnalysisResult {
     LaplacianMetadata metadata;
 };
 
+struct DistanceMatrixMetadata {
+    std::size_t atomCount;
+    std::size_t coordinateDimension;
+    std::string units;
+};
+
+struct DistanceMatrixInput {
+    std::vector<int> atomIds;
+    std::filesystem::path jsonPath;
+    std::filesystem::path sdfPath;
+};
+
+struct DistanceMatrixResult {
+    std::string sourceFile;
+    std::string method;
+    std::vector<int> atomIds;
+    std::vector<std::vector<double>> xyzCoordinates;
+    std::vector<std::vector<double>> distanceMatrix;
+    DistanceMatrixMetadata metadata;
+};
+
 class AdjacencyMatrixStrategy {
   public:
     virtual ~AdjacencyMatrixStrategy() = default;
@@ -121,6 +142,14 @@ class LaplacianAnalysisStrategy {
                                                           double zeroTolerance) const = 0;
 };
 
+class DistanceMatrixStrategy {
+  public:
+    virtual ~DistanceMatrixStrategy() = default;
+
+    [[nodiscard]] virtual std::string_view method() const noexcept = 0;
+    [[nodiscard]] virtual DistanceMatrixResult build(const DistanceMatrixInput& input) const = 0;
+};
+
 double averageOrZero(const std::vector<double>& values);
 std::vector<std::string> supportedAdjacencyMethods();
 std::string parseAdjacencyMethod(std::string_view method);
@@ -128,6 +157,8 @@ std::vector<std::string> supportedEigendecompositionMethods();
 std::string parseEigendecompositionMethod(std::string_view method);
 std::vector<std::string> supportedLaplacianMethods();
 std::string parseLaplacianMethod(std::string_view method);
+std::vector<std::string> supportedDistanceMethods();
+std::string parseDistanceMethod(std::string_view method);
 NormalizedAdjacencyInput loadAdjacencyInput(const std::filesystem::path& jsonPath);
 AdjacencyMatrix buildAdjacencyMatrix(const NormalizedAdjacencyInput& input,
                                      std::string_view sourceFile,
@@ -137,6 +168,7 @@ EigendecompositionResult buildEigendecomposition(const AdjacencyMatrix& matrix,
 LaplacianAnalysisResult buildLaplacianAnalysis(const AdjacencyMatrix& matrix,
                                                std::string_view method,
                                                double zeroTolerance = 1.0e-10);
+DistanceMatrixResult buildDistanceMatrix(const DistanceMatrixInput& input, std::string_view method);
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory);
 std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory,
                                      const std::filesystem::path& sourceFile);
@@ -149,4 +181,7 @@ std::filesystem::path eigendecompositionOutputJsonPath(const std::filesystem::pa
 std::filesystem::path laplacianOutputJsonPath(const std::filesystem::path& outputDirectory,
                                               const std::filesystem::path& sourceFile,
                                               std::string_view method);
+std::filesystem::path distanceOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                             const std::filesystem::path& sourceFile,
+                                             std::string_view method);
 } // namespace pubchem

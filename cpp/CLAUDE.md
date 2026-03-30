@@ -39,6 +39,10 @@ cmake --build --preset=vcpkg  # Build project
 # Run with an explicit Laplacian analysis method
 ./build/app --laplacian-method armadillo
 ./build/app --laplacian-method boost
+
+# Run with an explicit distance-matrix source method
+./build/app --distance-method json
+./build/app --distance-method sdf
 ```
 
 ### Testing
@@ -74,7 +78,7 @@ Managed via `vcpkg.json`:
 ## Dataset Location
 
 Data files are in `../data/`:
-- Molecular structure: `Conformer3D_COMPOUND_CID_4.json`, `Conformer3D_COMPOUND_CID_4.sdf`
+- Molecular structure: `Conformer3D_COMPOUND_CID_4(1).json`, `Conformer3D_COMPOUND_CID_4(1).sdf`
 - Bioactivity: `pubchem_cid_4_bioactivity.csv` (34 columns, IC50/potency values, assay classifications)
 - Taxonomy: `pubchem_cid_4_consolidatedcompoundtaxonomy.csv` (17 food sources)
 - Graph: `cid_4.dot` (compound-species associations)
@@ -112,9 +116,13 @@ The main executable is `app` (built from `src/app.cpp`). Add new implementation 
 
 The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. The eigendecomposition flow exposes a separate `--eigenmethod` selector with `armadillo` and `boost`. The Laplacian flow also exposes a strategy selector with `--laplacian-method <armadillo|boost>`.
 
+The distance-matrix flow exposes a dedicated `--distance-method <json|sdf>` selector. The `json` strategy reads `PC_Compounds[0].coords[0].conformers[0]` from the numbered conformer JSON file, while the `sdf` strategy reads the first valid RDKit conformer from the numbered SDF file.
+
 Use Armadillo as the default eigensolver. The `boost` eigendecomposition path uses `boost-ublas` for matrix representation together with an in-repo symmetric solver implementation, so keep the JSON output contract library-agnostic.
 
 Use the same strategy split for Laplacian analysis. The Laplacian artifact is written separately from the adjacency and eigendecomposition outputs so downstream consumers can inspect degree values, null-space basis vectors, and connected-component metadata independently.
+
+The distance-matrix artifact is also written separately from the atom-record, adjacency, eigendecomposition, and Laplacian outputs so downstream consumers can compare geometric distances without coupling to graph structure choices.
 
 ## CI/CD
 
