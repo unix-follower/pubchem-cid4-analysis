@@ -95,7 +95,7 @@ Defined in `.editorconfig`:
 - Function braces: new line
 - Namespace braces: same line
 
-##Format code
+### Format code
 ```shell
 find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -exec clang-format -style=file -i {} \;
 find test -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -exec clang-format -style=file -i {} \;

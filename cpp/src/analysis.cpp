@@ -13,8 +13,8 @@
 #include <iomanip>
 #include <limits>
 #include <map>
-#include <numeric>
 #include <numbers>
+#include <numeric>
 #include <optional>
 #include <set>
 #include <sstream>
@@ -545,7 +545,8 @@ std::vector<BondAngleTriplet> bondAngleTripletsFromAdjacency(const AdjacencyMatr
 
     for (std::size_t centerIndex = 0; centerIndex < adjacencyMatrix.values.size(); ++centerIndex) {
         std::vector<int> neighbors;
-        for (std::size_t neighborIndex = 0; neighborIndex < adjacencyMatrix.values[centerIndex].size();
+        for (std::size_t neighborIndex = 0;
+             neighborIndex < adjacencyMatrix.values[centerIndex].size();
              ++neighborIndex) {
             if (adjacencyMatrix.values[centerIndex][neighborIndex] > 0) {
                 neighbors.push_back(adjacencyMatrix.atomIds[neighborIndex]);
@@ -553,7 +554,8 @@ std::vector<BondAngleTriplet> bondAngleTripletsFromAdjacency(const AdjacencyMatr
         }
 
         for (std::size_t leftIndex = 0; leftIndex < neighbors.size(); ++leftIndex) {
-            for (std::size_t rightIndex = leftIndex + 1; rightIndex < neighbors.size(); ++rightIndex) {
+            for (std::size_t rightIndex = leftIndex + 1; rightIndex < neighbors.size();
+                 ++rightIndex) {
                 triplets.push_back(BondAngleTriplet{
                     .atomIdA = neighbors[leftIndex],
                     .atomIdBCenter = adjacencyMatrix.atomIds[centerIndex],
@@ -597,8 +599,8 @@ double computeBondAngleDegrees(const std::vector<double>& firstBondVector,
         throw DistanceAnalysisError("Bond angle computation requires non-zero bond vectors");
     }
 
-    const double cosine = dotProduct(firstBondVector, secondBondVector) /
-                          (firstMagnitude * secondMagnitude);
+    const double cosine =
+        dotProduct(firstBondVector, secondBondVector) / (firstMagnitude * secondMagnitude);
     constexpr double radiansToDegrees = 180.0 / std::numbers::pi;
     return std::acos(std::clamp(cosine, -1.0, 1.0)) * radiansToDegrees;
 }
@@ -1905,10 +1907,10 @@ BondAngleAnalysisResult buildBondAngleAnalysis(const DistanceMatrixResult& dista
         const std::size_t aIndex = atomIndexById.at(triplet.atomIdA);
         const std::size_t centerIndex = atomIndexById.at(triplet.atomIdBCenter);
         const std::size_t cIndex = atomIndexById.at(triplet.atomIdC);
-        const auto firstBondVector = subtractCoordinates(distanceMatrix.xyzCoordinates[aIndex],
-                                                         distanceMatrix.xyzCoordinates[centerIndex]);
-        const auto secondBondVector = subtractCoordinates(distanceMatrix.xyzCoordinates[cIndex],
-                                                          distanceMatrix.xyzCoordinates[centerIndex]);
+        const auto firstBondVector = subtractCoordinates(
+            distanceMatrix.xyzCoordinates[aIndex], distanceMatrix.xyzCoordinates[centerIndex]);
+        const auto secondBondVector = subtractCoordinates(
+            distanceMatrix.xyzCoordinates[cIndex], distanceMatrix.xyzCoordinates[centerIndex]);
 
         bondAngles.push_back(BondAngleMeasurement{
             .atomIdA = triplet.atomIdA,
