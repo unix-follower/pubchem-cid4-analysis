@@ -9,10 +9,10 @@
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <cmath>
 #include <fstream>
-#include <sstream>
 #include <limits>
 #include <map>
 #include <numeric>
+#include <sstream>
 #include <stdexcept>
 
 #include <nlohmann/json.hpp>
@@ -260,8 +260,7 @@ std::vector<std::vector<double>> loadSdfCoordinates(const std::filesystem::path&
 {
     std::ifstream input(sdfPath);
     if (!input) {
-        throw DistanceAnalysisError("Could not open distance SDF input file: " +
-                                    sdfPath.string());
+        throw DistanceAnalysisError("Could not open distance SDF input file: " + sdfPath.string());
     }
 
     std::string line;
@@ -273,8 +272,7 @@ std::vector<std::vector<double>> loadSdfCoordinates(const std::filesystem::path&
     }
 
     if (!std::getline(input, line)) {
-        throw DistanceAnalysisError("SDF file ended before the counts line: " +
-                                    sdfPath.string());
+        throw DistanceAnalysisError("SDF file ended before the counts line: " + sdfPath.string());
     }
 
     std::istringstream countsStream(line);
@@ -818,10 +816,8 @@ class SdfDistanceMatrixStrategy final : public DistanceMatrixStrategy {
 
     [[nodiscard]] DistanceMatrixResult build(const DistanceMatrixInput& input) const override
     {
-        return makeDistanceMatrixResult(input,
-                                        method(),
-                                        input.sdfPath.filename().string(),
-                                        loadSdfCoordinates(input.sdfPath));
+        return makeDistanceMatrixResult(
+            input, method(), input.sdfPath.filename().string(), loadSdfCoordinates(input.sdfPath));
     }
 };
 
