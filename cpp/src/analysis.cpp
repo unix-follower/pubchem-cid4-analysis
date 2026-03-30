@@ -12,6 +12,7 @@
 #include <limits>
 #include <map>
 #include <numeric>
+#include <sstream>
 #include <stdexcept>
 
 #include <nlohmann/json.hpp>
@@ -30,12 +31,19 @@ class LaplacianAnalysisError : public std::runtime_error {
     using std::runtime_error::runtime_error;
 };
 
+class DistanceAnalysisError : public std::runtime_error {
+  public:
+    using std::runtime_error::runtime_error;
+};
+
 struct EigenComponents {
     std::vector<double> eigenvalues;
     std::vector<std::vector<double>> eigenvectors;
 };
 
 using UblasMatrix = boost::numeric::ublas::matrix<double>;
+
+std::vector<int> jsonToIntVector(const Json& value, std::string_view fieldName);
 
 std::vector<std::vector<double>> identityMatrix(const std::size_t size)
 {
@@ -173,6 +181,129 @@ std::vector<std::vector<double>> buildLaplacianMatrixValues(const AdjacencyMatri
     }
 
     return laplacianValues;
+}
+
+std::vector<double> jsonToDoubleVector(const Json& value, const std::string_view fieldName)
+{
+    if (!value.is_array()) {
+        throw DistanceAnalysisError(std::string(fieldName) + " must be an array");
+    }
+
+    return value.get<std::vector<double>>();
+}
+
+std::vector<std::vector<double>>
+buildDistanceMatrixValues(const std::vector<std::vector<double>>& coordinates)
+{
+    std::vector<std::vector<double>> matrix(coordinates.size(),
+                                            std::vector<double>(coordinates.size(), 0.0));
+
+    for (std::size_t rowIndex = 0; rowIndex < coordinates.size(); ++rowIndex) {
+        for (std::size_t columnIndex = rowIndex + 1; columnIndex < coordinates.size();
+             ++columnIndex) {
+            const double xDelta = coordinates[rowIndex][0] - coordinates[columnIndex][0];
+            const double yDelta = coordinates[rowIndex][1] - coordinates[columnIndex][1];
+            const double zDelta = coordinates[rowIndex][2] - coordinates[columnIndex][2];
+            const double distance = std::sqrt(xDelta * xDelta + yDelta * yDelta + zDelta * zDelta);
+            matrix[rowIndex][columnIndex] = distance;
+            matrix[columnIndex][rowIndex] = distance;
+        }
+    }
+
+    return matrix;
+}
+
+void validateCoordinates(const DistanceMatrixInput& input,
+                         const std::vector<std::vector<double>>& coordinates,
+                         const std::string_view sourceName)
+{
+    if (input.atomIds.empty()) {
+        throw DistanceAnalysisError("Distance analysis requires at least one atom id");
+    }
+
+    if (coordinates.size() != input.atomIds.size()) {
+        throw DistanceAnalysisError("Atom ids count does not match coordinate count for " +
+                                    std::string(sourceName));
+    }
+
+    for (const auto& coordinate : coordinates) {
+        if (coordinate.size() != 3U) {
+            throw DistanceAnalysisError("Distance analysis expects 3D coordinates for " +
+                                        std::string(sourceName));
+        }
+    }
+}
+
+DistanceMatrixResult makeDistanceMatrixResult(const DistanceMatrixInput& input,
+                                              const std::string_view method,
+                                              const std::string_view sourceFile,
+                                              std::vector<std::vector<double>> coordinates)
+{
+    validateCoordinates(input, coordinates, sourceFile);
+
+    return DistanceMatrixResult{
+        .sourceFile = std::string(sourceFile),
+        .method = std::string(method),
+        .atomIds = input.atomIds,
+        .xyzCoordinates = coordinates,
+        .distanceMatrix = buildDistanceMatrixValues(coordinates),
+        .metadata =
+            DistanceMatrixMetadata{
+                .atomCount = input.atomIds.size(),
+                .coordinateDimension = 3,
+                .units = "angstrom",
+            },
+    };
+}
+
+std::vector<std::vector<double>> loadSdfCoordinates(const std::filesystem::path& sdfPath)
+{
+    std::ifstream input(sdfPath);
+    if (!input) {
+        throw DistanceAnalysisError("Could not open distance SDF input file: " + sdfPath.string());
+    }
+
+    std::string line;
+    for (int index = 0; index < 3; ++index) {
+        if (!std::getline(input, line)) {
+            throw DistanceAnalysisError("SDF file ended before the counts line: " +
+                                        sdfPath.string());
+        }
+    }
+
+    if (!std::getline(input, line)) {
+        throw DistanceAnalysisError("SDF file ended before the counts line: " + sdfPath.string());
+    }
+
+    std::istringstream countsStream(line);
+    int atomCount = 0;
+    int bondCount = 0;
+    if (!(countsStream >> atomCount >> bondCount) || atomCount <= 0) {
+        throw DistanceAnalysisError("Could not parse SDF counts line: " + sdfPath.string());
+    }
+
+    std::vector<std::vector<double>> coordinates;
+    coordinates.reserve(static_cast<std::size_t>(atomCount));
+    for (int atomIndex = 0; atomIndex < atomCount; ++atomIndex) {
+        if (!std::getline(input, line)) {
+            throw DistanceAnalysisError("SDF file ended inside the atom block: " +
+                                        sdfPath.string());
+        }
+
+        std::istringstream atomStream(line);
+        double x = 0.0;
+        double y = 0.0;
+        double z = 0.0;
+        std::string symbol;
+        if (!(atomStream >> x >> y >> z >> symbol)) {
+            throw DistanceAnalysisError("Could not parse SDF atom coordinates: " +
+                                        sdfPath.string());
+        }
+
+        coordinates.push_back({x, y, z});
+    }
+
+    return coordinates;
 }
 
 NullSpaceBasis buildNullSpaceBasis(const EigenComponents& components, const double zeroTolerance)
@@ -608,6 +739,88 @@ class BoostLaplacianAnalysisStrategy final : public LaplacianAnalysisStrategy {
     }
 };
 
+class JsonDistanceMatrixStrategy final : public DistanceMatrixStrategy {
+  public:
+    [[nodiscard]] std::string_view method() const noexcept override
+    {
+        return "json";
+    }
+
+    [[nodiscard]] DistanceMatrixResult build(const DistanceMatrixInput& input) const override
+    {
+        std::ifstream jsonInput(input.jsonPath);
+        if (!jsonInput) {
+            throw DistanceAnalysisError("Could not open distance JSON input file: " +
+                                        input.jsonPath.string());
+        }
+
+        Json root;
+        jsonInput >> root;
+
+        const auto& compounds = root.at("PC_Compounds");
+        if (!compounds.is_array() || compounds.empty()) {
+            throw DistanceAnalysisError("PC_Compounds must contain at least one compound");
+        }
+
+        const auto& compound = compounds.at(0);
+        const auto& coords = compound.at("coords");
+        if (!coords.is_array() || coords.empty()) {
+            throw DistanceAnalysisError("coords must contain at least one coordinate entry");
+        }
+
+        const auto& coordinateSet = coords.at(0);
+        const auto coordinateAtomIds = jsonToIntVector(coordinateSet.at("aid"), "coords[0].aid");
+        const auto& conformers = coordinateSet.at("conformers");
+        if (!conformers.is_array() || conformers.empty()) {
+            throw DistanceAnalysisError("coords[0].conformers must contain at least one conformer");
+        }
+
+        const auto& conformer = conformers.at(0);
+        const auto x = jsonToDoubleVector(conformer.at("x"), "coords[0].conformers[0].x");
+        const auto y = jsonToDoubleVector(conformer.at("y"), "coords[0].conformers[0].y");
+        const auto z = jsonToDoubleVector(conformer.at("z"), "coords[0].conformers[0].z");
+
+        if (coordinateAtomIds.size() != x.size() || x.size() != y.size() || x.size() != z.size()) {
+            throw DistanceAnalysisError(
+                "JSON coordinate atom ids and x/y/z arrays must have the same length");
+        }
+
+        std::map<int, std::vector<double>> coordinatesByAtomId;
+        for (std::size_t index = 0; index < coordinateAtomIds.size(); ++index) {
+            coordinatesByAtomId.emplace(coordinateAtomIds[index],
+                                        std::vector<double>{x[index], y[index], z[index]});
+        }
+
+        std::vector<std::vector<double>> orderedCoordinates;
+        orderedCoordinates.reserve(input.atomIds.size());
+        for (const auto atomId : input.atomIds) {
+            const auto iterator = coordinatesByAtomId.find(atomId);
+            if (iterator == coordinatesByAtomId.end()) {
+                throw DistanceAnalysisError("Missing JSON coordinates for atom id " +
+                                            std::to_string(atomId));
+            }
+            orderedCoordinates.push_back(iterator->second);
+        }
+
+        return makeDistanceMatrixResult(
+            input, method(), input.jsonPath.filename().string(), std::move(orderedCoordinates));
+    }
+};
+
+class SdfDistanceMatrixStrategy final : public DistanceMatrixStrategy {
+  public:
+    [[nodiscard]] std::string_view method() const noexcept override
+    {
+        return "sdf";
+    }
+
+    [[nodiscard]] DistanceMatrixResult build(const DistanceMatrixInput& input) const override
+    {
+        return makeDistanceMatrixResult(
+            input, method(), input.sdfPath.filename().string(), loadSdfCoordinates(input.sdfPath));
+    }
+};
+
 const AdjacencyMatrixStrategy& resolveAdjacencyStrategy(const std::string_view method)
 {
     static const ArraysAdjacencyMatrixStrategy arraysStrategy;
@@ -650,6 +863,19 @@ const LaplacianAnalysisStrategy& resolveLaplacianAnalysisStrategy(const std::str
     }
 
     return armadilloStrategy;
+}
+
+const DistanceMatrixStrategy& resolveDistanceMatrixStrategy(const std::string_view method)
+{
+    static const JsonDistanceMatrixStrategy jsonStrategy;
+    static const SdfDistanceMatrixStrategy sdfStrategy;
+
+    const std::string normalizedMethod = parseDistanceMethod(method);
+    if (normalizedMethod == sdfStrategy.method()) {
+        return sdfStrategy;
+    }
+
+    return jsonStrategy;
 }
 
 std::vector<int> jsonToIntVector(const Json& value, const std::string_view fieldName)
@@ -718,6 +944,11 @@ std::vector<std::string> supportedLaplacianMethods()
     return {"armadillo", "boost"};
 }
 
+std::vector<std::string> supportedDistanceMethods()
+{
+    return {"json", "sdf"};
+}
+
 std::string parseLaplacianMethod(const std::string_view method)
 {
     const std::string normalizedMethod(method);
@@ -729,6 +960,19 @@ std::string parseLaplacianMethod(const std::string_view method)
 
     throw std::invalid_argument("Unsupported Laplacian method '" + normalizedMethod +
                                 "'. Supported values: armadillo, boost");
+}
+
+std::string parseDistanceMethod(const std::string_view method)
+{
+    const std::string normalizedMethod(method);
+    for (const auto& supportedMethod : supportedDistanceMethods()) {
+        if (normalizedMethod == supportedMethod) {
+            return supportedMethod;
+        }
+    }
+
+    throw std::invalid_argument("Unsupported distance method '" + normalizedMethod +
+                                "'. Supported values: json, sdf");
 }
 
 NormalizedAdjacencyInput loadAdjacencyInput(const std::filesystem::path& jsonPath)
@@ -812,6 +1056,12 @@ LaplacianAnalysisResult buildLaplacianAnalysis(const AdjacencyMatrix& matrix,
     return resolveLaplacianAnalysisStrategy(method).analyze(matrix, zeroTolerance);
 }
 
+DistanceMatrixResult buildDistanceMatrix(const DistanceMatrixInput& input,
+                                         const std::string_view method)
+{
+    return resolveDistanceMatrixStrategy(method).build(input);
+}
+
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory)
 {
     return dataDirectory / "out";
@@ -845,5 +1095,13 @@ std::filesystem::path laplacianOutputJsonPath(const std::filesystem::path& outpu
 {
     return outputDirectory /
            (sourceFile.stem().string() + "." + std::string(method) + ".laplacian_analysis.json");
+}
+
+std::filesystem::path distanceOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                             const std::filesystem::path& sourceFile,
+                                             const std::string_view method)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + "." + std::string(method) + ".distance_matrix.json");
 }
 } // namespace pubchem

@@ -27,6 +27,7 @@ struct CommandLineOptions {
     std::string adjacencyMethod = "armadillo";
     std::string eigenMethod = "armadillo";
     std::string laplacianMethod = "armadillo";
+    std::string distanceMethod = "json";
 };
 
 std::filesystem::path defaultDataDir()
@@ -72,7 +73,8 @@ std::string hybridizationToString(const RDKit::Atom::HybridizationType hybridiza
 void printUsage(std::ostream& output)
 {
     output << "Usage: app [--sdf <file>] [--json <file>] [--method <arrays|armadillo|boost-graph>]"
-           << " [--eigenmethod <armadillo|boost>] [--laplacian-method <armadillo|boost>]\n";
+           << " [--eigenmethod <armadillo|boost>] [--laplacian-method <armadillo|boost>]"
+           << " [--distance-method <json|sdf>]\n";
 }
 
 CommandLineOptions parseArguments(int argc, char* argv[])
@@ -120,6 +122,11 @@ CommandLineOptions parseArguments(int argc, char* argv[])
         if (argument == "--laplacian-method") {
             options.laplacianMethod =
                 pubchem::parseLaplacianMethod(readValue("--laplacian-method"));
+            continue;
+        }
+
+        if (argument == "--distance-method") {
+            options.distanceMethod = pubchem::parseDistanceMethod(readValue("--distance-method"));
             continue;
         }
 
@@ -260,6 +267,23 @@ nlohmann::json toJson(const pubchem::LaplacianAnalysisResult& laplacianAnalysis)
          }},
     };
 }
+
+nlohmann::json toJson(const pubchem::DistanceMatrixResult& distanceMatrix)
+{
+    return {
+        {"sourceFile", distanceMatrix.sourceFile},
+        {"method", distanceMatrix.method},
+        {"atomIds", distanceMatrix.atomIds},
+        {"xyzCoordinates", distanceMatrix.xyzCoordinates},
+        {"distanceMatrix", distanceMatrix.distanceMatrix},
+        {"metadata",
+         {
+             {"atomCount", distanceMatrix.metadata.atomCount},
+             {"coordinateDimension", distanceMatrix.metadata.coordinateDimension},
+             {"units", distanceMatrix.metadata.units},
+         }},
+    };
+}
 } // namespace
 
 int main(int argc, char* argv[])
@@ -277,6 +301,15 @@ int main(int argc, char* argv[])
         const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
         const pubchem::NormalizedAdjacencyInput adjacencyInput =
             pubchem::loadAdjacencyInput(adjacencyJsonPath);
+        const pubchem::DistanceMatrixInput distanceInput{
+            .atomIds = adjacencyInput.atomIds,
+            .jsonPath = adjacencyJsonPath,
+            .sdfPath = sdfPath,
+        };
+        const pubchem::DistanceMatrixResult distanceMatrix =
+            pubchem::buildDistanceMatrix(distanceInput, options.distanceMethod);
+        const std::filesystem::path distanceOutputPath = pubchem::distanceOutputJsonPath(
+            outputDir, options.adjacencyJsonFile, distanceMatrix.method);
         const pubchem::AdjacencyMatrix adjacencyMatrix = pubchem::buildAdjacencyMatrix(
             adjacencyInput, options.adjacencyJsonFile.filename().string(), options.adjacencyMethod);
         const std::filesystem::path adjacencyOutputPath = pubchem::adjacencyOutputJsonPath(
@@ -299,6 +332,9 @@ int main(int argc, char* argv[])
         std::ofstream adjacencyOutput(adjacencyOutputPath);
         adjacencyOutput << std::setw(2) << toJson(adjacencyMatrix) << '\n';
 
+        std::ofstream distanceOutput(distanceOutputPath);
+        distanceOutput << std::setw(2) << toJson(distanceMatrix) << '\n';
+
         std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
         eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
 
@@ -308,6 +344,8 @@ int main(int argc, char* argv[])
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
         std::cout << "Atom records written to: " << outputPath << '\n';
+        std::cout << "Distance method: " << distanceMatrix.method << '\n';
+        std::cout << "Distance matrix written to: " << distanceOutputPath << '\n';
         std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
         std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
         std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';

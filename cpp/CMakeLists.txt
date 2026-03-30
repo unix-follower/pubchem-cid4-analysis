@@ -71,4 +71,4 @@ add_executable(tests test/analysis_test.cpp)
 target_link_libraries(tests PRIVATE analysis_core GTest::gtest GTest::gtest_main)
 
 include(GoogleTest)
-gtest_discover_tests(tests)
+gtest_discover_tests(tests DISCOVERY_TIMEOUT 30)
