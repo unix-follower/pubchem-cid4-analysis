@@ -50,8 +50,8 @@ class BioactivityAnalysisError : public std::runtime_error {
 };
 
 class GradientDescentAnalysisError : public std::runtime_error {
-    public:
-        using std::runtime_error::runtime_error;
+  public:
+    using std::runtime_error::runtime_error;
 };
 
 struct EigenComponents {
@@ -396,8 +396,7 @@ double computeMeanSquaredError(const std::vector<double>& xValues,
                                const std::vector<double>& yValues,
                                const double weight)
 {
-    return computeSumSquaredError(xValues, yValues, weight) /
-           static_cast<double>(xValues.size());
+    return computeSumSquaredError(xValues, yValues, weight) / static_cast<double>(xValues.size());
 }
 
 double computeSumSquaredErrorGradient(const std::vector<double>& xValues,
@@ -2321,12 +2320,8 @@ GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<Ato
         yValues.push_back(static_cast<double>(atom.atomicNumber));
     }
 
-    const double denominator = std::transform_reduce(xValues.begin(),
-                                                     xValues.end(),
-                                                     xValues.begin(),
-                                                     0.0,
-                                                     std::plus<>(),
-                                                     std::multiplies<>());
+    const double denominator = std::transform_reduce(
+        xValues.begin(), xValues.end(), xValues.begin(), 0.0, std::plus<>(), std::multiplies<>());
     if (std::abs(denominator) < 1.0e-12) {
         throw GradientDescentAnalysisError(
             "Gradient descent closed-form solution is undefined when all masses are zero");
@@ -2354,12 +2349,8 @@ GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<Ato
         }
     }
 
-    const double numerator = std::transform_reduce(xValues.begin(),
-                                                   xValues.end(),
-                                                   yValues.begin(),
-                                                   0.0,
-                                                   std::plus<>(),
-                                                   std::multiplies<>());
+    const double numerator = std::transform_reduce(
+        xValues.begin(), xValues.end(), yValues.begin(), 0.0, std::plus<>(), std::multiplies<>());
     const double closedFormWeight = numerator / denominator;
     const auto bestTraceRow = std::min_element(
         traceRows.begin(), traceRows.end(), [](const auto& left, const auto& right) {
@@ -2424,13 +2415,12 @@ GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<Ato
                 .lossTrace =
                     GradientDescentLossTraceSummary{
                         .monotonicNonincreasingMeanSquaredError =
-                            std::adjacent_find(
-                                traceRows.begin(),
-                                traceRows.end(),
-                                [](const auto& left, const auto& right) {
-                                    return right.meanSquaredError >
-                                           left.meanSquaredError + 1.0e-12;
-                                }) == traceRows.end(),
+                            std::adjacent_find(traceRows.begin(),
+                                               traceRows.end(),
+                                               [](const auto& left, const auto& right) {
+                                                   return right.meanSquaredError >
+                                                          left.meanSquaredError + 1.0e-12;
+                                               }) == traceRows.end(),
                         .bestEpoch = bestTraceRow->epoch,
                     },
             },
@@ -2470,8 +2460,8 @@ void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result
 
     std::ofstream output(outputPath);
     if (!output) {
-        throw GradientDescentAnalysisError("Could not open gradient descent loss plot output path: " +
-                                           outputPath.string());
+        throw GradientDescentAnalysisError(
+            "Could not open gradient descent loss plot output path: " + outputPath.string());
     }
 
     constexpr double width = 1280.0;
@@ -2511,9 +2501,8 @@ void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result
                  << yToSvg(result.traceRows[index].meanSquaredError);
     }
 
-    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width
-           << "\" height=\"" << height << "\" viewBox=\"0 0 " << width << ' ' << height
-           << "\">\n";
+    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width << "\" height=\""
+           << height << "\" viewBox=\"0 0 " << width << ' ' << height << "\">\n";
     output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
     output << svgText(left,
                       40.0,
@@ -2523,8 +2512,8 @@ void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result
     output << "<line x1=\"" << left << "\" y1=\"" << top + plotHeight << "\" x2=\""
            << left + plotWidth << "\" y2=\"" << top + plotHeight
            << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
-    output << "<line x1=\"" << left << "\" y1=\"" << top << "\" x2=\"" << left
-           << "\" y2=\"" << top + plotHeight << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
+    output << "<line x1=\"" << left << "\" y1=\"" << top << "\" x2=\"" << left << "\" y2=\""
+           << top + plotHeight << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
     output << "<polyline fill=\"none\" stroke=\"#0f766e\" stroke-width=\"3\" points=\""
            << polyline.str() << "\"/>\n";
     output << svgText(width / 2.0 - 20.0,
@@ -2558,8 +2547,8 @@ void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
 
     std::ofstream output(outputPath);
     if (!output) {
-        throw GradientDescentAnalysisError("Could not open gradient descent fit plot output path: " +
-                                           outputPath.string());
+        throw GradientDescentAnalysisError(
+            "Could not open gradient descent fit plot output path: " + outputPath.string());
     }
 
     constexpr double width = 1280.0;
@@ -2580,9 +2569,8 @@ void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
         return top + (maxAtomicNumber - atomicNumber) / maxAtomicNumber * plotHeight;
     };
 
-    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width
-           << "\" height=\"" << height << "\" viewBox=\"0 0 " << width << ' ' << height
-           << "\">\n";
+    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width << "\" height=\""
+           << height << "\" viewBox=\"0 0 " << width << ' ' << height << "\">\n";
     output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
     output << svgText(left,
                       40.0,
@@ -2592,15 +2580,15 @@ void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
     output << "<line x1=\"" << left << "\" y1=\"" << top + plotHeight << "\" x2=\""
            << left + plotWidth << "\" y2=\"" << top + plotHeight
            << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
-    output << "<line x1=\"" << left << "\" y1=\"" << top << "\" x2=\"" << left
-           << "\" y2=\"" << top + plotHeight << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
+    output << "<line x1=\"" << left << "\" y1=\"" << top << "\" x2=\"" << left << "\" y2=\""
+           << top + plotHeight << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
 
     const double lineX1 = 0.0;
     const double lineY1 = 0.0;
     const double lineX2 = maxMass;
     const double lineY2 = finalWeight * maxMass;
-    output << "<line x1=\"" << xToSvg(lineX1) << "\" y1=\"" << yToSvg(lineY1)
-           << "\" x2=\"" << xToSvg(lineX2) << "\" y2=\"" << yToSvg(lineY2)
+    output << "<line x1=\"" << xToSvg(lineX1) << "\" y1=\"" << yToSvg(lineY1) << "\" x2=\""
+           << xToSvg(lineX2) << "\" y2=\"" << yToSvg(lineY2)
            << "\" stroke=\"#b91c1c\" stroke-width=\"3\"/>\n";
 
     for (const auto& atomRow : result.summary.dataset.atomRows) {

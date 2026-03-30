@@ -453,12 +453,11 @@ void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
                               const std::filesystem::path& outputPath);
 void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
                                   const std::filesystem::path& outputPath);
-GradientDescentAnalysisResult buildGradientDescentAnalysis(
-    const std::vector<AtomRecord>& atoms,
-    std::string_view sourceFile,
-    double learningRate = 5.0e-5,
-    std::size_t epochs = 250U,
-    double initialWeight = 0.0);
+GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<AtomRecord>& atoms,
+                                                           std::string_view sourceFile,
+                                                           double learningRate = 5.0e-5,
+                                                           std::size_t epochs = 250U,
+                                                           double initialWeight = 0.0);
 void writeGradientDescentCsv(const GradientDescentAnalysisResult& result,
                              const std::filesystem::path& outputPath);
 void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result,

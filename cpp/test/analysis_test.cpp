@@ -708,8 +708,9 @@ TEST(GradientDescentStrategiesTest, AnalysisConvergesTowardClosedFormWeight)
         pubchem::buildGradientDescentAnalysis(sampleGradientAtoms(), "sample.sdf", 0.05, 40U);
 
     EXPECT_EQ(result.sourceFile, "sample.sdf");
-    EXPECT_EQ(result.headers,
-              (std::vector<std::string>{"epoch", "weight", "gradient", "sum_squared_error", "mse"}));
+    EXPECT_EQ(
+        result.headers,
+        (std::vector<std::string>{"epoch", "weight", "gradient", "sum_squared_error", "mse"}));
     ASSERT_EQ(result.traceRows.size(), 41U);
     EXPECT_NEAR(result.summary.optimization.closedFormWeight, 2.0, 1.0e-12);
     EXPECT_NEAR(result.summary.optimization.finalWeight, 2.0, 1.0e-6);
