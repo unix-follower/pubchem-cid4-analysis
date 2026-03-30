@@ -419,6 +419,78 @@ nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
 }
 } // namespace
 
+nlohmann::json toJson(const pubchem::HillDoseResponseAnalysisResult& hillAnalysis)
+{
+    nlohmann::json activityTypeCounts = nlohmann::json::object();
+    for (const auto& entry : hillAnalysis.activityTypeCounts) {
+        activityTypeCounts[entry.activityType] = entry.count;
+    }
+
+    nlohmann::json representativeRows = nlohmann::json::array();
+    for (const auto& row : hillAnalysis.analysis.representativeRows) {
+        representativeRows.push_back({
+            {"bioactivityId", row.bioactivityId},
+            {"bioAssayAid", row.bioAssayAid},
+            {"activityType", row.activityType},
+            {"targetName", row.targetName},
+            {"activityValue", row.activityValue},
+            {"inferredKActivityValue", row.inferredKActivityValue},
+            {"log10MidpointConcentration", row.log10MidpointConcentration},
+        });
+    }
+
+    nlohmann::json linearInflection = nullptr;
+    if (hillAnalysis.analysis.linearConcentrationInflection.has_value()) {
+        const auto& inflection = *hillAnalysis.analysis.linearConcentrationInflection;
+        linearInflection = {
+            {"formula", inflection.formula},
+            {"responseFormula", inflection.responseFormula},
+            {"relativeToK", inflection.relativeToK},
+            {"normalizedResponse", inflection.normalizedResponse},
+        };
+    }
+
+    return {
+        {"sourceFile", hillAnalysis.sourceFile},
+        {"rowCounts",
+         {{"totalRows", hillAnalysis.rowCounts.totalRows},
+          {"rowsWithNumericActivityValue", hillAnalysis.rowCounts.rowsWithNumericActivityValue},
+          {"rowsWithPositiveActivityValue", hillAnalysis.rowCounts.rowsWithPositiveActivityValue},
+          {"rowsFlaggedHasDoseResponseCurve",
+           hillAnalysis.rowCounts.rowsFlaggedHasDoseResponseCurve},
+          {"retainedRows", hillAnalysis.rowCounts.retainedRows},
+          {"retainedRowsFlaggedHasDoseResponseCurve",
+           hillAnalysis.rowCounts.retainedRowsFlaggedHasDoseResponseCurve},
+          {"retainedUniqueBioassays", hillAnalysis.rowCounts.retainedUniqueBioassays}}},
+        {"statistics",
+         {{"activityValueAsInferredK",
+           {{"min", hillAnalysis.statistics.activityValueAsInferredK.min},
+            {"median", hillAnalysis.statistics.activityValueAsInferredK.median},
+            {"max", hillAnalysis.statistics.activityValueAsInferredK.max}}},
+          {"midpointFirstDerivative",
+           {{"min", hillAnalysis.statistics.midpointFirstDerivative.min},
+            {"median", hillAnalysis.statistics.midpointFirstDerivative.median},
+            {"max", hillAnalysis.statistics.midpointFirstDerivative.max}}}}},
+        {"activityTypeCounts", activityTypeCounts},
+        {"analysis",
+         {{"model", hillAnalysis.analysis.model},
+          {"equation", hillAnalysis.analysis.equation},
+          {"firstDerivative", hillAnalysis.analysis.firstDerivative},
+          {"secondDerivative", hillAnalysis.analysis.secondDerivative},
+          {"referenceHillCoefficientN", hillAnalysis.analysis.referenceHillCoefficientN},
+          {"parameterInterpretation", hillAnalysis.analysis.parameterInterpretation},
+          {"midpointInLogConcentrationSpace",
+           {{"condition", hillAnalysis.analysis.midpointInLogConcentrationSpace.condition},
+            {"response", hillAnalysis.analysis.midpointInLogConcentrationSpace.response},
+            {"interpretation",
+             hillAnalysis.analysis.midpointInLogConcentrationSpace.interpretation}}},
+          {"linearConcentrationInflection", linearInflection},
+          {"fitStatus", hillAnalysis.analysis.fitStatus},
+          {"representativeRows", representativeRows},
+          {"notes", hillAnalysis.analysis.notes}}},
+    };
+}
+
 int main(int argc, char* argv[])
 {
     try {
@@ -476,6 +548,14 @@ int main(int argc, char* argv[])
             pubchem::bioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
         const std::filesystem::path bioactivityPlotOutputPath =
             pubchem::bioactivityPlotSvgPath(outputDir, options.bioactivityFile);
+        const pubchem::HillDoseResponseAnalysisResult hillDoseResponseAnalysis =
+            pubchem::buildHillDoseResponseAnalysis(bioactivityCsvPath);
+        const std::filesystem::path hillDoseResponseCsvOutputPath =
+            pubchem::hillDoseResponseCsvPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path hillDoseResponseSummaryOutputPath =
+            pubchem::hillDoseResponseSummaryJsonPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path hillDoseResponsePlotOutputPath =
+            pubchem::hillDoseResponsePlotSvgPath(outputDir, options.bioactivityFile);
 
         std::filesystem::create_directories(outputDir);
 
@@ -507,6 +587,14 @@ int main(int argc, char* argv[])
 
         pubchem::writeBioactivityPlotSvg(bioactivityAnalysis, bioactivityPlotOutputPath);
 
+        pubchem::writeHillDoseResponseCsv(hillDoseResponseAnalysis, hillDoseResponseCsvOutputPath);
+
+        std::ofstream hillDoseResponseSummaryOutput(hillDoseResponseSummaryOutputPath);
+        hillDoseResponseSummaryOutput << std::setw(2) << toJson(hillDoseResponseAnalysis) << '\n';
+
+        pubchem::writeHillDoseResponsePlotSvg(hillDoseResponseAnalysis,
+                                              hillDoseResponsePlotOutputPath);
+
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
         std::cout << "Atom records written to: " << outputPath << '\n';
@@ -523,6 +611,12 @@ int main(int argc, char* argv[])
         std::cout << "Bioactivity rows written to: " << bioactivityCsvOutputPath << '\n';
         std::cout << "Bioactivity summary written to: " << bioactivitySummaryOutputPath << '\n';
         std::cout << "Bioactivity plot written to: " << bioactivityPlotOutputPath << '\n';
+        std::cout << "Hill dose-response rows written to: " << hillDoseResponseCsvOutputPath
+                  << '\n';
+        std::cout << "Hill dose-response summary written to: " << hillDoseResponseSummaryOutputPath
+                  << '\n';
+        std::cout << "Hill dose-response plot written to: " << hillDoseResponsePlotOutputPath
+                  << '\n';
     }
     catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

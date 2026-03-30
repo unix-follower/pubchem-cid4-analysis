@@ -154,11 +154,16 @@ std::string sampleDistanceJson()
 
 std::string sampleBioactivityCsv()
 {
-    return "Bioactivity_ID,BioAssay_AID,Activity_Type,Activity_Value,citations\n"
-           "100909607,158688,IC50,800.0,\"Paper with, comma\"\n"
-           "334754348,743069,Potency,21.872400,\"Potency row\"\n"
-           "383459365,1920063,IC50,,\"Missing numeric value\"\n"
-           "383457597,1919969,IC50,not-a-number,\"Invalid numeric value\"\n";
+    return "Bioactivity_ID,BioAssay_AID,Activity_Type,Activity_Value,Has_Dose_Response_Curve,"
+           "Target_Name,citations\n"
+           "100909607,158688,IC50,800.0,0,Plasmodium falciparum (malaria parasite P. "
+           "falciparum),\"Paper with, comma\"\n"
+           "334754348,743069,Potency,21.872400,1,ESR1 - estrogen receptor 1 (human),\"Potency "
+           "row\"\n"
+           "383459365,1920063,IC50,,1,GNRHR - gonadotropin releasing hormone receptor "
+           "(human),\"Missing numeric value\"\n"
+           "383457597,1919969,IC50,not-a-number,1,NFE2L2 - NFE2 like bZIP transcription factor 2 "
+           "(human),\"Invalid numeric value\"\n";
 }
 
 } // namespace
@@ -625,6 +630,18 @@ TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.ic50_pic50.svg");
+    EXPECT_EQ(pubchem::hillDoseResponseCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.hill_dose_response.csv");
+    EXPECT_EQ(pubchem::hillDoseResponseSummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.hill_dose_response.summary.json");
+    EXPECT_EQ(pubchem::hillDoseResponsePlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.hill_dose_response.svg");
 }
 
 TEST(BioactivityStrategiesTest, AnalysisFiltersIc50RowsAndComputesPic50)
@@ -675,4 +692,110 @@ TEST(BioactivityStrategiesTest, CsvAndSvgWritersEmitArtifacts)
     EXPECT_NE(filteredContents.find("-2.90308998699194"), std::string::npos);
     EXPECT_NE(svgContents.find("<svg"), std::string::npos);
     EXPECT_NE(svgContents.find("Observed IC50 rows"), std::string::npos);
+}
+
+TEST(BioactivityStrategiesTest, HillAnalysisBuildsReferenceRowsAndSummary)
+{
+    const auto csvPath = writeTempFile("bioactivity-hill-sample.csv", sampleBioactivityCsv());
+
+    const auto result = pubchem::buildHillDoseResponseAnalysis(csvPath);
+
+    EXPECT_EQ(result.sourceFile, "bioactivity-hill-sample.csv");
+    EXPECT_EQ(result.rowCounts.totalRows, 4U);
+    EXPECT_EQ(result.rowCounts.rowsWithNumericActivityValue, 2U);
+    EXPECT_EQ(result.rowCounts.rowsWithPositiveActivityValue, 2U);
+    EXPECT_EQ(result.rowCounts.rowsFlaggedHasDoseResponseCurve, 3U);
+    EXPECT_EQ(result.rowCounts.retainedRows, 2U);
+    EXPECT_EQ(result.rowCounts.retainedRowsFlaggedHasDoseResponseCurve, 1U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
+    ASSERT_EQ(result.rows.size(), 2U);
+    EXPECT_NEAR(result.statistics.activityValueAsInferredK.min, 21.8724, 1.0e-12);
+    EXPECT_NEAR(result.statistics.activityValueAsInferredK.max, 800.0, 1.0e-12);
+    EXPECT_NEAR(result.statistics.midpointFirstDerivative.max, 1.0 / (4.0 * 21.8724), 1.0e-12);
+    EXPECT_NEAR(result.statistics.midpointFirstDerivative.min, 1.0 / (4.0 * 800.0), 1.0e-12);
+    EXPECT_EQ(result.analysis.fitStatus, "reference_curve_inferred_from_activity_value");
+    EXPECT_EQ(result.analysis.midpointInLogConcentrationSpace.condition, "c = K");
+    EXPECT_DOUBLE_EQ(result.analysis.midpointInLogConcentrationSpace.response, 0.5);
+    EXPECT_FALSE(result.analysis.linearConcentrationInflection.has_value());
+    ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
+    EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 743069LL);
+    EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 158688LL);
+}
+
+TEST(BioactivityStrategiesTest, HillAnalysisSupportsPositiveLinearInflectionForNGreaterThanOne)
+{
+    const auto csvPath = writeTempFile("bioactivity-hill-n2-sample.csv", sampleBioactivityCsv());
+
+    const auto result = pubchem::buildHillDoseResponseAnalysis(csvPath, 2.0);
+
+    ASSERT_TRUE(result.analysis.linearConcentrationInflection.has_value());
+    const auto& inflection = *result.analysis.linearConcentrationInflection;
+    EXPECT_NEAR(inflection.relativeToK, std::sqrt(1.0 / 3.0), 1.0e-12);
+    EXPECT_NEAR(inflection.normalizedResponse, 0.25, 1.0e-12);
+    const auto& firstRow = result.rows.front();
+    const auto headers = result.headers;
+    const auto linearInflectionColumn =
+        std::find(headers.begin(), headers.end(), "linear_inflection_concentration");
+    ASSERT_NE(linearInflectionColumn, headers.end());
+    const auto columnIndex =
+        static_cast<std::size_t>(std::distance(headers.begin(), linearInflectionColumn));
+    EXPECT_FALSE(firstRow.at(columnIndex).empty());
+}
+
+TEST(BioactivityStrategiesTest, HillCsvAndSvgWritersEmitArtifacts)
+{
+    const auto csvPath =
+        writeTempFile("bioactivity-hill-writer-sample.csv", sampleBioactivityCsv());
+    const auto result = pubchem::buildHillDoseResponseAnalysis(csvPath);
+    const auto outputDirectory =
+        std::filesystem::temp_directory_path() / "pubchem-cid4-hill-bioactivity";
+    std::filesystem::create_directories(outputDirectory);
+
+    const auto filteredCsvPath = outputDirectory / "bioactivity.hill.csv";
+    const auto plotSvgPath = outputDirectory / "bioactivity.hill.svg";
+
+    pubchem::writeHillDoseResponseCsv(result, filteredCsvPath);
+    pubchem::writeHillDoseResponsePlotSvg(result, plotSvgPath);
+
+    std::ifstream filteredInput(filteredCsvPath);
+    std::ifstream svgInput(plotSvgPath);
+    ASSERT_TRUE(filteredInput.good());
+    ASSERT_TRUE(svgInput.good());
+
+    const std::string filteredContents((std::istreambuf_iterator<char>(filteredInput)),
+                                       std::istreambuf_iterator<char>());
+    const std::string svgContents((std::istreambuf_iterator<char>(svgInput)),
+                                  std::istreambuf_iterator<char>());
+
+    EXPECT_NE(filteredContents.find("inferred_K_activity_value"), std::string::npos);
+    EXPECT_NE(filteredContents.find("reference_curve_inferred_from_activity_value"),
+              std::string::npos);
+    EXPECT_NE(svgContents.find("Reference Hill Curves Inferred from Activity_Value"),
+              std::string::npos);
+    EXPECT_NE(svgContents.find("AID 743069"), std::string::npos);
+}
+
+TEST(BioactivityStrategiesTest, HillAnalysisMatchesCid4RealData)
+{
+    const auto csvPath = repositoryRoot() / "data" / "pubchem_cid_4_bioactivity.csv";
+
+    const auto result = pubchem::buildHillDoseResponseAnalysis(csvPath);
+
+    EXPECT_EQ(result.rowCounts.totalRows, 406U);
+    EXPECT_EQ(result.rowCounts.rowsWithNumericActivityValue, 2U);
+    EXPECT_EQ(result.rowCounts.rowsWithPositiveActivityValue, 2U);
+    EXPECT_EQ(result.rowCounts.rowsFlaggedHasDoseResponseCurve, 203U);
+    EXPECT_EQ(result.rowCounts.retainedRows, 2U);
+    EXPECT_EQ(result.rowCounts.retainedRowsFlaggedHasDoseResponseCurve, 1U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
+    EXPECT_NEAR(result.statistics.activityValueAsInferredK.min, 21.8724, 1.0e-12);
+    EXPECT_NEAR(result.statistics.activityValueAsInferredK.median, 410.9362, 1.0e-10);
+    EXPECT_NEAR(result.statistics.activityValueAsInferredK.max, 800.0, 1.0e-12);
+    EXPECT_NEAR(result.statistics.midpointFirstDerivative.min, 0.0003125, 1.0e-12);
+    EXPECT_NEAR(result.statistics.midpointFirstDerivative.median, 0.005871214978694611, 1.0e-15);
+    EXPECT_NEAR(result.statistics.midpointFirstDerivative.max, 0.011429929957389222, 1.0e-15);
+    EXPECT_FALSE(result.analysis.linearConcentrationInflection.has_value());
+    ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
+    EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 743069LL);
+    EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 158688LL);
 }

@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <filesystem>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -246,6 +247,79 @@ struct BioactivityAnalysisResult {
     BioactivitySummary analysis;
 };
 
+struct HillDoseResponseRowCounts {
+    std::size_t totalRows;
+    std::size_t rowsWithNumericActivityValue;
+    std::size_t rowsWithPositiveActivityValue;
+    std::size_t rowsFlaggedHasDoseResponseCurve;
+    std::size_t retainedRows;
+    std::size_t retainedRowsFlaggedHasDoseResponseCurve;
+    std::size_t retainedUniqueBioassays;
+};
+
+struct HillDoseResponseStatistic {
+    double min;
+    double median;
+    double max;
+};
+
+struct HillDoseResponseStatistics {
+    HillDoseResponseStatistic activityValueAsInferredK;
+    HillDoseResponseStatistic midpointFirstDerivative;
+};
+
+struct HillDoseResponseActivityTypeCount {
+    std::string activityType;
+    std::size_t count;
+};
+
+struct HillDoseResponseRepresentativeRow {
+    long long bioactivityId;
+    long long bioAssayAid;
+    std::string activityType;
+    std::string targetName;
+    double activityValue;
+    double inferredKActivityValue;
+    double log10MidpointConcentration;
+};
+
+struct HillDoseResponseMidpointSummary {
+    std::string condition;
+    double response;
+    std::string interpretation;
+};
+
+struct HillDoseResponseLinearInflectionSummary {
+    std::string formula;
+    std::string responseFormula;
+    double relativeToK;
+    double normalizedResponse;
+};
+
+struct HillDoseResponseSummary {
+    std::string model;
+    std::string equation;
+    std::string firstDerivative;
+    std::string secondDerivative;
+    double referenceHillCoefficientN;
+    std::string parameterInterpretation;
+    HillDoseResponseMidpointSummary midpointInLogConcentrationSpace;
+    std::optional<HillDoseResponseLinearInflectionSummary> linearConcentrationInflection;
+    std::string fitStatus;
+    std::vector<HillDoseResponseRepresentativeRow> representativeRows;
+    std::vector<std::string> notes;
+};
+
+struct HillDoseResponseAnalysisResult {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::vector<std::vector<std::string>> rows;
+    HillDoseResponseRowCounts rowCounts;
+    HillDoseResponseStatistics statistics;
+    std::vector<HillDoseResponseActivityTypeCount> activityTypeCounts;
+    HillDoseResponseSummary analysis;
+};
+
 class AdjacencyMatrixStrategy {
   public:
     virtual ~AdjacencyMatrixStrategy() = default;
@@ -295,6 +369,12 @@ void writeBioactivityFilteredCsv(const BioactivityAnalysisResult& result,
                                  const std::filesystem::path& outputPath);
 void writeBioactivityPlotSvg(const BioactivityAnalysisResult& result,
                              const std::filesystem::path& outputPath);
+HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
+                                                             double hillCoefficient = 1.0);
+void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
+                              const std::filesystem::path& outputPath);
+void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
+                                  const std::filesystem::path& outputPath);
 AdjacencyMatrix buildAdjacencyMatrix(const NormalizedAdjacencyInput& input,
                                      std::string_view sourceFile,
                                      std::string_view method);
@@ -335,4 +415,10 @@ std::filesystem::path bioactivitySummaryJsonPath(const std::filesystem::path& ou
                                                  const std::filesystem::path& sourceFile);
 std::filesystem::path bioactivityPlotSvgPath(const std::filesystem::path& outputDirectory,
                                              const std::filesystem::path& sourceFile);
+std::filesystem::path hillDoseResponseCsvPath(const std::filesystem::path& outputDirectory,
+                                              const std::filesystem::path& sourceFile);
+std::filesystem::path hillDoseResponseSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                                      const std::filesystem::path& sourceFile);
+std::filesystem::path hillDoseResponsePlotSvgPath(const std::filesystem::path& outputDirectory,
+                                                  const std::filesystem::path& sourceFile);
 } // namespace pubchem
