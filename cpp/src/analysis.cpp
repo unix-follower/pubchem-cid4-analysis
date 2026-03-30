@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <limits>
 #include <map>
+#include <set>
 #include <numeric>
 #include <optional>
 #include <sstream>
@@ -424,6 +425,137 @@ buildDistanceMatrixValues(const std::vector<std::vector<double>>& coordinates)
     }
 
     return matrix;
+}
+
+double computePercentile(std::vector<double> values, const double percentile)
+{
+    if (values.empty()) {
+        throw DistanceAnalysisError("Cannot compute a percentile for an empty data set");
+    }
+
+    if (percentile < 0.0 || percentile > 1.0) {
+        throw DistanceAnalysisError("Percentile must be within [0, 1]");
+    }
+
+    std::sort(values.begin(), values.end());
+    if (values.size() == 1U) {
+        return values.front();
+    }
+
+    const double scaledIndex = percentile * static_cast<double>(values.size() - 1U);
+    const auto lowerIndex = static_cast<std::size_t>(std::floor(scaledIndex));
+    const auto upperIndex = static_cast<std::size_t>(std::ceil(scaledIndex));
+    if (lowerIndex == upperIndex) {
+        return values[lowerIndex];
+    }
+
+    const double fraction = scaledIndex - static_cast<double>(lowerIndex);
+    return values[lowerIndex] + fraction * (values[upperIndex] - values[lowerIndex]);
+}
+
+void validateBondedDistanceAlignment(const DistanceMatrixResult& distanceMatrix,
+                                    const AdjacencyMatrix& adjacencyMatrix)
+{
+    if (distanceMatrix.atomIds != adjacencyMatrix.atomIds) {
+        throw DistanceAnalysisError(
+            "Distance and adjacency atomIds must be aligned for bonded-distance analysis");
+    }
+
+    if (distanceMatrix.distanceMatrix.size() != adjacencyMatrix.values.size()) {
+        throw DistanceAnalysisError(
+            "Distance matrix and adjacency matrix must have the same size");
+    }
+}
+
+std::vector<BondedAtomPair> bondedAtomPairsFromAdjacency(const AdjacencyMatrix& adjacencyMatrix)
+{
+    std::vector<BondedAtomPair> pairs;
+    for (std::size_t rowIndex = 0; rowIndex < adjacencyMatrix.values.size(); ++rowIndex) {
+        for (std::size_t columnIndex = rowIndex + 1;
+             columnIndex < adjacencyMatrix.values[rowIndex].size();
+             ++columnIndex) {
+            if (adjacencyMatrix.values[rowIndex][columnIndex] > 0) {
+                pairs.push_back(BondedAtomPair{
+                    .atomId1 = adjacencyMatrix.atomIds[rowIndex],
+                    .atomId2 = adjacencyMatrix.atomIds[columnIndex],
+                });
+            }
+        }
+    }
+
+    if (pairs.empty()) {
+        throw DistanceAnalysisError("Expected at least one bonded atom pair in the adjacency matrix");
+    }
+
+    return pairs;
+}
+
+BondedDistanceStatistics summarizePairDistances(const std::vector<AtomPairDistance>& pairDistances)
+{
+    if (pairDistances.empty()) {
+        throw DistanceAnalysisError("Distance partition must contain at least one pair");
+    }
+
+    std::vector<double> distances;
+    distances.reserve(pairDistances.size());
+    for (const auto& pairDistance : pairDistances) {
+        distances.push_back(pairDistance.distanceAngstrom);
+    }
+
+    const double meanDistance = averageOrZero(distances);
+    double variance = 0.0;
+    for (const double distance : distances) {
+        const double delta = distance - meanDistance;
+        variance += delta * delta;
+    }
+    variance /= static_cast<double>(distances.size());
+
+    return BondedDistanceStatistics{
+        .count = distances.size(),
+        .minDistanceAngstrom = *std::min_element(distances.begin(), distances.end()),
+        .meanDistanceAngstrom = meanDistance,
+        .stdDistanceAngstrom = std::sqrt(variance),
+        .q25DistanceAngstrom = computePercentile(distances, 0.25),
+        .medianDistanceAngstrom = computePercentile(distances, 0.5),
+        .q75DistanceAngstrom = computePercentile(distances, 0.75),
+        .maxDistanceAngstrom = *std::max_element(distances.begin(), distances.end()),
+    };
+}
+
+BondedDistanceAnalysisResult makeBondedDistanceAnalysisResult(
+    const DistanceMatrixResult& distanceMatrix,
+    std::vector<BondedAtomPair> bondedAtomPairs,
+    std::vector<AtomPairDistance> bondedPairDistances,
+    std::vector<AtomPairDistance> nonbondedPairDistances)
+{
+    const BondedDistanceStatistics bondedDistances = summarizePairDistances(bondedPairDistances);
+    const BondedDistanceStatistics nonbondedDistances =
+        summarizePairDistances(nonbondedPairDistances);
+
+    return BondedDistanceAnalysisResult{
+        .atomIds = distanceMatrix.atomIds,
+        .bondedAtomPairs = std::move(bondedAtomPairs),
+        .bondedPairDistances = std::move(bondedPairDistances),
+        .nonbondedPairDistances = std::move(nonbondedPairDistances),
+        .bondedDistances = bondedDistances,
+        .nonbondedDistances = nonbondedDistances,
+        .comparison =
+            BondedDistanceComparison{
+                .meanDistanceDifferenceAngstrom =
+                    nonbondedDistances.meanDistanceAngstrom - bondedDistances.meanDistanceAngstrom,
+                .nonbondedToBondedMeanRatio =
+                    nonbondedDistances.meanDistanceAngstrom / bondedDistances.meanDistanceAngstrom,
+            },
+        .metadata =
+            BondedDistanceMetadata{
+                .atomCount = distanceMatrix.atomIds.size(),
+                .bondedPairCount = bondedDistances.count,
+                .nonbondedPairCount = nonbondedDistances.count,
+                .totalUniquePairCount = bondedDistances.count + nonbondedDistances.count,
+                .sourceDistanceMethod = distanceMatrix.method,
+                .units = distanceMatrix.metadata.units,
+            },
+    };
 }
 
 void validateCoordinates(const DistanceMatrixInput& input,
@@ -1573,6 +1705,54 @@ DistanceMatrixResult buildDistanceMatrix(const DistanceMatrixInput& input,
     return resolveDistanceMatrixStrategy(method).build(input);
 }
 
+BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixResult& distanceMatrix,
+                                                        const AdjacencyMatrix& adjacencyMatrix)
+{
+    validateBondedDistanceAlignment(distanceMatrix, adjacencyMatrix);
+
+    std::vector<BondedAtomPair> bondedAtomPairs = bondedAtomPairsFromAdjacency(adjacencyMatrix);
+    std::set<std::pair<int, int>> bondedPairSet;
+    for (const auto& pair : bondedAtomPairs) {
+        bondedPairSet.emplace(pair.atomId1, pair.atomId2);
+    }
+
+    std::vector<AtomPairDistance> bondedPairDistances;
+    std::vector<AtomPairDistance> nonbondedPairDistances;
+
+    for (std::size_t rowIndex = 0; rowIndex < distanceMatrix.atomIds.size(); ++rowIndex) {
+        for (std::size_t columnIndex = rowIndex + 1; columnIndex < distanceMatrix.atomIds.size();
+             ++columnIndex) {
+            AtomPairDistance pairDistance{
+                .atomId1 = distanceMatrix.atomIds[rowIndex],
+                .atomId2 = distanceMatrix.atomIds[columnIndex],
+                .distanceAngstrom = distanceMatrix.distanceMatrix[rowIndex][columnIndex],
+            };
+
+            if (bondedPairSet.contains({pairDistance.atomId1, pairDistance.atomId2})) {
+                bondedPairDistances.push_back(pairDistance);
+            }
+            else {
+                nonbondedPairDistances.push_back(pairDistance);
+            }
+        }
+    }
+
+    const std::size_t expectedPairCount =
+        distanceMatrix.atomIds.size() * (distanceMatrix.atomIds.size() - 1U) / 2U;
+    if (bondedPairDistances.size() + nonbondedPairDistances.size() != expectedPairCount) {
+        throw DistanceAnalysisError("Expected " + std::to_string(expectedPairCount) +
+                                    " unique atom pairs, partitioned " +
+                                    std::to_string(bondedPairDistances.size() +
+                                                   nonbondedPairDistances.size()) +
+                                    " instead");
+    }
+
+    return makeBondedDistanceAnalysisResult(distanceMatrix,
+                                            std::move(bondedAtomPairs),
+                                            std::move(bondedPairDistances),
+                                            std::move(nonbondedPairDistances));
+}
+
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory)
 {
     return dataDirectory / "out";
@@ -1614,6 +1794,14 @@ std::filesystem::path distanceOutputJsonPath(const std::filesystem::path& output
 {
     return outputDirectory /
            (sourceFile.stem().string() + "." + std::string(method) + ".distance_matrix.json");
+}
+
+std::filesystem::path bondedDistanceOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                                   const std::filesystem::path& sourceFile,
+                                                   const std::string_view distanceMethod)
+{
+    return outputDirectory / (sourceFile.stem().string() + "." +
+                              std::string(distanceMethod) + ".bonded_distance_analysis.json");
 }
 
 std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,

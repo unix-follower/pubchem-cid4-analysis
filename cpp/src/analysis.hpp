@@ -116,6 +116,53 @@ struct DistanceMatrixResult {
     DistanceMatrixMetadata metadata;
 };
 
+struct BondedAtomPair {
+    int atomId1;
+    int atomId2;
+};
+
+struct AtomPairDistance {
+    int atomId1;
+    int atomId2;
+    double distanceAngstrom;
+};
+
+struct BondedDistanceStatistics {
+    std::size_t count;
+    double minDistanceAngstrom;
+    double meanDistanceAngstrom;
+    double stdDistanceAngstrom;
+    double q25DistanceAngstrom;
+    double medianDistanceAngstrom;
+    double q75DistanceAngstrom;
+    double maxDistanceAngstrom;
+};
+
+struct BondedDistanceComparison {
+    double meanDistanceDifferenceAngstrom;
+    double nonbondedToBondedMeanRatio;
+};
+
+struct BondedDistanceMetadata {
+    std::size_t atomCount;
+    std::size_t bondedPairCount;
+    std::size_t nonbondedPairCount;
+    std::size_t totalUniquePairCount;
+    std::string sourceDistanceMethod;
+    std::string units;
+};
+
+struct BondedDistanceAnalysisResult {
+    std::vector<int> atomIds;
+    std::vector<BondedAtomPair> bondedAtomPairs;
+    std::vector<AtomPairDistance> bondedPairDistances;
+    std::vector<AtomPairDistance> nonbondedPairDistances;
+    BondedDistanceStatistics bondedDistances;
+    BondedDistanceStatistics nonbondedDistances;
+    BondedDistanceComparison comparison;
+    BondedDistanceMetadata metadata;
+};
+
 struct BioactivityRowCounts {
     std::size_t totalRows;
     std::size_t rowsWithNumericActivityValue;
@@ -217,6 +264,8 @@ LaplacianAnalysisResult buildLaplacianAnalysis(const AdjacencyMatrix& matrix,
                                                std::string_view method,
                                                double zeroTolerance = 1.0e-10);
 DistanceMatrixResult buildDistanceMatrix(const DistanceMatrixInput& input, std::string_view method);
+BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixResult& distanceMatrix,
+                                                        const AdjacencyMatrix& adjacencyMatrix);
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory);
 std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory,
                                      const std::filesystem::path& sourceFile);
@@ -232,6 +281,9 @@ std::filesystem::path laplacianOutputJsonPath(const std::filesystem::path& outpu
 std::filesystem::path distanceOutputJsonPath(const std::filesystem::path& outputDirectory,
                                              const std::filesystem::path& sourceFile,
                                              std::string_view method);
+std::filesystem::path bondedDistanceOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                                   const std::filesystem::path& sourceFile,
+                                                   std::string_view distanceMethod);
 std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,
                                                  const std::filesystem::path& sourceFile);
 std::filesystem::path bioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory,
