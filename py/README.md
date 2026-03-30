@@ -13,6 +13,9 @@ The standard Python run now also writes bioactivity artifacts from `pubchem_cid_
 The same run also writes a bonded-distance comparison artifact from the CID 4 conformer:
 - a JSON report comparing bonded vs non-bonded inter-atom distances derived from the SDF 3D coordinates and PubChem bond list
 
+The same run also writes a bonded-angle analysis artifact from the CID 4 conformer:
+- a JSON report of bonded angles $A$-$B$-$C$ computed from 3D coordinates using the dot-product formula, where $A$-$B$ and $B$-$C$ are bonded and $B$ is the central atom
+
 ## Format code
 ```sh
 uv tool run ruff format

@@ -1,6 +1,7 @@
 import json
 import logging as log
 from functools import reduce
+from itertools import combinations
 from pathlib import Path
 
 import networkx as nx
@@ -19,6 +20,7 @@ from matplotlib_utils import plot_pic50_transform
 
 CONFORMER_ATOM_COUNT = 14
 NULL_SPACE_TOLERANCE = 1e-10
+ANGLE_VECTOR_TOLERANCE = 1e-10
 
 
 def reduce_mol_weights(mol_weights: list[float]) -> float:
@@ -175,6 +177,84 @@ def compute_bonded_nonbonded_distance_statistics(
                 nonbonded_summary["mean_distance_angstrom"] / bonded_summary["mean_distance_angstrom"]
             ),
         },
+    }
+
+
+def enumerate_bonded_angle_triplets(adjacency_matrix: pd.DataFrame) -> list[tuple[int, int, int]]:
+    atom_ids = adjacency_matrix.index.tolist()
+    adjacency_values = adjacency_matrix.to_numpy(dtype=np.int64)
+    angle_triplets: list[tuple[int, int, int]] = []
+
+    for central_index, central_atom_id in enumerate(atom_ids):
+        neighbor_atom_ids = [
+            int(atom_ids[neighbor_index])
+            for neighbor_index in range(len(atom_ids))
+            if adjacency_values[central_index, neighbor_index] > 0
+        ]
+
+        for neighbor_atom_id_1, neighbor_atom_id_2 in combinations(sorted(neighbor_atom_ids), 2):
+            angle_triplets.append((int(central_atom_id), int(neighbor_atom_id_1), int(neighbor_atom_id_2)))
+
+    if not angle_triplets:
+        raise ValueError("Expected at least one bonded angle triplet in the adjacency matrix")
+
+    return angle_triplets
+
+
+def compute_bond_angle_degrees(first_bond_vector: np.ndarray, second_bond_vector: np.ndarray) -> float:
+    first_norm = float(np.linalg.norm(first_bond_vector))
+    second_norm = float(np.linalg.norm(second_bond_vector))
+
+    if first_norm <= ANGLE_VECTOR_TOLERANCE or second_norm <= ANGLE_VECTOR_TOLERANCE:
+        raise ValueError("Bond angle computation requires non-zero bond vectors")
+
+    cosine = float(np.dot(first_bond_vector, second_bond_vector) / (first_norm * second_norm))
+    cosine = float(np.clip(cosine, -1.0, 1.0))
+    return float(np.degrees(np.arccos(cosine)))
+
+
+def compute_bonded_angle_records(
+    atom_ids: list[int],
+    coordinates: np.ndarray,
+    angle_triplets: list[tuple[int, int, int]],
+) -> list[dict[str, float | int]]:
+    atom_index_by_id = {atom_id: index for index, atom_id in enumerate(atom_ids)}
+    angle_records: list[dict[str, float | int]] = []
+
+    for central_atom_id, neighbor_atom_id_1, neighbor_atom_id_2 in angle_triplets:
+        central_index = atom_index_by_id[central_atom_id]
+        neighbor_index_1 = atom_index_by_id[neighbor_atom_id_1]
+        neighbor_index_2 = atom_index_by_id[neighbor_atom_id_2]
+
+        first_bond_vector = coordinates[neighbor_index_1] - coordinates[central_index]
+        second_bond_vector = coordinates[neighbor_index_2] - coordinates[central_index]
+        angle_records.append(
+            {
+                "central_atom_id": int(central_atom_id),
+                "neighbor_atom_id_1": int(neighbor_atom_id_1),
+                "neighbor_atom_id_2": int(neighbor_atom_id_2),
+                "angle_degrees": compute_bond_angle_degrees(first_bond_vector, second_bond_vector),
+            }
+        )
+
+    return angle_records
+
+
+def summarize_bond_angles(angle_records: list[dict[str, float | int]]) -> dict:
+    angle_values = np.array([float(angle_record["angle_degrees"]) for angle_record in angle_records], dtype=np.float64)
+    if angle_values.size == 0:
+        raise ValueError("Bond angle analysis must contain at least one angle")
+
+    quantiles = np.quantile(angle_values, [0.25, 0.5, 0.75])
+    return {
+        "count": int(angle_values.size),
+        "min_angle_degrees": float(angle_values.min()),
+        "mean_angle_degrees": float(angle_values.mean()),
+        "std_angle_degrees": float(angle_values.std(ddof=0)),
+        "q25_angle_degrees": float(quantiles[0]),
+        "median_angle_degrees": float(quantiles[1]),
+        "q75_angle_degrees": float(quantiles[2]),
+        "max_angle_degrees": float(angle_values.max()),
     }
 
 
@@ -467,6 +547,58 @@ def write_bonded_distance_analysis(sdf_filename: str, json_filename: str):
     log.info("Bonded distance analysis written to %s", output_path)
 
 
+def write_bonded_angle_analysis(sdf_filename: str, json_filename: str):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    molecules = load_sdf_molecules(sdf_filename)
+
+    if not molecules:
+        raise ValueError(f"No valid molecules found in {sdf_filename}")
+
+    coordinates = extract_3d_coordinates(molecules[IDX1])
+    adjacency_matrix = build_adjacency_matrix(json_filename)
+    atom_ids = adjacency_matrix.index.tolist()
+
+    if len(atom_ids) != coordinates.shape[0]:
+        raise ValueError(
+            f"Expected {len(atom_ids)} atom ids from {json_filename}, found {coordinates.shape[0]} coordinates"
+        )
+
+    angle_triplets = enumerate_bonded_angle_triplets(adjacency_matrix)
+    angle_records = compute_bonded_angle_records(atom_ids, coordinates, angle_triplets)
+    statistics = summarize_bond_angles(angle_records)
+    output_path = Path(out_dir) / f"{Path(sdf_filename).stem}.bonded_angle_analysis.json"
+
+    with output_path.open("w", encoding=UTF_8) as file:
+        json.dump(
+            {
+                "atom_ids": atom_ids,
+                "bonded_angle_triplets": [
+                    {
+                        "central_atom_id": triplet[0],
+                        "neighbor_atom_id_1": triplet[1],
+                        "neighbor_atom_id_2": triplet[2],
+                    }
+                    for triplet in angle_triplets
+                ],
+                "bonded_triplet_angles": angle_records,
+                "statistics": statistics,
+                "metadata": {
+                    "atom_count": len(atom_ids),
+                    "bonded_angle_triplet_count": len(angle_records),
+                    "source_sdf": sdf_filename,
+                    "source_bond_json": json_filename,
+                    "units": "degrees",
+                    "selection_rule": "angles A-B-C where A-B and B-C are bonded and B is the central atom",
+                },
+            },
+            file,
+            indent=2,
+        )
+
+    log.info("Bonded angle analysis written to %s", output_path)
+
+
 def write_bioactivity_analysis(filename: str):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
@@ -590,6 +722,7 @@ def main():
     process_sdf_file(sdf_filename)
     write_distance_matrix(sdf_filename, json_filename)
     write_bonded_distance_analysis(sdf_filename, json_filename)
+    write_bonded_angle_analysis(sdf_filename, json_filename)
     adjacency_matrix = write_adjacency_matrix(json_filename)
     write_adjacency_spectrum(json_filename, adjacency_matrix)
     write_laplacian_analysis(json_filename, adjacency_matrix)

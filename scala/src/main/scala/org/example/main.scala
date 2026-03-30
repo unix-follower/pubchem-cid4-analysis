@@ -4,6 +4,8 @@ import org.example.analysis.adjacency.AdjacencyMatrix
 import org.example.analysis.adjacency.AdjacencyMatrixService
 import org.example.analysis.bioactivity.BioactivityAnalysisResult
 import org.example.analysis.bioactivity.BioactivityService
+import org.example.analysis.distance.BondAngleAnalysisResult
+import org.example.analysis.distance.BondAngleAnalysisService
 import org.example.analysis.distance.BondedDistanceAnalysisResult
 import org.example.analysis.distance.BondedDistanceAnalysisService
 import org.example.analysis.distance.DistanceMatrixResult
@@ -104,6 +106,20 @@ private def writeBondedDistanceAnalysis(
   newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result)
   outputPath
 
+private def writeBondAngleAnalysis(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: BondAngleAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName =
+    s"${sourceFileName.stripSuffix(".json")}.${result.metadata.sourceDistanceMethod}.bond_angle_analysis.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result)
+  outputPath
+
 private def writeBioactivitySummary(
     dataDirectory: String,
     sourceFileName: String,
@@ -174,6 +190,9 @@ def readJson(method: String, distanceSource: String) = {
     val bondedDistanceAnalysis = BondedDistanceAnalysisService.analyze(distanceMatrix, adjacencyMatrix)
     val bondedDistanceAnalysisOutputPath =
       writeBondedDistanceAnalysis(dataDirectory, jsonPath.getFileName.toString, bondedDistanceAnalysis)
+    val bondAngleAnalysis = BondAngleAnalysisService.analyze(distanceMatrix, adjacencyMatrix)
+    val bondAngleAnalysisOutputPath =
+      writeBondAngleAnalysis(dataDirectory, jsonPath.getFileName.toString, bondAngleAnalysis)
     val eigendecomposition = EigendecompositionService.compute(adjacencyMatrix)
     val eigendecompositionOutputPath =
       writeAdjacencySpectrum(dataDirectory, jsonPath.getFileName.toString, eigendecomposition)
@@ -195,6 +214,7 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Distance matrix source: ${distanceMatrix.sourceMethod}")
     logger.info(s"Distance matrix output: $distanceMatrixOutputPath")
     logger.info(s"Bonded distance analysis output: $bondedDistanceAnalysisOutputPath")
+    logger.info(s"Bond angle analysis output: $bondAngleAnalysisOutputPath")
     logger.info(s"Adjacency matrix output: $outputPath")
     logger.info(s"Adjacency eigendecomposition output: $eigendecompositionOutputPath")
     logger.info(s"Laplacian analysis output: $laplacianOutputPath")
