@@ -116,6 +116,49 @@ struct DistanceMatrixResult {
     DistanceMatrixMetadata metadata;
 };
 
+struct BioactivityRowCounts {
+    std::size_t totalRows;
+    std::size_t rowsWithNumericActivityValue;
+    std::size_t rowsWithIc50ActivityType;
+    std::size_t retainedIc50Rows;
+    std::size_t droppedRows;
+};
+
+struct BioactivityStatistic {
+    double min;
+    double median;
+    double max;
+};
+
+struct BioactivityStatistics {
+    BioactivityStatistic ic50Um;
+    BioactivityStatistic pIC50;
+};
+
+struct BioactivityMeasurement {
+    long long bioactivityId;
+    long long bioAssayAid;
+    double ic50Um;
+    double pIC50;
+};
+
+struct BioactivitySummary {
+    std::string transform;
+    std::string interpretation;
+    std::vector<double> observedIc50DomainUm;
+    BioactivityMeasurement strongestRetainedMeasurement;
+    BioactivityMeasurement weakestRetainedMeasurement;
+};
+
+struct BioactivityAnalysisResult {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::vector<std::vector<std::string>> filteredRows;
+    BioactivityRowCounts rowCounts;
+    BioactivityStatistics statistics;
+    BioactivitySummary analysis;
+};
+
 class AdjacencyMatrixStrategy {
   public:
     virtual ~AdjacencyMatrixStrategy() = default;
@@ -160,6 +203,11 @@ std::string parseLaplacianMethod(std::string_view method);
 std::vector<std::string> supportedDistanceMethods();
 std::string parseDistanceMethod(std::string_view method);
 NormalizedAdjacencyInput loadAdjacencyInput(const std::filesystem::path& jsonPath);
+BioactivityAnalysisResult buildBioactivityAnalysis(const std::filesystem::path& csvPath);
+void writeBioactivityFilteredCsv(const BioactivityAnalysisResult& result,
+                                 const std::filesystem::path& outputPath);
+void writeBioactivityPlotSvg(const BioactivityAnalysisResult& result,
+                             const std::filesystem::path& outputPath);
 AdjacencyMatrix buildAdjacencyMatrix(const NormalizedAdjacencyInput& input,
                                      std::string_view sourceFile,
                                      std::string_view method);
@@ -184,4 +232,10 @@ std::filesystem::path laplacianOutputJsonPath(const std::filesystem::path& outpu
 std::filesystem::path distanceOutputJsonPath(const std::filesystem::path& outputDirectory,
                                              const std::filesystem::path& sourceFile,
                                              std::string_view method);
+std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,
+                                                 const std::filesystem::path& sourceFile);
+std::filesystem::path bioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                                 const std::filesystem::path& sourceFile);
+std::filesystem::path bioactivityPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                             const std::filesystem::path& sourceFile);
 } // namespace pubchem

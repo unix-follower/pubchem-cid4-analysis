@@ -152,6 +152,15 @@ std::string sampleDistanceJson()
 })json";
 }
 
+std::string sampleBioactivityCsv()
+{
+    return "Bioactivity_ID,BioAssay_AID,Activity_Type,Activity_Value,citations\n"
+           "100909607,158688,IC50,800.0,\"Paper with, comma\"\n"
+           "334754348,743069,Potency,21.872400,\"Potency row\"\n"
+           "383459365,1920063,IC50,,\"Missing numeric value\"\n"
+           "383457597,1919969,IC50,not-a-number,\"Invalid numeric value\"\n";
+}
+
 } // namespace
 
 TEST(AnalysisHelpersTest, AverageReturnsZeroForEmptyInput)
@@ -447,4 +456,70 @@ TEST(DistanceStrategiesTest, SdfMatchesJsonDistanceMatrix)
     for (std::size_t index = 0; index < sdfResult.distanceMatrix.size(); ++index) {
         EXPECT_DOUBLE_EQ(sdfResult.distanceMatrix[index][index], 0.0);
     }
+}
+
+TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
+{
+    EXPECT_EQ(pubchem::bioactivityFilteredCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.ic50_pic50.csv");
+    EXPECT_EQ(pubchem::bioactivitySummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.ic50_pic50.summary.json");
+    EXPECT_EQ(pubchem::bioactivityPlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.ic50_pic50.svg");
+}
+
+TEST(BioactivityStrategiesTest, AnalysisFiltersIc50RowsAndComputesPic50)
+{
+    const auto csvPath = writeTempFile("bioactivity-sample.csv", sampleBioactivityCsv());
+
+    const auto result = pubchem::buildBioactivityAnalysis(csvPath);
+
+    EXPECT_EQ(result.sourceFile, "bioactivity-sample.csv");
+    EXPECT_EQ(result.rowCounts.totalRows, 4U);
+    EXPECT_EQ(result.rowCounts.rowsWithNumericActivityValue, 2U);
+    EXPECT_EQ(result.rowCounts.rowsWithIc50ActivityType, 3U);
+    EXPECT_EQ(result.rowCounts.retainedIc50Rows, 1U);
+    EXPECT_EQ(result.rowCounts.droppedRows, 3U);
+    ASSERT_EQ(result.filteredRows.size(), 1U);
+    EXPECT_NEAR(result.statistics.ic50Um.min, 800.0, 1.0e-12);
+    EXPECT_NEAR(result.statistics.pIC50.max, -2.9030899869919438, 1.0e-12);
+    EXPECT_EQ(result.analysis.strongestRetainedMeasurement.bioactivityId, 100909607LL);
+    EXPECT_EQ(result.analysis.strongestRetainedMeasurement.bioAssayAid, 158688LL);
+    EXPECT_NEAR(result.analysis.strongestRetainedMeasurement.pIC50, -2.9030899869919438, 1.0e-12);
+}
+
+TEST(BioactivityStrategiesTest, CsvAndSvgWritersEmitArtifacts)
+{
+    const auto csvPath = writeTempFile("bioactivity-writer-sample.csv", sampleBioactivityCsv());
+    const auto result = pubchem::buildBioactivityAnalysis(csvPath);
+    const auto outputDirectory =
+        std::filesystem::temp_directory_path() / "pubchem-cid4-bioactivity";
+    std::filesystem::create_directories(outputDirectory);
+
+    const auto filteredCsvPath = outputDirectory / "bioactivity.csv";
+    const auto plotSvgPath = outputDirectory / "bioactivity.svg";
+
+    pubchem::writeBioactivityFilteredCsv(result, filteredCsvPath);
+    pubchem::writeBioactivityPlotSvg(result, plotSvgPath);
+
+    std::ifstream filteredInput(filteredCsvPath);
+    std::ifstream svgInput(plotSvgPath);
+    ASSERT_TRUE(filteredInput.good());
+    ASSERT_TRUE(svgInput.good());
+
+    const std::string filteredContents((std::istreambuf_iterator<char>(filteredInput)),
+                                       std::istreambuf_iterator<char>());
+    const std::string svgContents((std::istreambuf_iterator<char>(svgInput)),
+                                  std::istreambuf_iterator<char>());
+
+    EXPECT_NE(filteredContents.find("IC50_uM"), std::string::npos);
+    EXPECT_NE(filteredContents.find("-2.90308998699194"), std::string::npos);
+    EXPECT_NE(svgContents.find("<svg"), std::string::npos);
+    EXPECT_NE(svgContents.find("Observed IC50 rows"), std::string::npos);
 }

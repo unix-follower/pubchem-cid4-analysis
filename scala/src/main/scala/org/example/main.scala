@@ -2,6 +2,8 @@ package org.example
 
 import org.example.analysis.adjacency.AdjacencyMatrix
 import org.example.analysis.adjacency.AdjacencyMatrixService
+import org.example.analysis.bioactivity.BioactivityAnalysisResult
+import org.example.analysis.bioactivity.BioactivityService
 import org.example.analysis.distance.DistanceMatrixResult
 import org.example.analysis.distance.DistanceMatrixService
 import org.example.analysis.spectrum.EigendecompositionResult
@@ -86,11 +88,50 @@ private def writeDistanceMatrix(
   newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result)
   outputPath
 
+private def writeBioactivitySummary(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: BioactivityAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.ic50_pic50.summary.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result.summary)
+  outputPath
+
+private def writeBioactivityFilteredRows(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: BioactivityAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.ic50_pic50.csv"
+  val outputPath = outDirectory.resolve(outputFileName)
+  BioactivityService.writeFilteredCsv(result, outputPath)
+
+private def writeBioactivityPlot(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: BioactivityAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.ic50_pic50.png"
+  val outputPath = outDirectory.resolve(outputFileName)
+  BioactivityService.writePlot(result, outputPath)
+
 def readJson(method: String, distanceSource: String) = {
   val dataDirectory = fsUtils.getDataDir()
   if (dataDirectory == null) {
     throw new IllegalStateException("Env variable DATA_DIR is not set")
   }
+
+  val bioactivityPath = Path.of(s"$dataDirectory/pubchem_cid_4_bioactivity.csv")
 
   val jsonPath = Path.of(s"$dataDirectory/Conformer3D_COMPOUND_CID_4(1).json")
   val sdfPath = Path.of(s"$dataDirectory/Conformer3D_COMPOUND_CID_4(1).sdf")
@@ -120,6 +161,13 @@ def readJson(method: String, distanceSource: String) = {
     val laplacianAnalysis = LaplacianService.analyze(adjacencyMatrix)
     val laplacianOutputPath =
       writeLaplacianAnalysis(dataDirectory, jsonPath.getFileName.toString, laplacianAnalysis)
+    val bioactivityAnalysis = BioactivityService.analyze(bioactivityPath)
+    val bioactivityRowsOutputPath =
+      writeBioactivityFilteredRows(dataDirectory, bioactivityPath.getFileName.toString, bioactivityAnalysis)
+    val bioactivitySummaryOutputPath =
+      writeBioactivitySummary(dataDirectory, bioactivityPath.getFileName.toString, bioactivityAnalysis)
+    val bioactivityPlotOutputPath =
+      writeBioactivityPlot(dataDirectory, bioactivityPath.getFileName.toString, bioactivityAnalysis)
 
     logger.info(s"Adjacency matrix method: ${adjacencyMatrix.method}")
     logger.info(
@@ -130,6 +178,9 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Adjacency matrix output: $outputPath")
     logger.info(s"Adjacency eigendecomposition output: $eigendecompositionOutputPath")
     logger.info(s"Laplacian analysis output: $laplacianOutputPath")
+    logger.info(s"Bioactivity filtered rows output: $bioactivityRowsOutputPath")
+    logger.info(s"Bioactivity summary output: $bioactivitySummaryOutputPath")
+    logger.info(s"Bioactivity plot output: $bioactivityPlotOutputPath")
   }
 }
 
