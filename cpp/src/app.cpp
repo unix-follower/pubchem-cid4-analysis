@@ -343,6 +343,45 @@ nlohmann::json toJson(const pubchem::BondedDistanceAnalysisResult& bondedDistanc
     };
 }
 
+nlohmann::json toJson(const pubchem::BondAngleAnalysisResult& bondAngleAnalysis)
+{
+    nlohmann::json triplets = nlohmann::json::array();
+    for (const auto& triplet : bondAngleAnalysis.bondAngleTriplets) {
+        triplets.push_back({{"atomIdA", triplet.atomIdA},
+                            {"atomIdBCenter", triplet.atomIdBCenter},
+                            {"atomIdC", triplet.atomIdC}});
+    }
+
+    nlohmann::json bondAngles = nlohmann::json::array();
+    for (const auto& bondAngle : bondAngleAnalysis.bondAngles) {
+        bondAngles.push_back({{"atomIdA", bondAngle.atomIdA},
+                              {"atomIdBCenter", bondAngle.atomIdBCenter},
+                              {"atomIdC", bondAngle.atomIdC},
+                              {"angleDegrees", bondAngle.angleDegrees}});
+    }
+
+    return {
+        {"atomIds", bondAngleAnalysis.atomIds},
+        {"bondAngleTriplets", triplets},
+        {"bondAngles", bondAngles},
+        {"statistics",
+         {{"count", bondAngleAnalysis.statistics.count},
+          {"minAngleDegrees", bondAngleAnalysis.statistics.minAngleDegrees},
+          {"meanAngleDegrees", bondAngleAnalysis.statistics.meanAngleDegrees},
+          {"stdAngleDegrees", bondAngleAnalysis.statistics.stdAngleDegrees},
+          {"q25AngleDegrees", bondAngleAnalysis.statistics.q25AngleDegrees},
+          {"medianAngleDegrees", bondAngleAnalysis.statistics.medianAngleDegrees},
+          {"q75AngleDegrees", bondAngleAnalysis.statistics.q75AngleDegrees},
+          {"maxAngleDegrees", bondAngleAnalysis.statistics.maxAngleDegrees}}},
+        {"metadata",
+         {{"atomCount", bondAngleAnalysis.metadata.atomCount},
+          {"bondedAngleTripletCount", bondAngleAnalysis.metadata.bondedAngleTripletCount},
+          {"sourceDistanceMethod", bondAngleAnalysis.metadata.sourceDistanceMethod},
+          {"units", bondAngleAnalysis.metadata.units},
+          {"selectionRule", bondAngleAnalysis.metadata.selectionRule}}},
+    };
+}
+
 nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
 {
     return {
@@ -414,6 +453,10 @@ int main(int argc, char* argv[])
                 outputDir,
                 options.adjacencyJsonFile,
                 bondedDistanceAnalysis.metadata.sourceDistanceMethod);
+        const pubchem::BondAngleAnalysisResult bondAngleAnalysis =
+            pubchem::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
+        const std::filesystem::path bondAngleOutputPath = pubchem::bondAngleOutputJsonPath(
+            outputDir, options.adjacencyJsonFile, bondAngleAnalysis.metadata.sourceDistanceMethod);
         const std::filesystem::path adjacencyOutputPath = pubchem::adjacencyOutputJsonPath(
             outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
         const pubchem::EigendecompositionResult eigendecomposition =
@@ -448,6 +491,9 @@ int main(int argc, char* argv[])
         std::ofstream bondedDistanceOutput(bondedDistanceOutputPath);
         bondedDistanceOutput << std::setw(2) << toJson(bondedDistanceAnalysis) << '\n';
 
+        std::ofstream bondAngleOutput(bondAngleOutputPath);
+        bondAngleOutput << std::setw(2) << toJson(bondAngleAnalysis) << '\n';
+
         std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
         eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
 
@@ -467,6 +513,7 @@ int main(int argc, char* argv[])
         std::cout << "Distance method: " << distanceMatrix.method << '\n';
         std::cout << "Distance matrix written to: " << distanceOutputPath << '\n';
         std::cout << "Bonded distance analysis written to: " << bondedDistanceOutputPath << '\n';
+        std::cout << "Bond angle analysis written to: " << bondAngleOutputPath << '\n';
         std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
         std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
         std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';

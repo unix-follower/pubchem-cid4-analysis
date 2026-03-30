@@ -95,7 +95,7 @@ Defined in `.editorconfig`:
 - Function braces: new line
 - Namespace braces: same line
 
-##Format code
+### Format code
 ```shell
 find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -exec clang-format -style=file -i {} \;
 find test -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -exec clang-format -style=file -i {} \;
@@ -128,6 +128,8 @@ Use the same strategy split for Laplacian analysis. The Laplacian artifact is wr
 The distance-matrix artifact is also written separately from the atom-record, adjacency, eigendecomposition, and Laplacian outputs so downstream consumers can compare geometric distances without coupling to graph structure choices.
 
 The C++ app also writes a bonded-distance comparison JSON artifact derived from the distance matrix and PubChem bond list. It reports bonded atom pairs, bonded and non-bonded pair distances, and summary statistics so downstream consumers can compare local bond geometry with longer-range separations without changing the distance-matrix contract.
+
+The C++ app also writes a bond-angle analysis JSON artifact derived from the aligned 3D coordinates and PubChem bond list. It reports unique triplets A-B-C where A-B and B-C are bonded and B is the central atom, together with angle statistics in degrees, as a separate artifact so downstream consumers can inspect local valence geometry without changing the distance-matrix contract.
 
 The bioactivity flow now reads `pubchem_cid_4_bioactivity.csv`, filters to positive numeric `Activity_Type == IC50` rows, computes `pIC50 = -log10(IC50_uM)`, and writes three additive artifacts under `data/out`: a filtered CSV, a summary JSON file, and an SVG plot of the transform curve over the observed IC50 range.
 

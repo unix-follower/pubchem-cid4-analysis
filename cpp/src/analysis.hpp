@@ -163,6 +163,46 @@ struct BondedDistanceAnalysisResult {
     BondedDistanceMetadata metadata;
 };
 
+struct BondAngleTriplet {
+    int atomIdA;
+    int atomIdBCenter;
+    int atomIdC;
+};
+
+struct BondAngleMeasurement {
+    int atomIdA;
+    int atomIdBCenter;
+    int atomIdC;
+    double angleDegrees;
+};
+
+struct BondAngleStatistics {
+    std::size_t count;
+    double minAngleDegrees;
+    double meanAngleDegrees;
+    double stdAngleDegrees;
+    double q25AngleDegrees;
+    double medianAngleDegrees;
+    double q75AngleDegrees;
+    double maxAngleDegrees;
+};
+
+struct BondAngleMetadata {
+    std::size_t atomCount;
+    std::size_t bondedAngleTripletCount;
+    std::string sourceDistanceMethod;
+    std::string units;
+    std::string selectionRule;
+};
+
+struct BondAngleAnalysisResult {
+    std::vector<int> atomIds;
+    std::vector<BondAngleTriplet> bondAngleTriplets;
+    std::vector<BondAngleMeasurement> bondAngles;
+    BondAngleStatistics statistics;
+    BondAngleMetadata metadata;
+};
+
 struct BioactivityRowCounts {
     std::size_t totalRows;
     std::size_t rowsWithNumericActivityValue;
@@ -266,6 +306,8 @@ LaplacianAnalysisResult buildLaplacianAnalysis(const AdjacencyMatrix& matrix,
 DistanceMatrixResult buildDistanceMatrix(const DistanceMatrixInput& input, std::string_view method);
 BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixResult& distanceMatrix,
                                                          const AdjacencyMatrix& adjacencyMatrix);
+BondAngleAnalysisResult buildBondAngleAnalysis(const DistanceMatrixResult& distanceMatrix,
+                                               const AdjacencyMatrix& adjacencyMatrix);
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory);
 std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory,
                                      const std::filesystem::path& sourceFile);
@@ -284,6 +326,9 @@ std::filesystem::path distanceOutputJsonPath(const std::filesystem::path& output
 std::filesystem::path bondedDistanceOutputJsonPath(const std::filesystem::path& outputDirectory,
                                                    const std::filesystem::path& sourceFile,
                                                    std::string_view distanceMethod);
+std::filesystem::path bondAngleOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                              const std::filesystem::path& sourceFile,
+                                              std::string_view distanceMethod);
 std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,
                                                  const std::filesystem::path& sourceFile);
 std::filesystem::path bioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory,

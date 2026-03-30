@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <limits>
 #include <map>
+#include <numbers>
 #include <numeric>
 #include <optional>
 #include <set>
@@ -24,6 +25,8 @@
 namespace pubchem {
 namespace {
 using Json = nlohmann::json;
+
+constexpr double kAngleVectorTolerance = 1.0e-10;
 
 class AdjacencyInputError : public std::invalid_argument {
   public:
@@ -466,6 +469,20 @@ void validateBondedDistanceAlignment(const DistanceMatrixResult& distanceMatrix,
     }
 }
 
+void validateBondAngleAlignment(const DistanceMatrixResult& distanceMatrix,
+                                const AdjacencyMatrix& adjacencyMatrix)
+{
+    if (distanceMatrix.atomIds != adjacencyMatrix.atomIds) {
+        throw DistanceAnalysisError(
+            "Distance and adjacency atomIds must be aligned for bond-angle analysis");
+    }
+
+    if (distanceMatrix.xyzCoordinates.size() != adjacencyMatrix.values.size()) {
+        throw DistanceAnalysisError(
+            "Distance coordinates and adjacency matrix must have the same size");
+    }
+}
+
 std::vector<BondedAtomPair> bondedAtomPairsFromAdjacency(const AdjacencyMatrix& adjacencyMatrix)
 {
     std::vector<BondedAtomPair> pairs;
@@ -519,6 +536,127 @@ BondedDistanceStatistics summarizePairDistances(const std::vector<AtomPairDistan
         .medianDistanceAngstrom = computePercentile(distances, 0.5),
         .q75DistanceAngstrom = computePercentile(distances, 0.75),
         .maxDistanceAngstrom = *std::max_element(distances.begin(), distances.end()),
+    };
+}
+
+std::vector<BondAngleTriplet> bondAngleTripletsFromAdjacency(const AdjacencyMatrix& adjacencyMatrix)
+{
+    std::vector<BondAngleTriplet> triplets;
+
+    for (std::size_t centerIndex = 0; centerIndex < adjacencyMatrix.values.size(); ++centerIndex) {
+        std::vector<int> neighbors;
+        for (std::size_t neighborIndex = 0;
+             neighborIndex < adjacencyMatrix.values[centerIndex].size();
+             ++neighborIndex) {
+            if (adjacencyMatrix.values[centerIndex][neighborIndex] > 0) {
+                neighbors.push_back(adjacencyMatrix.atomIds[neighborIndex]);
+            }
+        }
+
+        for (std::size_t leftIndex = 0; leftIndex < neighbors.size(); ++leftIndex) {
+            for (std::size_t rightIndex = leftIndex + 1; rightIndex < neighbors.size();
+                 ++rightIndex) {
+                triplets.push_back(BondAngleTriplet{
+                    .atomIdA = neighbors[leftIndex],
+                    .atomIdBCenter = adjacencyMatrix.atomIds[centerIndex],
+                    .atomIdC = neighbors[rightIndex],
+                });
+            }
+        }
+    }
+
+    if (triplets.empty()) {
+        throw DistanceAnalysisError(
+            "Expected at least one bonded angle triplet in the adjacency matrix");
+    }
+
+    return triplets;
+}
+
+std::vector<double> subtractCoordinates(const std::vector<double>& left,
+                                        const std::vector<double>& right)
+{
+    return {left[0] - right[0], left[1] - right[1], left[2] - right[2]};
+}
+
+double vectorMagnitude(const std::vector<double>& values)
+{
+    return std::sqrt(values[0] * values[0] + values[1] * values[1] + values[2] * values[2]);
+}
+
+double dotProduct(const std::vector<double>& left, const std::vector<double>& right)
+{
+    return left[0] * right[0] + left[1] * right[1] + left[2] * right[2];
+}
+
+double computeBondAngleDegrees(const std::vector<double>& firstBondVector,
+                               const std::vector<double>& secondBondVector)
+{
+    const double firstMagnitude = vectorMagnitude(firstBondVector);
+    const double secondMagnitude = vectorMagnitude(secondBondVector);
+
+    if (firstMagnitude <= kAngleVectorTolerance || secondMagnitude <= kAngleVectorTolerance) {
+        throw DistanceAnalysisError("Bond angle computation requires non-zero bond vectors");
+    }
+
+    const double cosine =
+        dotProduct(firstBondVector, secondBondVector) / (firstMagnitude * secondMagnitude);
+    constexpr double radiansToDegrees = 180.0 / std::numbers::pi;
+    return std::acos(std::clamp(cosine, -1.0, 1.0)) * radiansToDegrees;
+}
+
+BondAngleStatistics summarizeBondAngles(const std::vector<BondAngleMeasurement>& bondAngles)
+{
+    if (bondAngles.empty()) {
+        throw DistanceAnalysisError("Bond angle analysis must contain at least one angle");
+    }
+
+    std::vector<double> angleValues;
+    angleValues.reserve(bondAngles.size());
+    for (const auto& bondAngle : bondAngles) {
+        angleValues.push_back(bondAngle.angleDegrees);
+    }
+
+    const double meanAngle = averageOrZero(angleValues);
+    double variance = 0.0;
+    for (const double angle : angleValues) {
+        const double delta = angle - meanAngle;
+        variance += delta * delta;
+    }
+    variance /= static_cast<double>(angleValues.size());
+
+    return BondAngleStatistics{
+        .count = angleValues.size(),
+        .minAngleDegrees = *std::min_element(angleValues.begin(), angleValues.end()),
+        .meanAngleDegrees = meanAngle,
+        .stdAngleDegrees = std::sqrt(variance),
+        .q25AngleDegrees = computePercentile(angleValues, 0.25),
+        .medianAngleDegrees = computePercentile(angleValues, 0.5),
+        .q75AngleDegrees = computePercentile(angleValues, 0.75),
+        .maxAngleDegrees = *std::max_element(angleValues.begin(), angleValues.end()),
+    };
+}
+
+BondAngleAnalysisResult makeBondAngleAnalysisResult(const DistanceMatrixResult& distanceMatrix,
+                                                    std::vector<BondAngleTriplet> triplets,
+                                                    std::vector<BondAngleMeasurement> bondAngles)
+{
+    const BondAngleStatistics statistics = summarizeBondAngles(bondAngles);
+
+    return BondAngleAnalysisResult{
+        .atomIds = distanceMatrix.atomIds,
+        .bondAngleTriplets = std::move(triplets),
+        .bondAngles = std::move(bondAngles),
+        .statistics = statistics,
+        .metadata =
+            BondAngleMetadata{
+                .atomCount = distanceMatrix.atomIds.size(),
+                .bondedAngleTripletCount = statistics.count,
+                .sourceDistanceMethod = distanceMatrix.method,
+                .units = "degrees",
+                .selectionRule =
+                    "angles A-B-C where A-B and B-C are bonded and B is the central atom",
+            },
     };
 }
 
@@ -1752,6 +1890,39 @@ BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixRes
                                             std::move(nonbondedPairDistances));
 }
 
+BondAngleAnalysisResult buildBondAngleAnalysis(const DistanceMatrixResult& distanceMatrix,
+                                               const AdjacencyMatrix& adjacencyMatrix)
+{
+    validateBondAngleAlignment(distanceMatrix, adjacencyMatrix);
+
+    const std::vector<BondAngleTriplet> triplets = bondAngleTripletsFromAdjacency(adjacencyMatrix);
+    std::map<int, std::size_t> atomIndexById;
+    for (std::size_t index = 0; index < distanceMatrix.atomIds.size(); ++index) {
+        atomIndexById.emplace(distanceMatrix.atomIds[index], index);
+    }
+
+    std::vector<BondAngleMeasurement> bondAngles;
+    bondAngles.reserve(triplets.size());
+    for (const auto& triplet : triplets) {
+        const std::size_t aIndex = atomIndexById.at(triplet.atomIdA);
+        const std::size_t centerIndex = atomIndexById.at(triplet.atomIdBCenter);
+        const std::size_t cIndex = atomIndexById.at(triplet.atomIdC);
+        const auto firstBondVector = subtractCoordinates(
+            distanceMatrix.xyzCoordinates[aIndex], distanceMatrix.xyzCoordinates[centerIndex]);
+        const auto secondBondVector = subtractCoordinates(
+            distanceMatrix.xyzCoordinates[cIndex], distanceMatrix.xyzCoordinates[centerIndex]);
+
+        bondAngles.push_back(BondAngleMeasurement{
+            .atomIdA = triplet.atomIdA,
+            .atomIdBCenter = triplet.atomIdBCenter,
+            .atomIdC = triplet.atomIdC,
+            .angleDegrees = computeBondAngleDegrees(firstBondVector, secondBondVector),
+        });
+    }
+
+    return makeBondAngleAnalysisResult(distanceMatrix, triplets, std::move(bondAngles));
+}
+
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory)
 {
     return dataDirectory / "out";
@@ -1801,6 +1972,14 @@ std::filesystem::path bondedDistanceOutputJsonPath(const std::filesystem::path& 
 {
     return outputDirectory / (sourceFile.stem().string() + "." + std::string(distanceMethod) +
                               ".bonded_distance_analysis.json");
+}
+
+std::filesystem::path bondAngleOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                              const std::filesystem::path& sourceFile,
+                                              const std::string_view distanceMethod)
+{
+    return outputDirectory / (sourceFile.stem().string() + "." + std::string(distanceMethod) +
+                              ".bond_angle_analysis.json");
 }
 
 std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,

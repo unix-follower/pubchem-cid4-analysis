@@ -418,6 +418,14 @@ TEST(DistanceHelpersTest, BondedDistanceOutputPathIncludesMethodSuffix)
               "Conformer3D_COMPOUND_CID_4(1).json.bonded_distance_analysis.json");
 }
 
+TEST(DistanceHelpersTest, BondAngleOutputPathIncludesMethodSuffix)
+{
+    const auto path =
+        pubchem::bondAngleOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
+    EXPECT_EQ(path.filename().string(),
+              "Conformer3D_COMPOUND_CID_4(1).json.bond_angle_analysis.json");
+}
+
 TEST(DistanceStrategiesTest, JsonBuildsExpectedDistanceMatrix)
 {
     const auto jsonPath = writeTempFile("distance-sample.json", sampleDistanceJson());
@@ -537,6 +545,70 @@ TEST(DistanceStrategiesTest, BondedDistanceAnalysisMatchesCid4RealData)
     EXPECT_NEAR(result.bondedDistances.meanDistanceAngstrom, 1.1940559475938086, 1.0e-12);
     EXPECT_NEAR(result.nonbondedDistances.meanDistanceAngstrom, 2.9383026626251145, 1.0e-12);
     EXPECT_NEAR(result.comparison.nonbondedToBondedMeanRatio, 2.460774696986527, 1.0e-12);
+}
+
+TEST(DistanceStrategiesTest, BondAngleAnalysisComputesTripletsAndStatistics)
+{
+    const pubchem::DistanceMatrixResult distanceMatrix{
+        .sourceFile = "distance-sample.json",
+        .method = "json",
+        .atomIds = {1, 2, 3},
+        .xyzCoordinates = {{1.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}},
+        .distanceMatrix = {{0.0, 1.0, std::sqrt(2.0)}, {1.0, 0.0, 1.0}, {std::sqrt(2.0), 1.0, 0.0}},
+        .metadata =
+            pubchem::DistanceMatrixMetadata{
+                .atomCount = 3U,
+                .coordinateDimension = 3U,
+                .units = "angstrom",
+            },
+    };
+    const pubchem::AdjacencyMatrix adjacencyMatrix{
+        .sourceFile = "distance-sample.json",
+        .method = "arrays",
+        .atomIds = {1, 2, 3},
+        .values = {{0, 1, 0}, {1, 0, 1}, {0, 1, 0}},
+    };
+
+    const auto result = pubchem::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
+
+    EXPECT_EQ(result.atomIds, (std::vector<int>{1, 2, 3}));
+    ASSERT_EQ(result.bondAngleTriplets.size(), 1U);
+    EXPECT_EQ(result.bondAngleTriplets.front().atomIdA, 1);
+    EXPECT_EQ(result.bondAngleTriplets.front().atomIdBCenter, 2);
+    EXPECT_EQ(result.bondAngleTriplets.front().atomIdC, 3);
+    ASSERT_EQ(result.bondAngles.size(), 1U);
+    EXPECT_DOUBLE_EQ(result.bondAngles.front().angleDegrees, 90.0);
+    EXPECT_EQ(result.metadata.atomCount, 3U);
+    EXPECT_EQ(result.metadata.bondedAngleTripletCount, 1U);
+    EXPECT_EQ(result.metadata.sourceDistanceMethod, "json");
+    EXPECT_EQ(result.metadata.units, "degrees");
+    EXPECT_DOUBLE_EQ(result.statistics.meanAngleDegrees, 90.0);
+    EXPECT_DOUBLE_EQ(result.statistics.medianAngleDegrees, 90.0);
+}
+
+TEST(DistanceStrategiesTest, BondAngleAnalysisMatchesCid4RealData)
+{
+    const auto dataDirectory = repositoryRoot() / "data";
+    const auto jsonPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).json";
+    const auto sdfPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).sdf";
+    const auto adjacencyInput = pubchem::loadAdjacencyInput(jsonPath);
+    const auto distanceInput = pubchem::DistanceMatrixInput{
+        .atomIds = adjacencyInput.atomIds,
+        .jsonPath = jsonPath,
+        .sdfPath = sdfPath,
+    };
+    const auto distanceMatrix = pubchem::buildDistanceMatrix(distanceInput, "json");
+    const auto adjacencyMatrix =
+        pubchem::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
+
+    const auto result = pubchem::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
+
+    EXPECT_EQ(result.metadata.atomCount, 14U);
+    EXPECT_EQ(result.metadata.bondedAngleTripletCount, 22U);
+    EXPECT_EQ(result.metadata.sourceDistanceMethod, "json");
+    EXPECT_NEAR(result.statistics.meanAngleDegrees, 109.22375164065625, 1.0e-12);
+    EXPECT_NEAR(result.statistics.minAngleDegrees, 106.04151155509001, 1.0e-12);
+    EXPECT_NEAR(result.statistics.maxAngleDegrees, 113.11659612947966, 1.0e-12);
 }
 
 TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
