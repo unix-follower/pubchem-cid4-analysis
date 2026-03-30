@@ -439,7 +439,8 @@ def select_hill_plot_representatives(hill_df: pd.DataFrame) -> tuple[np.ndarray,
     representative_rows = hill_df.iloc[representative_positions]
     representative_k_values = representative_rows["inferred_K_activity_value"].to_numpy(dtype=np.float64)
     representative_labels = [
-        f"AID {int(row['BioAssay_AID'])} | {str(row['Activity_Type'])} | K={float(row['inferred_K_activity_value']):.4g}"
+        f"AID {int(row['BioAssay_AID'])} | {str(row['Activity_Type'])} | "
+        + "K={float(row['inferred_K_activity_value']):.4g}"
         for _, row in representative_rows.iterrows()
     ]
     return representative_k_values, representative_labels
