@@ -410,6 +410,14 @@ TEST(DistanceHelpersTest, OutputPathIncludesMethodSuffix)
     EXPECT_EQ(path.filename().string(), "Conformer3D_COMPOUND_CID_4(1).json.distance_matrix.json");
 }
 
+TEST(DistanceHelpersTest, BondedDistanceOutputPathIncludesMethodSuffix)
+{
+    const auto path = pubchem::bondedDistanceOutputJsonPath(
+        "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
+    EXPECT_EQ(path.filename().string(),
+              "Conformer3D_COMPOUND_CID_4(1).json.bonded_distance_analysis.json");
+}
+
 TEST(DistanceStrategiesTest, JsonBuildsExpectedDistanceMatrix)
 {
     const auto jsonPath = writeTempFile("distance-sample.json", sampleDistanceJson());
@@ -456,6 +464,79 @@ TEST(DistanceStrategiesTest, SdfMatchesJsonDistanceMatrix)
     for (std::size_t index = 0; index < sdfResult.distanceMatrix.size(); ++index) {
         EXPECT_DOUBLE_EQ(sdfResult.distanceMatrix[index][index], 0.0);
     }
+}
+
+TEST(DistanceStrategiesTest, BondedDistanceAnalysisPartitionsDistancesAndSummaries)
+{
+    const pubchem::DistanceMatrixResult distanceMatrix{
+        .sourceFile = "distance-sample.json",
+        .method = "json",
+        .atomIds = {1, 2, 3},
+        .xyzCoordinates = {{0.0, 0.0, 0.0}, {3.0, 0.0, 0.0}, {0.0, 4.0, 0.0}},
+        .distanceMatrix = {{0.0, 3.0, 4.0}, {3.0, 0.0, 5.0}, {4.0, 5.0, 0.0}},
+        .metadata =
+            pubchem::DistanceMatrixMetadata{
+                .atomCount = 3U,
+                .coordinateDimension = 3U,
+                .units = "angstrom",
+            },
+    };
+    const pubchem::AdjacencyMatrix adjacencyMatrix{
+        .sourceFile = "distance-sample.json",
+        .method = "arrays",
+        .atomIds = {1, 2, 3},
+        .values = {{0, 1, 1}, {1, 0, 0}, {1, 0, 0}},
+    };
+
+    const auto result = pubchem::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
+
+    EXPECT_EQ(result.atomIds, (std::vector<int>{1, 2, 3}));
+    ASSERT_EQ(result.bondedAtomPairs.size(), 2U);
+    EXPECT_EQ(result.metadata.atomCount, 3U);
+    EXPECT_EQ(result.metadata.bondedPairCount, 2U);
+    EXPECT_EQ(result.metadata.nonbondedPairCount, 1U);
+    EXPECT_EQ(result.metadata.totalUniquePairCount, 3U);
+    EXPECT_EQ(result.metadata.sourceDistanceMethod, "json");
+    EXPECT_EQ(result.metadata.units, "angstrom");
+    ASSERT_EQ(result.bondedPairDistances.size(), 2U);
+    ASSERT_EQ(result.nonbondedPairDistances.size(), 1U);
+    EXPECT_EQ(result.nonbondedPairDistances.front().atomId1, 2);
+    EXPECT_EQ(result.nonbondedPairDistances.front().atomId2, 3);
+    EXPECT_DOUBLE_EQ(result.nonbondedPairDistances.front().distanceAngstrom, 5.0);
+    EXPECT_DOUBLE_EQ(result.bondedDistances.meanDistanceAngstrom, 3.5);
+    EXPECT_DOUBLE_EQ(result.bondedDistances.stdDistanceAngstrom, 0.5);
+    EXPECT_DOUBLE_EQ(result.bondedDistances.q25DistanceAngstrom, 3.25);
+    EXPECT_DOUBLE_EQ(result.bondedDistances.medianDistanceAngstrom, 3.5);
+    EXPECT_DOUBLE_EQ(result.bondedDistances.q75DistanceAngstrom, 3.75);
+    EXPECT_DOUBLE_EQ(result.nonbondedDistances.meanDistanceAngstrom, 5.0);
+    EXPECT_DOUBLE_EQ(result.comparison.meanDistanceDifferenceAngstrom, 1.5);
+    EXPECT_DOUBLE_EQ(result.comparison.nonbondedToBondedMeanRatio, 5.0 / 3.5);
+}
+
+TEST(DistanceStrategiesTest, BondedDistanceAnalysisMatchesCid4RealData)
+{
+    const auto dataDirectory = repositoryRoot() / "data";
+    const auto jsonPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).json";
+    const auto sdfPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).sdf";
+    const auto adjacencyInput = pubchem::loadAdjacencyInput(jsonPath);
+    const auto distanceInput = pubchem::DistanceMatrixInput{
+        .atomIds = adjacencyInput.atomIds,
+        .jsonPath = jsonPath,
+        .sdfPath = sdfPath,
+    };
+    const auto distanceMatrix = pubchem::buildDistanceMatrix(distanceInput, "json");
+    const auto adjacencyMatrix =
+        pubchem::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
+
+    const auto result = pubchem::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
+
+    EXPECT_EQ(result.metadata.atomCount, 14U);
+    EXPECT_EQ(result.metadata.bondedPairCount, 13U);
+    EXPECT_EQ(result.metadata.nonbondedPairCount, 78U);
+    EXPECT_EQ(result.metadata.totalUniquePairCount, 91U);
+    EXPECT_NEAR(result.bondedDistances.meanDistanceAngstrom, 1.1940559475938086, 1.0e-12);
+    EXPECT_NEAR(result.nonbondedDistances.meanDistanceAngstrom, 2.9383026626251145, 1.0e-12);
+    EXPECT_NEAR(result.comparison.nonbondedToBondedMeanRatio, 2.460774696986527, 1.0e-12);
 }
 
 TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)

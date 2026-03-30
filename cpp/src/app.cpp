@@ -292,6 +292,57 @@ nlohmann::json toJson(const pubchem::DistanceMatrixResult& distanceMatrix)
     };
 }
 
+nlohmann::json toJson(const pubchem::BondedDistanceAnalysisResult& bondedDistanceAnalysis)
+{
+    nlohmann::json bondedAtomPairs = nlohmann::json::array();
+    for (const auto& pair : bondedDistanceAnalysis.bondedAtomPairs) {
+        bondedAtomPairs.push_back({{"atomId1", pair.atomId1}, {"atomId2", pair.atomId2}});
+    }
+
+    auto pairDistancesToJson = [](const std::vector<pubchem::AtomPairDistance>& pairDistances) {
+        nlohmann::json values = nlohmann::json::array();
+        for (const auto& pairDistance : pairDistances) {
+            values.push_back({{"atomId1", pairDistance.atomId1},
+                              {"atomId2", pairDistance.atomId2},
+                              {"distanceAngstrom", pairDistance.distanceAngstrom}});
+        }
+        return values;
+    };
+
+    auto statisticsToJson = [](const pubchem::BondedDistanceStatistics& statistics) {
+        return nlohmann::json{{"count", statistics.count},
+                              {"minDistanceAngstrom", statistics.minDistanceAngstrom},
+                              {"meanDistanceAngstrom", statistics.meanDistanceAngstrom},
+                              {"stdDistanceAngstrom", statistics.stdDistanceAngstrom},
+                              {"q25DistanceAngstrom", statistics.q25DistanceAngstrom},
+                              {"medianDistanceAngstrom", statistics.medianDistanceAngstrom},
+                              {"q75DistanceAngstrom", statistics.q75DistanceAngstrom},
+                              {"maxDistanceAngstrom", statistics.maxDistanceAngstrom}};
+    };
+
+    return {
+        {"atomIds", bondedDistanceAnalysis.atomIds},
+        {"bondedAtomPairs", bondedAtomPairs},
+        {"bondedPairDistances", pairDistancesToJson(bondedDistanceAnalysis.bondedPairDistances)},
+        {"nonbondedPairDistances",
+         pairDistancesToJson(bondedDistanceAnalysis.nonbondedPairDistances)},
+        {"bondedDistances", statisticsToJson(bondedDistanceAnalysis.bondedDistances)},
+        {"nonbondedDistances", statisticsToJson(bondedDistanceAnalysis.nonbondedDistances)},
+        {"comparison",
+         {{"meanDistanceDifferenceAngstrom",
+           bondedDistanceAnalysis.comparison.meanDistanceDifferenceAngstrom},
+          {"nonbondedToBondedMeanRatio",
+           bondedDistanceAnalysis.comparison.nonbondedToBondedMeanRatio}}},
+        {"metadata",
+         {{"atomCount", bondedDistanceAnalysis.metadata.atomCount},
+          {"bondedPairCount", bondedDistanceAnalysis.metadata.bondedPairCount},
+          {"nonbondedPairCount", bondedDistanceAnalysis.metadata.nonbondedPairCount},
+          {"totalUniquePairCount", bondedDistanceAnalysis.metadata.totalUniquePairCount},
+          {"sourceDistanceMethod", bondedDistanceAnalysis.metadata.sourceDistanceMethod},
+          {"units", bondedDistanceAnalysis.metadata.units}}},
+    };
+}
+
 nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
 {
     return {
@@ -356,6 +407,13 @@ int main(int argc, char* argv[])
             outputDir, options.adjacencyJsonFile, distanceMatrix.method);
         const pubchem::AdjacencyMatrix adjacencyMatrix = pubchem::buildAdjacencyMatrix(
             adjacencyInput, options.adjacencyJsonFile.filename().string(), options.adjacencyMethod);
+        const pubchem::BondedDistanceAnalysisResult bondedDistanceAnalysis =
+            pubchem::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
+        const std::filesystem::path bondedDistanceOutputPath =
+            pubchem::bondedDistanceOutputJsonPath(
+                outputDir,
+                options.adjacencyJsonFile,
+                bondedDistanceAnalysis.metadata.sourceDistanceMethod);
         const std::filesystem::path adjacencyOutputPath = pubchem::adjacencyOutputJsonPath(
             outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
         const pubchem::EigendecompositionResult eigendecomposition =
@@ -387,6 +445,9 @@ int main(int argc, char* argv[])
         std::ofstream distanceOutput(distanceOutputPath);
         distanceOutput << std::setw(2) << toJson(distanceMatrix) << '\n';
 
+        std::ofstream bondedDistanceOutput(bondedDistanceOutputPath);
+        bondedDistanceOutput << std::setw(2) << toJson(bondedDistanceAnalysis) << '\n';
+
         std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
         eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
 
@@ -405,6 +466,7 @@ int main(int argc, char* argv[])
         std::cout << "Atom records written to: " << outputPath << '\n';
         std::cout << "Distance method: " << distanceMatrix.method << '\n';
         std::cout << "Distance matrix written to: " << distanceOutputPath << '\n';
+        std::cout << "Bonded distance analysis written to: " << bondedDistanceOutputPath << '\n';
         std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
         std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
         std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';

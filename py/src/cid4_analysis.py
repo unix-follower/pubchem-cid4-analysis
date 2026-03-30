@@ -83,6 +83,101 @@ def build_distance_matrix(coordinates: np.ndarray) -> np.ndarray:
     return distance_matrix
 
 
+def get_bonded_atom_pairs_from_adjacency(adjacency_matrix: pd.DataFrame) -> list[tuple[int, int]]:
+    atom_ids = adjacency_matrix.index.tolist()
+    adjacency_values = adjacency_matrix.to_numpy(dtype=np.int64)
+    bonded_pairs: list[tuple[int, int]] = []
+
+    for row_index in range(len(atom_ids)):
+        for column_index in range(row_index + 1, len(atom_ids)):
+            if adjacency_values[row_index, column_index] > 0:
+                bonded_pairs.append((int(atom_ids[row_index]), int(atom_ids[column_index])))
+
+    if not bonded_pairs:
+        raise ValueError("Expected at least one bonded atom pair in the adjacency matrix")
+
+    return bonded_pairs
+
+
+def partition_distances_by_bonding(
+    atom_ids: list[int],
+    distance_matrix: np.ndarray,
+    bonded_pairs: list[tuple[int, int]],
+) -> dict[str, list[dict[str, float | int]]]:
+    atom_index_by_id = {atom_id: index for index, atom_id in enumerate(atom_ids)}
+    bonded_pair_set = {tuple(sorted(pair)) for pair in bonded_pairs}
+    bonded_distances: list[dict[str, float | int]] = []
+    nonbonded_distances: list[dict[str, float | int]] = []
+
+    for first_atom_id in atom_ids:
+        for second_atom_id in atom_ids:
+            if first_atom_id >= second_atom_id:
+                continue
+
+            first_index = atom_index_by_id[first_atom_id]
+            second_index = atom_index_by_id[second_atom_id]
+            pair_record = {
+                "atom_id_1": int(first_atom_id),
+                "atom_id_2": int(second_atom_id),
+                "distance_angstrom": float(distance_matrix[first_index, second_index]),
+            }
+
+            if (first_atom_id, second_atom_id) in bonded_pair_set:
+                bonded_distances.append(pair_record)
+            else:
+                nonbonded_distances.append(pair_record)
+
+    expected_pair_count = len(atom_ids) * (len(atom_ids) - 1) // 2
+    actual_pair_count = len(bonded_distances) + len(nonbonded_distances)
+    if actual_pair_count != expected_pair_count:
+        raise ValueError(
+            f"Expected {expected_pair_count} unique atom pairs, partitioned {actual_pair_count} pairs instead"
+        )
+
+    return {
+        "bonded": bonded_distances,
+        "nonbonded": nonbonded_distances,
+    }
+
+
+def summarize_distance_partition(pair_records: list[dict[str, float | int]]) -> dict:
+    distances = np.array([float(pair_record["distance_angstrom"]) for pair_record in pair_records], dtype=np.float64)
+    if distances.size == 0:
+        raise ValueError("Distance partition must contain at least one pair")
+
+    quantiles = np.quantile(distances, [0.25, 0.5, 0.75])
+    return {
+        "count": int(distances.size),
+        "min_distance_angstrom": float(distances.min()),
+        "mean_distance_angstrom": float(distances.mean()),
+        "std_distance_angstrom": float(distances.std(ddof=0)),
+        "q25_distance_angstrom": float(quantiles[0]),
+        "median_distance_angstrom": float(quantiles[1]),
+        "q75_distance_angstrom": float(quantiles[2]),
+        "max_distance_angstrom": float(distances.max()),
+    }
+
+
+def compute_bonded_nonbonded_distance_statistics(
+    partitions: dict[str, list[dict[str, float | int]]],
+) -> dict:
+    bonded_summary = summarize_distance_partition(partitions["bonded"])
+    nonbonded_summary = summarize_distance_partition(partitions["nonbonded"])
+
+    return {
+        "bonded_distances": bonded_summary,
+        "nonbonded_distances": nonbonded_summary,
+        "comparison": {
+            "mean_distance_difference_angstrom": float(
+                nonbonded_summary["mean_distance_angstrom"] - bonded_summary["mean_distance_angstrom"]
+            ),
+            "nonbonded_to_bonded_mean_ratio": float(
+                nonbonded_summary["mean_distance_angstrom"] / bonded_summary["mean_distance_angstrom"]
+            ),
+        },
+    }
+
+
 def load_bioactivity_dataframe(filename: str) -> pd.DataFrame:
     return pd.read_csv(resolve_data_path(filename))
 
@@ -330,6 +425,48 @@ def write_distance_matrix(sdf_filename: str, json_filename: str):
     log.info("Distance matrix written to %s", output_path)
 
 
+def write_bonded_distance_analysis(sdf_filename: str, json_filename: str):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    molecules = load_sdf_molecules(sdf_filename)
+
+    if not molecules:
+        raise ValueError(f"No valid molecules found in {sdf_filename}")
+
+    coordinates = extract_3d_coordinates(molecules[IDX1])
+    distance_matrix = build_distance_matrix(coordinates)
+    adjacency_matrix = build_adjacency_matrix(json_filename)
+    atom_ids = adjacency_matrix.index.tolist()
+    bonded_pairs = get_bonded_atom_pairs_from_adjacency(adjacency_matrix)
+    partitions = partition_distances_by_bonding(atom_ids, distance_matrix, bonded_pairs)
+    statistics = compute_bonded_nonbonded_distance_statistics(partitions)
+    output_path = Path(out_dir) / f"{Path(sdf_filename).stem}.bonded_distance_analysis.json"
+
+    with output_path.open("w", encoding=UTF_8) as file:
+        json.dump(
+            {
+                "atom_ids": atom_ids,
+                "bonded_atom_pairs": [{"atom_id_1": pair[0], "atom_id_2": pair[1]} for pair in bonded_pairs],
+                "bonded_pair_distances": partitions["bonded"],
+                "nonbonded_pair_distances": partitions["nonbonded"],
+                "statistics": statistics,
+                "metadata": {
+                    "atom_count": len(atom_ids),
+                    "bonded_pair_count": len(partitions["bonded"]),
+                    "nonbonded_pair_count": len(partitions["nonbonded"]),
+                    "total_unique_pair_count": len(partitions["bonded"]) + len(partitions["nonbonded"]),
+                    "source_sdf": sdf_filename,
+                    "source_bond_json": json_filename,
+                    "units": "angstrom",
+                },
+            },
+            file,
+            indent=2,
+        )
+
+    log.info("Bonded distance analysis written to %s", output_path)
+
+
 def write_bioactivity_analysis(filename: str):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
@@ -452,6 +589,7 @@ def main():
     bioactivity_filename = "pubchem_cid_4_bioactivity.csv"
     process_sdf_file(sdf_filename)
     write_distance_matrix(sdf_filename, json_filename)
+    write_bonded_distance_analysis(sdf_filename, json_filename)
     adjacency_matrix = write_adjacency_matrix(json_filename)
     write_adjacency_spectrum(json_filename, adjacency_matrix)
     write_laplacian_analysis(json_filename, adjacency_matrix)
