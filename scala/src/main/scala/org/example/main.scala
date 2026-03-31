@@ -8,6 +8,8 @@ import org.example.analysis.bioactivity.BinomialActivityDistributionAnalysisResu
 import org.example.analysis.bioactivity.BinomialActivityDistributionService
 import org.example.analysis.bioactivity.BioactivityAnalysisResult
 import org.example.analysis.bioactivity.BioactivityService
+import org.example.analysis.bioactivity.ChiSquareActivityAidTypeAnalysisResult
+import org.example.analysis.bioactivity.ChiSquareActivityAidTypeService
 import org.example.analysis.bioactivity.HillDoseResponseAnalysisResult
 import org.example.analysis.bioactivity.HillDoseResponseService
 import org.example.analysis.distance.BondAngleAnalysisResult
@@ -268,6 +270,31 @@ private def writeBinomialActivityDistributionRows(
   val outputPath = outDirectory.resolve(outputFileName)
   BinomialActivityDistributionService.writeCsv(result, outputPath)
 
+private def writeChiSquareActivityAidTypeSummary(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: ChiSquareActivityAidTypeAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.activity_aid_type_chi_square.summary.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result.summary)
+  outputPath
+
+private def writeChiSquareActivityAidTypeRows(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: ChiSquareActivityAidTypeAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.activity_aid_type_chi_square_contingency.csv"
+  val outputPath = outDirectory.resolve(outputFileName)
+  ChiSquareActivityAidTypeService.writeCsv(result, outputPath)
+
 private def writeGradientDescentSummary(
     dataDirectory: String,
     sourceFileName: String,
@@ -376,6 +403,7 @@ def readJson(method: String, distanceSource: String) = {
     val hillDoseResponseAnalysis = HillDoseResponseService.analyze(bioactivityPath)
     val bayesianActivityPosteriorAnalysis = BayesianActivityPosteriorService.analyze(bioactivityPath)
     val binomialActivityDistributionAnalysis = BinomialActivityDistributionService.analyze(bioactivityPath)
+    val chiSquareActivityAidTypeAnalysis = ChiSquareActivityAidTypeService.analyze(bioactivityPath)
     val bioactivityRowsOutputPath =
       writeBioactivityFilteredRows(dataDirectory, bioactivityPath.getFileName.toString, bioactivityAnalysis)
     val bioactivitySummaryOutputPath =
@@ -412,6 +440,18 @@ def readJson(method: String, distanceSource: String) = {
         bioactivityPath.getFileName.toString,
         binomialActivityDistributionAnalysis
       )
+    val chiSquareActivityAidTypeRowsOutputPath =
+      writeChiSquareActivityAidTypeRows(
+        dataDirectory,
+        bioactivityPath.getFileName.toString,
+        chiSquareActivityAidTypeAnalysis
+      )
+    val chiSquareActivityAidTypeSummaryOutputPath =
+      writeChiSquareActivityAidTypeSummary(
+        dataDirectory,
+        bioactivityPath.getFileName.toString,
+        chiSquareActivityAidTypeAnalysis
+      )
 
     logger.info(s"Adjacency matrix method: ${adjacencyMatrix.method}")
     logger.info(
@@ -439,6 +479,8 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Bayesian activity posterior summary output: $bayesianActivityPosteriorSummaryOutputPath")
     logger.info(s"Binomial activity distribution rows output: $binomialActivityDistributionRowsOutputPath")
     logger.info(s"Binomial activity distribution summary output: $binomialActivityDistributionSummaryOutputPath")
+    logger.info(s"Chi-square activity vs Aid_Type rows output: $chiSquareActivityAidTypeRowsOutputPath")
+    logger.info(s"Chi-square activity vs Aid_Type summary output: $chiSquareActivityAidTypeSummaryOutputPath")
   }
 }
 

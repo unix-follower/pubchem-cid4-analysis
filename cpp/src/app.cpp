@@ -689,6 +689,106 @@ nlohmann::json toJson(const pubchem::BinomialActivityDistributionAnalysisResult&
     };
 }
 
+nlohmann::json toJson(const pubchem::ChiSquareActivityAidTypeAnalysisResult& chiSquareActivity)
+{
+    nlohmann::json observedCounts = nlohmann::json::object();
+    for (const auto& [activity, aidTypeCounts] :
+         chiSquareActivity.contingencyTable.observedCounts) {
+        nlohmann::json aidTypeObject = nlohmann::json::object();
+        for (const auto& [aidType, count] : aidTypeCounts) {
+            aidTypeObject[aidType] = count;
+        }
+        observedCounts[activity] = aidTypeObject;
+    }
+
+    nlohmann::json expectedCounts = nlohmann::json::object();
+    for (const auto& [activity, aidTypeCounts] :
+         chiSquareActivity.contingencyTable.expectedCounts) {
+        nlohmann::json aidTypeObject = nlohmann::json::object();
+        for (const auto& [aidType, count] : aidTypeCounts) {
+            aidTypeObject[aidType] =
+                count.has_value() ? nlohmann::json(*count) : nlohmann::json(nullptr);
+        }
+        expectedCounts[activity] = aidTypeObject;
+    }
+
+    nlohmann::json representativeCells = nlohmann::json::array();
+    for (const auto& cell : chiSquareActivity.analysis.representativeCells) {
+        representativeCells.push_back({
+            {"activity", cell.activity},
+            {"aidType", cell.aidType},
+            {"observedCount", cell.observedCount},
+            {"expectedCount",
+             cell.expectedCount.has_value() ? nlohmann::json(*cell.expectedCount)
+                                            : nlohmann::json(nullptr)},
+        });
+    }
+
+    return {
+        {"sourceFile", chiSquareActivity.sourceFile},
+        {"rowCounts",
+         {{"totalRows", chiSquareActivity.rowCounts.totalRows},
+          {"activeRows", chiSquareActivity.rowCounts.activeRows},
+          {"inactiveRows", chiSquareActivity.rowCounts.inactiveRows},
+          {"unspecifiedRows", chiSquareActivity.rowCounts.unspecifiedRows},
+          {"otherActivityRows", chiSquareActivity.rowCounts.otherActivityRows},
+          {"retainedBinaryRows", chiSquareActivity.rowCounts.retainedBinaryRows},
+          {"droppedNonBinaryRows", chiSquareActivity.rowCounts.droppedNonBinaryRows},
+          {"retainedUniqueBioassays", chiSquareActivity.rowCounts.retainedUniqueBioassays},
+          {"retainedRowsWithAidType", chiSquareActivity.rowCounts.retainedRowsWithAidType},
+          {"activityLevelsTested", chiSquareActivity.rowCounts.activityLevelsTested},
+          {"aidTypeLevelsTested", chiSquareActivity.rowCounts.aidTypeLevelsTested}}},
+        {"contingencyTable",
+         {{"activityLevels", chiSquareActivity.contingencyTable.activityLevels},
+          {"aidTypeLevels", chiSquareActivity.contingencyTable.aidTypeLevels},
+          {"observedCounts", observedCounts},
+          {"expectedCounts", expectedCounts}}},
+        {"chiSquareTest",
+         {{"variables",
+           {{"row", chiSquareActivity.chiSquareTest.variables.row},
+            {"column", chiSquareActivity.chiSquareTest.variables.column}}},
+          {"nullHypothesis", chiSquareActivity.chiSquareTest.nullHypothesis},
+          {"alternativeHypothesis", chiSquareActivity.chiSquareTest.alternativeHypothesis},
+          {"computed", chiSquareActivity.chiSquareTest.computed},
+          {"reasonNotComputed",
+           chiSquareActivity.chiSquareTest.reasonNotComputed.has_value()
+               ? nlohmann::json(*chiSquareActivity.chiSquareTest.reasonNotComputed)
+               : nlohmann::json(nullptr)},
+          {"chi2Statistic",
+           chiSquareActivity.chiSquareTest.chi2Statistic.has_value()
+               ? nlohmann::json(*chiSquareActivity.chiSquareTest.chi2Statistic)
+               : nlohmann::json(nullptr)},
+          {"pValue",
+           chiSquareActivity.chiSquareTest.pValue.has_value()
+               ? nlohmann::json(*chiSquareActivity.chiSquareTest.pValue)
+               : nlohmann::json(nullptr)},
+          {"degreesOfFreedom",
+           chiSquareActivity.chiSquareTest.degreesOfFreedom.has_value()
+               ? nlohmann::json(*chiSquareActivity.chiSquareTest.degreesOfFreedom)
+               : nlohmann::json(nullptr)},
+          {"minimumExpectedCountThreshold",
+           chiSquareActivity.chiSquareTest.minimumExpectedCountThreshold},
+          {"sparseExpectedCellCount",
+           chiSquareActivity.chiSquareTest.sparseExpectedCellCount.has_value()
+               ? nlohmann::json(*chiSquareActivity.chiSquareTest.sparseExpectedCellCount)
+               : nlohmann::json(nullptr)},
+          {"sparseExpectedCellFraction",
+           chiSquareActivity.chiSquareTest.sparseExpectedCellFraction.has_value()
+               ? nlohmann::json(*chiSquareActivity.chiSquareTest.sparseExpectedCellFraction)
+               : nlohmann::json(nullptr)}}},
+        {"analysis",
+         {{"targetQuantity", chiSquareActivity.analysis.targetQuantity},
+          {"model", chiSquareActivity.analysis.model},
+          {"binaryEvidenceDefinition",
+           {{"retainedLabels", chiSquareActivity.analysis.binaryEvidenceDefinition.retainedLabels},
+            {"excludedLabels", chiSquareActivity.analysis.binaryEvidenceDefinition.excludedLabels},
+            {"interpretation",
+             chiSquareActivity.analysis.binaryEvidenceDefinition.interpretation}}},
+          {"representativeCells", representativeCells},
+          {"notes", chiSquareActivity.analysis.notes}}},
+    };
+}
+
 nlohmann::json toJson(const pubchem::GradientDescentAnalysisResult& gradientDescent)
 {
     nlohmann::json atomRows = nlohmann::json::array();
@@ -909,6 +1009,12 @@ int main(int argc, char* argv[])
         const std::filesystem::path binomialActivityDistributionSummaryOutputPath =
             pubchem::binomialActivityDistributionSummaryJsonPath(outputDir,
                                                                  options.bioactivityFile);
+        const pubchem::ChiSquareActivityAidTypeAnalysisResult chiSquareActivityAidTypeAnalysis =
+            pubchem::buildChiSquareActivityAidTypeAnalysis(bioactivityCsvPath);
+        const std::filesystem::path chiSquareActivityAidTypeCsvOutputPath =
+            pubchem::chiSquareActivityAidTypeCsvPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path chiSquareActivityAidTypeSummaryOutputPath =
+            pubchem::chiSquareActivityAidTypeSummaryJsonPath(outputDir, options.bioactivityFile);
         const pubchem::HillDoseResponseAnalysisResult hillDoseResponseAnalysis =
             pubchem::buildHillDoseResponseAnalysis(bioactivityCsvPath);
         const std::filesystem::path hillDoseResponseCsvOutputPath =
@@ -977,6 +1083,14 @@ int main(int argc, char* argv[])
         binomialActivityDistributionSummaryOutput << std::setw(2)
                                                   << toJson(binomialActivityDistribution) << '\n';
 
+        pubchem::writeChiSquareActivityAidTypeCsv(chiSquareActivityAidTypeAnalysis,
+                                                  chiSquareActivityAidTypeCsvOutputPath);
+
+        std::ofstream chiSquareActivityAidTypeSummaryOutput(
+            chiSquareActivityAidTypeSummaryOutputPath);
+        chiSquareActivityAidTypeSummaryOutput << std::setw(2)
+                                              << toJson(chiSquareActivityAidTypeAnalysis) << '\n';
+
         pubchem::writeHillDoseResponseCsv(hillDoseResponseAnalysis, hillDoseResponseCsvOutputPath);
 
         std::ofstream hillDoseResponseSummaryOutput(hillDoseResponseSummaryOutputPath);
@@ -1021,6 +1135,10 @@ int main(int argc, char* argv[])
                   << binomialActivityDistributionCsvOutputPath << '\n';
         std::cout << "Binomial activity distribution summary written to: "
                   << binomialActivityDistributionSummaryOutputPath << '\n';
+        std::cout << "Chi-square activity vs Aid_Type rows written to: "
+                  << chiSquareActivityAidTypeCsvOutputPath << '\n';
+        std::cout << "Chi-square activity vs Aid_Type summary written to: "
+                  << chiSquareActivityAidTypeSummaryOutputPath << '\n';
         std::cout << "Hill dose-response rows written to: " << hillDoseResponseCsvOutputPath
                   << '\n';
         std::cout << "Hill dose-response summary written to: " << hillDoseResponseSummaryOutputPath

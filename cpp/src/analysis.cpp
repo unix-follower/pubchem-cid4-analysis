@@ -7,6 +7,7 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/math/distributions/beta.hpp>
 #include <boost/math/distributions/binomial.hpp>
+#include <boost/math/distributions/chi_squared.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <cctype>
@@ -40,6 +41,7 @@ constexpr std::size_t kHillAucGridSize = 400U;
 constexpr double kDefaultPosteriorPriorAlpha = 1.0;
 constexpr double kDefaultPosteriorPriorBeta = 1.0;
 constexpr double kDefaultPosteriorCredibleIntervalMass = 0.95;
+constexpr double kDefaultChiSquareExpectedCountThreshold = 5.0;
 
 using BondReferenceKey = std::tuple<std::string, std::string, int>;
 
@@ -108,6 +110,7 @@ struct BinaryBioactivityContext {
     std::map<std::string, std::size_t> headerIndex;
     std::size_t totalRows;
     std::size_t activityIndex;
+    std::optional<std::size_t> aidTypeIndex;
     std::optional<std::size_t> activityTypeIndex;
     std::optional<std::size_t> targetNameIndex;
     std::optional<std::size_t> bioAssayNameIndex;
@@ -417,6 +420,7 @@ BinaryBioactivityContext loadBinaryBioactivityContext(const std::filesystem::pat
     }
 
     const std::size_t activityIndex = headerIndex.at("Activity");
+    const std::optional<std::size_t> aidTypeIndex = optionalColumnIndex(headerIndex, "Aid_Type");
     const std::optional<std::size_t> activityTypeIndex =
         optionalColumnIndex(headerIndex, "Activity_Type");
     const std::optional<std::size_t> targetNameIndex =
@@ -455,6 +459,10 @@ BinaryBioactivityContext loadBinaryBioactivityContext(const std::filesystem::pat
         }
 
         row[activityIndex] = toTitleCase(normalizedActivity);
+        if (aidTypeIndex.has_value()) {
+            row[*aidTypeIndex] =
+                normalizeOptionalLabel(valueAtOrEmpty(row, aidTypeIndex), "Unknown");
+        }
         if (activityTypeIndex.has_value()) {
             row[*activityTypeIndex] =
                 normalizeOptionalLabel(valueAtOrEmpty(row, activityTypeIndex), "Unknown");
@@ -483,6 +491,7 @@ BinaryBioactivityContext loadBinaryBioactivityContext(const std::filesystem::pat
         .headerIndex = std::move(headerIndex),
         .totalRows = records.size(),
         .activityIndex = activityIndex,
+        .aidTypeIndex = aidTypeIndex,
         .activityTypeIndex = activityTypeIndex,
         .targetNameIndex = targetNameIndex,
         .bioAssayNameIndex = bioAssayNameIndex,
@@ -2671,6 +2680,242 @@ void writeBinomialActivityDistributionCsv(const BinomialActivityDistributionAnal
         result.headers, result.rows, outputPath, "binomial activity distribution CSV output path");
 }
 
+ChiSquareActivityAidTypeAnalysisResult
+buildChiSquareActivityAidTypeAnalysis(const std::filesystem::path& csvPath,
+                                      const double expectedCountThreshold)
+{
+    if (!(expectedCountThreshold > 0.0)) {
+        throw BioactivityAnalysisError("Chi-square expected-count threshold must be positive");
+    }
+
+    BinaryBioactivityContext context = loadBinaryBioactivityContext(csvPath);
+    if (!context.aidTypeIndex.has_value()) {
+        throw BioactivityAnalysisError("Bioactivity CSV is missing required column: Aid_Type");
+    }
+
+    std::map<std::string, std::map<std::string, std::size_t>> observedCounts;
+    std::set<std::string> activityLevelsSet;
+    std::set<std::string> aidTypeLevelsSet;
+    for (const auto& row : context.retainedRows) {
+        const std::string& activity = row.at(context.activityIndex);
+        const std::string aidType =
+            normalizeOptionalLabel(valueAtOrEmpty(row, context.aidTypeIndex), "Unknown");
+        activityLevelsSet.insert(activity);
+        aidTypeLevelsSet.insert(aidType);
+        observedCounts[activity][aidType] += 1U;
+    }
+
+    std::vector<std::string> activityLevels(activityLevelsSet.begin(), activityLevelsSet.end());
+    std::vector<std::string> aidTypeLevels(aidTypeLevelsSet.begin(), aidTypeLevelsSet.end());
+
+    for (const auto& activity : activityLevels) {
+        for (const auto& aidType : aidTypeLevels) {
+            observedCounts[activity][aidType] += 0U;
+        }
+    }
+
+    const bool hasMinimumShape = activityLevels.size() >= 2U && aidTypeLevels.size() >= 2U;
+    std::map<std::string, std::map<std::string, std::optional<double>>> expectedCounts;
+    std::optional<double> chi2Statistic;
+    std::optional<double> pValue;
+    std::optional<std::size_t> degreesOfFreedom;
+    std::optional<std::size_t> sparseExpectedCellCount;
+    std::optional<double> sparseExpectedCellFraction;
+    std::optional<std::string> reasonNotComputed;
+
+    if (hasMinimumShape) {
+        std::map<std::string, std::size_t> rowTotals;
+        std::map<std::string, std::size_t> columnTotals;
+        std::size_t grandTotal = 0U;
+        for (const auto& activity : activityLevels) {
+            const auto total =
+                std::accumulate(aidTypeLevels.begin(),
+                                aidTypeLevels.end(),
+                                std::size_t{0U},
+                                [&](const std::size_t sum, const std::string& aidType) {
+                                    return sum + observedCounts.at(activity).at(aidType);
+                                });
+            rowTotals.emplace(activity, total);
+            grandTotal += total;
+        }
+        for (const auto& aidType : aidTypeLevels) {
+            const auto total =
+                std::accumulate(activityLevels.begin(),
+                                activityLevels.end(),
+                                std::size_t{0U},
+                                [&](const std::size_t sum, const std::string& activity) {
+                                    return sum + observedCounts.at(activity).at(aidType);
+                                });
+            columnTotals.emplace(aidType, total);
+        }
+
+        double chiSquareValue = 0.0;
+        std::size_t sparseCount = 0U;
+        for (const auto& activity : activityLevels) {
+            for (const auto& aidType : aidTypeLevels) {
+                const double expected = (static_cast<double>(rowTotals.at(activity)) *
+                                         static_cast<double>(columnTotals.at(aidType))) /
+                                        static_cast<double>(grandTotal);
+                expectedCounts[activity][aidType] = expected;
+                if (expected < expectedCountThreshold) {
+                    ++sparseCount;
+                }
+                if (expected > 0.0) {
+                    const double observed =
+                        static_cast<double>(observedCounts.at(activity).at(aidType));
+                    const double residual = observed - expected;
+                    chiSquareValue += (residual * residual) / expected;
+                }
+            }
+        }
+
+        const std::size_t degrees = (activityLevels.size() - 1U) * (aidTypeLevels.size() - 1U);
+        const boost::math::chi_squared_distribution<double> distribution(
+            static_cast<double>(degrees));
+        chi2Statistic = chiSquareValue;
+        pValue = 1.0 - cdf(distribution, chiSquareValue);
+        degreesOfFreedom = degrees;
+        sparseExpectedCellCount = sparseCount;
+        sparseExpectedCellFraction =
+            static_cast<double>(sparseCount) /
+            static_cast<double>(activityLevels.size() * aidTypeLevels.size());
+    }
+    else {
+        reasonNotComputed = "Chi-square test requires at least two observed Activity levels and "
+                            "two Aid_Type levels after binary filtering.";
+        for (const auto& activity : activityLevels) {
+            for (const auto& aidType : aidTypeLevels) {
+                expectedCounts[activity][aidType] = std::nullopt;
+            }
+        }
+    }
+
+    const std::vector<std::string> headers = {
+        "Activity",
+        "Aid_Type",
+        "observed_count",
+        "expected_count",
+    };
+    std::vector<std::vector<std::string>> rows;
+    rows.reserve(activityLevels.size() * aidTypeLevels.size());
+    for (const auto& activity : activityLevels) {
+        for (const auto& aidType : aidTypeLevels) {
+            rows.push_back({activity,
+                            aidType,
+                            std::to_string(observedCounts.at(activity).at(aidType)),
+                            expectedCounts.at(activity).at(aidType).has_value()
+                                ? formatDouble(*expectedCounts.at(activity).at(aidType))
+                                : std::string()});
+        }
+    }
+
+    std::vector<ChiSquareRepresentativeCell> representativeCells;
+    representativeCells.reserve(activityLevels.size() * aidTypeLevels.size());
+    for (const auto& activity : activityLevels) {
+        for (const auto& aidType : aidTypeLevels) {
+            representativeCells.push_back(ChiSquareRepresentativeCell{
+                .activity = activity,
+                .aidType = aidType,
+                .observedCount = observedCounts.at(activity).at(aidType),
+                .expectedCount = expectedCounts.at(activity).at(aidType),
+            });
+        }
+    }
+    std::stable_sort(
+        representativeCells.begin(),
+        representativeCells.end(),
+        [](const ChiSquareRepresentativeCell& left, const ChiSquareRepresentativeCell& right) {
+            if (left.observedCount != right.observedCount) {
+                return left.observedCount > right.observedCount;
+            }
+            if (left.activity != right.activity) {
+                return left.activity < right.activity;
+            }
+            return left.aidType < right.aidType;
+        });
+    if (representativeCells.size() > 3U) {
+        representativeCells.resize(3U);
+    }
+
+    return ChiSquareActivityAidTypeAnalysisResult{
+        .sourceFile = context.sourceFile,
+        .headers = headers,
+        .rows = std::move(rows),
+        .rowCounts =
+            ChiSquareActivityAidTypeRowCounts{
+                .totalRows = context.totalRows,
+                .activeRows = context.activeRows,
+                .inactiveRows = context.inactiveRows,
+                .unspecifiedRows = context.unspecifiedRows,
+                .otherActivityRows = context.otherActivityRows,
+                .retainedBinaryRows = context.activeRows + context.inactiveRows,
+                .droppedNonBinaryRows =
+                    context.totalRows - (context.activeRows + context.inactiveRows),
+                .retainedUniqueBioassays = context.retainedBioassayIds.size(),
+                .retainedRowsWithAidType = context.retainedRows.size(),
+                .activityLevelsTested = activityLevels.size(),
+                .aidTypeLevelsTested = aidTypeLevels.size(),
+            },
+        .contingencyTable =
+            ChiSquareContingencyTable{
+                .activityLevels = std::move(activityLevels),
+                .aidTypeLevels = std::move(aidTypeLevels),
+                .observedCounts = std::move(observedCounts),
+                .expectedCounts = std::move(expectedCounts),
+            },
+        .chiSquareTest =
+            ChiSquareTestMetrics{
+                .variables =
+                    ChiSquareVariables{
+                        .row = "Activity",
+                        .column = "Aid_Type",
+                    },
+                .nullHypothesis = "Activity and Aid_Type are statistically independent within the "
+                                  "retained binary bioactivity rows.",
+                .alternativeHypothesis = "Activity and Aid_Type are statistically associated "
+                                         "within the retained binary bioactivity rows.",
+                .computed = hasMinimumShape,
+                .reasonNotComputed = std::move(reasonNotComputed),
+                .chi2Statistic = chi2Statistic,
+                .pValue = pValue,
+                .degreesOfFreedom = degreesOfFreedom,
+                .minimumExpectedCountThreshold = expectedCountThreshold,
+                .sparseExpectedCellCount = sparseExpectedCellCount,
+                .sparseExpectedCellFraction = sparseExpectedCellFraction,
+            },
+        .analysis =
+            ChiSquareActivityAidTypeAnalysis{
+                .targetQuantity = "Activity independent of Aid_Type",
+                .model = "Pearson chi-square test of independence",
+                .binaryEvidenceDefinition =
+                    ChiSquareBinaryEvidenceDefinition{
+                        .retainedLabels = {"Active", "Inactive"},
+                        .excludedLabels = {"Unspecified"},
+                        .interpretation = "The chi-square table is built from the same binary "
+                                          "Activity evidence used by the posterior analysis.",
+                    },
+                .representativeCells = std::move(representativeCells),
+                .notes =
+                    {
+                        "Rows with Activity = Unspecified and other non-binary Activity labels are "
+                        "excluded before the contingency table is built.",
+                        "Aid_Type values are used as observed in the CSV after trimming whitespace "
+                        "and filling blanks with Unknown.",
+                        "If fewer than two observed Activity levels or fewer than two Aid_Type "
+                        "levels remain after filtering, the summary records that the chi-square "
+                        "test is not statistically identifiable on this dataset slice.",
+                    },
+            },
+    };
+}
+
+void writeChiSquareActivityAidTypeCsv(const ChiSquareActivityAidTypeAnalysisResult& result,
+                                      const std::filesystem::path& outputPath)
+{
+    writeCsvTable(
+        result.headers, result.rows, outputPath, "chi-square activity Aid_Type CSV output path");
+}
+
 HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
                                                              const double hillCoefficient)
 {
@@ -3983,6 +4228,21 @@ binomialActivityDistributionSummaryJsonPath(const std::filesystem::path& outputD
                                             const std::filesystem::path& sourceFile)
 {
     return outputDirectory / (sourceFile.stem().string() + ".activity_binomial.summary.json");
+}
+
+std::filesystem::path chiSquareActivityAidTypeCsvPath(const std::filesystem::path& outputDirectory,
+                                                      const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".activity_aid_type_chi_square_contingency.csv");
+}
+
+std::filesystem::path
+chiSquareActivityAidTypeSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                        const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".activity_aid_type_chi_square.summary.json");
 }
 
 std::filesystem::path hillDoseResponseCsvPath(const std::filesystem::path& outputDirectory,
