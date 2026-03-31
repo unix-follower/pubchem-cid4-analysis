@@ -152,7 +152,8 @@ object BayesianActivityPosteriorService:
       val betaDistribution = new BetaDistribution(posteriorAlpha, posteriorBeta)
       val tailProbability = (1.0 - credibleIntervalMass) / 2.0
       val posteriorMode =
-        if posteriorAlpha > 1.0 && posteriorBeta > 1.0 then Some((posteriorAlpha - 1.0) / (posteriorAlpha + posteriorBeta - 2.0))
+        if posteriorAlpha > 1.0 && posteriorBeta > 1.0 then
+          Some((posteriorAlpha - 1.0) / (posteriorAlpha + posteriorBeta - 2.0))
         else None
       val representativeRows = selectRepresentativeRows(retainedRows)
 

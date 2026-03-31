@@ -1069,7 +1069,8 @@ def summarize_bioactivity_posterior_analysis(
             "binary_evidence_definition": {
                 "retained_labels": ["Active", "Inactive"],
                 "excluded_labels": ["Unspecified"],
-                "interpretation": "Unspecified rows are excluded from the binary posterior update and reported only in row counts.",
+                "interpretation": "Unspecified rows are excluded from the binary posterior update "
+                "and reported only in row counts.",
             },
             "representative_rows": [
                 {
@@ -1084,8 +1085,9 @@ def summarize_bioactivity_posterior_analysis(
             ],
             "notes": [
                 "This posterior is an aggregate CID 4 activity probability across retained binary bioassay outcomes.",
-                "The update uses a Beta(1,1) prior and treats Active/Inactive outcomes as exchangeable Bernoulli evidence.",
-                "Rows labeled Unspecified are kept out of the posterior update so they do not contribute artificial failures.",
+                "The update uses a Beta(1,1) prior and treats Active/Inactive outcomes as exchangeable "
+                "Bernoulli evidence. Rows labeled Unspecified are kept out of the posterior update so "
+                "they do not contribute artificial failures.",
             ],
         },
     }
