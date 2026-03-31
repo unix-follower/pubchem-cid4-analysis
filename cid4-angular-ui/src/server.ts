@@ -6,8 +6,11 @@ import {
 } from "@angular/ssr/node"
 import express from "express"
 import { join } from "node:path"
+import { ensureMockServerStarted } from "./mocks/server"
 
 const browserDistFolder = join(import.meta.dirname, "../browser")
+
+ensureMockServerStarted()
 
 const app = express()
 const angularApp = new AngularNodeAppEngine()
