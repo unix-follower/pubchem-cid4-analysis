@@ -32,6 +32,31 @@ DEFAULT_HILL_AUC_UPPER_BOUND_SCALE = 1e2
 DEFAULT_HILL_AUC_GRID_SIZE = 400
 DEFAULT_GRADIENT_DESCENT_LEARNING_RATE = 5e-5
 DEFAULT_GRADIENT_DESCENT_EPOCHS = 250
+SPRING_DISTANCE_TOLERANCE = 1e-12
+DEFAULT_BOND_ORDER_SPRING_CONSTANTS = {
+    1: 300.0,
+    2: 500.0,
+    3: 700.0,
+}
+DEFAULT_BOND_ORDER_LENGTH_SCALES = {
+    1: 1.0,
+    2: 0.9,
+    3: 0.85,
+}
+DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM = {
+    ("C", "C", 1): 1.54,
+    ("C", "C", 2): 1.34,
+    ("C", "C", 3): 1.20,
+    ("C", "N", 1): 1.47,
+    ("C", "N", 2): 1.28,
+    ("C", "N", 3): 1.16,
+    ("C", "O", 1): 1.43,
+    ("C", "O", 2): 1.23,
+    ("C", "H", 1): 1.09,
+    ("N", "H", 1): 1.01,
+    ("O", "H", 1): 0.96,
+}
+PERIODIC_TABLE = Chem.GetPeriodicTable()
 
 
 def reduce_mol_weights(mol_weights: list[float]) -> float:
@@ -266,6 +291,214 @@ def summarize_bond_angles(angle_records: list[dict[str, float | int]]) -> dict:
         "median_angle_degrees": float(quantiles[1]),
         "q75_angle_degrees": float(quantiles[2]),
         "max_angle_degrees": float(angle_values.max()),
+    }
+
+
+def infer_reference_bond_length_angstrom(symbol_1: str, symbol_2: str, bond_order: int) -> tuple[float, str]:
+    if bond_order <= 0:
+        raise ValueError("Bond order must be positive when inferring a spring reference distance")
+
+    normalized_key = tuple(sorted((str(symbol_1), str(symbol_2)))) + (int(bond_order),)
+    if normalized_key in DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM:
+        return float(DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM[normalized_key]), "lookup_table"
+
+    atomic_number_1 = PERIODIC_TABLE.GetAtomicNumber(str(symbol_1))
+    atomic_number_2 = PERIODIC_TABLE.GetAtomicNumber(str(symbol_2))
+    if atomic_number_1 <= 0 or atomic_number_2 <= 0:
+        raise ValueError(f"Could not infer atomic numbers for bond symbols {symbol_1!r} and {symbol_2!r}")
+
+    covalent_radius_sum = float(
+        PERIODIC_TABLE.GetRcovalent(atomic_number_1) + PERIODIC_TABLE.GetRcovalent(atomic_number_2)
+    )
+    length_scale = float(DEFAULT_BOND_ORDER_LENGTH_SCALES.get(int(bond_order), 1.0 / np.sqrt(float(bond_order))))
+    return covalent_radius_sum * length_scale, "covalent_radius_fallback"
+
+
+def resolve_spring_constant_for_bond_order(bond_order: int) -> float:
+    if bond_order <= 0:
+        raise ValueError("Bond order must be positive when resolving a spring constant")
+
+    return float(DEFAULT_BOND_ORDER_SPRING_CONSTANTS.get(int(bond_order), DEFAULT_BOND_ORDER_SPRING_CONSTANTS[1] * bond_order))
+
+
+def compute_spring_bond_partial_derivative_records(
+    atom_ids: list[int],
+    coordinates: np.ndarray,
+    adjacency_matrix: pd.DataFrame,
+    molecule: Chem.Mol,
+) -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, object]]:
+    if len(atom_ids) != coordinates.shape[0] or molecule.GetNumAtoms() != coordinates.shape[0]:
+        raise ValueError("Spring bond derivative analysis requires aligned atom ids, coordinates, and RDKit atoms")
+
+    atom_index_by_id = {atom_id: index for index, atom_id in enumerate(atom_ids)}
+    atom_symbol_by_id = {int(atom_id): molecule.GetAtomWithIdx(index).GetSymbol() for index, atom_id in enumerate(atom_ids)}
+    bonded_pairs = get_bonded_atom_pairs_from_adjacency(adjacency_matrix)
+
+    atom_gradient_accumulators = {
+        int(atom_id): {
+            "atom_id": int(atom_id),
+            "atom_symbol": atom_symbol_by_id[int(atom_id)],
+            "incident_bond_count": 0,
+            "gradient_vector": np.zeros(3, dtype=np.float64),
+        }
+        for atom_id in atom_ids
+    }
+    reference_distance_source_counts: dict[str, int] = {}
+    bond_records: list[dict[str, object]] = []
+
+    for atom_id_1, atom_id_2 in bonded_pairs:
+        atom_index_1 = atom_index_by_id[atom_id_1]
+        atom_index_2 = atom_index_by_id[atom_id_2]
+        atom_symbol_1 = atom_symbol_by_id[atom_id_1]
+        atom_symbol_2 = atom_symbol_by_id[atom_id_2]
+        bond_order = int(adjacency_matrix.loc[atom_id_1, atom_id_2])
+
+        bond_vector = coordinates[atom_index_1] - coordinates[atom_index_2]
+        distance = float(np.linalg.norm(bond_vector))
+        if distance <= SPRING_DISTANCE_TOLERANCE:
+            raise ValueError(
+                f"Spring bond derivative analysis requires non-zero bonded distances, found {distance} for pair {(atom_id_1, atom_id_2)}"
+            )
+
+        reference_distance, reference_distance_source = infer_reference_bond_length_angstrom(
+            atom_symbol_1,
+            atom_symbol_2,
+            bond_order,
+        )
+        reference_distance_source_counts[reference_distance_source] = (
+            reference_distance_source_counts.get(reference_distance_source, 0) + 1
+        )
+        spring_constant = resolve_spring_constant_for_bond_order(bond_order)
+        distance_residual = float(distance - reference_distance)
+        d_e_ddistance = float(spring_constant * distance_residual)
+        gradient_atom_1 = d_e_ddistance * (bond_vector / distance)
+        gradient_atom_2 = -gradient_atom_1
+        spring_energy = float(0.5 * spring_constant * (distance_residual**2))
+
+        atom_gradient_accumulators[atom_id_1]["gradient_vector"] += gradient_atom_1
+        atom_gradient_accumulators[atom_id_1]["incident_bond_count"] += 1
+        atom_gradient_accumulators[atom_id_2]["gradient_vector"] += gradient_atom_2
+        atom_gradient_accumulators[atom_id_2]["incident_bond_count"] += 1
+
+        bond_records.append(
+            {
+                "atom_id_1": int(atom_id_1),
+                "atom_id_2": int(atom_id_2),
+                "atom_symbol_1": atom_symbol_1,
+                "atom_symbol_2": atom_symbol_2,
+                "bond_order": bond_order,
+                "distance_angstrom": distance,
+                "reference_distance_angstrom": float(reference_distance),
+                "reference_distance_source": reference_distance_source,
+                "distance_residual_angstrom": distance_residual,
+                "spring_constant": spring_constant,
+                "spring_energy": spring_energy,
+                "dE_ddistance": d_e_ddistance,
+                "atom_1_partial_derivatives": {
+                    "dE_dx": float(gradient_atom_1[0]),
+                    "dE_dy": float(gradient_atom_1[1]),
+                    "dE_dz": float(gradient_atom_1[2]),
+                    "gradient_norm": float(np.linalg.norm(gradient_atom_1)),
+                },
+                "atom_2_partial_derivatives": {
+                    "dE_dx": float(gradient_atom_2[0]),
+                    "dE_dy": float(gradient_atom_2[1]),
+                    "dE_dz": float(gradient_atom_2[2]),
+                    "gradient_norm": float(np.linalg.norm(gradient_atom_2)),
+                },
+            }
+        )
+
+    atom_gradient_records: list[dict[str, object]] = []
+    net_gradient_vector = np.zeros(3, dtype=np.float64)
+    for atom_id in atom_ids:
+        accumulator = atom_gradient_accumulators[int(atom_id)]
+        gradient_vector = accumulator["gradient_vector"]
+        net_gradient_vector += gradient_vector
+        atom_gradient_records.append(
+            {
+                "atom_id": int(atom_id),
+                "atom_symbol": str(accumulator["atom_symbol"]),
+                "incident_bond_count": int(accumulator["incident_bond_count"]),
+                "dE_dx": float(gradient_vector[0]),
+                "dE_dy": float(gradient_vector[1]),
+                "dE_dz": float(gradient_vector[2]),
+                "gradient_norm": float(np.linalg.norm(gradient_vector)),
+            }
+        )
+
+    metadata = {
+        "bonded_pair_count": int(len(bond_records)),
+        "reference_distance_source_counts": {
+            str(source): int(count) for source, count in sorted(reference_distance_source_counts.items())
+        },
+        "net_cartesian_gradient": {
+            "dE_dx": float(net_gradient_vector[0]),
+            "dE_dy": float(net_gradient_vector[1]),
+            "dE_dz": float(net_gradient_vector[2]),
+            "gradient_norm": float(np.linalg.norm(net_gradient_vector)),
+        },
+    }
+    return bond_records, atom_gradient_records, metadata
+
+
+def summarize_spring_bond_partial_derivatives(
+    bond_records: list[dict[str, object]],
+    atom_gradient_records: list[dict[str, object]],
+    pair_metadata: dict[str, object],
+) -> dict:
+    if not bond_records:
+        raise ValueError("Spring bond derivative analysis must contain at least one bonded pair")
+
+    distance_residuals = np.array(
+        [float(record["distance_residual_angstrom"]) for record in bond_records],
+        dtype=np.float64,
+    )
+    spring_energies = np.array([float(record["spring_energy"]) for record in bond_records], dtype=np.float64)
+    atom_gradient_norms = np.array(
+        [float(record["gradient_norm"]) for record in atom_gradient_records],
+        dtype=np.float64,
+    )
+
+    distance_residual_quantiles = np.quantile(distance_residuals, [0.25, 0.5, 0.75])
+    spring_energy_quantiles = np.quantile(spring_energies, [0.25, 0.5, 0.75])
+    atom_gradient_quantiles = np.quantile(atom_gradient_norms, [0.25, 0.5, 0.75])
+    zero_residual_bond_count = int(np.count_nonzero(np.isclose(distance_residuals, 0.0, atol=1e-12)))
+
+    return {
+        "distance_residual_angstrom": {
+            "count": int(distance_residuals.size),
+            "min": float(distance_residuals.min()),
+            "mean": float(distance_residuals.mean()),
+            "std": float(distance_residuals.std(ddof=0)),
+            "q25": float(distance_residual_quantiles[0]),
+            "median": float(distance_residual_quantiles[1]),
+            "q75": float(distance_residual_quantiles[2]),
+            "max": float(distance_residuals.max()),
+            "zero_residual_bond_count": zero_residual_bond_count,
+        },
+        "spring_energy": {
+            "count": int(spring_energies.size),
+            "total": float(spring_energies.sum()),
+            "min": float(spring_energies.min()),
+            "mean": float(spring_energies.mean()),
+            "std": float(spring_energies.std(ddof=0)),
+            "q25": float(spring_energy_quantiles[0]),
+            "median": float(spring_energy_quantiles[1]),
+            "q75": float(spring_energy_quantiles[2]),
+            "max": float(spring_energies.max()),
+        },
+        "atom_gradient_norm": {
+            "count": int(atom_gradient_norms.size),
+            "min": float(atom_gradient_norms.min()),
+            "mean": float(atom_gradient_norms.mean()),
+            "std": float(atom_gradient_norms.std(ddof=0)),
+            "q25": float(atom_gradient_quantiles[0]),
+            "median": float(atom_gradient_quantiles[1]),
+            "q75": float(atom_gradient_quantiles[2]),
+            "max": float(atom_gradient_norms.max()),
+        },
+        "gradient_balance": pair_metadata["net_cartesian_gradient"],
     }
 
 
@@ -1056,6 +1289,85 @@ def write_bonded_angle_analysis(sdf_filename: str, json_filename: str):
     log.info("Bonded angle analysis written to %s", output_path)
 
 
+def write_spring_bond_potential_analysis(sdf_filename: str, json_filename: str):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    molecules = load_sdf_molecules(sdf_filename)
+
+    if not molecules:
+        raise ValueError(f"No valid molecules found in {sdf_filename}")
+
+    molecule = molecules[IDX1]
+    coordinates = extract_3d_coordinates(molecule)
+    adjacency_matrix = build_adjacency_matrix(json_filename)
+    atom_ids = adjacency_matrix.index.tolist()
+
+    if len(atom_ids) != coordinates.shape[0]:
+        raise ValueError(
+            f"Expected {len(atom_ids)} atom ids from {json_filename}, found {coordinates.shape[0]} coordinates"
+        )
+
+    bond_records, atom_gradient_records, pair_metadata = compute_spring_bond_partial_derivative_records(
+        atom_ids,
+        coordinates,
+        adjacency_matrix,
+        molecule,
+    )
+    statistics = summarize_spring_bond_partial_derivatives(bond_records, atom_gradient_records, pair_metadata)
+    output_path = Path(out_dir) / f"{Path(sdf_filename).stem}.spring_bond_potential_analysis.json"
+
+    with output_path.open("w", encoding=UTF_8) as file:
+        json.dump(
+            {
+                "atom_ids": atom_ids,
+                "bonded_pair_spring_records": bond_records,
+                "atom_gradient_records": atom_gradient_records,
+                "statistics": statistics,
+                "analysis": {
+                    "energy_equation": "E_ij = 0.5 * k_ij * (d_ij - d0_ij)^2",
+                    "distance_equation": "d_ij = ||r_i - r_j||",
+                    "distance_derivative_equation": "dE_ij/dd_ij = k_ij * (d_ij - d0_ij)",
+                    "cartesian_gradient_equation": "dE_ij/dr_i = k_ij * (d_ij - d0_ij) * (r_i - r_j) / d_ij",
+                    "reaction_gradient_equation": "dE_ij/dr_j = -dE_ij/dr_i",
+                    "reference_distance_policy": (
+                        "Chemistry-informed lookup keyed by atom symbols and bond order with a covalent-radius fallback"
+                    ),
+                    "spring_constant_policy": "Bond-order-specific constants for an educational harmonic bond model",
+                    "bond_order_spring_constants": {
+                        str(bond_order): float(value)
+                        for bond_order, value in sorted(DEFAULT_BOND_ORDER_SPRING_CONSTANTS.items())
+                    },
+                    "reference_distance_lookup_examples_angstrom": {
+                        f"{symbol_1}-{symbol_2}-order-{bond_order}": float(distance)
+                        for (symbol_1, symbol_2, bond_order), distance in sorted(
+                            DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM.items()
+                        )
+                    },
+                    "interpretation": (
+                        "Positive and negative Cartesian partial derivatives quantify how the spring-bond energy changes "
+                        "under infinitesimal coordinate displacements of each bonded atom in the current CID 4 conformer."
+                    ),
+                },
+                "metadata": {
+                    "atom_count": len(atom_ids),
+                    "bonded_pair_count": int(pair_metadata["bonded_pair_count"]),
+                    "source_sdf": sdf_filename,
+                    "source_bond_json": json_filename,
+                    "distance_units": "angstrom",
+                    "reference_distance_units": "angstrom",
+                    "spring_constant_units": "relative spring units / angstrom^2",
+                    "spring_energy_units": "relative spring units",
+                    "coordinate_partial_derivative_units": "relative spring units / angstrom",
+                    "reference_distance_source_counts": pair_metadata["reference_distance_source_counts"],
+                },
+            },
+            file,
+            indent=2,
+        )
+
+    log.info("Spring bond potential analysis written to %s", output_path)
+
+
 def write_bioactivity_analysis(filename: str):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
@@ -1237,6 +1549,7 @@ def main():
     write_distance_matrix(sdf_filename, json_filename)
     write_bonded_distance_analysis(sdf_filename, json_filename)
     write_bonded_angle_analysis(sdf_filename, json_filename)
+    write_spring_bond_potential_analysis(sdf_filename, json_filename)
     adjacency_matrix = write_adjacency_matrix(json_filename)
     write_adjacency_spectrum(json_filename, adjacency_matrix)
     write_laplacian_analysis(json_filename, adjacency_matrix)

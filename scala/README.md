@@ -30,6 +30,12 @@ The same run also writes a bonded-distance comparison JSON artifact for the acti
 The same run also writes a bond-angle analysis JSON artifact for the active conformer:
 - bonded angles $A$-$B$-$C$ derived from the 3D coordinates using the dot-product formula, where $A$-$B$ and $B$-$C$ are bonded and $B$ is the central atom
 
+The same run now also writes a spring-bond potential JSON artifact for the active conformer:
+- per-bond harmonic spring records using $E_{ij} = 0.5 k_{ij}(d_{ij} - d0_{ij})^2$ with chemistry-informed reference lengths keyed by atom symbols and bond order
+- Cartesian partial derivatives $\partial E / \partial x_i$, $\partial E / \partial y_i$, and $\partial E / \partial z_i$ for each bonded atom pair, along with per-atom aggregated gradient vectors and gradient-balance statistics
+
+This spring-bond analysis is an educational local-geometry diagnostic rather than a production force field: it uses bond-order-specific spring constants, uses a small lookup table of common reference bond lengths with a covalent-radius fallback, and reports how the current 3D CID 4 conformer would change the harmonic bond energy under infinitesimal Cartesian displacements.
+
 The same run now also writes a manual gradient-descent analysis from the atom feature matrix of the active CID 4 conformer:
 - a CSV trace of per-epoch weight, gradient, summed squared error, and MSE for the no-intercept model $\hat{y} = wx$
 - a summary JSON documenting the hand-derived gradient $\frac{\partial}{\partial w}\sum_i(y_i - wx_i)^2 = 2\sum_i x_i(wx_i - y_i)$ with atom mass as the feature and atomic number as the target

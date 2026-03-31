@@ -22,15 +22,37 @@
 
 #include <nlohmann/json.hpp>
 
+#include <GraphMol/PeriodicTable.h>
+
 namespace pubchem {
 namespace {
 using Json = nlohmann::json;
 
 constexpr double kAngleVectorTolerance = 1.0e-10;
+constexpr double kSpringDistanceTolerance = 1.0e-12;
+constexpr double kSpringZeroResidualTolerance = 1.0e-12;
 constexpr double kMinimumPositiveConcentration = 1.0e-6;
 constexpr double kHillAucLowerBoundScale = 1.0e-2;
 constexpr double kHillAucUpperBoundScale = 1.0e2;
 constexpr std::size_t kHillAucGridSize = 400U;
+
+using BondReferenceKey = std::tuple<std::string, std::string, int>;
+
+const std::map<int, double> kDefaultBondOrderSpringConstants{{1, 300.0}, {2, 500.0}, {3, 700.0}};
+const std::map<int, double> kDefaultBondOrderLengthScales{{1, 1.0}, {2, 0.9}, {3, 0.85}};
+const std::map<BondReferenceKey, double> kDefaultReferenceBondLengthsAngstrom{
+    {BondReferenceKey{"C", "C", 1}, 1.54},
+    {BondReferenceKey{"C", "C", 2}, 1.34},
+    {BondReferenceKey{"C", "C", 3}, 1.20},
+    {BondReferenceKey{"C", "N", 1}, 1.47},
+    {BondReferenceKey{"C", "N", 2}, 1.28},
+    {BondReferenceKey{"C", "N", 3}, 1.16},
+    {BondReferenceKey{"C", "O", 1}, 1.43},
+    {BondReferenceKey{"C", "O", 2}, 1.23},
+    {BondReferenceKey{"C", "H", 1}, 1.09},
+    {BondReferenceKey{"N", "H", 1}, 1.01},
+    {BondReferenceKey{"O", "H", 1}, 0.96},
+};
 
 class AdjacencyInputError : public std::invalid_argument {
   public:
@@ -55,6 +77,19 @@ class BioactivityAnalysisError : public std::runtime_error {
 class GradientDescentAnalysisError : public std::runtime_error {
   public:
     using std::runtime_error::runtime_error;
+};
+
+struct BondedPairWithOrder {
+    int atomId1;
+    int atomId2;
+    int bondOrder;
+};
+
+struct AtomGradientAccumulator {
+    int atomId;
+    std::string atomSymbol;
+    std::size_t incidentBondCount;
+    std::vector<double> gradientVector;
 };
 
 struct EigenComponents {
@@ -720,6 +755,26 @@ void validateBondAngleAlignment(const DistanceMatrixResult& distanceMatrix,
     }
 }
 
+void validateSpringBondPotentialAlignment(const DistanceMatrixResult& distanceMatrix,
+                                          const AdjacencyMatrix& adjacencyMatrix,
+                                          const std::vector<AtomRecord>& atoms)
+{
+    if (distanceMatrix.atomIds != adjacencyMatrix.atomIds) {
+        throw DistanceAnalysisError(
+            "Distance and adjacency atomIds must be aligned for spring-bond analysis");
+    }
+
+    if (distanceMatrix.xyzCoordinates.size() != adjacencyMatrix.values.size()) {
+        throw DistanceAnalysisError(
+            "Distance coordinates and adjacency matrix must have the same size");
+    }
+
+    if (atoms.size() != distanceMatrix.atomIds.size()) {
+        throw DistanceAnalysisError(
+            "Spring-bond analysis requires atom records aligned with distance-matrix atom ids");
+    }
+}
+
 std::vector<BondedAtomPair> bondedAtomPairsFromAdjacency(const AdjacencyMatrix& adjacencyMatrix)
 {
     std::vector<BondedAtomPair> pairs;
@@ -731,6 +786,33 @@ std::vector<BondedAtomPair> bondedAtomPairsFromAdjacency(const AdjacencyMatrix& 
                 pairs.push_back(BondedAtomPair{
                     .atomId1 = adjacencyMatrix.atomIds[rowIndex],
                     .atomId2 = adjacencyMatrix.atomIds[columnIndex],
+                });
+            }
+        }
+    }
+
+    if (pairs.empty()) {
+        throw DistanceAnalysisError(
+            "Expected at least one bonded atom pair in the adjacency matrix");
+    }
+
+    return pairs;
+}
+
+std::vector<BondedPairWithOrder>
+bondedPairsWithOrderFromAdjacency(const AdjacencyMatrix& adjacencyMatrix)
+{
+    std::vector<BondedPairWithOrder> pairs;
+    for (std::size_t rowIndex = 0; rowIndex < adjacencyMatrix.values.size(); ++rowIndex) {
+        for (std::size_t columnIndex = rowIndex + 1;
+             columnIndex < adjacencyMatrix.values[rowIndex].size();
+             ++columnIndex) {
+            const int bondOrder = adjacencyMatrix.values[rowIndex][columnIndex];
+            if (bondOrder > 0) {
+                pairs.push_back(BondedPairWithOrder{
+                    .atomId1 = adjacencyMatrix.atomIds[rowIndex],
+                    .atomId2 = adjacencyMatrix.atomIds[columnIndex],
+                    .bondOrder = bondOrder,
                 });
             }
         }
@@ -840,6 +922,157 @@ double computeBondAngleDegrees(const std::vector<double>& firstBondVector,
         dotProduct(firstBondVector, secondBondVector) / (firstMagnitude * secondMagnitude);
     constexpr double radiansToDegrees = 180.0 / std::numbers::pi;
     return std::acos(std::clamp(cosine, -1.0, 1.0)) * radiansToDegrees;
+}
+
+std::vector<double> addCoordinates(const std::vector<double>& left,
+                                   const std::vector<double>& right)
+{
+    return {left[0] + right[0], left[1] + right[1], left[2] + right[2]};
+}
+
+std::vector<double> scaleCoordinates(const std::vector<double>& values, const double factor)
+{
+    return {values[0] * factor, values[1] * factor, values[2] * factor};
+}
+
+std::string normalizedAtomSymbol(const AtomRecord& atom)
+{
+    if (!atom.symbol.empty()) {
+        return atom.symbol;
+    }
+
+    if (atom.atomicNumber <= 0) {
+        throw DistanceAnalysisError("Spring-bond analysis could not resolve an atom symbol");
+    }
+
+    return RDKit::PeriodicTable::getTable()->getElementSymbol(atom.atomicNumber);
+}
+
+double covalentRadiusForSymbol(const std::string& symbol)
+{
+    const double radius = RDKit::PeriodicTable::getTable()->getRcovalent(symbol);
+    if (!(radius > 0.0)) {
+        throw DistanceAnalysisError("Could not infer a positive covalent radius for symbol: " +
+                                    symbol);
+    }
+
+    return radius;
+}
+
+std::pair<double, std::string> inferReferenceBondLengthAngstrom(const std::string& atomSymbol1,
+                                                                const std::string& atomSymbol2,
+                                                                const int bondOrder)
+{
+    if (bondOrder <= 0) {
+        throw DistanceAnalysisError(
+            "Bond order must be positive when inferring a spring reference distance");
+    }
+
+    const auto [leftSymbol, rightSymbol] =
+        std::minmax(atomSymbol1, atomSymbol2, std::less<std::string>{});
+    const BondReferenceKey key{leftSymbol, rightSymbol, bondOrder};
+    const auto lookupIterator = kDefaultReferenceBondLengthsAngstrom.find(key);
+    if (lookupIterator != kDefaultReferenceBondLengthsAngstrom.end()) {
+        return {lookupIterator->second, "lookupTable"};
+    }
+
+    const double covalentRadiusSum =
+        covalentRadiusForSymbol(atomSymbol1) + covalentRadiusForSymbol(atomSymbol2);
+    const auto scaleIterator = kDefaultBondOrderLengthScales.find(bondOrder);
+    const double lengthScale = scaleIterator != kDefaultBondOrderLengthScales.end()
+                                   ? scaleIterator->second
+                                   : 1.0 / std::sqrt(static_cast<double>(bondOrder));
+    return {covalentRadiusSum * lengthScale, "covalentRadiusFallback"};
+}
+
+double resolveSpringConstantForBondOrder(const int bondOrder)
+{
+    if (bondOrder <= 0) {
+        throw DistanceAnalysisError("Bond order must be positive when resolving a spring constant");
+    }
+
+    const auto iterator = kDefaultBondOrderSpringConstants.find(bondOrder);
+    if (iterator != kDefaultBondOrderSpringConstants.end()) {
+        return iterator->second;
+    }
+
+    return kDefaultBondOrderSpringConstants.at(1) * static_cast<double>(bondOrder);
+}
+
+CartesianPartialDerivatives toCartesianPartialDerivatives(const std::vector<double>& gradientVector)
+{
+    return CartesianPartialDerivatives{.dEDx = gradientVector[0],
+                                       .dEDy = gradientVector[1],
+                                       .dEDz = gradientVector[2],
+                                       .gradientNorm = vectorMagnitude(gradientVector)};
+}
+
+DistanceResidualStatistics summarizeDistanceResiduals(const std::vector<double>& residuals)
+{
+    const double meanResidual = averageOrZero(residuals);
+    double variance = 0.0;
+    for (const double residual : residuals) {
+        const double delta = residual - meanResidual;
+        variance += delta * delta;
+    }
+    variance /= static_cast<double>(residuals.size());
+
+    return DistanceResidualStatistics{
+        .count = residuals.size(),
+        .min = *std::min_element(residuals.begin(), residuals.end()),
+        .mean = meanResidual,
+        .std = std::sqrt(variance),
+        .q25 = computePercentile(residuals, 0.25),
+        .median = computePercentile(residuals, 0.5),
+        .q75 = computePercentile(residuals, 0.75),
+        .max = *std::max_element(residuals.begin(), residuals.end()),
+        .zeroResidualBondCount = static_cast<std::size_t>(
+            std::count_if(residuals.begin(), residuals.end(), [](const double value) {
+                return std::abs(value) <= kSpringZeroResidualTolerance;
+            }))};
+}
+
+SpringEnergyStatistics summarizeSpringEnergies(const std::vector<double>& springEnergies)
+{
+    const double meanEnergy = averageOrZero(springEnergies);
+    double variance = 0.0;
+    for (const double springEnergy : springEnergies) {
+        const double delta = springEnergy - meanEnergy;
+        variance += delta * delta;
+    }
+    variance /= static_cast<double>(springEnergies.size());
+
+    return SpringEnergyStatistics{
+        .count = springEnergies.size(),
+        .total = std::accumulate(springEnergies.begin(), springEnergies.end(), 0.0),
+        .min = *std::min_element(springEnergies.begin(), springEnergies.end()),
+        .mean = meanEnergy,
+        .std = std::sqrt(variance),
+        .q25 = computePercentile(springEnergies, 0.25),
+        .median = computePercentile(springEnergies, 0.5),
+        .q75 = computePercentile(springEnergies, 0.75),
+        .max = *std::max_element(springEnergies.begin(), springEnergies.end())};
+}
+
+AtomGradientNormStatistics summarizeAtomGradientNorms(const std::vector<double>& atomGradientNorms)
+{
+    const double meanNorm = averageOrZero(atomGradientNorms);
+    double variance = 0.0;
+    for (const double atomGradientNorm : atomGradientNorms) {
+        const double delta = atomGradientNorm - meanNorm;
+        variance += delta * delta;
+    }
+    variance /= static_cast<double>(atomGradientNorms.size());
+
+    return AtomGradientNormStatistics{
+        .count = atomGradientNorms.size(),
+        .min = *std::min_element(atomGradientNorms.begin(), atomGradientNorms.end()),
+        .mean = meanNorm,
+        .std = std::sqrt(variance),
+        .q25 = computePercentile(atomGradientNorms, 0.25),
+        .median = computePercentile(atomGradientNorms, 0.5),
+        .q75 = computePercentile(atomGradientNorms, 0.75),
+        .max = *std::max_element(atomGradientNorms.begin(), atomGradientNorms.end())};
 }
 
 BondAngleStatistics summarizeBondAngles(const std::vector<BondAngleMeasurement>& bondAngles)
@@ -2924,6 +3157,183 @@ BondAngleAnalysisResult buildBondAngleAnalysis(const DistanceMatrixResult& dista
     return makeBondAngleAnalysisResult(distanceMatrix, triplets, std::move(bondAngles));
 }
 
+SpringBondPotentialAnalysisResult
+buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
+                                 const AdjacencyMatrix& adjacencyMatrix,
+                                 const std::vector<AtomRecord>& atoms)
+{
+    validateSpringBondPotentialAlignment(distanceMatrix, adjacencyMatrix, atoms);
+
+    std::map<int, std::size_t> atomIndexById;
+    std::map<int, std::string> atomSymbolById;
+    for (std::size_t index = 0; index < distanceMatrix.atomIds.size(); ++index) {
+        const int atomId = distanceMatrix.atomIds[index];
+        atomIndexById.emplace(atomId, index);
+        atomSymbolById.emplace(atomId, normalizedAtomSymbol(atoms[index]));
+    }
+
+    const std::vector<BondedPairWithOrder> bondedPairs =
+        bondedPairsWithOrderFromAdjacency(adjacencyMatrix);
+    std::map<int, AtomGradientAccumulator> atomGradientAccumulators;
+    for (const int atomId : distanceMatrix.atomIds) {
+        atomGradientAccumulators.emplace(
+            atomId,
+            AtomGradientAccumulator{.atomId = atomId,
+                                    .atomSymbol = atomSymbolById.at(atomId),
+                                    .incidentBondCount = 0U,
+                                    .gradientVector = {0.0, 0.0, 0.0}});
+    }
+
+    std::map<std::string, std::size_t> referenceDistanceSourceCounts;
+    std::vector<BondedPairSpringRecord> bondRecords;
+    bondRecords.reserve(bondedPairs.size());
+
+    for (const auto& bondedPair : bondedPairs) {
+        const std::size_t atomIndex1 = atomIndexById.at(bondedPair.atomId1);
+        const std::size_t atomIndex2 = atomIndexById.at(bondedPair.atomId2);
+        const std::string& atomSymbol1 = atomSymbolById.at(bondedPair.atomId1);
+        const std::string& atomSymbol2 = atomSymbolById.at(bondedPair.atomId2);
+        const std::vector<double> bondVector = subtractCoordinates(
+            distanceMatrix.xyzCoordinates[atomIndex1], distanceMatrix.xyzCoordinates[atomIndex2]);
+        const double distance = distanceMatrix.distanceMatrix[atomIndex1][atomIndex2];
+        if (distance <= kSpringDistanceTolerance) {
+            throw DistanceAnalysisError(
+                "Spring bond derivative analysis requires non-zero bonded distances");
+        }
+
+        const auto [referenceDistance, referenceDistanceSource] =
+            inferReferenceBondLengthAngstrom(atomSymbol1, atomSymbol2, bondedPair.bondOrder);
+        const double springConstant = resolveSpringConstantForBondOrder(bondedPair.bondOrder);
+        const double distanceResidual = distance - referenceDistance;
+        const double dEDDistance = springConstant * distanceResidual;
+        const std::vector<double> gradientAtom1 =
+            scaleCoordinates(bondVector, dEDDistance / distance);
+        const std::vector<double> gradientAtom2 = scaleCoordinates(gradientAtom1, -1.0);
+        const double springEnergy = 0.5 * springConstant * distanceResidual * distanceResidual;
+
+        ++referenceDistanceSourceCounts[referenceDistanceSource];
+        auto& atomAccumulator1 = atomGradientAccumulators.at(bondedPair.atomId1);
+        atomAccumulator1.gradientVector =
+            addCoordinates(atomAccumulator1.gradientVector, gradientAtom1);
+        ++atomAccumulator1.incidentBondCount;
+        auto& atomAccumulator2 = atomGradientAccumulators.at(bondedPair.atomId2);
+        atomAccumulator2.gradientVector =
+            addCoordinates(atomAccumulator2.gradientVector, gradientAtom2);
+        ++atomAccumulator2.incidentBondCount;
+
+        bondRecords.push_back(BondedPairSpringRecord{
+            .atomId1 = bondedPair.atomId1,
+            .atomId2 = bondedPair.atomId2,
+            .atomSymbol1 = atomSymbol1,
+            .atomSymbol2 = atomSymbol2,
+            .bondOrder = bondedPair.bondOrder,
+            .distanceAngstrom = distance,
+            .referenceDistanceAngstrom = referenceDistance,
+            .referenceDistanceSource = referenceDistanceSource,
+            .distanceResidualAngstrom = distanceResidual,
+            .springConstant = springConstant,
+            .springEnergy = springEnergy,
+            .dEDDistance = dEDDistance,
+            .atom1PartialDerivatives = toCartesianPartialDerivatives(gradientAtom1),
+            .atom2PartialDerivatives = toCartesianPartialDerivatives(gradientAtom2)});
+    }
+
+    std::vector<AtomGradientRecord> atomGradientRecords;
+    atomGradientRecords.reserve(distanceMatrix.atomIds.size());
+    std::vector<double> netGradientVector{0.0, 0.0, 0.0};
+    for (const int atomId : distanceMatrix.atomIds) {
+        const auto& accumulator = atomGradientAccumulators.at(atomId);
+        netGradientVector = addCoordinates(netGradientVector, accumulator.gradientVector);
+        atomGradientRecords.push_back(
+            AtomGradientRecord{.atomId = accumulator.atomId,
+                               .atomSymbol = accumulator.atomSymbol,
+                               .incidentBondCount = accumulator.incidentBondCount,
+                               .dEDx = accumulator.gradientVector[0],
+                               .dEDy = accumulator.gradientVector[1],
+                               .dEDz = accumulator.gradientVector[2],
+                               .gradientNorm = vectorMagnitude(accumulator.gradientVector)});
+    }
+
+    std::vector<double> distanceResiduals;
+    std::vector<double> springEnergies;
+    std::vector<double> atomGradientNorms;
+    distanceResiduals.reserve(bondRecords.size());
+    springEnergies.reserve(bondRecords.size());
+    atomGradientNorms.reserve(atomGradientRecords.size());
+    for (const auto& bondRecord : bondRecords) {
+        distanceResiduals.push_back(bondRecord.distanceResidualAngstrom);
+        springEnergies.push_back(bondRecord.springEnergy);
+    }
+    for (const auto& atomGradientRecord : atomGradientRecords) {
+        atomGradientNorms.push_back(atomGradientRecord.gradientNorm);
+    }
+
+    std::vector<std::pair<std::string, double>> bondOrderSpringConstants;
+    for (const auto& [bondOrder, value] : kDefaultBondOrderSpringConstants) {
+        bondOrderSpringConstants.emplace_back(std::to_string(bondOrder), value);
+    }
+
+    std::vector<std::pair<std::string, double>> referenceDistanceLookupExamples;
+    for (const auto& [key, value] : kDefaultReferenceBondLengthsAngstrom) {
+        const auto& [symbol1, symbol2, bondOrder] = key;
+        referenceDistanceLookupExamples.emplace_back(
+            symbol1 + "-" + symbol2 + "-order-" + std::to_string(bondOrder), value);
+    }
+
+    std::vector<std::pair<std::string, std::size_t>> sortedSourceCounts;
+    for (const auto& [source, count] : referenceDistanceSourceCounts) {
+        sortedSourceCounts.emplace_back(source, count);
+    }
+
+    return SpringBondPotentialAnalysisResult{
+        .atomIds = distanceMatrix.atomIds,
+        .bondedPairSpringRecords = std::move(bondRecords),
+        .atomGradientRecords = std::move(atomGradientRecords),
+        .statistics =
+            SpringBondPotentialStatistics{
+                .distanceResidualAngstrom = summarizeDistanceResiduals(distanceResiduals),
+                .springEnergy = summarizeSpringEnergies(springEnergies),
+                .atomGradientNorm = summarizeAtomGradientNorms(atomGradientNorms),
+                .gradientBalance =
+                    NetCartesianGradient{.dEDx = netGradientVector[0],
+                                         .dEDy = netGradientVector[1],
+                                         .dEDz = netGradientVector[2],
+                                         .gradientNorm = vectorMagnitude(netGradientVector)},
+            },
+        .analysis =
+            SpringBondPotentialAnalysis{
+                .energyEquation = "E_ij = 0.5 * k_ij * (d_ij - d0_ij)^2",
+                .distanceEquation = "d_ij = ||r_i - r_j||",
+                .distanceDerivativeEquation = "dE_ij/dd_ij = k_ij * (d_ij - d0_ij)",
+                .cartesianGradientEquation =
+                    "dE_ij/dr_i = k_ij * (d_ij - d0_ij) * (r_i - r_j) / d_ij",
+                .reactionGradientEquation = "dE_ij/dr_j = -dE_ij/dr_i",
+                .referenceDistancePolicy = "Chemistry-informed lookup keyed by atom symbols and "
+                                           "bond order with a covalent-radius fallback",
+                .springConstantPolicy =
+                    "Bond-order-specific constants for an educational harmonic bond model",
+                .bondOrderSpringConstants = std::move(bondOrderSpringConstants),
+                .referenceDistanceLookupExamplesAngstrom =
+                    std::move(referenceDistanceLookupExamples),
+                .interpretation =
+                    "Positive and negative Cartesian partial derivatives quantify how the "
+                    "spring-bond energy changes under infinitesimal coordinate displacements of "
+                    "each bonded atom in the current CID 4 conformer.",
+            },
+        .metadata = SpringBondPotentialMetadata{
+            .atomCount = distanceMatrix.atomIds.size(),
+            .bondedPairCount = bondedPairs.size(),
+            .sourceDistanceMethod = distanceMatrix.method,
+            .sourceAdjacencyMethod = adjacencyMatrix.method,
+            .distanceUnits = distanceMatrix.metadata.units,
+            .referenceDistanceUnits = "angstrom",
+            .springConstantUnits = "relative spring units / angstrom^2",
+            .springEnergyUnits = "relative spring units",
+            .coordinatePartialDerivativeUnits = "relative spring units / angstrom",
+            .referenceDistanceSourceCounts = std::move(sortedSourceCounts),
+        }};
+}
+
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory)
 {
     return dataDirectory / "out";
@@ -2981,6 +3391,15 @@ std::filesystem::path bondAngleOutputJsonPath(const std::filesystem::path& outpu
 {
     return outputDirectory / (sourceFile.stem().string() + "." + std::string(distanceMethod) +
                               ".bond_angle_analysis.json");
+}
+
+std::filesystem::path
+springBondPotentialOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                  const std::filesystem::path& sourceFile,
+                                  const std::string_view distanceMethod)
+{
+    return outputDirectory / (sourceFile.stem().string() + "." + std::string(distanceMethod) +
+                              ".spring_bond_potential_analysis.json");
 }
 
 std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,

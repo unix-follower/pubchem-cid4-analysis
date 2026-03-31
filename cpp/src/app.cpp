@@ -382,6 +382,128 @@ nlohmann::json toJson(const pubchem::BondAngleAnalysisResult& bondAngleAnalysis)
     };
 }
 
+nlohmann::json toJson(const pubchem::SpringBondPotentialAnalysisResult& springBondAnalysis)
+{
+    auto partialDerivativesToJson = [](const pubchem::CartesianPartialDerivatives& derivatives) {
+        return nlohmann::json{{"dEDx", derivatives.dEDx},
+                              {"dEDy", derivatives.dEDy},
+                              {"dEDz", derivatives.dEDz},
+                              {"gradientNorm", derivatives.gradientNorm}};
+    };
+
+    nlohmann::json bondRecords = nlohmann::json::array();
+    for (const auto& record : springBondAnalysis.bondedPairSpringRecords) {
+        bondRecords.push_back(
+            {{"atomId1", record.atomId1},
+             {"atomId2", record.atomId2},
+             {"atomSymbol1", record.atomSymbol1},
+             {"atomSymbol2", record.atomSymbol2},
+             {"bondOrder", record.bondOrder},
+             {"distanceAngstrom", record.distanceAngstrom},
+             {"referenceDistanceAngstrom", record.referenceDistanceAngstrom},
+             {"referenceDistanceSource", record.referenceDistanceSource},
+             {"distanceResidualAngstrom", record.distanceResidualAngstrom},
+             {"springConstant", record.springConstant},
+             {"springEnergy", record.springEnergy},
+             {"dEDDistance", record.dEDDistance},
+             {"atom1PartialDerivatives", partialDerivativesToJson(record.atom1PartialDerivatives)},
+             {"atom2PartialDerivatives",
+              partialDerivativesToJson(record.atom2PartialDerivatives)}});
+    }
+
+    nlohmann::json atomGradientRecords = nlohmann::json::array();
+    for (const auto& record : springBondAnalysis.atomGradientRecords) {
+        atomGradientRecords.push_back({{"atomId", record.atomId},
+                                       {"atomSymbol", record.atomSymbol},
+                                       {"incidentBondCount", record.incidentBondCount},
+                                       {"dEDx", record.dEDx},
+                                       {"dEDy", record.dEDy},
+                                       {"dEDz", record.dEDz},
+                                       {"gradientNorm", record.gradientNorm}});
+    }
+
+    nlohmann::json bondOrderSpringConstants = nlohmann::json::object();
+    for (const auto& [key, value] : springBondAnalysis.analysis.bondOrderSpringConstants) {
+        bondOrderSpringConstants[key] = value;
+    }
+
+    nlohmann::json referenceDistanceLookupExamples = nlohmann::json::object();
+    for (const auto& [key, value] :
+         springBondAnalysis.analysis.referenceDistanceLookupExamplesAngstrom) {
+        referenceDistanceLookupExamples[key] = value;
+    }
+
+    nlohmann::json referenceDistanceSourceCounts = nlohmann::json::object();
+    for (const auto& [source, count] : springBondAnalysis.metadata.referenceDistanceSourceCounts) {
+        referenceDistanceSourceCounts[source] = count;
+    }
+
+    return {
+        {"atomIds", springBondAnalysis.atomIds},
+        {"bondedPairSpringRecords", bondRecords},
+        {"atomGradientRecords", atomGradientRecords},
+        {"statistics",
+         {{"distanceResidualAngstrom",
+           {{"count", springBondAnalysis.statistics.distanceResidualAngstrom.count},
+            {"min", springBondAnalysis.statistics.distanceResidualAngstrom.min},
+            {"mean", springBondAnalysis.statistics.distanceResidualAngstrom.mean},
+            {"std", springBondAnalysis.statistics.distanceResidualAngstrom.std},
+            {"q25", springBondAnalysis.statistics.distanceResidualAngstrom.q25},
+            {"median", springBondAnalysis.statistics.distanceResidualAngstrom.median},
+            {"q75", springBondAnalysis.statistics.distanceResidualAngstrom.q75},
+            {"max", springBondAnalysis.statistics.distanceResidualAngstrom.max},
+            {"zeroResidualBondCount",
+             springBondAnalysis.statistics.distanceResidualAngstrom.zeroResidualBondCount}}},
+          {"springEnergy",
+           {{"count", springBondAnalysis.statistics.springEnergy.count},
+            {"total", springBondAnalysis.statistics.springEnergy.total},
+            {"min", springBondAnalysis.statistics.springEnergy.min},
+            {"mean", springBondAnalysis.statistics.springEnergy.mean},
+            {"std", springBondAnalysis.statistics.springEnergy.std},
+            {"q25", springBondAnalysis.statistics.springEnergy.q25},
+            {"median", springBondAnalysis.statistics.springEnergy.median},
+            {"q75", springBondAnalysis.statistics.springEnergy.q75},
+            {"max", springBondAnalysis.statistics.springEnergy.max}}},
+          {"atomGradientNorm",
+           {{"count", springBondAnalysis.statistics.atomGradientNorm.count},
+            {"min", springBondAnalysis.statistics.atomGradientNorm.min},
+            {"mean", springBondAnalysis.statistics.atomGradientNorm.mean},
+            {"std", springBondAnalysis.statistics.atomGradientNorm.std},
+            {"q25", springBondAnalysis.statistics.atomGradientNorm.q25},
+            {"median", springBondAnalysis.statistics.atomGradientNorm.median},
+            {"q75", springBondAnalysis.statistics.atomGradientNorm.q75},
+            {"max", springBondAnalysis.statistics.atomGradientNorm.max}}},
+          {"gradientBalance",
+           {{"dEDx", springBondAnalysis.statistics.gradientBalance.dEDx},
+            {"dEDy", springBondAnalysis.statistics.gradientBalance.dEDy},
+            {"dEDz", springBondAnalysis.statistics.gradientBalance.dEDz},
+            {"gradientNorm", springBondAnalysis.statistics.gradientBalance.gradientNorm}}}}},
+        {"analysis",
+         {{"energyEquation", springBondAnalysis.analysis.energyEquation},
+          {"distanceEquation", springBondAnalysis.analysis.distanceEquation},
+          {"distanceDerivativeEquation", springBondAnalysis.analysis.distanceDerivativeEquation},
+          {"cartesianGradientEquation", springBondAnalysis.analysis.cartesianGradientEquation},
+          {"reactionGradientEquation", springBondAnalysis.analysis.reactionGradientEquation},
+          {"referenceDistancePolicy", springBondAnalysis.analysis.referenceDistancePolicy},
+          {"springConstantPolicy", springBondAnalysis.analysis.springConstantPolicy},
+          {"bondOrderSpringConstants", bondOrderSpringConstants},
+          {"referenceDistanceLookupExamplesAngstrom", referenceDistanceLookupExamples},
+          {"interpretation", springBondAnalysis.analysis.interpretation}}},
+        {"metadata",
+         {{"atomCount", springBondAnalysis.metadata.atomCount},
+          {"bondedPairCount", springBondAnalysis.metadata.bondedPairCount},
+          {"sourceDistanceMethod", springBondAnalysis.metadata.sourceDistanceMethod},
+          {"sourceAdjacencyMethod", springBondAnalysis.metadata.sourceAdjacencyMethod},
+          {"distanceUnits", springBondAnalysis.metadata.distanceUnits},
+          {"referenceDistanceUnits", springBondAnalysis.metadata.referenceDistanceUnits},
+          {"springConstantUnits", springBondAnalysis.metadata.springConstantUnits},
+          {"springEnergyUnits", springBondAnalysis.metadata.springEnergyUnits},
+          {"coordinatePartialDerivativeUnits",
+           springBondAnalysis.metadata.coordinatePartialDerivativeUnits},
+          {"referenceDistanceSourceCounts", referenceDistanceSourceCounts}}},
+    };
+}
+
 nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
 {
     return {
@@ -598,6 +720,14 @@ int main(int argc, char* argv[])
             pubchem::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
         const std::filesystem::path bondAngleOutputPath = pubchem::bondAngleOutputJsonPath(
             outputDir, options.adjacencyJsonFile, bondAngleAnalysis.metadata.sourceDistanceMethod);
+        const pubchem::SpringBondPotentialAnalysisResult springBondPotentialAnalysis =
+            pubchem::buildSpringBondPotentialAnalysis(
+                distanceMatrix, adjacencyMatrix, result.atoms);
+        const std::filesystem::path springBondPotentialOutputPath =
+            pubchem::springBondPotentialOutputJsonPath(
+                outputDir,
+                options.adjacencyJsonFile,
+                springBondPotentialAnalysis.metadata.sourceDistanceMethod);
         const std::filesystem::path adjacencyOutputPath = pubchem::adjacencyOutputJsonPath(
             outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
         const pubchem::EigendecompositionResult eigendecomposition =
@@ -654,6 +784,9 @@ int main(int argc, char* argv[])
         std::ofstream bondAngleOutput(bondAngleOutputPath);
         bondAngleOutput << std::setw(2) << toJson(bondAngleAnalysis) << '\n';
 
+        std::ofstream springBondPotentialOutput(springBondPotentialOutputPath);
+        springBondPotentialOutput << std::setw(2) << toJson(springBondPotentialAnalysis) << '\n';
+
         std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
         eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
 
@@ -692,6 +825,8 @@ int main(int argc, char* argv[])
         std::cout << "Distance matrix written to: " << distanceOutputPath << '\n';
         std::cout << "Bonded distance analysis written to: " << bondedDistanceOutputPath << '\n';
         std::cout << "Bond angle analysis written to: " << bondAngleOutputPath << '\n';
+        std::cout << "Spring bond potential analysis written to: " << springBondPotentialOutputPath
+                  << '\n';
         std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
         std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
         std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';

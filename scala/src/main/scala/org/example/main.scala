@@ -14,6 +14,8 @@ import org.example.analysis.distance.DistanceMatrixResult
 import org.example.analysis.distance.DistanceMatrixService
 import org.example.analysis.distance.GradientDescentAnalysisResult
 import org.example.analysis.distance.GradientDescentAnalysisService
+import org.example.analysis.distance.SpringBondPotentialAnalysisResult
+import org.example.analysis.distance.SpringBondPotentialAnalysisService
 import org.example.analysis.spectrum.EigendecompositionResult
 import org.example.analysis.spectrum.EigendecompositionService
 import org.example.analysis.spectrum.LaplacianAnalysisResult
@@ -120,6 +122,20 @@ private def writeBondAngleAnalysis(
 
   val outputFileName =
     s"${sourceFileName.stripSuffix(".json")}.${result.metadata.sourceDistanceMethod}.bond_angle_analysis.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result)
+  outputPath
+
+private def writeSpringBondPotentialAnalysis(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: SpringBondPotentialAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName =
+    s"${sourceFileName.stripSuffix(".json")}.${result.metadata.sourceDistanceMethod}.spring_bond_potential_analysis.json"
   val outputPath = outDirectory.resolve(outputFileName)
   newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result)
   outputPath
@@ -283,6 +299,10 @@ def readJson(method: String, distanceSource: String) = {
     val bondAngleAnalysis = BondAngleAnalysisService.analyze(distanceMatrix, adjacencyMatrix)
     val bondAngleAnalysisOutputPath =
       writeBondAngleAnalysis(dataDirectory, jsonPath.getFileName.toString, bondAngleAnalysis)
+    val springBondPotentialAnalysis =
+      SpringBondPotentialAnalysisService.analyze(compound, distanceMatrix, adjacencyMatrix)
+    val springBondPotentialAnalysisOutputPath =
+      writeSpringBondPotentialAnalysis(dataDirectory, jsonPath.getFileName.toString, springBondPotentialAnalysis)
     val gradientDescentAnalysis = GradientDescentAnalysisService.analyze(compound, sdfPath)
     val gradientDescentTraceOutputPath =
       writeGradientDescentTrace(dataDirectory, jsonPath.getFileName.toString, gradientDescentAnalysis)
@@ -321,6 +341,7 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Distance matrix output: $distanceMatrixOutputPath")
     logger.info(s"Bonded distance analysis output: $bondedDistanceAnalysisOutputPath")
     logger.info(s"Bond angle analysis output: $bondAngleAnalysisOutputPath")
+    logger.info(s"Spring bond potential analysis output: $springBondPotentialAnalysisOutputPath")
     logger.info(s"Gradient descent trace output: $gradientDescentTraceOutputPath")
     logger.info(s"Gradient descent summary output: $gradientDescentSummaryOutputPath")
     logger.info(s"Gradient descent loss plot output: $gradientDescentLossPlotOutputPath")

@@ -46,7 +46,7 @@ target_include_directories(
 )
 target_link_libraries(
 	analysis_core
-	PUBLIC ${ARMADILLO_LIBRARIES} Boost::graph nlohmann_json::nlohmann_json
+	PUBLIC ${ARMADILLO_LIBRARIES} Boost::graph nlohmann_json::nlohmann_json RDKit::GraphMol RDKit::RDGeneral
 )
 
 add_executable(app src/app.cpp)
