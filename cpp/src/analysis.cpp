@@ -5,6 +5,7 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/graph_traits.hpp>
+#include <boost/math/distributions/beta.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <cctype>
@@ -35,6 +36,9 @@ constexpr double kMinimumPositiveConcentration = 1.0e-6;
 constexpr double kHillAucLowerBoundScale = 1.0e-2;
 constexpr double kHillAucUpperBoundScale = 1.0e2;
 constexpr std::size_t kHillAucGridSize = 400U;
+constexpr double kDefaultPosteriorPriorAlpha = 1.0;
+constexpr double kDefaultPosteriorPriorBeta = 1.0;
+constexpr double kDefaultPosteriorCredibleIntervalMass = 0.95;
 
 using BondReferenceKey = std::tuple<std::string, std::string, int>;
 
@@ -213,6 +217,38 @@ std::string normalizeActivityType(std::string value)
     return value;
 }
 
+std::string normalizePosteriorActivity(std::string value)
+{
+    value = trimWhitespace(std::move(value));
+    std::transform(value.begin(), value.end(), value.begin(), [](const unsigned char character) {
+        return static_cast<char>(std::toupper(character));
+    });
+    if (value.empty()) {
+        return "UNSPECIFIED";
+    }
+    return value;
+}
+
+std::string normalizeOptionalLabel(std::string value, const std::string_view fallback)
+{
+    value = trimWhitespace(std::move(value));
+    if (value.empty()) {
+        return std::string(fallback);
+    }
+    return value;
+}
+
+std::string toTitleCase(std::string value)
+{
+    std::transform(value.begin(), value.end(), value.begin(), [](const unsigned char character) {
+        return static_cast<char>(std::tolower(character));
+    });
+    if (!value.empty()) {
+        value.front() = static_cast<char>(std::toupper(static_cast<unsigned char>(value.front())));
+    }
+    return value;
+}
+
 std::optional<double> parseDouble(const std::string& value)
 {
     const std::string trimmedValue = trimWhitespace(value);
@@ -305,6 +341,18 @@ optionalColumnIndex(const std::map<std::string, std::size_t>& headerIndex,
         return std::nullopt;
     }
     return iterator->second;
+}
+
+std::vector<std::size_t> representativeRowPositions(const std::size_t rowCount)
+{
+    if (rowCount == 0U) {
+        return {};
+    }
+
+    std::vector<std::size_t> positions{0U, rowCount / 2U, rowCount - 1U};
+    std::sort(positions.begin(), positions.end());
+    positions.erase(std::unique(positions.begin(), positions.end()), positions.end());
+    return positions;
 }
 
 void writeCsvTable(const std::vector<std::string>& headers,
@@ -2134,6 +2182,244 @@ void writeBioactivityFilteredCsv(const BioactivityAnalysisResult& result,
     writeCsvTable(result.headers, result.filteredRows, outputPath, "bioactivity CSV output path");
 }
 
+PosteriorBioactivityAnalysisResult
+buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
+                                  const double priorAlpha,
+                                  const double priorBeta,
+                                  const double credibleIntervalMass)
+{
+    if (!(priorAlpha > 0.0) || !(priorBeta > 0.0)) {
+        throw BioactivityAnalysisError("Posterior prior parameters must be positive");
+    }
+    if (!(credibleIntervalMass > 0.0 && credibleIntervalMass < 1.0)) {
+        throw BioactivityAnalysisError("Credible interval mass must be within (0, 1)");
+    }
+
+    std::ifstream input(csvPath);
+    if (!input) {
+        throw BioactivityAnalysisError("Could not open bioactivity input file: " +
+                                       csvPath.string());
+    }
+
+    auto records = parseCsvRecords(input);
+    if (records.empty()) {
+        throw BioactivityAnalysisError("Bioactivity CSV is empty: " + csvPath.string());
+    }
+
+    auto headers = records.front();
+    if (!headers.empty()) {
+        headers.front() = stripUtf8Bom(headers.front());
+    }
+    records.erase(records.begin());
+
+    std::map<std::string, std::size_t> headerIndex;
+    for (std::size_t index = 0; index < headers.size(); ++index) {
+        headerIndex.emplace(headers[index], index);
+    }
+
+    for (const std::string_view requiredHeader : {"Bioactivity_ID", "BioAssay_AID", "Activity"}) {
+        if (!headerIndex.contains(std::string(requiredHeader))) {
+            throw BioactivityAnalysisError("Bioactivity CSV is missing required column: " +
+                                           std::string(requiredHeader));
+        }
+    }
+
+    const std::size_t activityIndex = headerIndex.at("Activity");
+    const std::optional<std::size_t> activityTypeIndex =
+        optionalColumnIndex(headerIndex, "Activity_Type");
+    const std::optional<std::size_t> targetNameIndex =
+        optionalColumnIndex(headerIndex, "Target_Name");
+    const std::optional<std::size_t> bioAssayNameIndex =
+        optionalColumnIndex(headerIndex, "BioAssay_Name");
+
+    std::size_t activeRows = 0U;
+    std::size_t inactiveRows = 0U;
+    std::size_t unspecifiedRows = 0U;
+    std::size_t otherActivityRows = 0U;
+    std::set<long long> retainedBioassayIds;
+    std::vector<std::vector<std::string>> retainedRows;
+
+    for (auto& row : records) {
+        if (row.size() < headers.size()) {
+            row.resize(headers.size());
+        }
+
+        const std::string normalizedActivity = normalizePosteriorActivity(row[activityIndex]);
+        if (normalizedActivity == "ACTIVE") {
+            ++activeRows;
+        }
+        else if (normalizedActivity == "INACTIVE") {
+            ++inactiveRows;
+        }
+        else if (normalizedActivity == "UNSPECIFIED") {
+            ++unspecifiedRows;
+        }
+        else {
+            ++otherActivityRows;
+        }
+
+        if (normalizedActivity != "ACTIVE" && normalizedActivity != "INACTIVE") {
+            continue;
+        }
+
+        row[activityIndex] = toTitleCase(normalizedActivity);
+        if (activityTypeIndex.has_value()) {
+            row[*activityTypeIndex] =
+                normalizeOptionalLabel(valueAtOrEmpty(row, activityTypeIndex), "Unknown");
+        }
+        if (targetNameIndex.has_value()) {
+            row[*targetNameIndex] =
+                normalizeOptionalLabel(valueAtOrEmpty(row, targetNameIndex), "Unknown");
+        }
+        if (bioAssayNameIndex.has_value()) {
+            row[*bioAssayNameIndex] =
+                normalizeOptionalLabel(valueAtOrEmpty(row, bioAssayNameIndex), "Unknown");
+        }
+
+        retainedBioassayIds.insert(parseRequiredLong(row, headerIndex, "BioAssay_AID"));
+        retainedRows.push_back(row);
+    }
+
+    if (retainedRows.empty()) {
+        throw BioactivityAnalysisError("No Active/Inactive rows were found in " +
+                                       csvPath.filename().string());
+    }
+
+    std::stable_sort(
+        retainedRows.begin(), retainedRows.end(), [&](const auto& left, const auto& right) {
+            const std::string_view leftActivity = left.at(activityIndex);
+            const std::string_view rightActivity = right.at(activityIndex);
+            if (leftActivity != rightActivity) {
+                return leftActivity < rightActivity;
+            }
+            const long long leftBioAssayAid = parseRequiredLong(left, headerIndex, "BioAssay_AID");
+            const long long rightBioAssayAid =
+                parseRequiredLong(right, headerIndex, "BioAssay_AID");
+            if (leftBioAssayAid != rightBioAssayAid) {
+                return leftBioAssayAid < rightBioAssayAid;
+            }
+            return parseRequiredLong(left, headerIndex, "Bioactivity_ID") <
+                   parseRequiredLong(right, headerIndex, "Bioactivity_ID");
+        });
+
+    const double posteriorAlpha = priorAlpha + static_cast<double>(activeRows);
+    const double posteriorBeta = priorBeta + static_cast<double>(inactiveRows);
+    const boost::math::beta_distribution<double> posteriorDistribution(posteriorAlpha,
+                                                                       posteriorBeta);
+    const double tailProbability = (1.0 - credibleIntervalMass) / 2.0;
+    const std::optional<double> posteriorMode =
+        posteriorAlpha > 1.0 && posteriorBeta > 1.0
+            ? std::optional<double>((posteriorAlpha - 1.0) / (posteriorAlpha + posteriorBeta - 2.0))
+            : std::nullopt;
+
+    std::vector<PosteriorBioactivityRepresentativeRow> representativeRows;
+    for (const std::size_t position : representativeRowPositions(retainedRows.size())) {
+        const auto& row = retainedRows[position];
+        representativeRows.push_back(PosteriorBioactivityRepresentativeRow{
+            .bioactivityId = parseRequiredLong(row, headerIndex, "Bioactivity_ID"),
+            .bioAssayAid = parseRequiredLong(row, headerIndex, "BioAssay_AID"),
+            .activity = row.at(activityIndex),
+            .activityType =
+                normalizeOptionalLabel(valueAtOrEmpty(row, activityTypeIndex), "Unknown"),
+            .targetName = normalizeOptionalLabel(valueAtOrEmpty(row, targetNameIndex), "Unknown"),
+            .bioAssayName =
+                normalizeOptionalLabel(valueAtOrEmpty(row, bioAssayNameIndex), "Unknown"),
+        });
+    }
+
+    return PosteriorBioactivityAnalysisResult{
+        .sourceFile = csvPath.filename().string(),
+        .headers = std::move(headers),
+        .rows = std::move(retainedRows),
+        .rowCounts =
+            PosteriorBioactivityRowCounts{
+                .totalRows = records.size(),
+                .activeRows = activeRows,
+                .inactiveRows = inactiveRows,
+                .unspecifiedRows = unspecifiedRows,
+                .otherActivityRows = otherActivityRows,
+                .retainedBinaryRows = activeRows + inactiveRows,
+                .droppedNonBinaryRows = records.size() - (activeRows + inactiveRows),
+                .retainedUniqueBioassays = retainedBioassayIds.size(),
+            },
+        .posterior =
+            PosteriorBioactivityPosteriorSection{
+                .prior =
+                    PosteriorBioactivityPrior{
+                        .family = "beta",
+                        .alpha = priorAlpha,
+                        .beta = priorBeta,
+                    },
+                .likelihood =
+                    PosteriorBioactivityLikelihood{
+                        .family = "binomial",
+                        .successLabel = "Active",
+                        .failureLabel = "Inactive",
+                    },
+                .posteriorDistribution =
+                    PosteriorBioactivityDistribution{
+                        .family = "beta",
+                        .alpha = posteriorAlpha,
+                        .beta = posteriorBeta,
+                    },
+                .summary =
+                    PosteriorBioactivitySummaryStatistics{
+                        .posteriorMeanProbabilityActive =
+                            posteriorAlpha / (posteriorAlpha + posteriorBeta),
+                        .posteriorMedianProbabilityActive = quantile(posteriorDistribution, 0.5),
+                        .posteriorModeProbabilityActive = posteriorMode,
+                        .posteriorVariance = (posteriorAlpha * posteriorBeta) /
+                                             (std::pow(posteriorAlpha + posteriorBeta, 2.0) *
+                                              (posteriorAlpha + posteriorBeta + 1.0)),
+                        .credibleIntervalProbabilityActive =
+                            PosteriorBioactivityCredibleInterval{
+                                .mass = credibleIntervalMass,
+                                .lower = quantile(posteriorDistribution, tailProbability),
+                                .upper = quantile(posteriorDistribution, 1.0 - tailProbability),
+                            },
+                        .posteriorProbabilityActiveGt0_5 = 1.0 - cdf(posteriorDistribution, 0.5),
+                        .observedActiveFractionInRetainedRows =
+                            static_cast<double>(activeRows) /
+                            static_cast<double>(activeRows + inactiveRows),
+                    },
+            },
+        .analysis =
+            PosteriorBioactivityAnalysis{
+                .targetQuantity = "P(Active | CID=4)",
+                .model = "Beta-Binomial conjugate update",
+                .updateEquations =
+                    PosteriorBioactivityUpdateEquations{
+                        .posteriorAlpha = "alphaPost = alphaPrior + activeCount",
+                        .posteriorBeta = "betaPost = betaPrior + inactiveCount",
+                        .posteriorMean = "E[p | data] = alphaPost / (alphaPost + betaPost)",
+                    },
+                .binaryEvidenceDefinition =
+                    PosteriorBioactivityBinaryEvidenceDefinition{
+                        .retainedLabels = {"Active", "Inactive"},
+                        .excludedLabels = {"Unspecified"},
+                        .interpretation = "Unspecified rows are excluded from the binary posterior "
+                                          "update and reported only in row counts.",
+                    },
+                .representativeRows = std::move(representativeRows),
+                .notes =
+                    {
+                        "This posterior is an aggregate CID 4 activity probability across retained "
+                        "binary bioassay outcomes.",
+                        "The update uses a Beta(1,1) prior and treats Active/Inactive outcomes as "
+                        "exchangeable Bernoulli evidence.",
+                        "Rows labeled Unspecified are kept out of the posterior update so they do "
+                        "not contribute artificial failures.",
+                    },
+            },
+    };
+}
+
+void writePosteriorBioactivityCsv(const PosteriorBioactivityAnalysisResult& result,
+                                  const std::filesystem::path& outputPath)
+{
+    writeCsvTable(result.headers, result.rows, outputPath, "posterior bioactivity CSV output path");
+}
+
 HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
                                                              const double hillCoefficient)
 {
@@ -3418,6 +3704,20 @@ std::filesystem::path bioactivityPlotSvgPath(const std::filesystem::path& output
                                              const std::filesystem::path& sourceFile)
 {
     return outputDirectory / (sourceFile.stem().string() + ".ic50_pic50.svg");
+}
+
+std::filesystem::path posteriorBioactivityCsvPath(const std::filesystem::path& outputDirectory,
+                                                  const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".activity_posterior_binary_evidence.csv");
+}
+
+std::filesystem::path
+posteriorBioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                    const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".activity_posterior.summary.json");
 }
 
 std::filesystem::path hillDoseResponseCsvPath(const std::filesystem::path& outputDirectory,

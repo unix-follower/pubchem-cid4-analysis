@@ -2,6 +2,8 @@ package org.example
 
 import org.example.analysis.adjacency.AdjacencyMatrix
 import org.example.analysis.adjacency.AdjacencyMatrixService
+import org.example.analysis.bioactivity.BayesianActivityPosteriorAnalysisResult
+import org.example.analysis.bioactivity.BayesianActivityPosteriorService
 import org.example.analysis.bioactivity.BioactivityAnalysisResult
 import org.example.analysis.bioactivity.BioactivityService
 import org.example.analysis.bioactivity.HillDoseResponseAnalysisResult
@@ -214,6 +216,31 @@ private def writeHillDoseResponsePlot(
   val outputPath = outDirectory.resolve(outputFileName)
   HillDoseResponseService.writePlot(result, outputPath)
 
+private def writeBayesianActivityPosteriorSummary(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: BayesianActivityPosteriorAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.activity_posterior.summary.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result.summary)
+  outputPath
+
+private def writeBayesianActivityPosteriorRows(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: BayesianActivityPosteriorAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.activity_posterior_binary_evidence.csv"
+  val outputPath = outDirectory.resolve(outputFileName)
+  BayesianActivityPosteriorService.writeCsv(result, outputPath)
+
 private def writeGradientDescentSummary(
     dataDirectory: String,
     sourceFileName: String,
@@ -320,6 +347,7 @@ def readJson(method: String, distanceSource: String) = {
       writeLaplacianAnalysis(dataDirectory, jsonPath.getFileName.toString, laplacianAnalysis)
     val bioactivityAnalysis = BioactivityService.analyze(bioactivityPath)
     val hillDoseResponseAnalysis = HillDoseResponseService.analyze(bioactivityPath)
+    val bayesianActivityPosteriorAnalysis = BayesianActivityPosteriorService.analyze(bioactivityPath)
     val bioactivityRowsOutputPath =
       writeBioactivityFilteredRows(dataDirectory, bioactivityPath.getFileName.toString, bioactivityAnalysis)
     val bioactivitySummaryOutputPath =
@@ -332,6 +360,18 @@ def readJson(method: String, distanceSource: String) = {
       writeHillDoseResponseSummary(dataDirectory, bioactivityPath.getFileName.toString, hillDoseResponseAnalysis)
     val hillDoseResponsePlotOutputPath =
       writeHillDoseResponsePlot(dataDirectory, bioactivityPath.getFileName.toString, hillDoseResponseAnalysis)
+    val bayesianActivityPosteriorRowsOutputPath =
+      writeBayesianActivityPosteriorRows(
+        dataDirectory,
+        bioactivityPath.getFileName.toString,
+        bayesianActivityPosteriorAnalysis
+      )
+    val bayesianActivityPosteriorSummaryOutputPath =
+      writeBayesianActivityPosteriorSummary(
+        dataDirectory,
+        bioactivityPath.getFileName.toString,
+        bayesianActivityPosteriorAnalysis
+      )
 
     logger.info(s"Adjacency matrix method: ${adjacencyMatrix.method}")
     logger.info(
@@ -355,6 +395,8 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Hill dose-response rows output: $hillDoseResponseRowsOutputPath")
     logger.info(s"Hill dose-response summary output: $hillDoseResponseSummaryOutputPath")
     logger.info(s"Hill dose-response plot output: $hillDoseResponsePlotOutputPath")
+    logger.info(s"Bayesian activity posterior rows output: $bayesianActivityPosteriorRowsOutputPath")
+    logger.info(s"Bayesian activity posterior summary output: $bayesianActivityPosteriorSummaryOutputPath")
   }
 }
 

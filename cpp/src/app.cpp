@@ -540,6 +540,86 @@ nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
     };
 }
 
+nlohmann::json toJson(const pubchem::PosteriorBioactivityAnalysisResult& posteriorBioactivity)
+{
+    nlohmann::json representativeRows = nlohmann::json::array();
+    for (const auto& row : posteriorBioactivity.analysis.representativeRows) {
+        representativeRows.push_back({
+            {"bioactivityId", row.bioactivityId},
+            {"bioAssayAid", row.bioAssayAid},
+            {"activity", row.activity},
+            {"activityType", row.activityType},
+            {"targetName", row.targetName},
+            {"bioAssayName", row.bioAssayName},
+        });
+    }
+
+    nlohmann::json posteriorMode = nullptr;
+    if (posteriorBioactivity.posterior.summary.posteriorModeProbabilityActive.has_value()) {
+        posteriorMode = *posteriorBioactivity.posterior.summary.posteriorModeProbabilityActive;
+    }
+
+    return {
+        {"sourceFile", posteriorBioactivity.sourceFile},
+        {"rowCounts",
+         {{"totalRows", posteriorBioactivity.rowCounts.totalRows},
+          {"activeRows", posteriorBioactivity.rowCounts.activeRows},
+          {"inactiveRows", posteriorBioactivity.rowCounts.inactiveRows},
+          {"unspecifiedRows", posteriorBioactivity.rowCounts.unspecifiedRows},
+          {"otherActivityRows", posteriorBioactivity.rowCounts.otherActivityRows},
+          {"retainedBinaryRows", posteriorBioactivity.rowCounts.retainedBinaryRows},
+          {"droppedNonBinaryRows", posteriorBioactivity.rowCounts.droppedNonBinaryRows},
+          {"retainedUniqueBioassays", posteriorBioactivity.rowCounts.retainedUniqueBioassays}}},
+        {"posterior",
+         {{"prior",
+           {{"family", posteriorBioactivity.posterior.prior.family},
+            {"alpha", posteriorBioactivity.posterior.prior.alpha},
+            {"beta", posteriorBioactivity.posterior.prior.beta}}},
+          {"likelihood",
+           {{"family", posteriorBioactivity.posterior.likelihood.family},
+            {"successLabel", posteriorBioactivity.posterior.likelihood.successLabel},
+            {"failureLabel", posteriorBioactivity.posterior.likelihood.failureLabel}}},
+          {"posteriorDistribution",
+           {{"family", posteriorBioactivity.posterior.posteriorDistribution.family},
+            {"alpha", posteriorBioactivity.posterior.posteriorDistribution.alpha},
+            {"beta", posteriorBioactivity.posterior.posteriorDistribution.beta}}},
+          {"summary",
+           {{"posteriorMeanProbabilityActive",
+             posteriorBioactivity.posterior.summary.posteriorMeanProbabilityActive},
+            {"posteriorMedianProbabilityActive",
+             posteriorBioactivity.posterior.summary.posteriorMedianProbabilityActive},
+            {"posteriorModeProbabilityActive", posteriorMode},
+            {"posteriorVariance", posteriorBioactivity.posterior.summary.posteriorVariance},
+            {"credibleIntervalProbabilityActive",
+             {{"mass",
+               posteriorBioactivity.posterior.summary.credibleIntervalProbabilityActive.mass},
+              {"lower",
+               posteriorBioactivity.posterior.summary.credibleIntervalProbabilityActive.lower},
+              {"upper",
+               posteriorBioactivity.posterior.summary.credibleIntervalProbabilityActive.upper}}},
+            {"posteriorProbabilityActiveGt0_5",
+             posteriorBioactivity.posterior.summary.posteriorProbabilityActiveGt0_5},
+            {"observedActiveFractionInRetainedRows",
+             posteriorBioactivity.posterior.summary.observedActiveFractionInRetainedRows}}}}},
+        {"analysis",
+         {{"targetQuantity", posteriorBioactivity.analysis.targetQuantity},
+          {"model", posteriorBioactivity.analysis.model},
+          {"updateEquations",
+           {{"posteriorAlpha", posteriorBioactivity.analysis.updateEquations.posteriorAlpha},
+            {"posteriorBeta", posteriorBioactivity.analysis.updateEquations.posteriorBeta},
+            {"posteriorMean", posteriorBioactivity.analysis.updateEquations.posteriorMean}}},
+          {"binaryEvidenceDefinition",
+           {{"retainedLabels",
+             posteriorBioactivity.analysis.binaryEvidenceDefinition.retainedLabels},
+            {"excludedLabels",
+             posteriorBioactivity.analysis.binaryEvidenceDefinition.excludedLabels},
+            {"interpretation",
+             posteriorBioactivity.analysis.binaryEvidenceDefinition.interpretation}}},
+          {"representativeRows", representativeRows},
+          {"notes", posteriorBioactivity.analysis.notes}}},
+    };
+}
+
 nlohmann::json toJson(const pubchem::GradientDescentAnalysisResult& gradientDescent)
 {
     nlohmann::json atomRows = nlohmann::json::array();
@@ -747,6 +827,12 @@ int main(int argc, char* argv[])
             pubchem::bioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
         const std::filesystem::path bioactivityPlotOutputPath =
             pubchem::bioactivityPlotSvgPath(outputDir, options.bioactivityFile);
+        const pubchem::PosteriorBioactivityAnalysisResult posteriorBioactivityAnalysis =
+            pubchem::buildPosteriorBioactivityAnalysis(bioactivityCsvPath);
+        const std::filesystem::path posteriorBioactivityCsvOutputPath =
+            pubchem::posteriorBioactivityCsvPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path posteriorBioactivitySummaryOutputPath =
+            pubchem::posteriorBioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
         const pubchem::HillDoseResponseAnalysisResult hillDoseResponseAnalysis =
             pubchem::buildHillDoseResponseAnalysis(bioactivityCsvPath);
         const std::filesystem::path hillDoseResponseCsvOutputPath =
@@ -800,6 +886,13 @@ int main(int argc, char* argv[])
 
         pubchem::writeBioactivityPlotSvg(bioactivityAnalysis, bioactivityPlotOutputPath);
 
+        pubchem::writePosteriorBioactivityCsv(posteriorBioactivityAnalysis,
+                                              posteriorBioactivityCsvOutputPath);
+
+        std::ofstream posteriorBioactivitySummaryOutput(posteriorBioactivitySummaryOutputPath);
+        posteriorBioactivitySummaryOutput << std::setw(2) << toJson(posteriorBioactivityAnalysis)
+                                          << '\n';
+
         pubchem::writeHillDoseResponseCsv(hillDoseResponseAnalysis, hillDoseResponseCsvOutputPath);
 
         std::ofstream hillDoseResponseSummaryOutput(hillDoseResponseSummaryOutputPath);
@@ -836,6 +929,10 @@ int main(int argc, char* argv[])
         std::cout << "Bioactivity rows written to: " << bioactivityCsvOutputPath << '\n';
         std::cout << "Bioactivity summary written to: " << bioactivitySummaryOutputPath << '\n';
         std::cout << "Bioactivity plot written to: " << bioactivityPlotOutputPath << '\n';
+        std::cout << "Posterior bioactivity rows written to: " << posteriorBioactivityCsvOutputPath
+                  << '\n';
+        std::cout << "Posterior bioactivity summary written to: "
+                  << posteriorBioactivitySummaryOutputPath << '\n';
         std::cout << "Hill dose-response rows written to: " << hillDoseResponseCsvOutputPath
                   << '\n';
         std::cout << "Hill dose-response summary written to: " << hillDoseResponseSummaryOutputPath
