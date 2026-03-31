@@ -25,6 +25,13 @@ The same run now also writes Hill/sigmoidal dose-response reference artifacts fr
 
 Because the CID 4 bioactivity CSV contains potency-style summary values rather than raw per-concentration response series, this Hill output is a reference-curve analysis rather than a nonlinear fit to experimental dose-response points. The implementation uses each positive numeric `Activity_Value` as an inferred $K$ value, reports that the log-concentration midpoint occurs at $c = K$, and approximates AUC with the trapezoidal rule over an inferred concentration grid scaled relative to each row's $K$. For the default reference coefficient $n = 1$, there is no positive linear-concentration inflection point.
 
+The same run now also writes positive-numeric `Activity_Value` descriptive statistics and normality artifacts from `pubchem_cid_4_bioactivity.csv` into `data/out`:
+- a CSV of retained rows where `Activity_Value` is numeric and strictly greater than 0
+- a summary JSON with mean, sample variance, skewness, quantiles, and a Shapiro-Wilk normality test result
+- a PNG diagnostic plot pairing a log-scale histogram with a normal Q-Q panel when the retained sample supports it
+
+This `Activity_Value` analysis follows the agreed scope exactly: only positive numeric rows are retained. Missing, non-numeric, zero, and negative values are counted in the summary metadata and excluded from the descriptive statistics and Shapiro-Wilk test.
+
 The same run now also writes a Bayesian posterior bioactivity analysis from `pubchem_cid_4_bioactivity.csv` into `data/out`:
 - a CSV of retained binary evidence rows where `Activity` is `Active` or `Inactive`
 - a summary JSON for the posterior probability $P(\mathrm{Active} \mid \mathrm{CID}=4)$ using a conjugate Beta-Binomial update with prior $\mathrm{Beta}(1,1)$
@@ -42,6 +49,13 @@ The same run now also writes an assay-level binomial bioactivity analysis from `
 - a summary JSON for $P(K = k \text{ active assays in } n \text{ assays})$ using unique `BioAssay_AID` values as trials
 
 This binomial output first reuses the same `Activity = Active / Inactive` binary evidence filter as the posterior analysis, excluding `Unspecified` rows before grouping by assay. The first-pass assay resolution rule is that an assay is counted as `Active` if any retained row for that `BioAssay_AID` is `Active`; otherwise it is `Inactive`. The success probability is then estimated as the observed assay-level active fraction $p = n_{active\_assays} / n_{assays}$, and the summary reports the PMF at the observed active-assay count, cumulative tail probabilities, the binomial mean $np$, and the variance $np(1-p)$.
+
+The same run now also writes atom-element entropy artifacts from the conformer-derived atom feature matrix into `data/out`:
+- a CSV of O/N/C/H element counts, proportions, log proportions, and per-element Shannon contributions
+- a summary JSON with the entropy value $H = -\sum p_i \log p_i$, normalized entropy, retained support, and any unexpected atom symbols
+- a PNG bar chart of the O/N/C/H proportions with the entropy value in the title
+
+This entropy analysis operates on the `symbol` column produced from `Conformer3D_COMPOUND_CID_4(1).sdf`. The entropy sum is computed over the required O/N/C/H support from the README exercise, while any unexpected symbols are reported separately for transparency.
 
 The same run also writes a bonded-distance comparison artifact from the CID 4 conformer:
 - a JSON report comparing bonded vs non-bonded inter-atom distances derived from the SDF 3D coordinates and PubChem bond list

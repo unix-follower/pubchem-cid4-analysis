@@ -56,6 +56,13 @@ The same run now also writes Hill/sigmoidal dose-response reference artifacts fr
 
 Because the CID 4 bioactivity CSV contains potency-style summary values rather than raw per-concentration response series, this Hill output is a reference-curve analysis rather than a nonlinear fit to experimental dose-response points. The implementation uses each positive numeric `Activity_Value` as an inferred `K` value, reports that the log-concentration midpoint occurs at `c = K`, and approximates AUC with the trapezoidal rule over an inferred concentration grid scaled relative to each row's `K`. For the default reference coefficient `n = 1`, there is no positive linear-concentration inflection point.
 
+The same run now also writes positive-numeric `Activity_Value` descriptive statistics artifacts from `pubchem_cid_4_bioactivity.csv` under `DATA_DIR/out`:
+- a CSV of retained rows where `Activity_Value` is numeric and strictly greater than 0
+- a summary JSON with mean, sample variance, skewness, quantiles, and a Shapiro-Wilk status block
+- a PNG diagnostic plot with a log-scale histogram and a normality-status panel
+
+This Scala implementation matches the agreed positive-numeric filtering semantics from Python. For the current CID 4 dataset, only two rows are retained, so Shapiro-Wilk is not computable on sample-size grounds. The summary reports that explicitly. For larger datasets, the Scala service currently keeps the Shapiro-Wilk section structurally present but marks it as not computed until a dedicated Scala implementation is added.
+
 The same run now also writes a Bayesian posterior bioactivity analysis from `pubchem_cid_4_bioactivity.csv` under `DATA_DIR/out`:
 - a CSV of retained binary evidence rows where `Activity` is `Active` or `Inactive`
 - a summary JSON for the posterior probability $P(\mathrm{Active} \mid \mathrm{CID}=4)$ using a conjugate Beta-Binomial update with prior $\mathrm{Beta}(1,1)$
@@ -73,3 +80,10 @@ The same run now also writes an assay-level binomial bioactivity analysis from `
 - a summary JSON documenting the assay-level trial definition, plug-in success probability, observed-tail probabilities, and representative assays
 
 This binomial output operates on one Bernoulli trial per unique `BioAssay_AID` after excluding rows with `Activity = Unspecified`, consistent with the posterior feature. Each assay is resolved to `Active` if any retained row for that assay is `Active`; otherwise it is resolved to `Inactive`. The model uses the observed active-assay fraction $p = n_{active\ assays} / n_{assays}$ as a plug-in estimate and reports the full binomial PMF, cumulative probabilities at the observed active-assay count, the binomial mean and variance, and the PMF probability sum as a numerical check. This is a frequentist plug-in binomial model rather than a posterior-predictive model.
+
+The same run now also writes atom-element entropy artifacts from the active CID 4 conformer under `DATA_DIR/out`:
+- a CSV of O/N/C/H element counts, proportions, log proportions, and per-element Shannon contributions
+- a summary JSON with entropy $H = -\sum p_i \log p_i$, normalized entropy, retained support, and any unexpected atom symbols
+- a PNG bar chart of the O/N/C/H proportions with the entropy value in the title
+
+This entropy analysis derives element symbols from the conformer atom model and computes the entropy sum only over the required O/N/C/H support from the README exercise. Unexpected elements are excluded from the entropy sum and reported separately.

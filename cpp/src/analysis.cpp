@@ -42,8 +42,11 @@ constexpr double kDefaultPosteriorPriorAlpha = 1.0;
 constexpr double kDefaultPosteriorPriorBeta = 1.0;
 constexpr double kDefaultPosteriorCredibleIntervalMass = 0.95;
 constexpr double kDefaultChiSquareExpectedCountThreshold = 5.0;
+constexpr double kDefaultShapiroAlpha = 0.05;
 
 using BondReferenceKey = std::tuple<std::string, std::string, int>;
+
+const std::vector<std::string> kRequiredAtomEntropyElements{"O", "N", "C", "H"};
 
 const std::map<int, double> kDefaultBondOrderSpringConstants{{1, 300.0}, {2, 500.0}, {3, 700.0}};
 const std::map<int, double> kDefaultBondOrderLengthScales{{1, 1.0}, {2, 0.9}, {3, 0.85}};
@@ -324,6 +327,82 @@ double computeMedian(std::vector<double> values)
         return (values[middle - 1] + values[middle]) / 2.0;
     }
     return values[middle];
+}
+
+double computeLinearQuantileFromSorted(const std::vector<double>& sortedValues,
+                                      const double probability)
+{
+    if (sortedValues.empty()) {
+        throw BioactivityAnalysisError("Cannot compute a quantile of an empty data set");
+    }
+
+    if (probability <= 0.0) {
+        return sortedValues.front();
+    }
+    if (probability >= 1.0) {
+        return sortedValues.back();
+    }
+
+    const double position = probability * static_cast<double>(sortedValues.size() - 1U);
+    const auto lowerIndex = static_cast<std::size_t>(std::floor(position));
+    const auto upperIndex = static_cast<std::size_t>(std::ceil(position));
+    if (lowerIndex == upperIndex) {
+        return sortedValues[lowerIndex];
+    }
+
+    const double interpolationWeight = position - static_cast<double>(lowerIndex);
+    return sortedValues[lowerIndex] +
+           interpolationWeight * (sortedValues[upperIndex] - sortedValues[lowerIndex]);
+}
+
+double computeMean(const std::vector<double>& values)
+{
+    if (values.empty()) {
+        throw BioactivityAnalysisError("Cannot compute the mean of an empty data set");
+    }
+
+    return std::accumulate(values.begin(), values.end(), 0.0) /
+           static_cast<double>(values.size());
+}
+
+double computeSampleVariance(const std::vector<double>& values, const double mean)
+{
+    if (values.size() < 2U) {
+        return 0.0;
+    }
+
+    double sumSquaredResiduals = 0.0;
+    for (const double value : values) {
+        const double residual = value - mean;
+        sumSquaredResiduals += residual * residual;
+    }
+    return sumSquaredResiduals / static_cast<double>(values.size() - 1U);
+}
+
+std::optional<double> computeBiasCorrectedSampleSkewness(const std::vector<double>& values,
+                                                         const double mean)
+{
+    if (values.size() < 3U) {
+        return std::nullopt;
+    }
+
+    double secondCentralMoment = 0.0;
+    double thirdCentralMoment = 0.0;
+    for (const double value : values) {
+        const double residual = value - mean;
+        secondCentralMoment += residual * residual;
+        thirdCentralMoment += residual * residual * residual;
+    }
+
+    secondCentralMoment /= static_cast<double>(values.size());
+    thirdCentralMoment /= static_cast<double>(values.size());
+    if (secondCentralMoment <= 0.0) {
+        return std::nullopt;
+    }
+
+    const double momentSkewness = thirdCentralMoment / std::pow(secondCentralMoment, 1.5);
+    const double n = static_cast<double>(values.size());
+    return std::sqrt(n * (n - 1.0)) / (n - 2.0) * momentSkewness;
 }
 
 long long parseRequiredLong(const std::vector<std::string>& row,
@@ -3357,26 +3436,393 @@ void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
            << '\n';
     output << "</g>\n";
 
-    const double legendX = width - 520.0;
-    const double legendY = top + 16.0;
-    const double legendHeight = 32.0 + (result.analysis.representativeRows.size() * 28.0);
-    output << "<rect x=\"" << legendX << "\" y=\"" << legendY << "\" width=\"440\" height=\""
-           << legendHeight << "\" fill=\"#ffffff\" stroke=\"#cbd5e1\"/>\n";
+        const double legendX = width - 520.0;
+        const double legendY = top + 16.0;
+        const double legendHeight = 32.0 + (result.analysis.representativeRows.size() * 28.0);
+        output << "<rect x=\"" << legendX << "\" y=\"" << legendY << "\" width=\"440\" height=\""
+            << legendHeight << "\" fill=\"#ffffff\" stroke=\"#cbd5e1\"/>\n";
 
-    for (std::size_t rowIndex = 0; rowIndex < result.analysis.representativeRows.size();
-         ++rowIndex) {
-        const auto& representativeRow = result.analysis.representativeRows[rowIndex];
-        const std::string& color = colors[rowIndex % colors.size()];
-        const double y = legendY + 24.0 + (rowIndex * 28.0);
-        output << "<line x1=\"" << legendX + 20.0 << "\" y1=\"" << y << "\" x2=\"" << legendX + 68.0
-               << "\" y2=\"" << y << "\" stroke=\"" << color << "\" stroke-width=\"4\"/>\n";
-        output << svgText(legendX + 82.0,
-                          y + 5.0,
-                          "AID " + std::to_string(representativeRow.bioAssayAid) + " | " +
-                              representativeRow.activityType + " | K=" +
-                              formatCompactDouble(representativeRow.inferredKActivityValue))
+        for (std::size_t rowIndex = 0; rowIndex < result.analysis.representativeRows.size();
+          ++rowIndex) {
+         const auto& representativeRow = result.analysis.representativeRows[rowIndex];
+         const std::string& color = colors[rowIndex % colors.size()];
+         const double y = legendY + 24.0 + (rowIndex * 28.0);
+         output << "<line x1=\"" << legendX + 20.0 << "\" y1=\"" << y << "\" x2=\""
+             << legendX + 68.0 << "\" y2=\"" << y << "\" stroke=\"" << color
+             << "\" stroke-width=\"4\"/>\n";
+         output << svgText(legendX + 82.0,
+                     y + 5.0,
+                     "AID " + std::to_string(representativeRow.bioAssayAid) + " | " +
+                      representativeRow.activityType + " | K=" +
+                      formatCompactDouble(representativeRow.inferredKActivityValue))
+             << '\n';
+        }
+
+        output << "</svg>\n";
+    }
+
+
+ActivityValueStatisticsAnalysisResult
+buildActivityValueStatisticsAnalysis(const std::filesystem::path& csvPath,
+                                     const double shapiroAlpha)
+{
+    if (!(shapiroAlpha > 0.0 && shapiroAlpha < 1.0)) {
+        throw BioactivityAnalysisError("Shapiro alpha must be within (0, 1)");
+    }
+
+    std::ifstream input(csvPath);
+    if (!input) {
+        throw BioactivityAnalysisError("Could not open bioactivity input file: " +
+                                       csvPath.string());
+    }
+
+    auto records = parseCsvRecords(input);
+    if (records.empty()) {
+        throw BioactivityAnalysisError("Bioactivity CSV is empty: " + csvPath.string());
+    }
+
+    auto headers = records.front();
+    if (!headers.empty()) {
+        headers.front() = stripUtf8Bom(headers.front());
+    }
+    records.erase(records.begin());
+
+    std::map<std::string, std::size_t> headerIndex;
+    for (std::size_t index = 0; index < headers.size(); ++index) {
+        headerIndex.emplace(headers[index], index);
+    }
+
+    for (const std::string_view requiredHeader :
+         {"Bioactivity_ID", "BioAssay_AID", "Activity_Type", "Activity_Value"}) {
+        if (!headerIndex.contains(std::string(requiredHeader))) {
+            throw BioactivityAnalysisError("Bioactivity CSV is missing required column: " +
+                                           std::string(requiredHeader));
+        }
+    }
+
+    const std::size_t activityTypeIndex = headerIndex.at("Activity_Type");
+    const std::size_t activityValueIndex = headerIndex.at("Activity_Value");
+    const std::optional<std::size_t> activityIndex = optionalColumnIndex(headerIndex, "Activity");
+    const std::optional<std::size_t> aidTypeIndex = optionalColumnIndex(headerIndex, "Aid_Type");
+
+    const std::vector<std::string> retainedHeaders{
+        "Bioactivity_ID", "BioAssay_AID", "Activity", "Aid_Type", "Activity_Type", "Activity_Value"};
+
+    std::size_t numericValueCount = 0U;
+    std::size_t positiveValueCount = 0U;
+    std::size_t zeroValueCount = 0U;
+    std::size_t negativeValueCount = 0U;
+    std::set<long long> retainedBioassayIds;
+    std::vector<std::vector<std::string>> retainedRows;
+    std::vector<double> retainedValues;
+
+    for (auto& row : records) {
+        if (row.size() < headers.size()) {
+            row.resize(headers.size());
+        }
+
+        const auto activityValue = parseDouble(row[activityValueIndex]);
+        if (activityValue.has_value()) {
+            ++numericValueCount;
+            if (*activityValue > 0.0) {
+                ++positiveValueCount;
+            }
+            else if (*activityValue < 0.0) {
+                ++negativeValueCount;
+            }
+            else {
+                ++zeroValueCount;
+            }
+        }
+
+        if (!activityValue.has_value() || *activityValue <= 0.0) {
+            continue;
+        }
+
+        retainedBioassayIds.insert(parseRequiredLong(row, headerIndex, "BioAssay_AID"));
+        retainedValues.push_back(*activityValue);
+        retainedRows.push_back({row.at(headerIndex.at("Bioactivity_ID")),
+                                row.at(headerIndex.at("BioAssay_AID")),
+                                normalizeOptionalLabel(valueAtOrEmpty(row, activityIndex), "Unknown"),
+                                normalizeOptionalLabel(valueAtOrEmpty(row, aidTypeIndex), "Unknown"),
+                                normalizeOptionalLabel(row.at(activityTypeIndex), "Unknown"),
+                                formatDouble(*activityValue)});
+    }
+
+    if (retainedRows.empty()) {
+        throw BioactivityAnalysisError("No positive numeric Activity_Value rows were found in " +
+                                       csvPath.filename().string());
+    }
+
+    std::stable_sort(retainedRows.begin(), retainedRows.end(), [](const auto& left, const auto& right) {
+        const double leftValue = std::stod(left.back());
+        const double rightValue = std::stod(right.back());
+        if (std::abs(leftValue - rightValue) > 1.0e-12) {
+            return leftValue < rightValue;
+        }
+        const long long leftAid = std::stoll(left[1]);
+        const long long rightAid = std::stoll(right[1]);
+        if (leftAid != rightAid) {
+            return leftAid < rightAid;
+        }
+        return std::stoll(left[0]) < std::stoll(right[0]);
+    });
+
+    std::vector<double> sortedValues = retainedValues;
+    std::sort(sortedValues.begin(), sortedValues.end());
+
+    const double mean = computeMean(sortedValues);
+    const double variance = computeSampleVariance(sortedValues, mean);
+    const std::optional<double> skewness = computeBiasCorrectedSampleSkewness(sortedValues, mean);
+
+    std::vector<ActivityValueRepresentativeRow> representativeRows;
+    for (const std::size_t position : representativeRowPositions(retainedRows.size())) {
+        const auto& row = retainedRows[position];
+        representativeRows.push_back(ActivityValueRepresentativeRow{
+            .bioactivityId = std::stoll(row[0]),
+            .bioAssayAid = std::stoll(row[1]),
+            .activity = row[2],
+            .aidType = row[3],
+            .activityType = row[4],
+            .activityValue = std::stod(row[5]),
+        });
+    }
+
+    const bool hasEnoughRowsForShapiro = sortedValues.size() >= 3U;
+    const std::optional<std::string> reasonNotComputed =
+        hasEnoughRowsForShapiro
+            ? std::optional<std::string>(
+                  "Shapiro-Wilk is not implemented in the current C++ dependency set.")
+            : std::optional<std::string>(
+                  "Shapiro-Wilk requires at least 3 retained observations.");
+    const std::string interpretation =
+        hasEnoughRowsForShapiro
+            ? "Normality was not tested because Shapiro-Wilk is not implemented in the current C++ dependency set."
+            : "Normality was not tested because too few positive numeric rows were retained.";
+
+    return ActivityValueStatisticsAnalysisResult{
+        .sourceFile = csvPath.filename().string(),
+        .headers = retainedHeaders,
+        .rows = std::move(retainedRows),
+        .rowCounts =
+            ActivityValueStatisticsRowCounts{
+                .totalRows = records.size(),
+                .rowsWithNumericActivityValue = numericValueCount,
+                .positiveNumericRows = positiveValueCount,
+                .zeroActivityValueRows = zeroValueCount,
+                .negativeActivityValueRows = negativeValueCount,
+                .nonNumericOrMissingActivityValueRows = records.size() - numericValueCount,
+                .retainedPositiveNumericRows = sortedValues.size(),
+                .droppedRows = records.size() - sortedValues.size(),
+                .retainedUniqueBioassays = retainedBioassayIds.size(),
+            },
+        .statistics =
+            ActivityValueDescriptiveStatistics{
+                .sampleSize = sortedValues.size(),
+                .mean = mean,
+                .variance = variance,
+                .varianceDefinition = "sample_variance_ddof_1",
+                .skewness = skewness,
+                .min = sortedValues.front(),
+                .q25 = computeLinearQuantileFromSorted(sortedValues, 0.25),
+                .median = computeLinearQuantileFromSorted(sortedValues, 0.5),
+                .q75 = computeLinearQuantileFromSorted(sortedValues, 0.75),
+                .max = sortedValues.back(),
+            },
+        .normalityTest =
+            ActivityValueNormalityTest{
+                .name = "Shapiro-Wilk",
+                .computed = false,
+                .reasonNotComputed = reasonNotComputed,
+                .sampleSize = sortedValues.size(),
+                .alpha = shapiroAlpha,
+                .statistic = std::nullopt,
+                .pValue = std::nullopt,
+                .rejectNormality = std::nullopt,
+                .interpretation = interpretation,
+            },
+        .analysis =
+            ActivityValueAnalysis{
+                .targetQuantity = "Positive numeric Activity_Value distribution",
+                .retainedRowDefinition =
+                    ActivityValueRetainedRowDefinition{
+                        .predicate = "Activity_Value is numeric and strictly greater than 0",
+                        .excludedRows = {"missing Activity_Value",
+                                         "non-numeric Activity_Value",
+                                         "Activity_Value = 0",
+                                         "Activity_Value < 0"},
+                    },
+                .representativeRows = std::move(representativeRows),
+                .notes =
+                    {"The retained distribution aggregates all positive numeric Activity_Value rows regardless of Activity_Type.",
+                     "Variance is reported as the sample variance with ddof = 1 to match the Python and Scala implementations.",
+                     "The SVG plot shows a log-scale histogram and a diagnostic status panel for Shapiro-Wilk availability."},
+            },
+    };
+}
+
+void writeActivityValueStatisticsCsv(const ActivityValueStatisticsAnalysisResult& result,
+                                     const std::filesystem::path& outputPath)
+{
+    writeCsvTable(result.headers,
+                  result.rows,
+                  outputPath,
+                  "Activity_Value statistics CSV output path");
+}
+
+void writeActivityValueStatisticsPlotSvg(const ActivityValueStatisticsAnalysisResult& result,
+                                         const std::filesystem::path& outputPath)
+{
+    if (result.rows.empty()) {
+        throw BioactivityAnalysisError("Activity_Value statistics plot requires retained rows");
+    }
+
+    std::ofstream output(outputPath);
+    if (!output) {
+        throw BioactivityAnalysisError("Could not open Activity_Value statistics plot output path: " +
+                                       outputPath.string());
+    }
+
+    std::vector<double> logValues;
+    logValues.reserve(result.rows.size());
+    for (const auto& row : result.rows) {
+        logValues.push_back(std::log10(std::stod(row.back())));
+    }
+
+    const std::size_t binCount = logValues.size() == 1U ? 1U : std::min<std::size_t>(6U, logValues.size());
+    double minLogValue = *std::min_element(logValues.begin(), logValues.end());
+    double maxLogValue = *std::max_element(logValues.begin(), logValues.end());
+    if (std::abs(maxLogValue - minLogValue) < 1.0e-12) {
+        minLogValue -= 0.5;
+        maxLogValue += 0.5;
+    }
+
+    std::vector<std::size_t> histogramCounts(binCount, 0U);
+    for (const double value : logValues) {
+        const double normalized = (value - minLogValue) / (maxLogValue - minLogValue);
+        const std::size_t binIndex =
+            std::min<std::size_t>(binCount - 1U,
+                                  static_cast<std::size_t>(std::floor(normalized * static_cast<double>(binCount))));
+        histogramCounts[binIndex] += 1U;
+    }
+
+    const std::size_t maxCount =
+        *std::max_element(histogramCounts.begin(), histogramCounts.end());
+
+    constexpr double width = 1280.0;
+    constexpr double height = 720.0;
+    constexpr double outerLeft = 60.0;
+    constexpr double outerTop = 85.0;
+    constexpr double panelWidth = 540.0;
+    constexpr double panelHeight = 520.0;
+    constexpr double panelGap = 70.0;
+    constexpr double innerLeftPad = 55.0;
+    constexpr double innerRightPad = 25.0;
+    constexpr double innerTopPad = 25.0;
+    constexpr double innerBottomPad = 60.0;
+
+    const double leftPanelX = outerLeft;
+    const double rightPanelX = outerLeft + panelWidth + panelGap;
+    const double panelY = outerTop;
+    const double leftPlotWidth = panelWidth - innerLeftPad - innerRightPad;
+    const double leftPlotHeight = panelHeight - innerTopPad - innerBottomPad;
+    const double binWidth = leftPlotWidth / static_cast<double>(binCount);
+
+    output << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width << "\" height=\""
+           << height << "\" viewBox=\"0 0 " << width << ' ' << height << "\">\n";
+    output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
+    output << svgText(width / 2.0 - 260.0,
+                      42.0,
+                      "Positive Numeric Activity_Value Diagnostics",
+                      "font-size=\"20\" font-weight=\"700\"")
+           << '\n';
+
+    output << "<rect x=\"" << leftPanelX << "\" y=\"" << panelY << "\" width=\""
+           << panelWidth << "\" height=\"" << panelHeight
+           << "\" fill=\"#f8fafc\" stroke=\"#cbd5e1\"/>\n";
+    output << "<rect x=\"" << rightPanelX << "\" y=\"" << panelY << "\" width=\""
+           << panelWidth << "\" height=\"" << panelHeight
+           << "\" fill=\"#f8fafc\" stroke=\"#cbd5e1\"/>\n";
+
+    output << svgText(leftPanelX + 100.0,
+                      panelY - 14.0,
+                      "Positive Numeric Activity_Value Histogram",
+                      "font-size=\"16\" font-weight=\"600\"")
+           << '\n';
+    output << svgText(rightPanelX + 150.0,
+                      panelY - 14.0,
+                      "Normality / Q-Q Diagnostics",
+                      "font-size=\"16\" font-weight=\"600\"")
+           << '\n';
+
+    for (std::size_t tick = 0U; tick <= maxCount; ++tick) {
+        const double y = panelY + innerTopPad +
+                         (1.0 - static_cast<double>(tick) / static_cast<double>(std::max<std::size_t>(1U, maxCount))) *
+                             leftPlotHeight;
+        output << "<line x1=\"" << leftPanelX + innerLeftPad << "\" y1=\"" << y
+               << "\" x2=\"" << leftPanelX + innerLeftPad + leftPlotWidth << "\" y2=\""
+               << y << "\" stroke=\"#e2e8f0\" stroke-dasharray=\"4 6\"/>\n";
+        output << svgText(leftPanelX + 18.0, y + 5.0, std::to_string(tick)) << '\n';
+    }
+
+    for (std::size_t binIndex = 0U; binIndex < binCount; ++binIndex) {
+        const double barHeight = maxCount == 0U
+                                     ? 0.0
+                                     : leftPlotHeight * static_cast<double>(histogramCounts[binIndex]) /
+                                           static_cast<double>(maxCount);
+        const double x = leftPanelX + innerLeftPad + static_cast<double>(binIndex) * binWidth + 6.0;
+        const double y = panelY + innerTopPad + leftPlotHeight - barHeight;
+        output << "<rect x=\"" << x << "\" y=\"" << y << "\" width=\""
+               << std::max(1.0, binWidth - 12.0) << "\" height=\"" << barHeight
+               << "\" fill=\"#4f83b6\" fill-opacity=\"0.85\" stroke=\"#1f2937\"/>\n";
+
+        const double lowerLog = minLogValue + static_cast<double>(binIndex) / static_cast<double>(binCount) *
+                                                  (maxLogValue - minLogValue);
+        const double xLabel = x + std::max(1.0, binWidth - 12.0) / 2.0 - 16.0;
+        output << svgText(xLabel,
+                          panelY + innerTopPad + leftPlotHeight + 28.0,
+                          formatCompactDouble(std::pow(10.0, lowerLog)))
                << '\n';
     }
+
+    output << svgText(leftPanelX + panelWidth / 2.0 - 85.0,
+                      panelY + panelHeight - 12.0,
+                      "Activity_Value (log10 scale)")
+           << '\n';
+    output << svgText(leftPanelX + 8.0,
+                      panelY + panelHeight / 2.0,
+                      "Frequency",
+                      "transform=\"rotate(-90 68 345)\"")
+           << '\n';
+
+    output << svgText(rightPanelX + 130.0,
+                      panelY + 72.0,
+                      result.normalityTest.computed ? "Shapiro-Wilk computed" : "Shapiro-Wilk not computed",
+                      "font-size=\"18\" font-weight=\"600\"")
+           << '\n';
+    output << svgText(rightPanelX + 60.0,
+                      panelY + 140.0,
+                      "sample size = " + std::to_string(result.normalityTest.sampleSize),
+                      "font-size=\"16\"")
+           << '\n';
+    output << svgText(rightPanelX + 60.0,
+                      panelY + 200.0,
+                      "alpha = " + formatCompactDouble(result.normalityTest.alpha),
+                      "font-size=\"16\"")
+           << '\n';
+    if (result.normalityTest.reasonNotComputed.has_value()) {
+        output << svgText(rightPanelX + 60.0,
+                          panelY + 280.0,
+                          *result.normalityTest.reasonNotComputed,
+                          "font-size=\"16\"")
+               << '\n';
+    }
+    output << svgText(rightPanelX + 60.0,
+                      panelY + 350.0,
+                      result.normalityTest.interpretation,
+                      "font-size=\"16\"")
+           << '\n';
 
     output << "</svg>\n";
 }
@@ -3708,6 +4154,198 @@ void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
                       top + 30.0,
                       "y_hat = " + formatCompactDouble(finalWeight) + "x",
                       "font-size=\"18\" font-weight=\"600\"")
+           << '\n';
+    output << "</svg>\n";
+}
+
+AtomElementEntropyAnalysisResult buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms,
+                                                                std::string_view sourceFile)
+{
+    if (atoms.empty()) {
+        throw BioactivityAnalysisError("Atom entropy analysis requires at least one atom record");
+    }
+
+    std::map<std::string, std::size_t> requiredCounts;
+    for (const auto& element : kRequiredAtomEntropyElements) {
+        requiredCounts.emplace(element, 0U);
+    }
+    std::map<std::string, std::size_t> unexpectedCounts;
+
+    for (const auto& atom : atoms) {
+        const std::string symbol = trimWhitespace(atom.symbol);
+        if (requiredCounts.contains(symbol)) {
+            requiredCounts[symbol] += 1U;
+        }
+        else if (!symbol.empty()) {
+            unexpectedCounts[symbol] += 1U;
+        }
+    }
+
+    const std::size_t retainedAtomRows = std::accumulate(
+        requiredCounts.begin(), requiredCounts.end(), std::size_t{0U}, [](const std::size_t sum, const auto& entry) {
+            return sum + entry.second;
+        });
+    if (retainedAtomRows == 0U) {
+        throw BioactivityAnalysisError("Atom entropy analysis retained no O/N/C/H atoms");
+    }
+
+    const std::size_t observedRequiredElementCategories = std::count_if(
+        requiredCounts.begin(), requiredCounts.end(), [](const auto& entry) { return entry.second > 0U; });
+    const std::size_t unexpectedElementRows = std::accumulate(
+        unexpectedCounts.begin(), unexpectedCounts.end(), std::size_t{0U}, [](const std::size_t sum, const auto& entry) {
+            return sum + entry.second;
+        });
+
+    std::map<std::string, AtomElementDistributionEntry> distribution;
+    std::vector<std::vector<std::string>> rows;
+    rows.reserve(kRequiredAtomEntropyElements.size());
+    double entropyValue = 0.0;
+    std::string dominantElement;
+    std::size_t dominantCount = 0U;
+    double dominantProportion = 0.0;
+
+    for (const auto& element : kRequiredAtomEntropyElements) {
+        const std::size_t count = requiredCounts.at(element);
+        const double proportion = static_cast<double>(count) / static_cast<double>(retainedAtomRows);
+        const double logProportion = proportion > 0.0 ? std::log(proportion) : 0.0;
+        const double shannonContribution = proportion > 0.0 ? -(proportion * logProportion) : 0.0;
+        entropyValue += shannonContribution;
+        distribution.emplace(element,
+                             AtomElementDistributionEntry{
+                                 .count = count,
+                                 .proportion = proportion,
+                                 .logProportion = logProportion,
+                                 .shannonContribution = shannonContribution,
+                             });
+        rows.push_back({element,
+                        std::to_string(count),
+                        formatDouble(proportion),
+                        formatDouble(logProportion),
+                        formatDouble(shannonContribution)});
+
+        if (count > dominantCount) {
+            dominantElement = element;
+            dominantCount = count;
+            dominantProportion = proportion;
+        }
+    }
+
+    const double maximumEntropy =
+        observedRequiredElementCategories == 0U
+            ? 0.0
+            : std::log(static_cast<double>(observedRequiredElementCategories));
+    const double normalizedEntropy =
+        maximumEntropy > 0.0 ? entropyValue / maximumEntropy : 0.0;
+
+    return AtomElementEntropyAnalysisResult{
+        .sourceFile = std::string(sourceFile),
+        .headers = {"element", "count", "proportion", "log_proportion", "shannon_contribution"},
+        .rows = std::move(rows),
+        .rowCounts =
+            AtomElementEntropyRowCounts{
+                .totalAtomRows = atoms.size(),
+                .retainedAtomRows = retainedAtomRows,
+                .requiredElementCategories = kRequiredAtomEntropyElements.size(),
+                .observedRequiredElementCategories = observedRequiredElementCategories,
+                .unexpectedElementRows = unexpectedElementRows,
+                .unexpectedElementCategories = unexpectedCounts.size(),
+            },
+        .entropy =
+            AtomElementEntropyMetrics{
+                .formula = "H = -sum(p_i * log(p_i))",
+                .logBase = "natural_log",
+                .value = entropyValue,
+                .maximumEntropyForObservedSupport = maximumEntropy,
+                .normalizedEntropy = normalizedEntropy,
+            },
+        .distribution = std::move(distribution),
+        .analysis =
+            AtomElementEntropyAnalysis{
+                .targetQuantity = "Atom element entropy over O/N/C/H proportions",
+                .requiredElements = kRequiredAtomEntropyElements,
+                .uniqueRetainedElements = observedRequiredElementCategories,
+                .dominantElement =
+                    AtomElementDominantElement{
+                        .element = dominantElement,
+                        .count = dominantCount,
+                        .proportion = dominantProportion,
+                    },
+                .unexpectedElements = std::move(unexpectedCounts),
+                .notes =
+                    {"Entropy is computed only over the required O/N/C/H support requested in the README exercise.",
+                     "Unexpected atom symbols are excluded from the entropy sum and reported separately for transparency.",
+                     "Normalized entropy uses the maximum entropy over the observed required-element support rather than the fixed four-element support."},
+            },
+    };
+}
+
+void writeAtomElementEntropyCsv(const AtomElementEntropyAnalysisResult& result,
+                                const std::filesystem::path& outputPath)
+{
+    writeCsvTable(result.headers,
+                  result.rows,
+                  outputPath,
+                  "atom element entropy CSV output path");
+}
+
+void writeAtomElementEntropyPlotSvg(const AtomElementEntropyAnalysisResult& result,
+                                    const std::filesystem::path& outputPath)
+{
+    std::ofstream output(outputPath);
+    if (!output) {
+        throw BioactivityAnalysisError("Could not open atom element entropy plot output path: " +
+                                       outputPath.string());
+    }
+
+    constexpr double width = 1100.0;
+    constexpr double height = 720.0;
+    constexpr double left = 90.0;
+    constexpr double right = 60.0;
+    constexpr double top = 80.0;
+    constexpr double bottom = 100.0;
+    const double plotWidth = width - left - right;
+    const double plotHeight = height - top - bottom;
+    const double barWidth = plotWidth / static_cast<double>(result.rows.size());
+
+    output << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width << "\" height=\""
+           << height << "\" viewBox=\"0 0 " << width << ' ' << height << "\">\n";
+    output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
+    output << "<rect x=\"" << left << "\" y=\"" << top << "\" width=\"" << plotWidth
+           << "\" height=\"" << plotHeight << "\" fill=\"#f8fafc\" stroke=\"#cbd5e1\"/>\n";
+
+    for (const double yTick : std::vector<double>{0.0, 0.25, 0.5, 0.75, 1.0}) {
+        const double y = top + (1.0 - yTick) * plotHeight;
+        output << "<line x1=\"" << left << "\" y1=\"" << y << "\" x2=\"" << left + plotWidth
+               << "\" y2=\"" << y << "\" stroke=\"#cbd5e1\" stroke-dasharray=\"4 6\"/>\n";
+        output << svgText(28.0, y + 5.0, formatCompactDouble(yTick)) << '\n';
+    }
+
+    for (std::size_t index = 0U; index < result.rows.size(); ++index) {
+        const auto& row = result.rows[index];
+        const double proportion = std::stod(row[2]);
+        const double barHeight = proportion * plotHeight;
+        const double x = left + static_cast<double>(index) * barWidth + 18.0;
+        const double y = top + plotHeight - barHeight;
+        output << "<rect x=\"" << x << "\" y=\"" << y << "\" width=\""
+               << std::max(1.0, barWidth - 36.0) << "\" height=\"" << barHeight
+               << "\" fill=\"#2563eb\" fill-opacity=\"0.8\" stroke=\"#1e3a8a\"/>\n";
+        output << svgText(x + std::max(1.0, barWidth - 36.0) / 2.0 - 8.0,
+                          top + plotHeight + 30.0,
+                          row[0])
+               << '\n';
+    }
+
+    output << svgText(width / 2.0 - 150.0,
+                      40.0,
+                      "Atom Element Proportions (H = " + formatCompactDouble(result.entropy.value) + ")",
+                      "font-size=\"20\" font-weight=\"700\"")
+           << '\n';
+    output << svgText(width / 2.0 - 30.0, height - 20.0, "Element") << '\n';
+    output << svgText(25.0,
+                      height / 2.0 + 10.0,
+                      "Proportion",
+                      "transform=\"rotate(-90 40 360)\"")
            << '\n';
     output << "</svg>\n";
 }
@@ -4263,6 +4901,26 @@ std::filesystem::path hillDoseResponsePlotSvgPath(const std::filesystem::path& o
     return outputDirectory / (sourceFile.stem().string() + ".hill_dose_response.svg");
 }
 
+std::filesystem::path activityValueStatisticsCsvPath(const std::filesystem::path& outputDirectory,
+                                                     const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".activity_value_statistics.csv");
+}
+
+std::filesystem::path
+activityValueStatisticsSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                       const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".activity_value_statistics.summary.json");
+}
+
+std::filesystem::path
+activityValueStatisticsPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                   const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".activity_value_statistics.svg");
+}
+
 std::filesystem::path gradientDescentCsvPath(const std::filesystem::path& outputDirectory,
                                              const std::filesystem::path& sourceFile)
 {
@@ -4289,5 +4947,25 @@ std::filesystem::path gradientDescentFitPlotSvgPath(const std::filesystem::path&
 {
     return outputDirectory /
            (sourceFile.stem().string() + ".mass_to_atomic_number_gradient_descent.fit.svg");
+}
+
+std::filesystem::path atomElementEntropyCsvPath(const std::filesystem::path& outputDirectory,
+                                                const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".atom_element_entropy_proportions.csv");
+}
+
+std::filesystem::path atomElementEntropySummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                                        const std::filesystem::path& sourceFile)
+{
+    return outputDirectory /
+           (sourceFile.stem().string() + ".atom_element_entropy.summary.json");
+}
+
+std::filesystem::path atomElementEntropyPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                                    const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".atom_element_entropy.svg");
 }
 } // namespace pubchem

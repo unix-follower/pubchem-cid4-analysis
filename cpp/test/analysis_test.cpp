@@ -166,6 +166,15 @@ std::string sampleBioactivityCsv()
            "(human),\"Invalid numeric value\"\n";
 }
 
+std::string sampleActivityValueNormalityDeferredCsv()
+{
+    return "Bioactivity_ID,BioAssay_AID,Activity,Aid_Type,Activity_Type,Activity_Value\n"
+           "10,100,Active,Confirmatory,Potency,1.0\n"
+           "11,101,Inactive,Confirmatory,IC50,2.0\n"
+           "12,102,Unspecified,Other,IC50,4.0\n"
+           "13,103,Inactive,Other,Potency,8.0\n";
+}
+
 std::string samplePosteriorBioactivityCsv()
 {
     return "Bioactivity_ID,BioAssay_AID,Activity,Activity_Type,BioAssay_Name,Target_Name\n"
@@ -1032,6 +1041,20 @@ TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.hill_dose_response.svg");
+    EXPECT_EQ(pubchem::activityValueStatisticsCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.activity_value_statistics.csv");
+    EXPECT_EQ(pubchem::activityValueStatisticsSummaryJsonPath("/tmp/out",
+                                                              "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.activity_value_statistics.summary.json");
+    EXPECT_EQ(pubchem::activityValueStatisticsPlotSvgPath("/tmp/out",
+                                                          "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.activity_value_statistics.svg");
     EXPECT_EQ(pubchem::gradientDescentCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
                   .filename()
                   .string(),
@@ -1051,6 +1074,153 @@ TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
             .filename()
             .string(),
         "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.fit.svg");
+    EXPECT_EQ(pubchem::atomElementEntropyCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+                  .filename()
+                  .string(),
+              "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy_proportions.csv");
+    EXPECT_EQ(pubchem::atomElementEntropySummaryJsonPath("/tmp/out",
+                                                         "Conformer3D_COMPOUND_CID_4(1).sdf")
+                  .filename()
+                  .string(),
+              "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.summary.json");
+    EXPECT_EQ(pubchem::atomElementEntropyPlotSvgPath("/tmp/out",
+                                                     "Conformer3D_COMPOUND_CID_4(1).sdf")
+                  .filename()
+                  .string(),
+              "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.svg");
+}
+
+TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisBuildsPositiveNumericSummary)
+{
+    const auto csvPath = writeTempFile("bioactivity-activity-value-sample.csv", sampleBioactivityCsv());
+
+    const auto result = pubchem::buildActivityValueStatisticsAnalysis(csvPath);
+
+    EXPECT_EQ(result.sourceFile, "bioactivity-activity-value-sample.csv");
+    EXPECT_EQ(result.rowCounts.totalRows, 4U);
+    EXPECT_EQ(result.rowCounts.rowsWithNumericActivityValue, 2U);
+    EXPECT_EQ(result.rowCounts.positiveNumericRows, 2U);
+    EXPECT_EQ(result.rowCounts.zeroActivityValueRows, 0U);
+    EXPECT_EQ(result.rowCounts.negativeActivityValueRows, 0U);
+    EXPECT_EQ(result.rowCounts.nonNumericOrMissingActivityValueRows, 2U);
+    EXPECT_EQ(result.rowCounts.retainedPositiveNumericRows, 2U);
+    EXPECT_EQ(result.rowCounts.droppedRows, 2U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
+    ASSERT_EQ(result.rows.size(), 2U);
+    EXPECT_EQ(result.rows.front().at(1), "743069");
+    EXPECT_EQ(result.rows.back().at(1), "158688");
+    EXPECT_NEAR(result.statistics.mean, 410.9362, 1.0e-12);
+    EXPECT_NEAR(result.statistics.variance, 302741.28094088, 1.0e-8);
+    EXPECT_FALSE(result.statistics.skewness.has_value());
+    EXPECT_NEAR(result.statistics.min, 21.8724, 1.0e-12);
+    EXPECT_NEAR(result.statistics.q25, 216.4043, 1.0e-10);
+    EXPECT_NEAR(result.statistics.median, 410.9362, 1.0e-10);
+    EXPECT_NEAR(result.statistics.q75, 605.4681, 1.0e-10);
+    EXPECT_NEAR(result.statistics.max, 800.0, 1.0e-12);
+    EXPECT_FALSE(result.normalityTest.computed);
+    ASSERT_TRUE(result.normalityTest.reasonNotComputed.has_value());
+    EXPECT_EQ(*result.normalityTest.reasonNotComputed,
+              "Shapiro-Wilk requires at least 3 retained observations.");
+    ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
+    EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 743069LL);
+    EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 158688LL);
+}
+
+TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisDefersShapiroBeyondSampleThreshold)
+{
+    const auto csvPath = writeTempFile("bioactivity-activity-value-normality-sample.csv",
+                                       sampleActivityValueNormalityDeferredCsv());
+
+    const auto result = pubchem::buildActivityValueStatisticsAnalysis(csvPath);
+
+    EXPECT_EQ(result.rowCounts.retainedPositiveNumericRows, 4U);
+    EXPECT_FALSE(result.normalityTest.computed);
+    ASSERT_TRUE(result.normalityTest.reasonNotComputed.has_value());
+    EXPECT_EQ(*result.normalityTest.reasonNotComputed,
+              "Shapiro-Wilk is not implemented in the current C++ dependency set.");
+    ASSERT_TRUE(result.statistics.skewness.has_value());
+}
+
+TEST(BioactivityStrategiesTest, ActivityValueStatisticsCsvAndSvgWritersEmitArtifacts)
+{
+    const auto csvPath = writeTempFile("bioactivity-activity-value-writer.csv", sampleBioactivityCsv());
+    const auto result = pubchem::buildActivityValueStatisticsAnalysis(csvPath);
+    const auto outputDirectory =
+        std::filesystem::temp_directory_path() / "pubchem-cid4-activity-value";
+    std::filesystem::create_directories(outputDirectory);
+
+    const auto filteredCsvPath = outputDirectory / "bioactivity.activity_value.csv";
+    const auto plotSvgPath = outputDirectory / "bioactivity.activity_value.svg";
+
+    pubchem::writeActivityValueStatisticsCsv(result, filteredCsvPath);
+    pubchem::writeActivityValueStatisticsPlotSvg(result, plotSvgPath);
+
+    std::ifstream filteredInput(filteredCsvPath);
+    std::ifstream svgInput(plotSvgPath);
+    ASSERT_TRUE(filteredInput.good());
+    ASSERT_TRUE(svgInput.good());
+
+    const std::string filteredContents((std::istreambuf_iterator<char>(filteredInput)),
+                                       std::istreambuf_iterator<char>());
+    const std::string svgContents((std::istreambuf_iterator<char>(svgInput)),
+                                  std::istreambuf_iterator<char>());
+
+    EXPECT_NE(filteredContents.find("Activity_Value"), std::string::npos);
+    EXPECT_NE(filteredContents.find("21.8724"), std::string::npos);
+    EXPECT_NE(svgContents.find("Positive Numeric Activity_Value Diagnostics"), std::string::npos);
+    EXPECT_NE(svgContents.find("Shapiro-Wilk not computed"), std::string::npos);
+}
+
+TEST(DistanceStrategiesTest, AtomElementEntropyAnalysisMatchesCid4ElementCounts)
+{
+    const auto result = pubchem::buildAtomElementEntropyAnalysis(cid4SpringAtoms(), "sample.sdf");
+
+    EXPECT_EQ(result.sourceFile, "sample.sdf");
+    EXPECT_EQ(result.rowCounts.totalAtomRows, 14U);
+    EXPECT_EQ(result.rowCounts.retainedAtomRows, 14U);
+    EXPECT_EQ(result.rowCounts.requiredElementCategories, 4U);
+    EXPECT_EQ(result.rowCounts.observedRequiredElementCategories, 4U);
+    EXPECT_EQ(result.rowCounts.unexpectedElementRows, 0U);
+    EXPECT_EQ(result.rowCounts.unexpectedElementCategories, 0U);
+    ASSERT_EQ(result.rows.size(), 4U);
+    EXPECT_EQ(result.distribution.at("O").count, 1U);
+    EXPECT_EQ(result.distribution.at("N").count, 1U);
+    EXPECT_EQ(result.distribution.at("C").count, 3U);
+    EXPECT_EQ(result.distribution.at("H").count, 9U);
+    EXPECT_NEAR(result.entropy.value, 0.9911388966130941, 1.0e-15);
+    EXPECT_NEAR(result.entropy.maximumEntropyForObservedSupport, 1.3862943611198906, 1.0e-15);
+    EXPECT_NEAR(result.entropy.normalizedEntropy, 0.7149555854879349, 1.0e-15);
+    EXPECT_EQ(result.analysis.dominantElement.element, "H");
+    EXPECT_EQ(result.analysis.dominantElement.count, 9U);
+    EXPECT_TRUE(result.analysis.unexpectedElements.empty());
+}
+
+TEST(DistanceStrategiesTest, AtomElementEntropyWritersEmitArtifacts)
+{
+    const auto result = pubchem::buildAtomElementEntropyAnalysis(cid4SpringAtoms(), "sample.sdf");
+    const auto outputDirectory =
+        std::filesystem::temp_directory_path() / "pubchem-cid4-atom-entropy";
+    std::filesystem::create_directories(outputDirectory);
+
+    const auto csvPath = outputDirectory / "atom_entropy.csv";
+    const auto svgPath = outputDirectory / "atom_entropy.svg";
+
+    pubchem::writeAtomElementEntropyCsv(result, csvPath);
+    pubchem::writeAtomElementEntropyPlotSvg(result, svgPath);
+
+    std::ifstream csvInput(csvPath);
+    std::ifstream svgInput(svgPath);
+    ASSERT_TRUE(csvInput.good());
+    ASSERT_TRUE(svgInput.good());
+
+    const std::string csvContents((std::istreambuf_iterator<char>(csvInput)),
+                                  std::istreambuf_iterator<char>());
+    const std::string svgContents((std::istreambuf_iterator<char>(svgInput)),
+                                  std::istreambuf_iterator<char>());
+
+    EXPECT_NE(csvContents.find("shannon_contribution"), std::string::npos);
+    EXPECT_NE(csvContents.find("H,9"), std::string::npos);
+    EXPECT_NE(svgContents.find("Atom Element Proportions"), std::string::npos);
 }
 
 TEST(GradientDescentStrategiesTest, AnalysisConvergesTowardClosedFormWeight)

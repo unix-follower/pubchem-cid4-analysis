@@ -17,6 +17,8 @@ import log_settings
 from constants import ARR_1ST_IDX as IDX1
 from constants import UTF_8
 from matplotlib_utils import (
+    plot_activity_value_statistics,
+    plot_atom_element_entropy,
     plot_gradient_descent_fit,
     plot_gradient_descent_loss_curve,
     plot_hill_reference_curves,
@@ -35,9 +37,12 @@ DEFAULT_POSTERIOR_PRIOR_BETA = 1.0
 DEFAULT_POSTERIOR_CREDIBLE_INTERVAL = 0.95
 DEFAULT_BINOMIAL_TAIL_THRESHOLD = 0.0
 DEFAULT_CHI_SQUARE_EXPECTED_COUNT_THRESHOLD = 5.0
+DEFAULT_SHAPIRO_ALPHA = 0.05
+DEFAULT_SHAPIRO_MAX_SAMPLE_SIZE = 5000
 DEFAULT_GRADIENT_DESCENT_LEARNING_RATE = 5e-5
 DEFAULT_GRADIENT_DESCENT_EPOCHS = 250
 SPRING_DISTANCE_TOLERANCE = 1e-12
+REQUIRED_ATOM_ENTROPY_ELEMENTS = ("O", "N", "C", "H")
 DEFAULT_BOND_ORDER_SPRING_CONSTANTS = {
     1: 300.0,
     2: 500.0,
@@ -1414,6 +1419,58 @@ def build_pic50_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, d
     return pic50_df, counts
 
 
+def build_activity_value_statistics_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
+    activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
+    numeric_mask = activity_value.notna()
+    positive_numeric_mask = numeric_mask & activity_value.gt(0)
+    zero_mask = numeric_mask & activity_value.eq(0)
+    negative_mask = numeric_mask & activity_value.lt(0)
+
+    selected_columns = [
+        "Bioactivity_ID",
+        "BioAssay_AID",
+        "Activity",
+        "Aid_Type",
+        "Activity_Type",
+        "Target_Name",
+        "BioAssay_Name",
+        "Activity_Value",
+    ]
+    activity_value_df = bioactivity_df.loc[positive_numeric_mask, selected_columns].copy()
+    activity_value_df["Activity_Value"] = activity_value.loc[positive_numeric_mask]
+    activity_value_df["Activity"] = activity_value_df["Activity"].astype("string").str.strip().fillna("Unknown")
+    activity_value_df["Aid_Type"] = activity_value_df["Aid_Type"].astype("string").str.strip().fillna("Unknown")
+    activity_value_df["Aid_Type"] = activity_value_df["Aid_Type"].mask(activity_value_df["Aid_Type"].eq(""), "Unknown")
+    activity_value_df["Activity_Type"] = (
+        activity_value_df["Activity_Type"].astype("string").str.strip().fillna("Unknown")
+    )
+    activity_value_df["Target_Name"] = activity_value_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
+    activity_value_df["BioAssay_Name"] = (
+        activity_value_df["BioAssay_Name"].astype("string").str.strip().fillna("Unknown")
+    )
+    activity_value_df = activity_value_df.sort_values(
+        by=["Activity_Value", "BioAssay_AID", "Bioactivity_ID"],
+        ascending=[False, True, True],
+    ).reset_index(drop=True)
+
+    counts = {
+        "total_rows": int(len(bioactivity_df)),
+        "rows_with_numeric_activity_value": int(numeric_mask.sum()),
+        "positive_numeric_rows": int(positive_numeric_mask.sum()),
+        "zero_activity_value_rows": int(zero_mask.sum()),
+        "negative_activity_value_rows": int(negative_mask.sum()),
+        "non_numeric_or_missing_activity_value_rows": int((~numeric_mask).sum()),
+        "retained_positive_numeric_rows": int(len(activity_value_df)),
+        "dropped_rows": int(len(bioactivity_df) - len(activity_value_df)),
+        "retained_unique_bioassays": int(activity_value_df["BioAssay_AID"].nunique()),
+    }
+
+    if activity_value_df.empty:
+        raise ValueError("No positive numeric Activity_Value rows were found in the bioactivity dataset")
+
+    return activity_value_df, counts
+
+
 def summarize_pic50_analysis(pic50_df: pd.DataFrame, counts: dict[str, int]) -> dict:
     ic50_values = pic50_df["IC50_uM"]
     pic50_values = pic50_df["pIC50"]
@@ -1450,6 +1507,204 @@ def summarize_pic50_analysis(pic50_df: pd.DataFrame, counts: dict[str, int]) -> 
                 "IC50_uM": float(weakest_row["IC50_uM"]),
                 "pIC50": float(weakest_row["pIC50"]),
             },
+        },
+    }
+
+
+def summarize_activity_value_statistics_analysis(
+    activity_value_df: pd.DataFrame,
+    counts: dict[str, int],
+    shapiro_alpha: float = DEFAULT_SHAPIRO_ALPHA,
+    shapiro_max_sample_size: int = DEFAULT_SHAPIRO_MAX_SAMPLE_SIZE,
+) -> dict:
+    if not 0 < shapiro_alpha < 1:
+        raise ValueError("Shapiro-Wilk alpha must be between 0 and 1")
+    if shapiro_max_sample_size < 3:
+        raise ValueError("Shapiro-Wilk maximum sample size must be at least 3")
+
+    values = activity_value_df["Activity_Value"].to_numpy(dtype=np.float64)
+    quantiles = np.quantile(values, [0.25, 0.5, 0.75])
+    sample_size = int(values.size)
+    mean_value = float(np.mean(values))
+    variance_value = float(np.var(values, ddof=1)) if sample_size > 1 else 0.0
+    skewness_value = float(stats.skew(values, bias=False)) if sample_size > 2 else None
+
+    shapiro_summary: dict[str, object] = {
+        "computed": False,
+        "reason_not_computed": None,
+        "sample_size": sample_size,
+        "alpha": float(shapiro_alpha),
+        "statistic": None,
+        "p_value": None,
+        "reject_normality": None,
+        "interpretation": None,
+    }
+    if sample_size < 3:
+        shapiro_summary["reason_not_computed"] = "Shapiro-Wilk requires at least 3 retained observations."
+        shapiro_summary["interpretation"] = "Normality was not tested because too few positive numeric rows were retained."
+    elif sample_size > shapiro_max_sample_size:
+        shapiro_summary["reason_not_computed"] = (
+            "Shapiro-Wilk was skipped because SciPy warns that p-values may be inaccurate for samples larger than "
+            f"{shapiro_max_sample_size}."
+        )
+        shapiro_summary["interpretation"] = "Normality was not tested because the retained sample exceeds the configured Shapiro-Wilk limit."
+    else:
+        statistic, p_value = stats.shapiro(values)
+        reject_normality = bool(p_value < shapiro_alpha)
+        shapiro_summary.update(
+            {
+                "computed": True,
+                "statistic": float(statistic),
+                "p_value": float(p_value),
+                "reject_normality": reject_normality,
+                "interpretation": (
+                    "Reject the null hypothesis of normality at the configured alpha threshold."
+                    if reject_normality
+                    else "Do not reject the null hypothesis of normality at the configured alpha threshold."
+                ),
+            }
+        )
+
+    representative_positions = sorted({0, len(activity_value_df) // 2, len(activity_value_df) - 1})
+    representative_rows = activity_value_df.iloc[representative_positions]
+
+    return {
+        "row_counts": counts,
+        "statistics": {
+            "sample_size": sample_size,
+            "mean": mean_value,
+            "variance": variance_value,
+            "variance_definition": "sample_variance_ddof_1",
+            "skewness": skewness_value,
+            "min": float(values.min()),
+            "q25": float(quantiles[0]),
+            "median": float(quantiles[1]),
+            "q75": float(quantiles[2]),
+            "max": float(values.max()),
+        },
+        "normality_test": {
+            "name": "Shapiro-Wilk",
+            **shapiro_summary,
+        },
+        "analysis": {
+            "target_quantity": "Positive numeric Activity_Value distribution",
+            "retained_row_definition": {
+                "predicate": "Activity_Value is numeric and strictly greater than 0",
+                "excluded_rows": [
+                    "missing Activity_Value",
+                    "non-numeric Activity_Value",
+                    "Activity_Value = 0",
+                    "Activity_Value < 0",
+                ],
+            },
+            "representative_rows": [
+                {
+                    "Bioactivity_ID": int(row["Bioactivity_ID"]),
+                    "BioAssay_AID": int(row["BioAssay_AID"]),
+                    "Activity": str(row["Activity"]),
+                    "Aid_Type": str(row["Aid_Type"]),
+                    "Activity_Type": str(row["Activity_Type"]),
+                    "Activity_Value": float(row["Activity_Value"]),
+                }
+                for _, row in representative_rows.iterrows()
+            ],
+            "notes": [
+                "The retained distribution aggregates all positive numeric Activity_Value rows regardless of Activity_Type.",
+                "Variance is reported as the sample variance with ddof = 1 to reflect descriptive statistics over the retained sample.",
+                "The diagnostic plot pairs a log-scale histogram with a normal Q-Q panel when the retained sample supports it.",
+            ],
+        },
+    }
+
+
+def build_atom_element_entropy_dataframe(
+    atom_feature_df: pd.DataFrame,
+    required_elements: tuple[str, ...] = REQUIRED_ATOM_ENTROPY_ELEMENTS,
+) -> tuple[pd.DataFrame, dict[str, int], dict[str, int]]:
+    if "symbol" not in atom_feature_df.columns:
+        raise ValueError("Atom feature matrix is missing the required symbol column")
+
+    symbols = atom_feature_df["symbol"].astype("string").str.strip().str.upper()
+    symbol_counts = symbols.value_counts(dropna=False).to_dict()
+    required_counts = {element: int(symbol_counts.get(element, 0)) for element in required_elements}
+    unexpected_counts = {
+        str(element): int(count)
+        for element, count in symbol_counts.items()
+        if element not in required_elements and pd.notna(element) and str(element) != ""
+    }
+
+    retained_total = int(sum(required_counts.values()))
+    if retained_total <= 0:
+        raise ValueError("No required O/N/C/H atom symbols were found in the atom feature matrix")
+
+    entropy_df = pd.DataFrame(
+        {
+            "element": list(required_elements),
+            "count": [required_counts[element] for element in required_elements],
+        }
+    )
+    entropy_df["proportion"] = entropy_df["count"] / retained_total
+    entropy_df["log_proportion"] = entropy_df["proportion"].apply(lambda value: None if value <= 0 else float(np.log(value)))
+    entropy_df["shannon_contribution"] = entropy_df["proportion"].apply(
+        lambda value: 0.0 if value <= 0 else float(-value * np.log(value))
+    )
+
+    counts = {
+        "total_atom_rows": int(len(atom_feature_df)),
+        "retained_atom_rows": retained_total,
+        "required_element_categories": int(len(required_elements)),
+        "observed_required_element_categories": int((entropy_df["count"] > 0).sum()),
+        "unexpected_element_rows": int(sum(unexpected_counts.values())),
+        "unexpected_element_categories": int(len(unexpected_counts)),
+    }
+
+    return entropy_df, counts, unexpected_counts
+
+
+def summarize_atom_element_entropy_analysis(
+    entropy_df: pd.DataFrame,
+    counts: dict[str, int],
+    unexpected_counts: dict[str, int],
+) -> dict:
+    entropy_value = float(entropy_df["shannon_contribution"].sum())
+    unique_retained_elements = int((entropy_df["count"] > 0).sum())
+    maximum_entropy = float(np.log(unique_retained_elements)) if unique_retained_elements > 1 else 0.0
+    normalized_entropy = float(entropy_value / maximum_entropy) if maximum_entropy > 0 else 0.0
+    dominant_row = entropy_df.sort_values(by=["count", "element"], ascending=[False, True]).iloc[0]
+
+    return {
+        "row_counts": counts,
+        "entropy": {
+            "formula": "H = -sum(p_i * log(p_i))",
+            "log_base": "natural_log",
+            "value": entropy_value,
+            "maximum_entropy_for_observed_support": maximum_entropy,
+            "normalized_entropy": normalized_entropy,
+        },
+        "distribution": {
+            row["element"]: {
+                "count": int(row["count"]),
+                "proportion": float(row["proportion"]),
+                "log_proportion": None if pd.isna(row["log_proportion"]) else float(row["log_proportion"]),
+                "shannon_contribution": float(row["shannon_contribution"]),
+            }
+            for _, row in entropy_df.iterrows()
+        },
+        "analysis": {
+            "target_quantity": "Atom element entropy over O/N/C/H proportions",
+            "required_elements": list(REQUIRED_ATOM_ENTROPY_ELEMENTS),
+            "unique_retained_elements": unique_retained_elements,
+            "dominant_element": {
+                "element": str(dominant_row["element"]),
+                "count": int(dominant_row["count"]),
+                "proportion": float(dominant_row["proportion"]),
+            },
+            "unexpected_elements": unexpected_counts,
+            "notes": [
+                "Entropy is computed only over the required O/N/C/H support requested in the README exercise.",
+                "Unexpected atom symbols are excluded from the entropy sum and reported separately for transparency.",
+                "Normalized entropy uses the maximum entropy over the observed required-element support rather than the fixed four-element support.",
+            ],
         },
     }
 
@@ -1861,6 +2116,33 @@ def write_hill_dose_response_analysis(filename: str, hill_coefficient: float = D
     log.info("Hill dose-response plot written to %s", plot_output_path)
 
 
+def write_activity_value_statistics_analysis(filename: str):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    bioactivity_df = load_bioactivity_dataframe(filename)
+    activity_value_df, counts = build_activity_value_statistics_dataframe(bioactivity_df)
+    summary = summarize_activity_value_statistics_analysis(activity_value_df, counts)
+    output_stem = Path(filename).stem
+    records_output_path = Path(out_dir) / f"{output_stem}.activity_value_statistics.csv"
+    summary_output_path = Path(out_dir) / f"{output_stem}.activity_value_statistics.summary.json"
+    plot_output_path = Path(out_dir) / f"{output_stem}.activity_value_statistics.png"
+
+    activity_value_df.to_csv(records_output_path, index=False)
+
+    with summary_output_path.open("w", encoding=UTF_8) as file:
+        json.dump(summary, file, indent=2)
+
+    plot_activity_value_statistics(
+        activity_value_df["Activity_Value"].to_numpy(dtype=np.float64),
+        bool(summary["normality_test"]["computed"]),
+        str(plot_output_path),
+    )
+
+    log.info("Activity_Value statistics rows written to %s", records_output_path)
+    log.info("Activity_Value statistics summary written to %s", summary_output_path)
+    log.info("Activity_Value statistics plot written to %s", plot_output_path)
+
+
 def write_bioactivity_posterior_analysis(
     filename: str,
     prior_alpha: float = DEFAULT_POSTERIOR_PRIOR_ALPHA,
@@ -2062,6 +2344,37 @@ def write_atom_gradient_descent_analysis(
     log.info("Atom gradient-descent fit plot written to %s", fit_plot_output_path)
 
 
+def write_atom_element_entropy_analysis(
+    sdf_filename: str,
+    atom_feature_df: pd.DataFrame | None = None,
+):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    feature_df = atom_feature_df if atom_feature_df is not None else process_sdf_file(sdf_filename)
+    entropy_df, counts, unexpected_counts = build_atom_element_entropy_dataframe(feature_df)
+    summary = summarize_atom_element_entropy_analysis(entropy_df, counts, unexpected_counts)
+    output_stem = Path(sdf_filename).stem
+    records_output_path = Path(out_dir) / f"{output_stem}.atom_element_entropy_proportions.csv"
+    summary_output_path = Path(out_dir) / f"{output_stem}.atom_element_entropy.summary.json"
+    plot_output_path = Path(out_dir) / f"{output_stem}.atom_element_entropy.png"
+
+    entropy_df.to_csv(records_output_path, index=False)
+
+    with summary_output_path.open("w", encoding=UTF_8) as file:
+        json.dump(summary, file, indent=2)
+
+    plot_atom_element_entropy(
+        entropy_df["element"].tolist(),
+        entropy_df["proportion"].to_numpy(dtype=np.float64),
+        float(summary["entropy"]["value"]),
+        str(plot_output_path),
+    )
+
+    log.info("Atom element entropy rows written to %s", records_output_path)
+    log.info("Atom element entropy summary written to %s", summary_output_path)
+    log.info("Atom element entropy plot written to %s", plot_output_path)
+
+
 def main():
     log_settings.configure_logging()
     sdf_filename = "Conformer3D_COMPOUND_CID_4(1).sdf"
@@ -2069,6 +2382,7 @@ def main():
     bioactivity_filename = "pubchem_cid_4_bioactivity.csv"
     atom_feature_df = process_sdf_file(sdf_filename)
     write_atom_gradient_descent_analysis(sdf_filename, atom_feature_df=atom_feature_df)
+    write_atom_element_entropy_analysis(sdf_filename, atom_feature_df=atom_feature_df)
     write_distance_matrix(sdf_filename, json_filename)
     write_bonded_distance_analysis(sdf_filename, json_filename)
     write_bonded_angle_analysis(sdf_filename, json_filename)
@@ -2078,6 +2392,7 @@ def main():
     write_laplacian_analysis(json_filename, adjacency_matrix)
     write_bioactivity_analysis(bioactivity_filename)
     write_hill_dose_response_analysis(bioactivity_filename)
+    write_activity_value_statistics_analysis(bioactivity_filename)
     write_bioactivity_posterior_analysis(bioactivity_filename)
     write_activity_aid_type_chi_square_analysis(bioactivity_filename)
     write_bioactivity_binomial_analysis(bioactivity_filename)

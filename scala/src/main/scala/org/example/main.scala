@@ -2,6 +2,8 @@ package org.example
 
 import org.example.analysis.adjacency.AdjacencyMatrix
 import org.example.analysis.adjacency.AdjacencyMatrixService
+import org.example.analysis.bioactivity.ActivityValueStatisticsAnalysisResult
+import org.example.analysis.bioactivity.ActivityValueStatisticsService
 import org.example.analysis.bioactivity.BayesianActivityPosteriorAnalysisResult
 import org.example.analysis.bioactivity.BayesianActivityPosteriorService
 import org.example.analysis.bioactivity.BinomialActivityDistributionAnalysisResult
@@ -12,6 +14,8 @@ import org.example.analysis.bioactivity.ChiSquareActivityAidTypeAnalysisResult
 import org.example.analysis.bioactivity.ChiSquareActivityAidTypeService
 import org.example.analysis.bioactivity.HillDoseResponseAnalysisResult
 import org.example.analysis.bioactivity.HillDoseResponseService
+import org.example.analysis.distance.AtomElementEntropyAnalysisResult
+import org.example.analysis.distance.AtomElementEntropyAnalysisService
 import org.example.analysis.distance.BondAngleAnalysisResult
 import org.example.analysis.distance.BondAngleAnalysisService
 import org.example.analysis.distance.BondedDistanceAnalysisResult
@@ -220,6 +224,43 @@ private def writeHillDoseResponsePlot(
   val outputPath = outDirectory.resolve(outputFileName)
   HillDoseResponseService.writePlot(result, outputPath)
 
+private def writeActivityValueStatisticsSummary(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: ActivityValueStatisticsAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.activity_value_statistics.summary.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result.summary)
+  outputPath
+
+private def writeActivityValueStatisticsRows(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: ActivityValueStatisticsAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.activity_value_statistics.csv"
+  val outputPath = outDirectory.resolve(outputFileName)
+  ActivityValueStatisticsService.writeCsv(result, outputPath)
+
+private def writeActivityValueStatisticsPlot(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: ActivityValueStatisticsAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".csv")}.activity_value_statistics.png"
+  val outputPath = outDirectory.resolve(outputFileName)
+  ActivityValueStatisticsService.writePlot(result, outputPath)
+
 private def writeBayesianActivityPosteriorSummary(
     dataDirectory: String,
     sourceFileName: String,
@@ -344,6 +385,43 @@ private def writeGradientDescentFitPlot(
   val outputPath = outDirectory.resolve(outputFileName)
   GradientDescentAnalysisService.writeFitPlot(result, outputPath)
 
+private def writeAtomElementEntropySummary(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: AtomElementEntropyAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".json")}.atom_element_entropy.summary.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result.summary)
+  outputPath
+
+private def writeAtomElementEntropyRows(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: AtomElementEntropyAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".json")}.atom_element_entropy_proportions.csv"
+  val outputPath = outDirectory.resolve(outputFileName)
+  AtomElementEntropyAnalysisService.writeCsv(result, outputPath)
+
+private def writeAtomElementEntropyPlot(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: AtomElementEntropyAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".json")}.atom_element_entropy.png"
+  val outputPath = outDirectory.resolve(outputFileName)
+  AtomElementEntropyAnalysisService.writePlot(result, outputPath)
+
 def readJson(method: String, distanceSource: String) = {
   val dataDirectory = fsUtils.getDataDir()
   if (dataDirectory == null) {
@@ -385,6 +463,7 @@ def readJson(method: String, distanceSource: String) = {
     val springBondPotentialAnalysisOutputPath =
       writeSpringBondPotentialAnalysis(dataDirectory, jsonPath.getFileName.toString, springBondPotentialAnalysis)
     val gradientDescentAnalysis = GradientDescentAnalysisService.analyze(compound, sdfPath)
+    val atomElementEntropyAnalysis = AtomElementEntropyAnalysisService.analyze(compound)
     val gradientDescentTraceOutputPath =
       writeGradientDescentTrace(dataDirectory, jsonPath.getFileName.toString, gradientDescentAnalysis)
     val gradientDescentSummaryOutputPath =
@@ -393,6 +472,12 @@ def readJson(method: String, distanceSource: String) = {
       writeGradientDescentLossPlot(dataDirectory, jsonPath.getFileName.toString, gradientDescentAnalysis)
     val gradientDescentFitPlotOutputPath =
       writeGradientDescentFitPlot(dataDirectory, jsonPath.getFileName.toString, gradientDescentAnalysis)
+    val atomElementEntropyRowsOutputPath =
+      writeAtomElementEntropyRows(dataDirectory, jsonPath.getFileName.toString, atomElementEntropyAnalysis)
+    val atomElementEntropySummaryOutputPath =
+      writeAtomElementEntropySummary(dataDirectory, jsonPath.getFileName.toString, atomElementEntropyAnalysis)
+    val atomElementEntropyPlotOutputPath =
+      writeAtomElementEntropyPlot(dataDirectory, jsonPath.getFileName.toString, atomElementEntropyAnalysis)
     val eigendecomposition = EigendecompositionService.compute(adjacencyMatrix)
     val eigendecompositionOutputPath =
       writeAdjacencySpectrum(dataDirectory, jsonPath.getFileName.toString, eigendecomposition)
@@ -401,6 +486,7 @@ def readJson(method: String, distanceSource: String) = {
       writeLaplacianAnalysis(dataDirectory, jsonPath.getFileName.toString, laplacianAnalysis)
     val bioactivityAnalysis = BioactivityService.analyze(bioactivityPath)
     val hillDoseResponseAnalysis = HillDoseResponseService.analyze(bioactivityPath)
+    val activityValueStatisticsAnalysis = ActivityValueStatisticsService.analyze(bioactivityPath)
     val bayesianActivityPosteriorAnalysis = BayesianActivityPosteriorService.analyze(bioactivityPath)
     val binomialActivityDistributionAnalysis = BinomialActivityDistributionService.analyze(bioactivityPath)
     val chiSquareActivityAidTypeAnalysis = ChiSquareActivityAidTypeService.analyze(bioactivityPath)
@@ -416,6 +502,24 @@ def readJson(method: String, distanceSource: String) = {
       writeHillDoseResponseSummary(dataDirectory, bioactivityPath.getFileName.toString, hillDoseResponseAnalysis)
     val hillDoseResponsePlotOutputPath =
       writeHillDoseResponsePlot(dataDirectory, bioactivityPath.getFileName.toString, hillDoseResponseAnalysis)
+    val activityValueStatisticsRowsOutputPath =
+      writeActivityValueStatisticsRows(
+        dataDirectory,
+        bioactivityPath.getFileName.toString,
+        activityValueStatisticsAnalysis
+      )
+    val activityValueStatisticsSummaryOutputPath =
+      writeActivityValueStatisticsSummary(
+        dataDirectory,
+        bioactivityPath.getFileName.toString,
+        activityValueStatisticsAnalysis
+      )
+    val activityValueStatisticsPlotOutputPath =
+      writeActivityValueStatisticsPlot(
+        dataDirectory,
+        bioactivityPath.getFileName.toString,
+        activityValueStatisticsAnalysis
+      )
     val bayesianActivityPosteriorRowsOutputPath =
       writeBayesianActivityPosteriorRows(
         dataDirectory,
@@ -466,6 +570,9 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Gradient descent summary output: $gradientDescentSummaryOutputPath")
     logger.info(s"Gradient descent loss plot output: $gradientDescentLossPlotOutputPath")
     logger.info(s"Gradient descent fit plot output: $gradientDescentFitPlotOutputPath")
+    logger.info(s"Atom element entropy rows output: $atomElementEntropyRowsOutputPath")
+    logger.info(s"Atom element entropy summary output: $atomElementEntropySummaryOutputPath")
+    logger.info(s"Atom element entropy plot output: $atomElementEntropyPlotOutputPath")
     logger.info(s"Adjacency matrix output: $outputPath")
     logger.info(s"Adjacency eigendecomposition output: $eigendecompositionOutputPath")
     logger.info(s"Laplacian analysis output: $laplacianOutputPath")
@@ -475,6 +582,9 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Hill dose-response rows output: $hillDoseResponseRowsOutputPath")
     logger.info(s"Hill dose-response summary output: $hillDoseResponseSummaryOutputPath")
     logger.info(s"Hill dose-response plot output: $hillDoseResponsePlotOutputPath")
+    logger.info(s"Activity_Value statistics rows output: $activityValueStatisticsRowsOutputPath")
+    logger.info(s"Activity_Value statistics summary output: $activityValueStatisticsSummaryOutputPath")
+    logger.info(s"Activity_Value statistics plot output: $activityValueStatisticsPlotOutputPath")
     logger.info(s"Bayesian activity posterior rows output: $bayesianActivityPosteriorRowsOutputPath")
     logger.info(s"Bayesian activity posterior summary output: $bayesianActivityPosteriorSummaryOutputPath")
     logger.info(s"Binomial activity distribution rows output: $binomialActivityDistributionRowsOutputPath")
