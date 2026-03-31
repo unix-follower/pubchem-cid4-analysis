@@ -3,7 +3,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/build-cid4-angular-ui.yaml
-      - cid4-angular-ui/*
+      - cid4-angular-ui/**
     types:
       - opened
       - reopened
