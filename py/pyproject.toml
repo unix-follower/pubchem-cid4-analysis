@@ -23,6 +23,11 @@ dependencies = [
 dev = [
     "ruff>=0.12.10",
 ]
+deep-learning = [
+    "tensorflow",
+    "torch",
+    "torchvision",
+]
 
 [tool.ruff]
 line-length = 120

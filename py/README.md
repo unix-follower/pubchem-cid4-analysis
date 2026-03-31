@@ -70,3 +70,31 @@ The same run also writes a spring-bond partial-derivative artifact from the CID 
 ```sh
 uv tool run ruff format
 ```
+
+## Machine learning runner
+The Python workspace now includes a first ML entrypoint that builds shared CID 4 datasets and writes a mixed set of artifacts into `data/out`:
+- cross-library comparison summaries for scikit-learn, PyTorch, and TensorFlow where the task is genuinely comparable
+- scikit-learn-first summaries for SVM, KNN, Decision Tree, Random Forest, K-Means, hierarchical clustering, PCA, and Naive Bayes
+- scaffold summaries for GNN and SMILES-RNN next steps, with explicit dataset requirements and recommended libraries
+- CSV exports of the prepared atom, bioactivity, regression, and taxonomy feature tables
+
+Run it from the `py` workspace:
+
+```sh
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_ml.py
+```
+
+The runner currently compares these tasks across libraries:
+- atom heavy-atom vs hydrogen classification
+- atom O/N/C/H element classification
+- filtered bioactivity Active vs Inactive classification
+- positive `Activity_Value` regression using molecular descriptors plus assay metadata
+
+The current virtual environment may not include PyTorch or TensorFlow yet. In that case, the runner still completes and writes explicit `skipped` results for those libraries instead of failing. To install the optional deep-learning stack through the project metadata, add the `deep-learning` dependency group from `pyproject.toml` to your environment setup.
+
+For the mixed deliverable, a notebook companion can inspect the generated JSON summaries and reuse the shared `ml` package directly instead of duplicating feature engineering logic. The runner now also writes `cid4_ml.future_scaffolds.summary.json`, which captures the honest blockers and next code targets for a real graph-neural-network or SMILES-RNN implementation.
+
+Notebook companion:
+- `src/cid4_ml_taxonomy_text_baseline.ipynb` reuses `ml.datasets.build_taxonomy_clustering_frame()` to build a small TF-IDF plus logistic-regression baseline over the taxonomy text, then saves notebook artifacts back into `data/out`
