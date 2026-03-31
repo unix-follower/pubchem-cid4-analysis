@@ -61,3 +61,9 @@ The same run now also writes a Bayesian posterior bioactivity analysis from `pub
 - a summary JSON for the posterior probability $P(\mathrm{Active} \mid \mathrm{CID}=4)$ using a conjugate Beta-Binomial update with prior $\mathrm{Beta}(1,1)$
 
 This posterior output excludes rows with `Activity = Unspecified` from the binary update and reports their count separately in the summary metadata. The posterior parameters are computed as $\alpha_{post} = 1 + n_{active}$ and $\beta_{post} = 1 + n_{inactive}$, and the summary reports the posterior mean, median, variance, a 95% equal-tailed credible interval, and the posterior probability that the latent activity rate exceeds $0.5$.
+
+The same run now also writes an assay-level binomial bioactivity analysis from `pubchem_cid_4_bioactivity.csv` under `DATA_DIR/out`:
+- a CSV PMF table for $P(K = k)$ across $k = 0, \dots, n$ active assays
+- a summary JSON documenting the assay-level trial definition, plug-in success probability, observed-tail probabilities, and representative assays
+
+This binomial output operates on one Bernoulli trial per unique `BioAssay_AID` after excluding rows with `Activity = Unspecified`, consistent with the posterior feature. Each assay is resolved to `Active` if any retained row for that assay is `Active`; otherwise it is resolved to `Inactive`. The model uses the observed active-assay fraction $p = n_{active\ assays} / n_{assays}$ as a plug-in estimate and reports the full binomial PMF, cumulative probabilities at the observed active-assay count, the binomial mean and variance, and the PMF probability sum as a numerical check. This is a frequentist plug-in binomial model rather than a posterior-predictive model.
