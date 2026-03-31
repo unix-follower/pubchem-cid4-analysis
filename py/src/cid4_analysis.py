@@ -318,7 +318,8 @@ def resolve_spring_constant_for_bond_order(bond_order: int) -> float:
     if bond_order <= 0:
         raise ValueError("Bond order must be positive when resolving a spring constant")
 
-    return float(DEFAULT_BOND_ORDER_SPRING_CONSTANTS.get(int(bond_order), DEFAULT_BOND_ORDER_SPRING_CONSTANTS[1] * bond_order))
+    return float(DEFAULT_BOND_ORDER_SPRING_CONSTANTS.get(
+        int(bond_order), DEFAULT_BOND_ORDER_SPRING_CONSTANTS[1] * bond_order))
 
 
 def compute_spring_bond_partial_derivative_records(
@@ -331,7 +332,8 @@ def compute_spring_bond_partial_derivative_records(
         raise ValueError("Spring bond derivative analysis requires aligned atom ids, coordinates, and RDKit atoms")
 
     atom_index_by_id = {atom_id: index for index, atom_id in enumerate(atom_ids)}
-    atom_symbol_by_id = {int(atom_id): molecule.GetAtomWithIdx(index).GetSymbol() for index, atom_id in enumerate(atom_ids)}
+    atom_symbol_by_id = {int(atom_id): molecule.GetAtomWithIdx(index).GetSymbol()
+                         for index, atom_id in enumerate(atom_ids)}
     bonded_pairs = get_bonded_atom_pairs_from_adjacency(adjacency_matrix)
 
     atom_gradient_accumulators = {
@@ -357,7 +359,8 @@ def compute_spring_bond_partial_derivative_records(
         distance = float(np.linalg.norm(bond_vector))
         if distance <= SPRING_DISTANCE_TOLERANCE:
             raise ValueError(
-                f"Spring bond derivative analysis requires non-zero bonded distances, found {distance} for pair {(atom_id_1, atom_id_2)}"
+                f"Spring bond derivative analysis requires non-zero bonded distances, "
+                f"found {distance} for pair {(atom_id_1, atom_id_2)}"
             )
 
         reference_distance, reference_distance_source = infer_reference_bond_length_angstrom(
@@ -1344,8 +1347,9 @@ def write_spring_bond_potential_analysis(sdf_filename: str, json_filename: str):
                         )
                     },
                     "interpretation": (
-                        "Positive and negative Cartesian partial derivatives quantify how the spring-bond energy changes "
-                        "under infinitesimal coordinate displacements of each bonded atom in the current CID 4 conformer."
+                        "Positive and negative Cartesian partial derivatives quantify "
+                        "how the spring-bond energy changes under infinitesimal coordinate displacements of "
+                        "each bonded atom in the current CID 4 conformer."
                     ),
                 },
                 "metadata": {
