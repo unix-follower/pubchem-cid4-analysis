@@ -412,11 +412,11 @@ double computeHillReferenceAucTrapezoid(const double inferredK,
 
     double auc = 0.0;
     double previousConcentration = relativeConcentrationGrid.front() * inferredK;
-    double previousResponse =
-        hillResponse(previousConcentration, inferredK, hillCoefficient);
+    double previousResponse = hillResponse(previousConcentration, inferredK, hillCoefficient);
     for (std::size_t index = 1; index < relativeConcentrationGrid.size(); ++index) {
         const double currentConcentration = relativeConcentrationGrid[index] * inferredK;
-        const double currentResponse = hillResponse(currentConcentration, inferredK, hillCoefficient);
+        const double currentResponse =
+            hillResponse(currentConcentration, inferredK, hillCoefficient);
         auc += ((currentConcentration - previousConcentration) *
                 (previousResponse + currentResponse)) /
                2.0;
@@ -2196,8 +2196,8 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
                         .integrationMethod = "trapezoidal_rule",
                         .curveBasis = "reference_curve_inferred_from_activity_value",
                         .concentrationBoundsDefinition =
-                            "[" + formatCompactDouble(kHillAucLowerBoundScale) +
-                            " * K, " + formatCompactDouble(kHillAucUpperBoundScale) + " * K]",
+                            "[" + formatCompactDouble(kHillAucLowerBoundScale) + " * K, " +
+                            formatCompactDouble(kHillAucUpperBoundScale) + " * K]",
                         .gridSize = kHillAucGridSize,
                         .concentrationUnits = "same units as Activity_Value",
                         .interpretation =
