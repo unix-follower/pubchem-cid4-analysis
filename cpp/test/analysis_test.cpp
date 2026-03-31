@@ -833,13 +833,27 @@ TEST(BioactivityStrategiesTest, HillAnalysisBuildsReferenceRowsAndSummary)
     EXPECT_NEAR(result.statistics.activityValueAsInferredK.max, 800.0, 1.0e-12);
     EXPECT_NEAR(result.statistics.midpointFirstDerivative.max, 1.0 / (4.0 * 21.8724), 1.0e-12);
     EXPECT_NEAR(result.statistics.midpointFirstDerivative.min, 1.0 / (4.0 * 800.0), 1.0e-12);
+    EXPECT_NEAR(result.statistics.aucTrapezoidReferenceCurve.min, 2086.2890621653714, 1.0e-9);
+    EXPECT_NEAR(result.statistics.aucTrapezoidReferenceCurve.max, 76307.64112453582, 1.0e-6);
     EXPECT_EQ(result.analysis.fitStatus, "reference_curve_inferred_from_activity_value");
     EXPECT_EQ(result.analysis.midpointInLogConcentrationSpace.condition, "c = K");
     EXPECT_DOUBLE_EQ(result.analysis.midpointInLogConcentrationSpace.response, 0.5);
+    EXPECT_EQ(result.analysis.aucTrapezoidReferenceCurve.integrationMethod, "trapezoidal_rule");
+    EXPECT_EQ(result.analysis.aucTrapezoidReferenceCurve.curveBasis,
+              "reference_curve_inferred_from_activity_value");
+    EXPECT_EQ(result.analysis.aucTrapezoidReferenceCurve.concentrationBoundsDefinition,
+              "[0.01 * K, 100 * K]");
+    EXPECT_EQ(result.analysis.aucTrapezoidReferenceCurve.gridSize, 400U);
     EXPECT_FALSE(result.analysis.linearConcentrationInflection.has_value());
     ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
     EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 743069LL);
+    EXPECT_NEAR(result.analysis.representativeRows.front().aucTrapezoidReferenceCurve,
+                2086.2890621653714,
+                1.0e-9);
     EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 158688LL);
+    EXPECT_NEAR(result.analysis.representativeRows.back().aucTrapezoidReferenceCurve,
+                76307.64112453582,
+                1.0e-6);
 }
 
 TEST(BioactivityStrategiesTest, HillAnalysisSupportsPositiveLinearInflectionForNGreaterThanOne)
@@ -888,6 +902,7 @@ TEST(BioactivityStrategiesTest, HillCsvAndSvgWritersEmitArtifacts)
                                   std::istreambuf_iterator<char>());
 
     EXPECT_NE(filteredContents.find("inferred_K_activity_value"), std::string::npos);
+    EXPECT_NE(filteredContents.find("auc_trapezoid_reference_curve"), std::string::npos);
     EXPECT_NE(filteredContents.find("reference_curve_inferred_from_activity_value"),
               std::string::npos);
     EXPECT_NE(svgContents.find("Reference Hill Curves Inferred from Activity_Value"),
@@ -914,6 +929,9 @@ TEST(BioactivityStrategiesTest, HillAnalysisMatchesCid4RealData)
     EXPECT_NEAR(result.statistics.midpointFirstDerivative.min, 0.0003125, 1.0e-12);
     EXPECT_NEAR(result.statistics.midpointFirstDerivative.median, 0.005871214978694611, 1.0e-15);
     EXPECT_NEAR(result.statistics.midpointFirstDerivative.max, 0.011429929957389222, 1.0e-15);
+    EXPECT_NEAR(result.statistics.aucTrapezoidReferenceCurve.min, 2086.2890621653714, 1.0e-9);
+    EXPECT_NEAR(result.statistics.aucTrapezoidReferenceCurve.median, 39196.9650933506, 1.0e-8);
+    EXPECT_NEAR(result.statistics.aucTrapezoidReferenceCurve.max, 76307.64112453582, 1.0e-6);
     EXPECT_FALSE(result.analysis.linearConcentrationInflection.has_value());
     ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
     EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 743069LL);

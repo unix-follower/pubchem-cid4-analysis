@@ -27,6 +27,9 @@ CONFORMER_ATOM_COUNT = 14
 NULL_SPACE_TOLERANCE = 1e-10
 ANGLE_VECTOR_TOLERANCE = 1e-10
 DEFAULT_HILL_COEFFICIENT = 1.0
+DEFAULT_HILL_AUC_LOWER_BOUND_SCALE = 1e-2
+DEFAULT_HILL_AUC_UPPER_BOUND_SCALE = 1e2
+DEFAULT_HILL_AUC_GRID_SIZE = 400
 DEFAULT_GRADIENT_DESCENT_LEARNING_RATE = 5e-5
 DEFAULT_GRADIENT_DESCENT_EPOCHS = 250
 
@@ -461,6 +464,9 @@ def summarize_atom_gradient_descent_analysis(
 def build_hill_reference_dataframe(
     bioactivity_df: pd.DataFrame,
     hill_coefficient: float = DEFAULT_HILL_COEFFICIENT,
+    auc_lower_bound_scale: float = DEFAULT_HILL_AUC_LOWER_BOUND_SCALE,
+    auc_upper_bound_scale: float = DEFAULT_HILL_AUC_UPPER_BOUND_SCALE,
+    auc_grid_size: int = DEFAULT_HILL_AUC_GRID_SIZE,
 ) -> tuple[pd.DataFrame, dict[str, int]]:
     if hill_coefficient <= 0:
         raise ValueError("Hill coefficient must be positive")
@@ -482,6 +488,13 @@ def build_hill_reference_dataframe(
         hill_df["midpoint_concentration"].to_numpy(dtype=np.float64),
         hill_df["inferred_K_activity_value"].to_numpy(dtype=np.float64),
         hill_coefficient,
+    )
+    hill_df["auc_trapezoid_reference_curve"] = compute_hill_reference_auc_trapezoid(
+        hill_df["inferred_K_activity_value"].to_numpy(dtype=np.float64),
+        hill_coefficient=hill_coefficient,
+        lower_bound_scale=auc_lower_bound_scale,
+        upper_bound_scale=auc_upper_bound_scale,
+        grid_size=auc_grid_size,
     )
     hill_df["log10_midpoint_concentration"] = np.log10(hill_df["midpoint_concentration"])
     hill_df["linear_inflection_concentration"] = np.nan
@@ -528,6 +541,34 @@ def hill_response(
     return numerator / denominator
 
 
+def compute_hill_reference_auc_trapezoid(
+    inferred_k_values: np.ndarray,
+    hill_coefficient: float = DEFAULT_HILL_COEFFICIENT,
+    lower_bound_scale: float = DEFAULT_HILL_AUC_LOWER_BOUND_SCALE,
+    upper_bound_scale: float = DEFAULT_HILL_AUC_UPPER_BOUND_SCALE,
+    grid_size: int = DEFAULT_HILL_AUC_GRID_SIZE,
+) -> np.ndarray:
+    if hill_coefficient <= 0:
+        raise ValueError("Hill coefficient must be positive")
+    if lower_bound_scale <= 0 or upper_bound_scale <= 0:
+        raise ValueError("AUC concentration-bound scales must be positive")
+    if lower_bound_scale >= upper_bound_scale:
+        raise ValueError("AUC lower-bound scale must be smaller than the upper-bound scale")
+    if grid_size < 2:
+        raise ValueError("AUC trapezoidal integration requires at least two grid points")
+
+    k_values = np.asarray(inferred_k_values, dtype=np.float64)
+    if k_values.size == 0:
+        raise ValueError("AUC trapezoidal integration requires at least one inferred K value")
+    if np.any(k_values <= 0):
+        raise ValueError("AUC trapezoidal integration requires strictly positive inferred K values")
+
+    relative_concentration_grid = np.geomspace(lower_bound_scale, upper_bound_scale, grid_size, dtype=np.float64)
+    concentration_grid = k_values[:, np.newaxis] * relative_concentration_grid[np.newaxis, :]
+    response_grid = hill_response(concentration_grid, k_values[:, np.newaxis], hill_coefficient)
+    return np.trapz(response_grid, concentration_grid, axis=1)
+
+
 def hill_response_first_derivative(
     concentration: np.ndarray,
     half_maximal_concentration: np.ndarray | float,
@@ -562,9 +603,17 @@ def hill_response_second_derivative(
     return numerator / denominator
 
 
-def summarize_hill_reference_analysis(hill_df: pd.DataFrame, counts: dict[str, int], hill_coefficient: float) -> dict:
+def summarize_hill_reference_analysis(
+    hill_df: pd.DataFrame,
+    counts: dict[str, int],
+    hill_coefficient: float,
+    auc_lower_bound_scale: float = DEFAULT_HILL_AUC_LOWER_BOUND_SCALE,
+    auc_upper_bound_scale: float = DEFAULT_HILL_AUC_UPPER_BOUND_SCALE,
+    auc_grid_size: int = DEFAULT_HILL_AUC_GRID_SIZE,
+) -> dict:
     inferred_k_values = hill_df["inferred_K_activity_value"].to_numpy(dtype=np.float64)
     midpoint_derivatives = hill_df["midpoint_first_derivative"].to_numpy(dtype=np.float64)
+    auc_values = hill_df["auc_trapezoid_reference_curve"].to_numpy(dtype=np.float64)
     representative_positions = sorted({0, len(hill_df) // 2, len(hill_df) - 1})
     representative_rows = hill_df.iloc[representative_positions]
     activity_type_counts = {
@@ -594,6 +643,11 @@ def summarize_hill_reference_analysis(hill_df: pd.DataFrame, counts: dict[str, i
                 "median": float(np.median(midpoint_derivatives)),
                 "max": float(midpoint_derivatives.max()),
             },
+            "auc_trapezoid_reference_curve": {
+                "min": float(auc_values.min()),
+                "median": float(np.median(auc_values)),
+                "max": float(auc_values.max()),
+            },
         },
         "activity_type_counts": activity_type_counts,
         "analysis": {
@@ -611,6 +665,17 @@ def summarize_hill_reference_analysis(hill_df: pd.DataFrame, counts: dict[str, i
                 "response": 0.5,
                 "interpretation": "The Hill curve is centered at c = K in log-concentration space.",
             },
+            "auc_trapezoid_reference_curve": {
+                "integration_method": "trapezoidal_rule",
+                "curve_basis": "reference_curve_inferred_from_activity_value",
+                "concentration_bounds_definition": f"[{auc_lower_bound_scale:g} * K, {auc_upper_bound_scale:g} * K]",
+                "grid_size": int(auc_grid_size),
+                "concentration_units": "same units as Activity_Value",
+                "interpretation": (
+                    "AUC is approximated numerically over an inferred Hill reference curve rather than over raw "
+                    "experimental dose-response points."
+                ),
+            },
             "linear_concentration_inflection": linear_inflection,
             "fit_status": "reference_curve_inferred_from_activity_value",
             "representative_rows": [
@@ -621,6 +686,7 @@ def summarize_hill_reference_analysis(hill_df: pd.DataFrame, counts: dict[str, i
                     "Target_Name": str(row["Target_Name"]),
                     "Activity_Value": float(row["Activity_Value"]),
                     "inferred_K_activity_value": float(row["inferred_K_activity_value"]),
+                    "auc_trapezoid_reference_curve": float(row["auc_trapezoid_reference_curve"]),
                     "log10_midpoint_concentration": float(row["log10_midpoint_concentration"]),
                 }
                 for _, row in representative_rows.iterrows()
@@ -630,6 +696,8 @@ def summarize_hill_reference_analysis(hill_df: pd.DataFrame, counts: dict[str, i
                 "the CSV does not contain raw per-concentration response series for CID 4.",
                 "Rows with positive numeric Activity_Value are modeled as reference Hill curves "
                 "using Activity_Value as the inferred half-maximal scale K.",
+                "The trapezoidal-rule AUC is computed on those inferred reference curves across a concentration "
+                "grid scaled relative to each row's inferred K value.",
             ],
         },
     }
@@ -641,7 +709,7 @@ def select_hill_plot_representatives(hill_df: pd.DataFrame) -> tuple[np.ndarray,
     representative_k_values = representative_rows["inferred_K_activity_value"].to_numpy(dtype=np.float64)
     representative_labels = [
         f"AID {int(row['BioAssay_AID'])} | {str(row['Activity_Type'])} | "
-        + "K={float(row['inferred_K_activity_value']):.4g}"
+        f"K={float(row['inferred_K_activity_value']):.4g}"
         for _, row in representative_rows.iterrows()
     ]
     return representative_k_values, representative_labels

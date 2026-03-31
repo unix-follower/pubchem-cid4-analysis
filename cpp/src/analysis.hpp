@@ -266,6 +266,7 @@ struct HillDoseResponseStatistic {
 struct HillDoseResponseStatistics {
     HillDoseResponseStatistic activityValueAsInferredK;
     HillDoseResponseStatistic midpointFirstDerivative;
+    HillDoseResponseStatistic aucTrapezoidReferenceCurve;
 };
 
 struct HillDoseResponseActivityTypeCount {
@@ -280,7 +281,17 @@ struct HillDoseResponseRepresentativeRow {
     std::string targetName;
     double activityValue;
     double inferredKActivityValue;
+    double aucTrapezoidReferenceCurve;
     double log10MidpointConcentration;
+};
+
+struct HillDoseResponseAucSummary {
+    std::string integrationMethod;
+    std::string curveBasis;
+    std::string concentrationBoundsDefinition;
+    std::size_t gridSize;
+    std::string concentrationUnits;
+    std::string interpretation;
 };
 
 struct HillDoseResponseMidpointSummary {
@@ -304,6 +315,7 @@ struct HillDoseResponseSummary {
     double referenceHillCoefficientN;
     std::string parameterInterpretation;
     HillDoseResponseMidpointSummary midpointInLogConcentrationSpace;
+    HillDoseResponseAucSummary aucTrapezoidReferenceCurve;
     std::optional<HillDoseResponseLinearInflectionSummary> linearConcentrationInflection;
     std::string fitStatus;
     std::vector<HillDoseResponseRepresentativeRow> representativeRows;

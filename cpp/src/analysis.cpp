@@ -28,6 +28,9 @@ using Json = nlohmann::json;
 
 constexpr double kAngleVectorTolerance = 1.0e-10;
 constexpr double kMinimumPositiveConcentration = 1.0e-6;
+constexpr double kHillAucLowerBoundScale = 1.0e-2;
+constexpr double kHillAucUpperBoundScale = 1.0e2;
+constexpr std::size_t kHillAucGridSize = 400U;
 
 class AdjacencyInputError : public std::invalid_argument {
   public:
@@ -377,6 +380,51 @@ std::optional<double> hillLinearInflectionScale(const double hillCoefficient)
     }
 
     return std::pow((hillCoefficient - 1.0) / (hillCoefficient + 1.0), 1.0 / hillCoefficient);
+}
+
+double computeHillReferenceAucTrapezoid(const double inferredK,
+                                        const double hillCoefficient,
+                                        const double lowerBoundScale = kHillAucLowerBoundScale,
+                                        const double upperBoundScale = kHillAucUpperBoundScale,
+                                        const std::size_t gridSize = kHillAucGridSize)
+{
+    if (inferredK <= 0.0) {
+        throw BioactivityAnalysisError(
+            "AUC trapezoidal integration requires a strictly positive inferred K value");
+    }
+    if (hillCoefficient <= 0.0) {
+        throw BioactivityAnalysisError("Hill coefficient must be positive");
+    }
+    if (lowerBoundScale <= 0.0 || upperBoundScale <= 0.0) {
+        throw BioactivityAnalysisError("AUC concentration-bound scales must be positive");
+    }
+    if (lowerBoundScale >= upperBoundScale) {
+        throw BioactivityAnalysisError(
+            "AUC lower-bound scale must be smaller than the upper-bound scale");
+    }
+    if (gridSize < 2U) {
+        throw BioactivityAnalysisError(
+            "AUC trapezoidal integration requires at least two grid points");
+    }
+
+    const auto relativeConcentrationGrid =
+        geometricSpace(lowerBoundScale, upperBoundScale, gridSize);
+
+    double auc = 0.0;
+    double previousConcentration = relativeConcentrationGrid.front() * inferredK;
+    double previousResponse = hillResponse(previousConcentration, inferredK, hillCoefficient);
+    for (std::size_t index = 1; index < relativeConcentrationGrid.size(); ++index) {
+        const double currentConcentration = relativeConcentrationGrid[index] * inferredK;
+        const double currentResponse =
+            hillResponse(currentConcentration, inferredK, hillCoefficient);
+        auc += ((currentConcentration - previousConcentration) *
+                (previousResponse + currentResponse)) /
+               2.0;
+        previousConcentration = currentConcentration;
+        previousResponse = currentResponse;
+    }
+
+    return auc;
 }
 
 double computeSumSquaredError(const std::vector<double>& xValues,
@@ -1903,6 +1951,7 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
     headers.push_back("midpoint_concentration");
     headers.push_back("midpoint_response");
     headers.push_back("midpoint_first_derivative");
+    headers.push_back("auc_trapezoid_reference_curve");
     headers.push_back("log10_midpoint_concentration");
     headers.push_back("linear_inflection_concentration");
     headers.push_back("linear_inflection_response");
@@ -1922,6 +1971,7 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
     std::map<std::string, std::size_t> activityTypeCounts;
     std::vector<double> inferredKValues;
     std::vector<double> midpointFirstDerivatives;
+    std::vector<double> aucTrapezoidReferenceCurves;
     std::vector<std::vector<std::string>> retainedRows;
 
     const auto inflectionScale = hillLinearInflectionScale(hillCoefficient);
@@ -1962,6 +2012,8 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
         const double midpointResponse = 0.5;
         const double midpointFirstDerivative =
             hillResponseFirstDerivative(midpointConcentration, inferredK, hillCoefficient);
+        const double aucTrapezoidReferenceCurve =
+            computeHillReferenceAucTrapezoid(inferredK, hillCoefficient);
         const double log10MidpointConcentration = std::log10(midpointConcentration);
 
         row[augmentedHeaderIndex.at("hill_coefficient_n")] = formatDouble(hillCoefficient);
@@ -1971,6 +2023,8 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
         row[augmentedHeaderIndex.at("midpoint_response")] = formatDouble(midpointResponse);
         row[augmentedHeaderIndex.at("midpoint_first_derivative")] =
             formatDouble(midpointFirstDerivative);
+        row[augmentedHeaderIndex.at("auc_trapezoid_reference_curve")] =
+            formatDouble(aucTrapezoidReferenceCurve);
         row[augmentedHeaderIndex.at("log10_midpoint_concentration")] =
             formatDouble(log10MidpointConcentration);
         row[augmentedHeaderIndex.at("linear_inflection_concentration")] = "";
@@ -2002,6 +2056,7 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
         retainedBioassayIds.insert(parseRequiredLong(row, headerIndex, "BioAssay_AID"));
         inferredKValues.push_back(inferredK);
         midpointFirstDerivatives.push_back(midpointFirstDerivative);
+        aucTrapezoidReferenceCurves.push_back(aucTrapezoidReferenceCurve);
         retainedRows.push_back(std::move(row));
     }
 
@@ -2043,6 +2098,8 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
             .activityValue = std::stod(row.at(activityValueIndex)),
             .inferredKActivityValue =
                 std::stod(row.at(augmentedHeaderIndex.at("inferred_K_activity_value"))),
+            .aucTrapezoidReferenceCurve =
+                std::stod(row.at(augmentedHeaderIndex.at("auc_trapezoid_reference_curve"))),
             .log10MidpointConcentration =
                 std::stod(row.at(augmentedHeaderIndex.at("log10_midpoint_concentration"))),
         });
@@ -2105,6 +2162,14 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
                         .max = *std::max_element(midpointFirstDerivatives.begin(),
                                                  midpointFirstDerivatives.end()),
                     },
+                .aucTrapezoidReferenceCurve =
+                    HillDoseResponseStatistic{
+                        .min = *std::min_element(aucTrapezoidReferenceCurves.begin(),
+                                                 aucTrapezoidReferenceCurves.end()),
+                        .median = computeMedian(aucTrapezoidReferenceCurves),
+                        .max = *std::max_element(aucTrapezoidReferenceCurves.begin(),
+                                                 aucTrapezoidReferenceCurves.end()),
+                    },
             },
         .activityTypeCounts = std::move(activityTypeCountRows),
         .analysis =
@@ -2126,6 +2191,19 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
                         .interpretation =
                             "The Hill curve is centered at c = K in log-concentration space.",
                     },
+                .aucTrapezoidReferenceCurve =
+                    HillDoseResponseAucSummary{
+                        .integrationMethod = "trapezoidal_rule",
+                        .curveBasis = "reference_curve_inferred_from_activity_value",
+                        .concentrationBoundsDefinition =
+                            "[" + formatCompactDouble(kHillAucLowerBoundScale) + " * K, " +
+                            formatCompactDouble(kHillAucUpperBoundScale) + " * K]",
+                        .gridSize = kHillAucGridSize,
+                        .concentrationUnits = "same units as Activity_Value",
+                        .interpretation =
+                            "AUC is approximated numerically over an inferred Hill reference "
+                            "curve rather than over raw experimental dose-response points.",
+                    },
                 .linearConcentrationInflection = linearInflectionSummary,
                 .fitStatus = "reference_curve_inferred_from_activity_value",
                 .representativeRows = std::move(representativeRows),
@@ -2135,6 +2213,9 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
                         "contain raw per-concentration response series for CID 4.",
                         "Rows with positive numeric Activity_Value are modeled as reference Hill "
                         "curves using Activity_Value as the inferred half-maximal scale K.",
+                        "The trapezoidal-rule AUC is computed on those inferred reference curves "
+                        "across a concentration grid scaled relative to each row's inferred K "
+                        "value.",
                     },
             },
     };
