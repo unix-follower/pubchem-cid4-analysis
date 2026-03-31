@@ -143,6 +143,10 @@ The C++ app now also writes an `Activity` versus `Aid_Type` chi-square bioactivi
 
 The C++ app now also writes Hill/sigmoidal dose-response reference artifacts under `data/out`: a CSV of positive numeric `Activity_Value` rows interpreted as inferred Hill-scale parameters `K`, including trapezoidal-rule AUC values for the inferred reference curves; a summary JSON that documents the normalized Hill model `f(c) = c^n / (K^n + c^n)` together with midpoint, inflection, and AUC integration interpretation; and an SVG plot of representative reference curves. Because the CID 4 bioactivity CSV contains potency-style summary values rather than raw per-concentration response series, this is a reference-curve analysis rather than a nonlinear fit to experimental dose-response points.
 
+The C++ app now also writes positive-numeric `Activity_Value` descriptive statistics artifacts under `data/out`: a CSV of retained rows where `Activity_Value` is numeric and strictly greater than 0; a summary JSON with mean, sample variance, skewness, quantiles, and a Shapiro-Wilk status block; and an SVG diagnostic plot with a log-scale histogram and a normality-status panel. For the current CID 4 dataset, only two rows are retained, so Shapiro-Wilk is not computable on sample-size grounds. The C++ implementation keeps the Shapiro-Wilk section structurally present but marks it as not computed until a dedicated implementation is added.
+
+The C++ app now also writes atom-element entropy artifacts under `data/out`: a CSV of O/N/C/H element counts, proportions, log proportions, and per-element Shannon contributions; a summary JSON with entropy `H = -sum p_i log p_i`, normalized entropy, retained support, and any unexpected atom symbols; and an SVG bar chart of the O/N/C/H proportions. This entropy analysis derives element symbols from the RDKit-backed atom records for the active conformer and computes the entropy sum only over the required O/N/C/H support from the README exercise.
+
 ## CI/CD
 
 GitHub Actions workflow (`.github/workflows/build-cpp.yaml`) builds on Ubuntu using:

@@ -451,6 +451,74 @@ struct HillDoseResponseAnalysisResult {
     HillDoseResponseSummary analysis;
 };
 
+struct ActivityValueStatisticsRowCounts {
+    std::size_t totalRows;
+    std::size_t rowsWithNumericActivityValue;
+    std::size_t positiveNumericRows;
+    std::size_t zeroActivityValueRows;
+    std::size_t negativeActivityValueRows;
+    std::size_t nonNumericOrMissingActivityValueRows;
+    std::size_t retainedPositiveNumericRows;
+    std::size_t droppedRows;
+    std::size_t retainedUniqueBioassays;
+};
+
+struct ActivityValueDescriptiveStatistics {
+    std::size_t sampleSize;
+    double mean;
+    double variance;
+    std::string varianceDefinition;
+    std::optional<double> skewness;
+    double min;
+    double q25;
+    double median;
+    double q75;
+    double max;
+};
+
+struct ActivityValueNormalityTest {
+    std::string name;
+    bool computed;
+    std::optional<std::string> reasonNotComputed;
+    std::size_t sampleSize;
+    double alpha;
+    std::optional<double> statistic;
+    std::optional<double> pValue;
+    std::optional<bool> rejectNormality;
+    std::string interpretation;
+};
+
+struct ActivityValueRepresentativeRow {
+    long long bioactivityId;
+    long long bioAssayAid;
+    std::string activity;
+    std::string aidType;
+    std::string activityType;
+    double activityValue;
+};
+
+struct ActivityValueRetainedRowDefinition {
+    std::string predicate;
+    std::vector<std::string> excludedRows;
+};
+
+struct ActivityValueAnalysis {
+    std::string targetQuantity;
+    ActivityValueRetainedRowDefinition retainedRowDefinition;
+    std::vector<ActivityValueRepresentativeRow> representativeRows;
+    std::vector<std::string> notes;
+};
+
+struct ActivityValueStatisticsAnalysisResult {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::vector<std::vector<std::string>> rows;
+    ActivityValueStatisticsRowCounts rowCounts;
+    ActivityValueDescriptiveStatistics statistics;
+    ActivityValueNormalityTest normalityTest;
+    ActivityValueAnalysis analysis;
+};
+
 struct PosteriorBioactivityRowCounts {
     std::size_t totalRows;
     std::size_t activeRows;
@@ -766,6 +834,55 @@ struct GradientDescentAnalysisResult {
     GradientDescentSummary summary;
 };
 
+struct AtomElementEntropyRowCounts {
+    std::size_t totalAtomRows;
+    std::size_t retainedAtomRows;
+    std::size_t requiredElementCategories;
+    std::size_t observedRequiredElementCategories;
+    std::size_t unexpectedElementRows;
+    std::size_t unexpectedElementCategories;
+};
+
+struct AtomElementEntropyMetrics {
+    std::string formula;
+    std::string logBase;
+    double value;
+    double maximumEntropyForObservedSupport;
+    double normalizedEntropy;
+};
+
+struct AtomElementDistributionEntry {
+    std::size_t count;
+    double proportion;
+    double logProportion;
+    double shannonContribution;
+};
+
+struct AtomElementDominantElement {
+    std::string element;
+    std::size_t count;
+    double proportion;
+};
+
+struct AtomElementEntropyAnalysis {
+    std::string targetQuantity;
+    std::vector<std::string> requiredElements;
+    std::size_t uniqueRetainedElements;
+    AtomElementDominantElement dominantElement;
+    std::map<std::string, std::size_t> unexpectedElements;
+    std::vector<std::string> notes;
+};
+
+struct AtomElementEntropyAnalysisResult {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::vector<std::vector<std::string>> rows;
+    AtomElementEntropyRowCounts rowCounts;
+    AtomElementEntropyMetrics entropy;
+    std::map<std::string, AtomElementDistributionEntry> distribution;
+    AtomElementEntropyAnalysis analysis;
+};
+
 class AdjacencyMatrixStrategy {
   public:
     virtual ~AdjacencyMatrixStrategy() = default;
@@ -837,6 +954,13 @@ void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
                               const std::filesystem::path& outputPath);
 void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
                                   const std::filesystem::path& outputPath);
+ActivityValueStatisticsAnalysisResult
+buildActivityValueStatisticsAnalysis(const std::filesystem::path& csvPath,
+                                     double shapiroAlpha = 0.05);
+void writeActivityValueStatisticsCsv(const ActivityValueStatisticsAnalysisResult& result,
+                                     const std::filesystem::path& outputPath);
+void writeActivityValueStatisticsPlotSvg(const ActivityValueStatisticsAnalysisResult& result,
+                                         const std::filesystem::path& outputPath);
 GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<AtomRecord>& atoms,
                                                            std::string_view sourceFile,
                                                            double learningRate = 5.0e-5,
@@ -847,6 +971,12 @@ void writeGradientDescentCsv(const GradientDescentAnalysisResult& result,
 void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result,
                                      const std::filesystem::path& outputPath);
 void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
+                                    const std::filesystem::path& outputPath);
+AtomElementEntropyAnalysisResult
+buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms, std::string_view sourceFile);
+void writeAtomElementEntropyCsv(const AtomElementEntropyAnalysisResult& result,
+                                const std::filesystem::path& outputPath);
+void writeAtomElementEntropyPlotSvg(const AtomElementEntropyAnalysisResult& result,
                                     const std::filesystem::path& outputPath);
 AdjacencyMatrix buildAdjacencyMatrix(const NormalizedAdjacencyInput& input,
                                      std::string_view sourceFile,
@@ -918,6 +1048,14 @@ std::filesystem::path hillDoseResponseSummaryJsonPath(const std::filesystem::pat
                                                       const std::filesystem::path& sourceFile);
 std::filesystem::path hillDoseResponsePlotSvgPath(const std::filesystem::path& outputDirectory,
                                                   const std::filesystem::path& sourceFile);
+std::filesystem::path activityValueStatisticsCsvPath(const std::filesystem::path& outputDirectory,
+                                                     const std::filesystem::path& sourceFile);
+std::filesystem::path
+activityValueStatisticsSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                       const std::filesystem::path& sourceFile);
+std::filesystem::path
+activityValueStatisticsPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                   const std::filesystem::path& sourceFile);
 std::filesystem::path gradientDescentCsvPath(const std::filesystem::path& outputDirectory,
                                              const std::filesystem::path& sourceFile);
 std::filesystem::path gradientDescentSummaryJsonPath(const std::filesystem::path& outputDirectory,
@@ -925,5 +1063,12 @@ std::filesystem::path gradientDescentSummaryJsonPath(const std::filesystem::path
 std::filesystem::path gradientDescentLossPlotSvgPath(const std::filesystem::path& outputDirectory,
                                                      const std::filesystem::path& sourceFile);
 std::filesystem::path gradientDescentFitPlotSvgPath(const std::filesystem::path& outputDirectory,
+                                                    const std::filesystem::path& sourceFile);
+std::filesystem::path atomElementEntropyCsvPath(const std::filesystem::path& outputDirectory,
+                                                const std::filesystem::path& sourceFile);
+std::filesystem::path
+atomElementEntropySummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                  const std::filesystem::path& sourceFile);
+std::filesystem::path atomElementEntropyPlotSvgPath(const std::filesystem::path& outputDirectory,
                                                     const std::filesystem::path& sourceFile);
 } // namespace pubchem

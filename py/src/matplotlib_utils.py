@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import stats
 
 
 def plot_2d_vector(x_component: float, y_component: float):
@@ -95,6 +96,45 @@ def plot_hill_reference_curves(
     plt.close()
 
 
+def plot_activity_value_statistics(
+    activity_values: np.ndarray,
+    include_qq_panel: bool,
+    out_file_path: str,
+):
+    if activity_values.size == 0:
+        raise ValueError("Activity_Value statistics plot requires at least one retained row")
+
+    figure, axes = plt.subplots(1, 2, figsize=(12, 5))
+    histogram_axis = axes[0]
+    qq_axis = axes[1]
+
+    histogram_axis.hist(activity_values, bins="auto", color="steelblue", edgecolor="black", alpha=0.85)
+    histogram_axis.set_xscale("log")
+    histogram_axis.set_xlabel("Activity_Value")
+    histogram_axis.set_ylabel("Frequency")
+    histogram_axis.set_title("Positive Numeric Activity_Value Histogram")
+    histogram_axis.grid(True, which="both", linestyle="--", linewidth=0.6, alpha=0.4)
+
+    values_have_spread = not np.isclose(float(activity_values.min()), float(activity_values.max()))
+    if include_qq_panel and values_have_spread:
+        fitted_mean = float(np.mean(activity_values))
+        fitted_std = float(np.std(activity_values, ddof=1)) if activity_values.size > 1 else 0.0
+        if fitted_std > 0:
+            stats.probplot(activity_values, dist="norm", sparams=(fitted_mean, fitted_std), plot=qq_axis)
+            qq_axis.set_title("Normal Q-Q Plot")
+            qq_axis.grid(True, linestyle="--", linewidth=0.6, alpha=0.4)
+        else:
+            qq_axis.text(0.5, 0.5, "Q-Q plot unavailable\nzero variance sample", ha="center", va="center")
+            qq_axis.set_axis_off()
+    else:
+        qq_axis.text(0.5, 0.5, "Q-Q plot unavailable\ninsufficient or degenerate sample", ha="center", va="center")
+        qq_axis.set_axis_off()
+
+    figure.tight_layout()
+    figure.savefig(out_file_path, dpi=200)
+    plt.close(figure)
+
+
 def plot_gradient_descent_loss_curve(
     epochs: np.ndarray,
     mse_values: np.ndarray,
@@ -109,6 +149,37 @@ def plot_gradient_descent_loss_curve(
     plt.ylabel("MSE")
     plt.title("Manual Gradient Descent MSE Trace")
     plt.grid(True, linestyle="--", linewidth=0.6, alpha=0.5)
+    plt.tight_layout()
+    plt.savefig(out_file_path, dpi=200)
+    plt.close()
+
+
+def plot_atom_element_entropy(
+    elements: list[str],
+    proportions: np.ndarray,
+    entropy_value: float,
+    out_file_path: str,
+):
+    if len(elements) == 0 or proportions.size == 0:
+        raise ValueError("Atom element entropy plot requires at least one element")
+
+    plt.figure(figsize=(8, 5))
+    bars = plt.bar(elements, proportions, color=["#4c78a8", "#f58518", "#54a24b", "#e45756"][: len(elements)])
+    plt.ylim(0.0, max(1.0, float(np.max(proportions)) * 1.15))
+    plt.xlabel("Element")
+    plt.ylabel("Proportion")
+    plt.title(f"Atom Element Proportions (H = {entropy_value:.4f})")
+    plt.grid(True, axis="y", linestyle="--", linewidth=0.6, alpha=0.4)
+
+    for bar, proportion in zip(bars, proportions, strict=True):
+        plt.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            float(bar.get_height()) + 0.015,
+            f"{float(proportion):.3f}",
+            ha="center",
+            va="bottom",
+        )
+
     plt.tight_layout()
     plt.savefig(out_file_path, dpi=200)
     plt.close()

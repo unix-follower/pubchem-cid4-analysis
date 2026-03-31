@@ -842,6 +842,127 @@ nlohmann::json toJson(const pubchem::GradientDescentAnalysisResult& gradientDesc
             {"bestEpoch", optimization.lossTrace.bestEpoch}}}}},
     };
 }
+
+nlohmann::json toJson(const pubchem::ActivityValueStatisticsAnalysisResult& activityValue)
+{
+    nlohmann::json representativeRows = nlohmann::json::array();
+    for (const auto& row : activityValue.analysis.representativeRows) {
+        representativeRows.push_back({
+            {"bioactivityId", row.bioactivityId},
+            {"bioAssayAid", row.bioAssayAid},
+            {"activity", row.activity},
+            {"aidType", row.aidType},
+            {"activityType", row.activityType},
+            {"activityValue", row.activityValue},
+        });
+    }
+
+    return {
+        {"sourceFile", activityValue.sourceFile},
+        {"rowCounts",
+         {{"totalRows", activityValue.rowCounts.totalRows},
+          {"rowsWithNumericActivityValue", activityValue.rowCounts.rowsWithNumericActivityValue},
+          {"positiveNumericRows", activityValue.rowCounts.positiveNumericRows},
+          {"zeroActivityValueRows", activityValue.rowCounts.zeroActivityValueRows},
+          {"negativeActivityValueRows", activityValue.rowCounts.negativeActivityValueRows},
+          {"nonNumericOrMissingActivityValueRows",
+           activityValue.rowCounts.nonNumericOrMissingActivityValueRows},
+          {"retainedPositiveNumericRows", activityValue.rowCounts.retainedPositiveNumericRows},
+          {"droppedRows", activityValue.rowCounts.droppedRows},
+          {"retainedUniqueBioassays", activityValue.rowCounts.retainedUniqueBioassays}}},
+        {"statistics",
+         {{"sampleSize", activityValue.statistics.sampleSize},
+          {"mean", activityValue.statistics.mean},
+          {"variance", activityValue.statistics.variance},
+          {"varianceDefinition", activityValue.statistics.varianceDefinition},
+          {"skewness",
+           activityValue.statistics.skewness.has_value()
+               ? nlohmann::json(*activityValue.statistics.skewness)
+               : nlohmann::json(nullptr)},
+          {"min", activityValue.statistics.min},
+          {"q25", activityValue.statistics.q25},
+          {"median", activityValue.statistics.median},
+          {"q75", activityValue.statistics.q75},
+          {"max", activityValue.statistics.max}}},
+        {"normalityTest",
+         {{"name", activityValue.normalityTest.name},
+          {"computed", activityValue.normalityTest.computed},
+          {"reasonNotComputed",
+           activityValue.normalityTest.reasonNotComputed.has_value()
+               ? nlohmann::json(*activityValue.normalityTest.reasonNotComputed)
+               : nlohmann::json(nullptr)},
+          {"sampleSize", activityValue.normalityTest.sampleSize},
+          {"alpha", activityValue.normalityTest.alpha},
+          {"statistic",
+           activityValue.normalityTest.statistic.has_value()
+               ? nlohmann::json(*activityValue.normalityTest.statistic)
+               : nlohmann::json(nullptr)},
+          {"pValue",
+           activityValue.normalityTest.pValue.has_value()
+               ? nlohmann::json(*activityValue.normalityTest.pValue)
+               : nlohmann::json(nullptr)},
+          {"rejectNormality",
+           activityValue.normalityTest.rejectNormality.has_value()
+               ? nlohmann::json(*activityValue.normalityTest.rejectNormality)
+               : nlohmann::json(nullptr)},
+          {"interpretation", activityValue.normalityTest.interpretation}}},
+        {"analysis",
+         {{"targetQuantity", activityValue.analysis.targetQuantity},
+          {"retainedRowDefinition",
+           {{"predicate", activityValue.analysis.retainedRowDefinition.predicate},
+            {"excludedRows", activityValue.analysis.retainedRowDefinition.excludedRows}}},
+          {"representativeRows", representativeRows},
+          {"notes", activityValue.analysis.notes}}},
+    };
+}
+
+nlohmann::json toJson(const pubchem::AtomElementEntropyAnalysisResult& atomEntropy)
+{
+    nlohmann::json distribution = nlohmann::json::object();
+    for (const auto& [element, entry] : atomEntropy.distribution) {
+        distribution[element] = {
+            {"count", entry.count},
+            {"proportion", entry.proportion},
+            {"logProportion", entry.logProportion},
+            {"shannonContribution", entry.shannonContribution},
+        };
+    }
+
+    nlohmann::json unexpectedElements = nlohmann::json::object();
+    for (const auto& [element, count] : atomEntropy.analysis.unexpectedElements) {
+        unexpectedElements[element] = count;
+    }
+
+    return {
+        {"sourceFile", atomEntropy.sourceFile},
+        {"rowCounts",
+         {{"totalAtomRows", atomEntropy.rowCounts.totalAtomRows},
+          {"retainedAtomRows", atomEntropy.rowCounts.retainedAtomRows},
+          {"requiredElementCategories", atomEntropy.rowCounts.requiredElementCategories},
+          {"observedRequiredElementCategories",
+           atomEntropy.rowCounts.observedRequiredElementCategories},
+          {"unexpectedElementRows", atomEntropy.rowCounts.unexpectedElementRows},
+          {"unexpectedElementCategories", atomEntropy.rowCounts.unexpectedElementCategories}}},
+        {"entropy",
+         {{"formula", atomEntropy.entropy.formula},
+          {"logBase", atomEntropy.entropy.logBase},
+          {"value", atomEntropy.entropy.value},
+          {"maximumEntropyForObservedSupport",
+           atomEntropy.entropy.maximumEntropyForObservedSupport},
+          {"normalizedEntropy", atomEntropy.entropy.normalizedEntropy}}},
+        {"distribution", distribution},
+        {"analysis",
+         {{"targetQuantity", atomEntropy.analysis.targetQuantity},
+          {"requiredElements", atomEntropy.analysis.requiredElements},
+          {"uniqueRetainedElements", atomEntropy.analysis.uniqueRetainedElements},
+          {"dominantElement",
+           {{"element", atomEntropy.analysis.dominantElement.element},
+            {"count", atomEntropy.analysis.dominantElement.count},
+            {"proportion", atomEntropy.analysis.dominantElement.proportion}}},
+          {"unexpectedElements", unexpectedElements},
+          {"notes", atomEntropy.analysis.notes}}},
+    };
+}
 } // namespace
 
 nlohmann::json toJson(const pubchem::HillDoseResponseAnalysisResult& hillAnalysis)
@@ -1023,6 +1144,14 @@ int main(int argc, char* argv[])
             pubchem::hillDoseResponseSummaryJsonPath(outputDir, options.bioactivityFile);
         const std::filesystem::path hillDoseResponsePlotOutputPath =
             pubchem::hillDoseResponsePlotSvgPath(outputDir, options.bioactivityFile);
+        const pubchem::ActivityValueStatisticsAnalysisResult activityValueStatisticsAnalysis =
+            pubchem::buildActivityValueStatisticsAnalysis(bioactivityCsvPath);
+        const std::filesystem::path activityValueStatisticsCsvOutputPath =
+            pubchem::activityValueStatisticsCsvPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path activityValueStatisticsSummaryOutputPath =
+            pubchem::activityValueStatisticsSummaryJsonPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path activityValueStatisticsPlotOutputPath =
+            pubchem::activityValueStatisticsPlotSvgPath(outputDir, options.bioactivityFile);
         const pubchem::GradientDescentAnalysisResult gradientDescentAnalysis =
             pubchem::buildGradientDescentAnalysis(result.atoms,
                                                   options.sdfFile.filename().string());
@@ -1034,6 +1163,15 @@ int main(int argc, char* argv[])
             pubchem::gradientDescentLossPlotSvgPath(outputDir, options.sdfFile);
         const std::filesystem::path gradientDescentFitPlotOutputPath =
             pubchem::gradientDescentFitPlotSvgPath(outputDir, options.sdfFile);
+        const pubchem::AtomElementEntropyAnalysisResult atomElementEntropyAnalysis =
+            pubchem::buildAtomElementEntropyAnalysis(result.atoms,
+                                                     options.sdfFile.filename().string());
+        const std::filesystem::path atomElementEntropyCsvOutputPath =
+            pubchem::atomElementEntropyCsvPath(outputDir, options.sdfFile);
+        const std::filesystem::path atomElementEntropySummaryOutputPath =
+            pubchem::atomElementEntropySummaryJsonPath(outputDir, options.sdfFile);
+        const std::filesystem::path atomElementEntropyPlotOutputPath =
+            pubchem::atomElementEntropyPlotSvgPath(outputDir, options.sdfFile);
 
         std::filesystem::create_directories(outputDir);
 
@@ -1099,6 +1237,17 @@ int main(int argc, char* argv[])
         pubchem::writeHillDoseResponsePlotSvg(hillDoseResponseAnalysis,
                                               hillDoseResponsePlotOutputPath);
 
+        pubchem::writeActivityValueStatisticsCsv(activityValueStatisticsAnalysis,
+                                                 activityValueStatisticsCsvOutputPath);
+
+        std::ofstream activityValueStatisticsSummaryOutput(
+            activityValueStatisticsSummaryOutputPath);
+        activityValueStatisticsSummaryOutput << std::setw(2)
+                                             << toJson(activityValueStatisticsAnalysis) << '\n';
+
+        pubchem::writeActivityValueStatisticsPlotSvg(activityValueStatisticsAnalysis,
+                                                     activityValueStatisticsPlotOutputPath);
+
         pubchem::writeGradientDescentCsv(gradientDescentAnalysis, gradientDescentCsvOutputPath);
 
         std::ofstream gradientDescentSummaryOutput(gradientDescentSummaryOutputPath);
@@ -1108,6 +1257,16 @@ int main(int argc, char* argv[])
                                                  gradientDescentLossPlotOutputPath);
         pubchem::writeGradientDescentFitPlotSvg(gradientDescentAnalysis,
                                                 gradientDescentFitPlotOutputPath);
+
+        pubchem::writeAtomElementEntropyCsv(atomElementEntropyAnalysis,
+                                            atomElementEntropyCsvOutputPath);
+
+        std::ofstream atomElementEntropySummaryOutput(atomElementEntropySummaryOutputPath);
+        atomElementEntropySummaryOutput << std::setw(2) << toJson(atomElementEntropyAnalysis)
+                                        << '\n';
+
+        pubchem::writeAtomElementEntropyPlotSvg(atomElementEntropyAnalysis,
+                                                atomElementEntropyPlotOutputPath);
 
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
@@ -1145,12 +1304,24 @@ int main(int argc, char* argv[])
                   << '\n';
         std::cout << "Hill dose-response plot written to: " << hillDoseResponsePlotOutputPath
                   << '\n';
+        std::cout << "Activity_Value statistics rows written to: "
+                  << activityValueStatisticsCsvOutputPath << '\n';
+        std::cout << "Activity_Value statistics summary written to: "
+                  << activityValueStatisticsSummaryOutputPath << '\n';
+        std::cout << "Activity_Value statistics plot written to: "
+                  << activityValueStatisticsPlotOutputPath << '\n';
         std::cout << "Gradient descent trace written to: " << gradientDescentCsvOutputPath << '\n';
         std::cout << "Gradient descent summary written to: " << gradientDescentSummaryOutputPath
                   << '\n';
         std::cout << "Gradient descent loss plot written to: " << gradientDescentLossPlotOutputPath
                   << '\n';
         std::cout << "Gradient descent fit plot written to: " << gradientDescentFitPlotOutputPath
+                  << '\n';
+        std::cout << "Atom element entropy rows written to: " << atomElementEntropyCsvOutputPath
+                  << '\n';
+        std::cout << "Atom element entropy summary written to: "
+                  << atomElementEntropySummaryOutputPath << '\n';
+        std::cout << "Atom element entropy plot written to: " << atomElementEntropyPlotOutputPath
                   << '\n';
     }
     catch (const std::exception& error) {
