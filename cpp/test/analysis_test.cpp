@@ -205,6 +205,194 @@ std::vector<pubchem::AtomRecord> sampleGradientAtoms()
     };
 }
 
+std::vector<pubchem::AtomRecord> sampleSpringAtoms()
+{
+    return {
+        pubchem::AtomRecord{.index = 0,
+                            .bondCount = 1,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 6,
+                            .symbol = "C",
+                            .valency = 4,
+                            .isAromatic = false,
+                            .mass = 12.011,
+                            .hybridization = "SP3"},
+        pubchem::AtomRecord{.index = 1,
+                            .bondCount = 1,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 1,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+    };
+}
+
+std::vector<pubchem::AtomRecord> cid4SpringAtoms()
+{
+    return {
+        pubchem::AtomRecord{.index = 0,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 8,
+                            .symbol = "O",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 15.999,
+                            .hybridization = "SP3"},
+        pubchem::AtomRecord{.index = 1,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 7,
+                            .symbol = "N",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 14.007,
+                            .hybridization = "SP3"},
+        pubchem::AtomRecord{.index = 2,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 6,
+                            .symbol = "C",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 12.011,
+                            .hybridization = "SP3"},
+        pubchem::AtomRecord{.index = 3,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 6,
+                            .symbol = "C",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 12.011,
+                            .hybridization = "SP3"},
+        pubchem::AtomRecord{.index = 4,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 6,
+                            .symbol = "C",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 12.011,
+                            .hybridization = "SP3"},
+        pubchem::AtomRecord{.index = 5,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 6,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 7,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 8,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 9,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 10,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 11,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 12,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 13,
+                            .bondCount = 0,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 1,
+                            .symbol = "H",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.008,
+                            .hybridization = "S"},
+    };
+}
+
 } // namespace
 
 TEST(AnalysisHelpersTest, AverageReturnsZeroForEmptyInput)
@@ -470,6 +658,14 @@ TEST(DistanceHelpersTest, BondAngleOutputPathIncludesMethodSuffix)
               "Conformer3D_COMPOUND_CID_4(1).json.bond_angle_analysis.json");
 }
 
+TEST(DistanceHelpersTest, SpringBondPotentialOutputPathIncludesMethodSuffix)
+{
+    const auto path = pubchem::springBondPotentialOutputJsonPath(
+        "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
+    EXPECT_EQ(path.filename().string(),
+              "Conformer3D_COMPOUND_CID_4(1).json.spring_bond_potential_analysis.json");
+}
+
 TEST(DistanceStrategiesTest, JsonBuildsExpectedDistanceMatrix)
 {
     const auto jsonPath = writeTempFile("distance-sample.json", sampleDistanceJson());
@@ -653,6 +849,100 @@ TEST(DistanceStrategiesTest, BondAngleAnalysisMatchesCid4RealData)
     EXPECT_NEAR(result.statistics.meanAngleDegrees, 109.22375164065625, 1.0e-12);
     EXPECT_NEAR(result.statistics.minAngleDegrees, 106.04151155509001, 1.0e-12);
     EXPECT_NEAR(result.statistics.maxAngleDegrees, 113.11659612947966, 1.0e-12);
+}
+
+TEST(DistanceStrategiesTest, SpringBondPotentialAnalysisComputesExpectedCartesianDerivatives)
+{
+    const pubchem::DistanceMatrixResult distanceMatrix{
+        .sourceFile = "distance-sample.json",
+        .method = "json",
+        .atomIds = {1, 2},
+        .xyzCoordinates = {{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}},
+        .distanceMatrix = {{0.0, 1.0}, {1.0, 0.0}},
+        .metadata = pubchem::DistanceMatrixMetadata{.atomCount = 2U,
+                                                    .coordinateDimension = 3U,
+                                                    .units = "angstrom"},
+    };
+    const pubchem::AdjacencyMatrix adjacencyMatrix{
+        .sourceFile = "distance-sample.json",
+        .method = "arrays",
+        .atomIds = {1, 2},
+        .values = {{0, 1}, {1, 0}},
+    };
+
+    const auto result = pubchem::buildSpringBondPotentialAnalysis(
+        distanceMatrix, adjacencyMatrix, sampleSpringAtoms());
+
+    ASSERT_EQ(result.bondedPairSpringRecords.size(), 1U);
+    const auto& record = result.bondedPairSpringRecords.front();
+    EXPECT_EQ(record.atomSymbol1, "C");
+    EXPECT_EQ(record.atomSymbol2, "H");
+    EXPECT_EQ(record.referenceDistanceSource, "lookupTable");
+    EXPECT_DOUBLE_EQ(record.referenceDistanceAngstrom, 1.09);
+    EXPECT_DOUBLE_EQ(record.springConstant, 300.0);
+    EXPECT_NEAR(record.distanceResidualAngstrom, -0.09, 1.0e-12);
+    EXPECT_NEAR(record.dEDDistance, -27.0, 1.0e-12);
+    EXPECT_NEAR(record.springEnergy, 1.215, 1.0e-12);
+    EXPECT_NEAR(record.atom1PartialDerivatives.dEDx, 27.0, 1.0e-12);
+    EXPECT_DOUBLE_EQ(record.atom1PartialDerivatives.dEDy, 0.0);
+    EXPECT_DOUBLE_EQ(record.atom1PartialDerivatives.dEDz, 0.0);
+    EXPECT_NEAR(record.atom2PartialDerivatives.dEDx, -27.0, 1.0e-12);
+    EXPECT_NEAR(record.atom2PartialDerivatives.gradientNorm, 27.0, 1.0e-12);
+    ASSERT_EQ(result.atomGradientRecords.size(), 2U);
+    EXPECT_NEAR(result.atomGradientRecords.front().dEDx, 27.0, 1.0e-12);
+    EXPECT_NEAR(result.atomGradientRecords.back().dEDx, -27.0, 1.0e-12);
+    EXPECT_NEAR(result.statistics.springEnergy.total, 1.215, 1.0e-12);
+    EXPECT_DOUBLE_EQ(result.statistics.gradientBalance.gradientNorm, 0.0);
+    EXPECT_EQ(result.metadata.bondedPairCount, 1U);
+    ASSERT_EQ(result.metadata.referenceDistanceSourceCounts.size(), 1U);
+    EXPECT_EQ(result.metadata.referenceDistanceSourceCounts.front().first, "lookupTable");
+    EXPECT_EQ(result.metadata.referenceDistanceSourceCounts.front().second, 1U);
+}
+
+TEST(DistanceStrategiesTest, SpringBondPotentialAnalysisMatchesCid4RealData)
+{
+    const auto dataDirectory = repositoryRoot() / "data";
+    const auto jsonPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).json";
+    const auto sdfPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).sdf";
+    const auto adjacencyInput = pubchem::loadAdjacencyInput(jsonPath);
+    const auto distanceInput = pubchem::DistanceMatrixInput{
+        .atomIds = adjacencyInput.atomIds,
+        .jsonPath = jsonPath,
+        .sdfPath = sdfPath,
+    };
+    const auto distanceMatrix = pubchem::buildDistanceMatrix(distanceInput, "json");
+    const auto adjacencyMatrix =
+        pubchem::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
+
+    const auto result = pubchem::buildSpringBondPotentialAnalysis(
+        distanceMatrix, adjacencyMatrix, cid4SpringAtoms());
+
+    EXPECT_EQ(result.metadata.atomCount, 14U);
+    EXPECT_EQ(result.metadata.bondedPairCount, 13U);
+    EXPECT_EQ(result.metadata.sourceDistanceMethod, "json");
+    EXPECT_EQ(result.metadata.sourceAdjacencyMethod, "arrays");
+    ASSERT_EQ(result.metadata.referenceDistanceSourceCounts.size(), 2U);
+    EXPECT_EQ(result.metadata.referenceDistanceSourceCounts[0].first, "covalentRadiusFallback");
+    EXPECT_EQ(result.metadata.referenceDistanceSourceCounts[0].second, 3U);
+    EXPECT_EQ(result.metadata.referenceDistanceSourceCounts[1].first, "lookupTable");
+    EXPECT_EQ(result.metadata.referenceDistanceSourceCounts[1].second, 10U);
+    EXPECT_NEAR(result.statistics.springEnergy.total, 0.11391413421967654, 1.0e-15);
+    EXPECT_NEAR(result.statistics.distanceResidualAngstrom.mean, -0.000559437021575972, 1.0e-15);
+    EXPECT_NEAR(result.statistics.gradientBalance.gradientNorm, 1.9016620773880707e-15, 1.0e-18);
+    ASSERT_FALSE(result.bondedPairSpringRecords.empty());
+    const auto& firstRecord = result.bondedPairSpringRecords.front();
+    EXPECT_EQ(firstRecord.atomId1, 1);
+    EXPECT_EQ(firstRecord.atomId2, 3);
+    EXPECT_EQ(firstRecord.referenceDistanceSource, "lookupTable");
+    EXPECT_NEAR(firstRecord.atom1PartialDerivatives.dEDx + firstRecord.atom2PartialDerivatives.dEDx,
+                0.0,
+                1.0e-12);
+    EXPECT_NEAR(firstRecord.atom1PartialDerivatives.dEDy + firstRecord.atom2PartialDerivatives.dEDy,
+                0.0,
+                1.0e-12);
+    EXPECT_NEAR(firstRecord.atom1PartialDerivatives.dEDz + firstRecord.atom2PartialDerivatives.dEDz,
+                0.0,
+                1.0e-12);
 }
 
 TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)

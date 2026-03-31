@@ -204,6 +204,124 @@ struct BondAngleAnalysisResult {
     BondAngleMetadata metadata;
 };
 
+struct CartesianPartialDerivatives {
+    double dEDx;
+    double dEDy;
+    double dEDz;
+    double gradientNorm;
+};
+
+struct BondedPairSpringRecord {
+    int atomId1;
+    int atomId2;
+    std::string atomSymbol1;
+    std::string atomSymbol2;
+    int bondOrder;
+    double distanceAngstrom;
+    double referenceDistanceAngstrom;
+    std::string referenceDistanceSource;
+    double distanceResidualAngstrom;
+    double springConstant;
+    double springEnergy;
+    double dEDDistance;
+    CartesianPartialDerivatives atom1PartialDerivatives;
+    CartesianPartialDerivatives atom2PartialDerivatives;
+};
+
+struct AtomGradientRecord {
+    int atomId;
+    std::string atomSymbol;
+    std::size_t incidentBondCount;
+    double dEDx;
+    double dEDy;
+    double dEDz;
+    double gradientNorm;
+};
+
+struct DistanceResidualStatistics {
+    std::size_t count;
+    double min;
+    double mean;
+    double std;
+    double q25;
+    double median;
+    double q75;
+    double max;
+    std::size_t zeroResidualBondCount;
+};
+
+struct SpringEnergyStatistics {
+    std::size_t count;
+    double total;
+    double min;
+    double mean;
+    double std;
+    double q25;
+    double median;
+    double q75;
+    double max;
+};
+
+struct AtomGradientNormStatistics {
+    std::size_t count;
+    double min;
+    double mean;
+    double std;
+    double q25;
+    double median;
+    double q75;
+    double max;
+};
+
+struct NetCartesianGradient {
+    double dEDx;
+    double dEDy;
+    double dEDz;
+    double gradientNorm;
+};
+
+struct SpringBondPotentialStatistics {
+    DistanceResidualStatistics distanceResidualAngstrom;
+    SpringEnergyStatistics springEnergy;
+    AtomGradientNormStatistics atomGradientNorm;
+    NetCartesianGradient gradientBalance;
+};
+
+struct SpringBondPotentialAnalysis {
+    std::string energyEquation;
+    std::string distanceEquation;
+    std::string distanceDerivativeEquation;
+    std::string cartesianGradientEquation;
+    std::string reactionGradientEquation;
+    std::string referenceDistancePolicy;
+    std::string springConstantPolicy;
+    std::vector<std::pair<std::string, double>> bondOrderSpringConstants;
+    std::vector<std::pair<std::string, double>> referenceDistanceLookupExamplesAngstrom;
+    std::string interpretation;
+};
+
+struct SpringBondPotentialMetadata {
+    std::size_t atomCount;
+    std::size_t bondedPairCount;
+    std::string sourceDistanceMethod;
+    std::string sourceAdjacencyMethod;
+    std::string distanceUnits;
+    std::string referenceDistanceUnits;
+    std::string springConstantUnits;
+    std::string springEnergyUnits;
+    std::string coordinatePartialDerivativeUnits;
+    std::vector<std::pair<std::string, std::size_t>> referenceDistanceSourceCounts;
+};
+
+struct SpringBondPotentialAnalysisResult {
+    std::vector<int> atomIds;
+    std::vector<BondedPairSpringRecord> bondedPairSpringRecords;
+    std::vector<AtomGradientRecord> atomGradientRecords;
+    SpringBondPotentialStatistics statistics;
+    SpringBondPotentialAnalysis analysis;
+    SpringBondPotentialMetadata metadata;
+};
+
 struct BioactivityRowCounts {
     std::size_t totalRows;
     std::size_t rowsWithNumericActivityValue;
@@ -489,6 +607,10 @@ BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixRes
                                                          const AdjacencyMatrix& adjacencyMatrix);
 BondAngleAnalysisResult buildBondAngleAnalysis(const DistanceMatrixResult& distanceMatrix,
                                                const AdjacencyMatrix& adjacencyMatrix);
+SpringBondPotentialAnalysisResult
+buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
+                                 const AdjacencyMatrix& adjacencyMatrix,
+                                 const std::vector<AtomRecord>& atoms);
 std::filesystem::path outputDirectoryFor(const std::filesystem::path& dataDirectory);
 std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirectory,
                                      const std::filesystem::path& sourceFile);
@@ -510,6 +632,10 @@ std::filesystem::path bondedDistanceOutputJsonPath(const std::filesystem::path& 
 std::filesystem::path bondAngleOutputJsonPath(const std::filesystem::path& outputDirectory,
                                               const std::filesystem::path& sourceFile,
                                               std::string_view distanceMethod);
+std::filesystem::path
+springBondPotentialOutputJsonPath(const std::filesystem::path& outputDirectory,
+                                  const std::filesystem::path& sourceFile,
+                                  std::string_view distanceMethod);
 std::filesystem::path bioactivityFilteredCsvPath(const std::filesystem::path& outputDirectory,
                                                  const std::filesystem::path& sourceFile);
 std::filesystem::path bioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory,

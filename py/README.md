@@ -31,6 +31,9 @@ The same run also writes a bonded-distance comparison artifact from the CID 4 co
 The same run also writes a bonded-angle analysis artifact from the CID 4 conformer:
 - a JSON report of bonded angles $A$-$B$-$C$ computed from 3D coordinates using the dot-product formula, where $A$-$B$ and $B$-$C$ are bonded and $B$ is the central atom
 
+The same run also writes a spring-bond partial-derivative artifact from the CID 4 conformer:
+- a JSON report of per-bond and per-atom Cartesian partial derivatives for the simple harmonic bond energy $E = \frac{1}{2}k(d - d_0)^2$ using 3D coordinates, chemistry-informed reference bond lengths $d_0$, and bond-order-specific spring constants $k$
+
 ## Format code
 ```sh
 uv tool run ruff format
