@@ -183,6 +183,8 @@ def plot_atom_element_entropy(
     plt.tight_layout()
     plt.savefig(out_file_path, dpi=200)
     plt.close()
+
+
 def plot_gradient_descent_fit(
     mass_values: np.ndarray,
     atomic_number_values: np.ndarray,

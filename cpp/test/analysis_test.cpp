@@ -1045,16 +1045,16 @@ TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.activity_value_statistics.csv");
-    EXPECT_EQ(pubchem::activityValueStatisticsSummaryJsonPath("/tmp/out",
-                                                              "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.activity_value_statistics.summary.json");
-    EXPECT_EQ(pubchem::activityValueStatisticsPlotSvgPath("/tmp/out",
-                                                          "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.activity_value_statistics.svg");
+    EXPECT_EQ(
+        pubchem::activityValueStatisticsSummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+            .filename()
+            .string(),
+        "pubchem_cid_4_bioactivity.activity_value_statistics.summary.json");
+    EXPECT_EQ(
+        pubchem::activityValueStatisticsPlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+            .filename()
+            .string(),
+        "pubchem_cid_4_bioactivity.activity_value_statistics.svg");
     EXPECT_EQ(pubchem::gradientDescentCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
                   .filename()
                   .string(),
@@ -1078,21 +1078,22 @@ TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
                   .filename()
                   .string(),
               "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy_proportions.csv");
-    EXPECT_EQ(pubchem::atomElementEntropySummaryJsonPath("/tmp/out",
-                                                         "Conformer3D_COMPOUND_CID_4(1).sdf")
-                  .filename()
-                  .string(),
-              "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.summary.json");
-    EXPECT_EQ(pubchem::atomElementEntropyPlotSvgPath("/tmp/out",
-                                                     "Conformer3D_COMPOUND_CID_4(1).sdf")
-                  .filename()
-                  .string(),
-              "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.svg");
+    EXPECT_EQ(
+        pubchem::atomElementEntropySummaryJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+            .filename()
+            .string(),
+        "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.summary.json");
+    EXPECT_EQ(
+        pubchem::atomElementEntropyPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+            .filename()
+            .string(),
+        "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.svg");
 }
 
 TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisBuildsPositiveNumericSummary)
 {
-    const auto csvPath = writeTempFile("bioactivity-activity-value-sample.csv", sampleBioactivityCsv());
+    const auto csvPath =
+        writeTempFile("bioactivity-activity-value-sample.csv", sampleBioactivityCsv());
 
     const auto result = pubchem::buildActivityValueStatisticsAnalysis(csvPath);
 
@@ -1143,7 +1144,8 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisDefersShapiroBeyo
 
 TEST(BioactivityStrategiesTest, ActivityValueStatisticsCsvAndSvgWritersEmitArtifacts)
 {
-    const auto csvPath = writeTempFile("bioactivity-activity-value-writer.csv", sampleBioactivityCsv());
+    const auto csvPath =
+        writeTempFile("bioactivity-activity-value-writer.csv", sampleBioactivityCsv());
     const auto result = pubchem::buildActivityValueStatisticsAnalysis(csvPath);
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-activity-value";

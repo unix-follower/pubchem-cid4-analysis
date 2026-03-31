@@ -1541,13 +1541,17 @@ def summarize_activity_value_statistics_analysis(
     }
     if sample_size < 3:
         shapiro_summary["reason_not_computed"] = "Shapiro-Wilk requires at least 3 retained observations."
-        shapiro_summary["interpretation"] = "Normality was not tested because too few positive numeric rows were retained."
+        shapiro_summary["interpretation"] = (
+            "Normality was not tested because too few positive numeric rows were retained."
+        )
     elif sample_size > shapiro_max_sample_size:
         shapiro_summary["reason_not_computed"] = (
             "Shapiro-Wilk was skipped because SciPy warns that p-values may be inaccurate for samples larger than "
             f"{shapiro_max_sample_size}."
         )
-        shapiro_summary["interpretation"] = "Normality was not tested because the retained sample exceeds the configured Shapiro-Wilk limit."
+        shapiro_summary["interpretation"] = (
+            "Normality was not tested because the retained sample exceeds the configured Shapiro-Wilk limit."
+        )
     else:
         statistic, p_value = stats.shapiro(values)
         reject_normality = bool(p_value < shapiro_alpha)
@@ -1609,9 +1613,12 @@ def summarize_activity_value_statistics_analysis(
                 for _, row in representative_rows.iterrows()
             ],
             "notes": [
-                "The retained distribution aggregates all positive numeric Activity_Value rows regardless of Activity_Type.",
-                "Variance is reported as the sample variance with ddof = 1 to reflect descriptive statistics over the retained sample.",
-                "The diagnostic plot pairs a log-scale histogram with a normal Q-Q panel when the retained sample supports it.",
+                "The retained distribution aggregates all positive numeric "
+                "Activity_Value rows regardless of Activity_Type.",
+                "Variance is reported as the sample variance with ddof = 1 "
+                "to reflect descriptive statistics over the retained sample.",
+                "The diagnostic plot pairs a log-scale histogram with a normal "
+                "Q-Q panel when the retained sample supports it.",
             ],
         },
     }
@@ -1644,7 +1651,9 @@ def build_atom_element_entropy_dataframe(
         }
     )
     entropy_df["proportion"] = entropy_df["count"] / retained_total
-    entropy_df["log_proportion"] = entropy_df["proportion"].apply(lambda value: None if value <= 0 else float(np.log(value)))
+    entropy_df["log_proportion"] = entropy_df["proportion"].apply(
+        lambda value: None if value <= 0 else float(np.log(value))
+    )
     entropy_df["shannon_contribution"] = entropy_df["proportion"].apply(
         lambda value: 0.0 if value <= 0 else float(-value * np.log(value))
     )
@@ -1703,7 +1712,8 @@ def summarize_atom_element_entropy_analysis(
             "notes": [
                 "Entropy is computed only over the required O/N/C/H support requested in the README exercise.",
                 "Unexpected atom symbols are excluded from the entropy sum and reported separately for transparency.",
-                "Normalized entropy uses the maximum entropy over the observed required-element support rather than the fixed four-element support.",
+                "Normalized entropy uses the maximum entropy over the observed required-element support rather than "
+                "the fixed four-element support.",
             ],
         },
     }

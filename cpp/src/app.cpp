@@ -1238,14 +1238,15 @@ int main(int argc, char* argv[])
                                               hillDoseResponsePlotOutputPath);
 
         pubchem::writeActivityValueStatisticsCsv(activityValueStatisticsAnalysis,
-                             activityValueStatisticsCsvOutputPath);
+                                                 activityValueStatisticsCsvOutputPath);
 
-        std::ofstream activityValueStatisticsSummaryOutput(activityValueStatisticsSummaryOutputPath);
+        std::ofstream activityValueStatisticsSummaryOutput(
+            activityValueStatisticsSummaryOutputPath);
         activityValueStatisticsSummaryOutput << std::setw(2)
-                            << toJson(activityValueStatisticsAnalysis) << '\n';
+                                             << toJson(activityValueStatisticsAnalysis) << '\n';
 
         pubchem::writeActivityValueStatisticsPlotSvg(activityValueStatisticsAnalysis,
-                                 activityValueStatisticsPlotOutputPath);
+                                                     activityValueStatisticsPlotOutputPath);
 
         pubchem::writeGradientDescentCsv(gradientDescentAnalysis, gradientDescentCsvOutputPath);
 
@@ -1257,15 +1258,15 @@ int main(int argc, char* argv[])
         pubchem::writeGradientDescentFitPlotSvg(gradientDescentAnalysis,
                                                 gradientDescentFitPlotOutputPath);
 
-    pubchem::writeAtomElementEntropyCsv(atomElementEntropyAnalysis,
-                        atomElementEntropyCsvOutputPath);
+        pubchem::writeAtomElementEntropyCsv(atomElementEntropyAnalysis,
+                                            atomElementEntropyCsvOutputPath);
 
-    std::ofstream atomElementEntropySummaryOutput(atomElementEntropySummaryOutputPath);
-    atomElementEntropySummaryOutput << std::setw(2) << toJson(atomElementEntropyAnalysis)
-                       << '\n';
+        std::ofstream atomElementEntropySummaryOutput(atomElementEntropySummaryOutputPath);
+        atomElementEntropySummaryOutput << std::setw(2) << toJson(atomElementEntropyAnalysis)
+                                        << '\n';
 
-    pubchem::writeAtomElementEntropyPlotSvg(atomElementEntropyAnalysis,
-                        atomElementEntropyPlotOutputPath);
+        pubchem::writeAtomElementEntropyPlotSvg(atomElementEntropyAnalysis,
+                                                atomElementEntropyPlotOutputPath);
 
         std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
         std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
@@ -1304,11 +1305,11 @@ int main(int argc, char* argv[])
         std::cout << "Hill dose-response plot written to: " << hillDoseResponsePlotOutputPath
                   << '\n';
         std::cout << "Activity_Value statistics rows written to: "
-              << activityValueStatisticsCsvOutputPath << '\n';
+                  << activityValueStatisticsCsvOutputPath << '\n';
         std::cout << "Activity_Value statistics summary written to: "
-              << activityValueStatisticsSummaryOutputPath << '\n';
+                  << activityValueStatisticsSummaryOutputPath << '\n';
         std::cout << "Activity_Value statistics plot written to: "
-              << activityValueStatisticsPlotOutputPath << '\n';
+                  << activityValueStatisticsPlotOutputPath << '\n';
         std::cout << "Gradient descent trace written to: " << gradientDescentCsvOutputPath << '\n';
         std::cout << "Gradient descent summary written to: " << gradientDescentSummaryOutputPath
                   << '\n';
@@ -1317,11 +1318,11 @@ int main(int argc, char* argv[])
         std::cout << "Gradient descent fit plot written to: " << gradientDescentFitPlotOutputPath
                   << '\n';
         std::cout << "Atom element entropy rows written to: " << atomElementEntropyCsvOutputPath
-              << '\n';
+                  << '\n';
         std::cout << "Atom element entropy summary written to: "
-              << atomElementEntropySummaryOutputPath << '\n';
+                  << atomElementEntropySummaryOutputPath << '\n';
         std::cout << "Atom element entropy plot written to: " << atomElementEntropyPlotOutputPath
-              << '\n';
+                  << '\n';
     }
     catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

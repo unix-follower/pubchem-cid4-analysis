@@ -972,8 +972,8 @@ void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result
                                      const std::filesystem::path& outputPath);
 void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
                                     const std::filesystem::path& outputPath);
-AtomElementEntropyAnalysisResult buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms,
-                                                                std::string_view sourceFile);
+AtomElementEntropyAnalysisResult
+buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms, std::string_view sourceFile);
 void writeAtomElementEntropyCsv(const AtomElementEntropyAnalysisResult& result,
                                 const std::filesystem::path& outputPath);
 void writeAtomElementEntropyPlotSvg(const AtomElementEntropyAnalysisResult& result,
@@ -1066,8 +1066,9 @@ std::filesystem::path gradientDescentFitPlotSvgPath(const std::filesystem::path&
                                                     const std::filesystem::path& sourceFile);
 std::filesystem::path atomElementEntropyCsvPath(const std::filesystem::path& outputDirectory,
                                                 const std::filesystem::path& sourceFile);
-std::filesystem::path atomElementEntropySummaryJsonPath(const std::filesystem::path& outputDirectory,
-                                                        const std::filesystem::path& sourceFile);
+std::filesystem::path
+atomElementEntropySummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                  const std::filesystem::path& sourceFile);
 std::filesystem::path atomElementEntropyPlotSvgPath(const std::filesystem::path& outputDirectory,
                                                     const std::filesystem::path& sourceFile);
 } // namespace pubchem
