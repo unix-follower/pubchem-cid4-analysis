@@ -11,7 +11,10 @@ import {
   buildBfsTrace,
   buildCycleDetectionTrace,
   buildDfsTrace,
+  buildLaplacianAnalysis,
   buildMinimumSpanningTreeTrace,
+  buildMolecularGraphMetrics,
+  buildMorganAnalysis,
   buildShortestPathTrace,
   buildTopologicalSortTrace,
 } from "../../core/algorithms/graph-algorithms"
@@ -20,6 +23,9 @@ import {
   BinarySearchTraceResult,
   DeduplicationResult,
   GraphTraceResult,
+  MatrixAnalysis,
+  MolecularGraphMetrics,
+  MorganAnalysisResult,
 } from "../../core/algorithms/types"
 import { buildLayoutPositions } from "../../core/cid4/graph"
 import { parseConformerPayload } from "../../core/cid4/parser"
@@ -29,7 +35,9 @@ import { CytoscapeGraphComponent } from "./cytoscape-graph.component"
 const GRAPH_SCENARIOS = [
   "bfs",
   "dfs",
+  "weighted-shortest-path",
   "shortest-path",
+  "morgan-labeling",
   "cycle-detection",
   "minimum-spanning-tree",
   "topological-sort",
@@ -94,6 +102,10 @@ interface TaxonomyResponse {
         <div>
           <dt>Unique organisms</dt>
           <dd>{{ deduplicationResult()?.uniqueItems?.length ?? 0 }}</dd>
+        </div>
+        <div>
+          <dt>Fiedler value</dt>
+          <dd>{{ laplacianAnalysis()?.fiedlerValue ?? "Pending" }}</dd>
         </div>
       </dl>
     </section>
@@ -204,6 +216,136 @@ interface TaxonomyResponse {
                 <div>
                   <p class="step-label">{{ step.label }}</p>
                   <p>{{ step.detail }}</p>
+                </div>
+              </li>
+            }
+          </ol>
+        }
+      </article>
+    </section>
+
+    <section class="analysis-grid graph-theory-grid">
+      <article class="card analysis-card">
+        <div class="card-header compact">
+          <div>
+            <p class="eyebrow">Molecular Metrics</p>
+            <h2>Degree sequence, density, radius, and diameter</h2>
+          </div>
+        </div>
+
+        @if (molecularMetrics(); as metrics) {
+          <div class="sort-stats metric-triptych">
+            <div>
+              <span>Degree sequence</span>
+              <strong>{{ metrics.degreeSequence.join(", ") }}</strong>
+            </div>
+            <div>
+              <span>Graph density</span>
+              <strong>{{ metrics.density }}</strong>
+            </div>
+            <div>
+              <span>Diameter / radius</span>
+              <strong>{{ metrics.diameter }} / {{ metrics.radius }}</strong>
+            </div>
+            <div>
+              <span>Center atoms</span>
+              <strong>{{ metrics.centerNodeIds.join(", ") }}</strong>
+            </div>
+          </div>
+
+          <div class="table-frame">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Atom</th>
+                  <th scope="col">Degree</th>
+                  <th scope="col">Eccentricity</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (metric of metrics.nodeMetrics; track metric.nodeId) {
+                  <tr>
+                    <td>{{ metric.label }}</td>
+                    <td>{{ metric.degree }}</td>
+                    <td>{{ metric.eccentricity }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+
+      <article class="card analysis-card">
+        <div class="card-header compact">
+          <div>
+            <p class="eyebrow">Spectral View</p>
+            <h2>Laplacian and connectivity summary</h2>
+          </div>
+        </div>
+
+        @if (laplacianAnalysis(); as analysis) {
+          <p class="summary-copy">
+            The second-smallest Laplacian eigenvalue is
+            <strong>{{ analysis.fiedlerValue ?? 0 }}</strong
+            >, which stays positive for this connected molecular graph.
+          </p>
+
+          <div class="sort-stats metric-triptych">
+            <div>
+              <span>Eigenvalues</span>
+              <strong>{{ analysis.eigenvalues.join(", ") }}</strong>
+            </div>
+          </div>
+
+          <div class="table-frame matrix-frame">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Row</th>
+                  @for (column of matrixHeader(); track column) {
+                    <th scope="col">{{ column }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of laplacianRows(); track row.label) {
+                  <tr>
+                    <td>{{ row.label }}</td>
+                    @for (value of row.values; track $index) {
+                      <td>{{ value }}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </article>
+
+      <article class="card analysis-card dedup-card">
+        <div class="card-header compact">
+          <div>
+            <p class="eyebrow">Morgan Propagation</p>
+            <h2>Iterative node labels for circular-fingerprint intuition</h2>
+          </div>
+        </div>
+
+        @if (morganAnalysis(); as analysis) {
+          <p class="summary-copy">
+            Label propagation stabilized after round {{ analysis.stabilizedAfterRound }}.
+          </p>
+
+          <ol class="step-list compact-list">
+            @for (round of analysis.rounds; track round.round) {
+              <li>
+                <span class="step-index">{{ round.round }}</span>
+                <div>
+                  <p class="step-label">Round {{ round.round }}</p>
+                  <p>{{ formatMorganLabels(round.labels) }}</p>
+                  <p class="probe-copy">
+                    Changed nodes: {{ round.changedNodeIds.join(", ") || "None" }}
+                  </p>
                 </div>
               </li>
             }
@@ -421,6 +563,10 @@ interface TaxonomyResponse {
 
       .dedup-card {
         grid-column: 1 / -1;
+      }
+
+      .graph-theory-grid {
+        margin-top: 20px;
       }
 
       .hero-meta,
@@ -693,6 +839,10 @@ interface TaxonomyResponse {
         min-width: 420px;
       }
 
+      .matrix-frame table {
+        min-width: 760px;
+      }
+
       th,
       td {
         padding: 10px 12px;
@@ -775,6 +925,11 @@ export class AlgorithmsPage {
     return molecule ? mapMoleculeToAlgorithmGraph(molecule) : null
   })
 
+  protected readonly weightedBondGraph = computed(() => {
+    const molecule = this.moleculeQuery.data()
+    return molecule ? buildWeightedBondGraph(molecule) : null
+  })
+
   protected readonly completeDistanceGraph = computed(() => {
     const molecule = this.moleculeQuery.data()
     return molecule ? buildCompleteDistanceGraph(molecule) : null
@@ -789,6 +944,7 @@ export class AlgorithmsPage {
     }
 
     const moleculeGraph = this.moleculeGraph()
+    const weightedBondGraph = this.weightedBondGraph()
 
     if (!moleculeGraph) {
       return null
@@ -799,8 +955,12 @@ export class AlgorithmsPage {
         return buildBfsTrace(moleculeGraph, "1")
       case "dfs":
         return buildDfsTrace(moleculeGraph, "1")
+      case "weighted-shortest-path":
+        return weightedBondGraph ? buildShortestPathTrace(weightedBondGraph, "1", "2") : null
       case "shortest-path":
         return buildShortestPathTrace(moleculeGraph, "1", "2")
+      case "morgan-labeling":
+        return buildMorganTrace(moleculeGraph)
       case "cycle-detection":
         return buildCycleDetectionTrace(moleculeGraph, "1")
       case "minimum-spanning-tree": {
@@ -818,6 +978,10 @@ export class AlgorithmsPage {
 
     if (scenario === "minimum-spanning-tree") {
       return trace?.graph ?? emptyGraph("mst")
+    }
+
+    if (scenario === "weighted-shortest-path") {
+      return this.weightedBondGraph() ?? emptyGraph("weighted-bonds")
     }
 
     if (scenario === "topological-sort") {
@@ -841,6 +1005,29 @@ export class AlgorithmsPage {
     return Object.entries(metrics).map(([label, value]) => ({
       label: humanizeMetricLabel(label),
       value: String(value),
+    }))
+  })
+  protected readonly molecularMetrics = computed<MolecularGraphMetrics | null>(() => {
+    const graph = this.moleculeGraph()
+    return graph ? buildMolecularGraphMetrics(graph) : null
+  })
+  protected readonly laplacianAnalysis = computed<MatrixAnalysis | null>(() => {
+    const graph = this.moleculeGraph()
+    return graph ? buildLaplacianAnalysis(graph) : null
+  })
+  protected readonly morganAnalysis = computed<MorganAnalysisResult | null>(() => {
+    const graph = this.moleculeGraph()
+    return graph ? buildMorganAnalysis(graph, 4) : null
+  })
+  protected readonly matrixHeader = computed(() => {
+    return this.moleculeGraph()?.nodes.map((node) => node.label) ?? []
+  })
+  protected readonly laplacianRows = computed(() => {
+    const header = this.matrixHeader()
+    const matrix = this.laplacianAnalysis()?.laplacianMatrix ?? []
+    return matrix.map((values, index) => ({
+      label: header[index] ?? String(index + 1),
+      values,
     }))
   })
 
@@ -927,8 +1114,12 @@ export class AlgorithmsPage {
         return "BFS"
       case "dfs":
         return "DFS"
+      case "weighted-shortest-path":
+        return "Weighted path"
       case "shortest-path":
         return "Shortest path"
+      case "morgan-labeling":
+        return "Morgan labels"
       case "cycle-detection":
         return "Cycle detection"
       case "minimum-spanning-tree":
@@ -946,6 +1137,12 @@ export class AlgorithmsPage {
     const values = this.bioactivityValues()
     const max = Math.max(...values, 1)
     return (value / max) * 100
+  }
+
+  protected formatMorganLabels(labels: Record<string, number>): string {
+    return Object.entries(labels)
+      .map(([nodeId, value]) => `${nodeId}:${value}`)
+      .join(" · ")
   }
 }
 
@@ -1026,6 +1223,63 @@ function buildCompleteDistanceGraph(molecule: MoleculeGraph): AlgorithmGraph {
   }
 }
 
+function buildWeightedBondGraph(molecule: MoleculeGraph): AlgorithmGraph {
+  const positions = normalizePositions(buildLayoutPositions(molecule, "source"))
+  const atomsById = new Map(molecule.atoms.map((atom) => [atom.id, atom]))
+
+  return {
+    id: `weighted-bonds-${molecule.cid}`,
+    title: `${molecule.title} weighted bond graph`,
+    directed: false,
+    nodes: molecule.atoms.map((atom) => ({
+      id: String(atom.id),
+      label: `${atom.elementSymbol}${atom.id}`,
+      x: positions.get(atom.id)?.x,
+      y: positions.get(atom.id)?.y,
+    })),
+    edges: molecule.bonds.map((bond) => {
+      const source = atomsById.get(bond.source)
+      const target = atomsById.get(bond.target)
+      const weight = source && target ? euclideanDistance(source, target) : 1
+
+      return {
+        id: bond.id,
+        label: weight.toFixed(2),
+        source: String(bond.source),
+        target: String(bond.target),
+        weight,
+      }
+    }),
+  }
+}
+
+function buildMorganTrace(graph: AlgorithmGraph): GraphTraceResult {
+  const analysis = buildMorganAnalysis(graph, 4)
+  const finalRound = analysis.rounds.at(-1)
+
+  return {
+    algorithm: "Morgan label propagation",
+    headline: `Stabilized after round ${analysis.stabilizedAfterRound}`,
+    detail:
+      "Each round re-labels atoms from their local neighborhoods to approximate the intuition behind circular fingerprints.",
+    order: analysis.rounds.map((round) => `Round ${round.round}`),
+    steps: analysis.rounds.map((round) => ({
+      label: `Round ${round.round}`,
+      detail: `Labels ${formatMorganRound(round.labels)}. Changed nodes: ${round.changedNodeIds.join(", ") || "None"}.`,
+      activeNodeIds: round.changedNodeIds,
+      activeEdgeIds: [],
+      visitedNodeIds: graph.nodes.map((node) => node.id),
+      frontierNodeIds: [],
+      pathNodeIds: [],
+      pathEdgeIds: [],
+    })),
+    metrics: {
+      stabilizedAfterRound: analysis.stabilizedAfterRound,
+      distinctLabels: new Set(Object.values(finalRound?.labels ?? {})).size,
+    },
+  }
+}
+
 function normalizePositions(points: Map<number, Point>): Map<number, Point> {
   const entries = [...points.entries()]
 
@@ -1065,6 +1319,12 @@ function euclideanDistance(
 
 function humanizeMetricLabel(label: string): string {
   return label.replaceAll(/([A-Z])/g, " $1").replace(/^./, (value) => value.toUpperCase())
+}
+
+function formatMorganRound(labels: Record<string, number>): string {
+  return Object.entries(labels)
+    .map(([nodeId, value]) => `${nodeId}:${value}`)
+    .join(", ")
 }
 
 function emptyGraph(id: string): AlgorithmGraph {

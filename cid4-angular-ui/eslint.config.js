@@ -16,6 +16,7 @@ export default defineConfig([
       "dist/*",
       "build/*",
       "package-lock.json",
+      "public/mockServiceWorker.js",
     ],
   },
   { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
