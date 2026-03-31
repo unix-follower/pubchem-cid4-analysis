@@ -29,7 +29,8 @@ final case class HillDoseResponseStatistic(min: Double, median: Double, max: Dou
 
 final case class HillDoseResponseStatistics(
     activityValueAsInferredK: HillDoseResponseStatistic,
-    midpointFirstDerivative: HillDoseResponseStatistic
+    midpointFirstDerivative: HillDoseResponseStatistic,
+    aucTrapezoidReferenceCurve: HillDoseResponseStatistic
 )
 
 final case class HillDoseResponseActivityTypeCount(activityType: String, count: Int)
@@ -41,7 +42,17 @@ final case class HillDoseResponseRepresentativeRow(
     targetName: String,
     activityValue: Double,
     inferredKActivityValue: Double,
+    aucTrapezoidReferenceCurve: Double,
     log10MidpointConcentration: Double
+)
+
+final case class HillDoseResponseAucSummary(
+    integrationMethod: String,
+    curveBasis: String,
+    concentrationBoundsDefinition: String,
+    gridSize: Int,
+    concentrationUnits: String,
+    interpretation: String
 )
 
 final case class HillDoseResponseMidpointSummary(condition: String, response: Double, interpretation: String)
@@ -61,6 +72,7 @@ final case class HillDoseResponseSummary(
     referenceHillCoefficientN: Double,
     parameterInterpretation: String,
     midpointInLogConcentrationSpace: HillDoseResponseMidpointSummary,
+    aucTrapezoidReferenceCurve: HillDoseResponseAucSummary,
     linearConcentrationInflection: Option[HillDoseResponseLinearInflectionSummary],
     fitStatus: String,
     representativeRows: Vector[HillDoseResponseRepresentativeRow],
@@ -84,6 +96,9 @@ object HillDoseResponseService:
   private val CsvFormat = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build()
   private val RequiredColumns = Vector("Bioactivity_ID", "BioAssay_AID", "Activity_Type", "Activity_Value")
   private val DefaultHillCoefficient = 1.0
+  private val DefaultAucLowerBoundScale = 1.0e-2
+  private val DefaultAucUpperBoundScale = 1.0e2
+  private val DefaultAucGridSize = 400
 
   def analyze(csvPath: Path, hillCoefficient: Double = DefaultHillCoefficient): HillDoseResponseAnalysisResult =
     require(hillCoefficient > 0.0, "Hill coefficient must be positive")
@@ -110,6 +125,13 @@ object HillDoseResponseService:
           val inferredK = activityValue
           val midpointConcentration = inferredK
           val midpointFirstDerivative = hillResponseFirstDerivative(midpointConcentration, inferredK, hillCoefficient)
+          val aucTrapezoidReferenceCurve = computeAucTrapezoid(
+            inferredK,
+            hillCoefficient,
+            lowerBoundScale = DefaultAucLowerBoundScale,
+            upperBoundScale = DefaultAucUpperBoundScale,
+            gridSize = DefaultAucGridSize
+          )
           val baseRow = row ++ Map(
             "Activity_Value" -> activityValue.toString,
             "hill_coefficient_n" -> hillCoefficient.toString,
@@ -117,6 +139,7 @@ object HillDoseResponseService:
             "midpoint_concentration" -> midpointConcentration.toString,
             "midpoint_response" -> 0.5.toString,
             "midpoint_first_derivative" -> midpointFirstDerivative.toString,
+            "auc_trapezoid_reference_curve" -> aucTrapezoidReferenceCurve.toString,
             "log10_midpoint_concentration" -> math.log10(midpointConcentration).toString,
             "fit_status" -> "reference_curve_inferred_from_activity_value",
             "analysis_mode" -> "reference_curve"
@@ -142,6 +165,7 @@ object HillDoseResponseService:
 
       val inferredKValues = retainedRows.map(_("inferred_K_activity_value").toDouble)
       val midpointDerivatives = retainedRows.map(_("midpoint_first_derivative").toDouble)
+      val aucValues = retainedRows.map(_("auc_trapezoid_reference_curve").toDouble)
       val representativeRows = selectRepresentativeRows(retainedRows)
       val activityTypeCounts = retainedRows
         .groupBy(row => normalizeLabel(row("Activity_Type"), fallback = "Unknown"))
@@ -170,6 +194,11 @@ object HillDoseResponseService:
             min = midpointDerivatives.min,
             median = computeMedian(midpointDerivatives),
             max = midpointDerivatives.max
+          ),
+          aucTrapezoidReferenceCurve = HillDoseResponseStatistic(
+            min = aucValues.min,
+            median = computeMedian(aucValues),
+            max = aucValues.max
           )
         ),
         activityTypeCounts = activityTypeCounts.toVector
@@ -188,6 +217,16 @@ object HillDoseResponseService:
             response = 0.5,
             interpretation = "The Hill curve is centered at c = K in log-concentration space."
           ),
+          aucTrapezoidReferenceCurve = HillDoseResponseAucSummary(
+            integrationMethod = "trapezoidal_rule",
+            curveBasis = "reference_curve_inferred_from_activity_value",
+            concentrationBoundsDefinition =
+              s"[${formatCompact(DefaultAucLowerBoundScale)} * K, ${formatCompact(DefaultAucUpperBoundScale)} * K]",
+            gridSize = DefaultAucGridSize,
+            concentrationUnits = "same units as Activity_Value",
+            interpretation =
+              "AUC is approximated numerically over an inferred Hill reference curve rather than over raw experimental dose-response points."
+          ),
           linearConcentrationInflection = linearInflectionScale.map { scale =>
             HillDoseResponseLinearInflectionSummary(
               formula = "c* = K * ((n - 1)/(n + 1))^(1/n)",
@@ -200,7 +239,8 @@ object HillDoseResponseService:
           representativeRows = representativeRows.map(toRepresentativeRow),
           notes = Vector(
             "No nonlinear dose-response fitting was performed because the CSV does not contain raw per-concentration response series for CID 4.",
-            "Rows with positive numeric Activity_Value are modeled as reference Hill curves using Activity_Value as the inferred half-maximal scale K."
+            "Rows with positive numeric Activity_Value are modeled as reference Hill curves using Activity_Value as the inferred half-maximal scale K.",
+            "The trapezoidal-rule AUC is computed on those inferred reference curves across a concentration grid scaled relative to each row's inferred K value."
           )
         )
       )
@@ -212,6 +252,7 @@ object HillDoseResponseService:
           "midpoint_concentration",
           "midpoint_response",
           "midpoint_first_derivative",
+          "auc_trapezoid_reference_curve",
           "log10_midpoint_concentration",
           "linear_inflection_concentration",
           "linear_inflection_response",
@@ -327,6 +368,34 @@ object HillDoseResponseService:
     )
     numerator / denominator
 
+  private def computeAucTrapezoid(
+      inferredK: Double,
+      hillCoefficient: Double,
+      lowerBoundScale: Double = DefaultAucLowerBoundScale,
+      upperBoundScale: Double = DefaultAucUpperBoundScale,
+      gridSize: Int = DefaultAucGridSize
+  ): Double =
+    require(inferredK > 0.0, "AUC trapezoidal integration requires a strictly positive inferred K value")
+    require(hillCoefficient > 0.0, "Hill coefficient must be positive")
+    require(lowerBoundScale > 0.0 && upperBoundScale > 0.0, "AUC concentration-bound scales must be positive")
+    require(lowerBoundScale < upperBoundScale, "AUC lower-bound scale must be smaller than the upper-bound scale")
+    require(gridSize >= 2, "AUC trapezoidal integration requires at least two grid points")
+
+    val relativeConcentrationGrid = geometricSpace(lowerBoundScale, upperBoundScale, gridSize)
+    val concentrationGrid = relativeConcentrationGrid.map(_ * inferredK)
+    val responseGrid = concentrationGrid.map(value => hillResponse(value, inferredK, hillCoefficient))
+
+    concentrationGrid
+      .zip(responseGrid)
+      .sliding(2)
+      .map {
+        case Vector((leftConcentration, leftResponse), (rightConcentration, rightResponse)) =>
+          (rightConcentration - leftConcentration) * (leftResponse + rightResponse) / 2.0
+        case _ =>
+          0.0
+      }
+      .sum
+
   private def hillLinearInflectionScale(hillCoefficient: Double): Option[Double] =
     if hillCoefficient <= 1.0 then None
     else Some(math.pow((hillCoefficient - 1.0) / (hillCoefficient + 1.0), 1.0 / hillCoefficient))
@@ -343,6 +412,7 @@ object HillDoseResponseService:
       targetName = normalizeLabel(row.getOrElse("Target_Name", ""), fallback = "Unknown"),
       activityValue = row("Activity_Value").toDouble,
       inferredKActivityValue = row("inferred_K_activity_value").toDouble,
+      aucTrapezoidReferenceCurve = row("auc_trapezoid_reference_curve").toDouble,
       log10MidpointConcentration = row("log10_midpoint_concentration").toDouble
     )
 
