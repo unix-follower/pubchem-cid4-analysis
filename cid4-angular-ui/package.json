@@ -14,7 +14,7 @@
     "serve:ssr:cid4-angular-ui": "node dist/cid4-angular-ui/server/server.mjs",
     "lint": "eslint",
     "check-format": "prettier --log-level error --check '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'",
-    "format": "prettier --log-level error --write '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'"
+    "format": "prettier --write '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'"
   },
   "private": true,
   "packageManager": "npm@11.9.0",
