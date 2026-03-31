@@ -176,6 +176,17 @@ std::string samplePosteriorBioactivityCsv()
            "14,104,Probe,IC50,Assay E,Target E\n";
 }
 
+std::string sampleBinomialBioactivityCsv()
+{
+    return "Bioactivity_ID,BioAssay_AID,Activity,Activity_Type,BioAssay_Name,Target_Name\n"
+           "10,100,Active,,,\n"
+           "11,100,Inactive,IC50,Assay A,Target A\n"
+           "12,101,Inactive,IC50,Assay B,Target B\n"
+           "13,102,Unspecified,Potency,Assay C,Target C\n"
+           "14,103,Active,,Assay D,Target D\n"
+           "15,104,Probe,IC50,Assay E,Target E\n";
+}
+
 std::vector<pubchem::AtomRecord> sampleGradientAtoms()
 {
     return {
@@ -978,6 +989,16 @@ TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
             .filename()
             .string(),
         "pubchem_cid_4_bioactivity.activity_posterior.summary.json");
+    EXPECT_EQ(
+        pubchem::binomialActivityDistributionCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+            .filename()
+            .string(),
+        "pubchem_cid_4_bioactivity.activity_binomial_pmf.csv");
+    EXPECT_EQ(pubchem::binomialActivityDistributionSummaryJsonPath("/tmp/out",
+                                                                   "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.activity_binomial.summary.json");
     EXPECT_EQ(pubchem::hillDoseResponseCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
@@ -1231,6 +1252,79 @@ TEST(BioactivityStrategiesTest, PosteriorCsvWriterEmitsArtifacts)
     EXPECT_EQ(filteredContents.find("Unspecified"), std::string::npos);
 }
 
+TEST(BioactivityStrategiesTest, BinomialAnalysisBuildsAssayLevelPmfAndSummary)
+{
+    const auto csvPath =
+        writeTempFile("bioactivity-binomial-sample.csv", sampleBinomialBioactivityCsv());
+
+    const auto result = pubchem::buildBinomialActivityDistributionAnalysis(csvPath);
+
+    EXPECT_EQ(result.sourceFile, "bioactivity-binomial-sample.csv");
+    EXPECT_EQ(result.rowCounts.totalRows, 6U);
+    EXPECT_EQ(result.rowCounts.activeRows, 2U);
+    EXPECT_EQ(result.rowCounts.inactiveRows, 2U);
+    EXPECT_EQ(result.rowCounts.unspecifiedRows, 1U);
+    EXPECT_EQ(result.rowCounts.otherActivityRows, 1U);
+    EXPECT_EQ(result.rowCounts.retainedBinaryRows, 4U);
+    EXPECT_EQ(result.rowCounts.droppedNonBinaryRows, 2U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 3U);
+    EXPECT_EQ(result.rowCounts.assayTrials, 3U);
+    EXPECT_EQ(result.rowCounts.activeAssayTrials, 2U);
+    EXPECT_EQ(result.rowCounts.inactiveAssayTrials, 1U);
+    EXPECT_EQ(result.rowCounts.mixedEvidenceAssayTrials, 1U);
+    EXPECT_EQ(result.rowCounts.unanimousActiveAssayTrials, 1U);
+    EXPECT_EQ(result.rowCounts.unanimousInactiveAssayTrials, 1U);
+    EXPECT_EQ(result.headers,
+              (std::vector<std::string>{"k_active",
+                                        "probability",
+                                        "cumulative_probability_leq_k",
+                                        "cumulative_probability_geq_k"}));
+    ASSERT_EQ(result.rows.size(), 4U);
+    EXPECT_EQ(result.rows.at(2).at(0), "2");
+    EXPECT_NEAR(std::stod(result.rows.at(2).at(1)), 4.0 / 9.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.parameters.successProbabilityActiveAssay, 2.0 / 3.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.pmfAtObservedActiveAssayCount, 4.0 / 9.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.cumulativeProbabilityLeqObservedActiveAssayCount,
+                19.0 / 27.0,
+                1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.cumulativeProbabilityGeqObservedActiveAssayCount,
+                20.0 / 27.0,
+                1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.binomialMeanActiveAssays, 2.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.binomialVarianceActiveAssays, 2.0 / 3.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.pmfProbabilitySum, 1.0, 1.0e-12);
+    ASSERT_EQ(result.analysis.representativeAssays.size(), 3U);
+    EXPECT_EQ(result.analysis.representativeAssays.front().bioAssayAid, 100LL);
+    EXPECT_TRUE(result.analysis.representativeAssays.front().mixedEvidence);
+    EXPECT_EQ(result.analysis.representativeAssays.front().assayActivity, "Active");
+    EXPECT_EQ(result.analysis.representativeAssays.back().bioAssayAid, 101LL);
+    EXPECT_EQ(result.analysis.representativeAssays.back().assayActivity, "Inactive");
+}
+
+TEST(BioactivityStrategiesTest, BinomialCsvWriterEmitsArtifacts)
+{
+    const auto csvPath =
+        writeTempFile("bioactivity-binomial-writer-sample.csv", sampleBinomialBioactivityCsv());
+    const auto result = pubchem::buildBinomialActivityDistributionAnalysis(csvPath);
+    const auto outputDirectory =
+        std::filesystem::temp_directory_path() / "pubchem-cid4-binomial-bioactivity";
+    std::filesystem::create_directories(outputDirectory);
+
+    const auto pmfCsvPath = outputDirectory / "bioactivity.binomial.csv";
+
+    pubchem::writeBinomialActivityDistributionCsv(result, pmfCsvPath);
+
+    std::ifstream pmfInput(pmfCsvPath);
+    ASSERT_TRUE(pmfInput.good());
+
+    const std::string pmfContents((std::istreambuf_iterator<char>(pmfInput)),
+                                  std::istreambuf_iterator<char>());
+
+    EXPECT_NE(pmfContents.find("k_active"), std::string::npos);
+    EXPECT_NE(pmfContents.find("cumulative_probability_geq_k"), std::string::npos);
+    EXPECT_NE(pmfContents.find("0.444444444444444"), std::string::npos);
+}
+
 TEST(BioactivityStrategiesTest, HillAnalysisSupportsPositiveLinearInflectionForNGreaterThanOne)
 {
     const auto csvPath = writeTempFile("bioactivity-hill-n2-sample.csv", sampleBioactivityCsv());
@@ -1345,4 +1439,36 @@ TEST(BioactivityStrategiesTest, PosteriorAnalysisMatchesCid4RealData)
     ASSERT_EQ(result.analysis.representativeRows.size(), 3U);
     EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 1188LL);
     EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 1259407LL);
+}
+
+TEST(BioactivityStrategiesTest, BinomialAnalysisMatchesCid4RealData)
+{
+    const auto csvPath = repositoryRoot() / "data" / "pubchem_cid_4_bioactivity.csv";
+
+    const auto result = pubchem::buildBinomialActivityDistributionAnalysis(csvPath);
+
+    EXPECT_EQ(result.rowCounts.totalRows, 406U);
+    EXPECT_EQ(result.rowCounts.activeRows, 3U);
+    EXPECT_EQ(result.rowCounts.inactiveRows, 0U);
+    EXPECT_EQ(result.rowCounts.unspecifiedRows, 398U);
+    EXPECT_EQ(result.rowCounts.otherActivityRows, 5U);
+    EXPECT_EQ(result.rowCounts.retainedBinaryRows, 3U);
+    EXPECT_EQ(result.rowCounts.droppedNonBinaryRows, 403U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
+    EXPECT_EQ(result.rowCounts.assayTrials, 2U);
+    EXPECT_EQ(result.rowCounts.activeAssayTrials, 2U);
+    EXPECT_EQ(result.rowCounts.inactiveAssayTrials, 0U);
+    EXPECT_EQ(result.rowCounts.mixedEvidenceAssayTrials, 0U);
+    EXPECT_EQ(result.rowCounts.unanimousActiveAssayTrials, 2U);
+    EXPECT_EQ(result.rowCounts.unanimousInactiveAssayTrials, 0U);
+    EXPECT_NEAR(result.binomial.parameters.successProbabilityActiveAssay, 1.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.pmfAtObservedActiveAssayCount, 1.0, 1.0e-12);
+    EXPECT_NEAR(
+        result.binomial.summary.cumulativeProbabilityLeqObservedActiveAssayCount, 1.0, 1.0e-12);
+    EXPECT_NEAR(
+        result.binomial.summary.cumulativeProbabilityGeqObservedActiveAssayCount, 1.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.binomialMeanActiveAssays, 2.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.binomialVarianceActiveAssays, 0.0, 1.0e-12);
+    EXPECT_NEAR(result.binomial.summary.pmfProbabilitySum, 1.0, 1.0e-12);
+    ASSERT_EQ(result.analysis.representativeAssays.size(), 2U);
 }

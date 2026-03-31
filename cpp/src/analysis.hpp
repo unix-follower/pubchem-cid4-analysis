@@ -541,6 +541,81 @@ struct PosteriorBioactivityAnalysisResult {
     PosteriorBioactivityAnalysis analysis;
 };
 
+struct BinomialActivityRowCounts {
+    std::size_t totalRows;
+    std::size_t activeRows;
+    std::size_t inactiveRows;
+    std::size_t unspecifiedRows;
+    std::size_t otherActivityRows;
+    std::size_t retainedBinaryRows;
+    std::size_t droppedNonBinaryRows;
+    std::size_t retainedUniqueBioassays;
+    std::size_t assayTrials;
+    std::size_t activeAssayTrials;
+    std::size_t inactiveAssayTrials;
+    std::size_t mixedEvidenceAssayTrials;
+    std::size_t unanimousActiveAssayTrials;
+    std::size_t unanimousInactiveAssayTrials;
+};
+
+struct BinomialActivityTrialDefinition {
+    std::string unit;
+    std::string successLabel;
+    std::string failureLabel;
+    std::string assayResolutionRule;
+};
+
+struct BinomialActivityParameters {
+    std::size_t nAssays;
+    std::size_t observedActiveAssays;
+    double successProbabilityActiveAssay;
+};
+
+struct BinomialActivitySummaryStatistics {
+    double pmfAtObservedActiveAssayCount;
+    double cumulativeProbabilityLeqObservedActiveAssayCount;
+    double cumulativeProbabilityGeqObservedActiveAssayCount;
+    double binomialMeanActiveAssays;
+    double binomialVarianceActiveAssays;
+    double pmfProbabilitySum;
+};
+
+struct BinomialActivityRepresentativeAssay {
+    long long bioAssayAid;
+    std::string assayActivity;
+    std::size_t retainedBinaryRows;
+    std::size_t activeRows;
+    std::size_t inactiveRows;
+    bool mixedEvidence;
+    std::string activityType;
+    std::string targetName;
+    std::string bioAssayName;
+};
+
+struct BinomialActivityDistributionSection {
+    BinomialActivityTrialDefinition trialDefinition;
+    BinomialActivityParameters parameters;
+    BinomialActivitySummaryStatistics summary;
+};
+
+struct BinomialActivityAnalysis {
+    std::string targetQuantity;
+    std::string model;
+    std::string equation;
+    std::string parameterEstimation;
+    std::vector<BinomialActivityRepresentativeAssay> representativeAssays;
+    std::vector<std::string> notes;
+};
+
+struct BinomialActivityDistributionAnalysisResult {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::vector<std::vector<std::string>> rows;
+    BinomialActivityRowCounts rowCounts;
+    BinomialActivityDistributionSection binomial;
+    BinomialActivityAnalysis analysis;
+};
+
 struct GradientDescentAtomRow {
     int index;
     std::string symbol;
@@ -675,6 +750,10 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
                                   double credibleIntervalMass = 0.95);
 void writePosteriorBioactivityCsv(const PosteriorBioactivityAnalysisResult& result,
                                   const std::filesystem::path& outputPath);
+BinomialActivityDistributionAnalysisResult
+buildBinomialActivityDistributionAnalysis(const std::filesystem::path& csvPath);
+void writeBinomialActivityDistributionCsv(const BinomialActivityDistributionAnalysisResult& result,
+                                          const std::filesystem::path& outputPath);
 HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
                                                              double hillCoefficient = 1.0);
 void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
@@ -745,6 +824,12 @@ std::filesystem::path posteriorBioactivityCsvPath(const std::filesystem::path& o
 std::filesystem::path
 posteriorBioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory,
                                     const std::filesystem::path& sourceFile);
+std::filesystem::path
+binomialActivityDistributionCsvPath(const std::filesystem::path& outputDirectory,
+                                    const std::filesystem::path& sourceFile);
+std::filesystem::path
+binomialActivityDistributionSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                            const std::filesystem::path& sourceFile);
 std::filesystem::path hillDoseResponseCsvPath(const std::filesystem::path& outputDirectory,
                                               const std::filesystem::path& sourceFile);
 std::filesystem::path hillDoseResponseSummaryJsonPath(const std::filesystem::path& outputDirectory,

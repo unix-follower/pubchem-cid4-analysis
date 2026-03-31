@@ -620,6 +620,75 @@ nlohmann::json toJson(const pubchem::PosteriorBioactivityAnalysisResult& posteri
     };
 }
 
+nlohmann::json toJson(const pubchem::BinomialActivityDistributionAnalysisResult& binomialActivity)
+{
+    nlohmann::json representativeAssays = nlohmann::json::array();
+    for (const auto& assay : binomialActivity.analysis.representativeAssays) {
+        representativeAssays.push_back({
+            {"bioAssayAid", assay.bioAssayAid},
+            {"assayActivity", assay.assayActivity},
+            {"retainedBinaryRows", assay.retainedBinaryRows},
+            {"activeRows", assay.activeRows},
+            {"inactiveRows", assay.inactiveRows},
+            {"mixedEvidence", assay.mixedEvidence},
+            {"activityType", assay.activityType},
+            {"targetName", assay.targetName},
+            {"bioAssayName", assay.bioAssayName},
+        });
+    }
+
+    return {
+        {"sourceFile", binomialActivity.sourceFile},
+        {"rowCounts",
+         {{"totalRows", binomialActivity.rowCounts.totalRows},
+          {"activeRows", binomialActivity.rowCounts.activeRows},
+          {"inactiveRows", binomialActivity.rowCounts.inactiveRows},
+          {"unspecifiedRows", binomialActivity.rowCounts.unspecifiedRows},
+          {"otherActivityRows", binomialActivity.rowCounts.otherActivityRows},
+          {"retainedBinaryRows", binomialActivity.rowCounts.retainedBinaryRows},
+          {"droppedNonBinaryRows", binomialActivity.rowCounts.droppedNonBinaryRows},
+          {"retainedUniqueBioassays", binomialActivity.rowCounts.retainedUniqueBioassays},
+          {"assayTrials", binomialActivity.rowCounts.assayTrials},
+          {"activeAssayTrials", binomialActivity.rowCounts.activeAssayTrials},
+          {"inactiveAssayTrials", binomialActivity.rowCounts.inactiveAssayTrials},
+          {"mixedEvidenceAssayTrials", binomialActivity.rowCounts.mixedEvidenceAssayTrials},
+          {"unanimousActiveAssayTrials", binomialActivity.rowCounts.unanimousActiveAssayTrials},
+          {"unanimousInactiveAssayTrials",
+           binomialActivity.rowCounts.unanimousInactiveAssayTrials}}},
+        {"binomial",
+         {{"trialDefinition",
+           {{"unit", binomialActivity.binomial.trialDefinition.unit},
+            {"successLabel", binomialActivity.binomial.trialDefinition.successLabel},
+            {"failureLabel", binomialActivity.binomial.trialDefinition.failureLabel},
+            {"assayResolutionRule",
+             binomialActivity.binomial.trialDefinition.assayResolutionRule}}},
+          {"parameters",
+           {{"nAssays", binomialActivity.binomial.parameters.nAssays},
+            {"observedActiveAssays", binomialActivity.binomial.parameters.observedActiveAssays},
+            {"successProbabilityActiveAssay",
+             binomialActivity.binomial.parameters.successProbabilityActiveAssay}}},
+          {"summary",
+           {{"pmfAtObservedActiveAssayCount",
+             binomialActivity.binomial.summary.pmfAtObservedActiveAssayCount},
+            {"cumulativeProbabilityLeqObservedActiveAssayCount",
+             binomialActivity.binomial.summary.cumulativeProbabilityLeqObservedActiveAssayCount},
+            {"cumulativeProbabilityGeqObservedActiveAssayCount",
+             binomialActivity.binomial.summary.cumulativeProbabilityGeqObservedActiveAssayCount},
+            {"binomialMeanActiveAssays",
+             binomialActivity.binomial.summary.binomialMeanActiveAssays},
+            {"binomialVarianceActiveAssays",
+             binomialActivity.binomial.summary.binomialVarianceActiveAssays},
+            {"pmfProbabilitySum", binomialActivity.binomial.summary.pmfProbabilitySum}}}}},
+        {"analysis",
+         {{"targetQuantity", binomialActivity.analysis.targetQuantity},
+          {"model", binomialActivity.analysis.model},
+          {"equation", binomialActivity.analysis.equation},
+          {"parameterEstimation", binomialActivity.analysis.parameterEstimation},
+          {"representativeAssays", representativeAssays},
+          {"notes", binomialActivity.analysis.notes}}},
+    };
+}
+
 nlohmann::json toJson(const pubchem::GradientDescentAnalysisResult& gradientDescent)
 {
     nlohmann::json atomRows = nlohmann::json::array();
@@ -833,6 +902,13 @@ int main(int argc, char* argv[])
             pubchem::posteriorBioactivityCsvPath(outputDir, options.bioactivityFile);
         const std::filesystem::path posteriorBioactivitySummaryOutputPath =
             pubchem::posteriorBioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
+        const pubchem::BinomialActivityDistributionAnalysisResult binomialActivityDistribution =
+            pubchem::buildBinomialActivityDistributionAnalysis(bioactivityCsvPath);
+        const std::filesystem::path binomialActivityDistributionCsvOutputPath =
+            pubchem::binomialActivityDistributionCsvPath(outputDir, options.bioactivityFile);
+        const std::filesystem::path binomialActivityDistributionSummaryOutputPath =
+            pubchem::binomialActivityDistributionSummaryJsonPath(outputDir,
+                                                                 options.bioactivityFile);
         const pubchem::HillDoseResponseAnalysisResult hillDoseResponseAnalysis =
             pubchem::buildHillDoseResponseAnalysis(bioactivityCsvPath);
         const std::filesystem::path hillDoseResponseCsvOutputPath =
@@ -893,6 +969,14 @@ int main(int argc, char* argv[])
         posteriorBioactivitySummaryOutput << std::setw(2) << toJson(posteriorBioactivityAnalysis)
                                           << '\n';
 
+        pubchem::writeBinomialActivityDistributionCsv(binomialActivityDistribution,
+                                                      binomialActivityDistributionCsvOutputPath);
+
+        std::ofstream binomialActivityDistributionSummaryOutput(
+            binomialActivityDistributionSummaryOutputPath);
+        binomialActivityDistributionSummaryOutput << std::setw(2)
+                                                  << toJson(binomialActivityDistribution) << '\n';
+
         pubchem::writeHillDoseResponseCsv(hillDoseResponseAnalysis, hillDoseResponseCsvOutputPath);
 
         std::ofstream hillDoseResponseSummaryOutput(hillDoseResponseSummaryOutputPath);
@@ -933,6 +1017,10 @@ int main(int argc, char* argv[])
                   << '\n';
         std::cout << "Posterior bioactivity summary written to: "
                   << posteriorBioactivitySummaryOutputPath << '\n';
+        std::cout << "Binomial activity distribution rows written to: "
+                  << binomialActivityDistributionCsvOutputPath << '\n';
+        std::cout << "Binomial activity distribution summary written to: "
+                  << binomialActivityDistributionSummaryOutputPath << '\n';
         std::cout << "Hill dose-response rows written to: " << hillDoseResponseCsvOutputPath
                   << '\n';
         std::cout << "Hill dose-response summary written to: " << hillDoseResponseSummaryOutputPath

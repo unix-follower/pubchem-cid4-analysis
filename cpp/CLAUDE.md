@@ -137,6 +137,8 @@ The bioactivity flow now reads `pubchem_cid_4_bioactivity.csv`, filters to posit
 
 The C++ app now also writes a Bayesian posterior bioactivity analysis under `data/out`: a CSV of retained binary evidence rows where `Activity` is `Active` or `Inactive`, plus a summary JSON for `P(Active | CID=4)` using a conjugate Beta-Binomial update with prior `Beta(1,1)`. Rows labeled `Unspecified` are excluded from the binary update and reported separately in the row counts.
 
+The C++ app now also writes an assay-level binomial bioactivity analysis under `data/out`: a PMF CSV for `P(K = k)` across `k = 0..n` active assays and a summary JSON for `P(K = k active assays in n assays)` using one Bernoulli trial per unique `BioAssay_AID`. This feature reuses the same `Activity = Active / Inactive` binary evidence filter as the posterior analysis, excludes `Unspecified` before assay-level collapsing, resolves an assay to `Active` if any retained row for that assay is `Active`, and uses the observed active-assay fraction as the plug-in binomial success probability.
+
 The C++ app now also writes Hill/sigmoidal dose-response reference artifacts under `data/out`: a CSV of positive numeric `Activity_Value` rows interpreted as inferred Hill-scale parameters `K`, including trapezoidal-rule AUC values for the inferred reference curves; a summary JSON that documents the normalized Hill model `f(c) = c^n / (K^n + c^n)` together with midpoint, inflection, and AUC integration interpretation; and an SVG plot of representative reference curves. Because the CID 4 bioactivity CSV contains potency-style summary values rather than raw per-concentration response series, this is a reference-curve analysis rather than a nonlinear fit to experimental dose-response points.
 
 ## CI/CD

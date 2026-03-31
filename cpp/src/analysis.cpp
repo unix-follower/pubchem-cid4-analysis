@@ -6,6 +6,7 @@
 #include <boost/graph/connected_components.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/math/distributions/beta.hpp>
+#include <boost/math/distributions/binomial.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <cctype>
@@ -99,6 +100,35 @@ struct AtomGradientAccumulator {
 struct EigenComponents {
     std::vector<double> eigenvalues;
     std::vector<std::vector<double>> eigenvectors;
+};
+
+struct BinaryBioactivityContext {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::map<std::string, std::size_t> headerIndex;
+    std::size_t totalRows;
+    std::size_t activityIndex;
+    std::optional<std::size_t> activityTypeIndex;
+    std::optional<std::size_t> targetNameIndex;
+    std::optional<std::size_t> bioAssayNameIndex;
+    std::size_t activeRows;
+    std::size_t inactiveRows;
+    std::size_t unspecifiedRows;
+    std::size_t otherActivityRows;
+    std::set<long long> retainedBioassayIds;
+    std::vector<std::vector<std::string>> retainedRows;
+};
+
+struct AssayActivityCollapseRow {
+    long long bioAssayAid;
+    std::string assayActivity;
+    std::size_t retainedBinaryRows;
+    std::size_t activeRows;
+    std::size_t inactiveRows;
+    bool mixedEvidence;
+    std::string activityType;
+    std::string targetName;
+    std::string bioAssayName;
 };
 
 using UblasMatrix = boost::numeric::ublas::matrix<double>;
@@ -353,6 +383,116 @@ std::vector<std::size_t> representativeRowPositions(const std::size_t rowCount)
     std::sort(positions.begin(), positions.end());
     positions.erase(std::unique(positions.begin(), positions.end()), positions.end());
     return positions;
+}
+
+BinaryBioactivityContext loadBinaryBioactivityContext(const std::filesystem::path& csvPath)
+{
+    std::ifstream input(csvPath);
+    if (!input) {
+        throw BioactivityAnalysisError("Could not open bioactivity input file: " +
+                                       csvPath.string());
+    }
+
+    auto records = parseCsvRecords(input);
+    if (records.empty()) {
+        throw BioactivityAnalysisError("Bioactivity CSV is empty: " + csvPath.string());
+    }
+
+    auto headers = records.front();
+    if (!headers.empty()) {
+        headers.front() = stripUtf8Bom(headers.front());
+    }
+    records.erase(records.begin());
+
+    std::map<std::string, std::size_t> headerIndex;
+    for (std::size_t index = 0; index < headers.size(); ++index) {
+        headerIndex.emplace(headers[index], index);
+    }
+
+    for (const std::string_view requiredHeader : {"Bioactivity_ID", "BioAssay_AID", "Activity"}) {
+        if (headerIndex.find(std::string(requiredHeader)) == headerIndex.end()) {
+            throw BioactivityAnalysisError("Bioactivity CSV is missing required column: " +
+                                           std::string(requiredHeader));
+        }
+    }
+
+    const std::size_t activityIndex = headerIndex.at("Activity");
+    const std::optional<std::size_t> activityTypeIndex =
+        optionalColumnIndex(headerIndex, "Activity_Type");
+    const std::optional<std::size_t> targetNameIndex =
+        optionalColumnIndex(headerIndex, "Target_Name");
+    const std::optional<std::size_t> bioAssayNameIndex =
+        optionalColumnIndex(headerIndex, "BioAssay_Name");
+
+    std::size_t activeRows = 0U;
+    std::size_t inactiveRows = 0U;
+    std::size_t unspecifiedRows = 0U;
+    std::size_t otherActivityRows = 0U;
+    std::set<long long> retainedBioassayIds;
+    std::vector<std::vector<std::string>> retainedRows;
+
+    for (auto& row : records) {
+        if (row.size() < headers.size()) {
+            row.resize(headers.size());
+        }
+
+        const std::string normalizedActivity = normalizePosteriorActivity(row[activityIndex]);
+        if (normalizedActivity == "ACTIVE") {
+            ++activeRows;
+        }
+        else if (normalizedActivity == "INACTIVE") {
+            ++inactiveRows;
+        }
+        else if (normalizedActivity == "UNSPECIFIED") {
+            ++unspecifiedRows;
+        }
+        else {
+            ++otherActivityRows;
+        }
+
+        if (normalizedActivity != "ACTIVE" && normalizedActivity != "INACTIVE") {
+            continue;
+        }
+
+        row[activityIndex] = toTitleCase(normalizedActivity);
+        if (activityTypeIndex.has_value()) {
+            row[*activityTypeIndex] =
+                normalizeOptionalLabel(valueAtOrEmpty(row, activityTypeIndex), "Unknown");
+        }
+        if (targetNameIndex.has_value()) {
+            row[*targetNameIndex] =
+                normalizeOptionalLabel(valueAtOrEmpty(row, targetNameIndex), "Unknown");
+        }
+        if (bioAssayNameIndex.has_value()) {
+            row[*bioAssayNameIndex] =
+                normalizeOptionalLabel(valueAtOrEmpty(row, bioAssayNameIndex), "Unknown");
+        }
+
+        retainedBioassayIds.insert(parseRequiredLong(row, headerIndex, "BioAssay_AID"));
+        retainedRows.push_back(std::move(row));
+    }
+
+    if (retainedRows.empty()) {
+        throw BioactivityAnalysisError("No Active/Inactive rows were found in " +
+                                       csvPath.filename().string());
+    }
+
+    return BinaryBioactivityContext{
+        .sourceFile = csvPath.filename().string(),
+        .headers = std::move(headers),
+        .headerIndex = std::move(headerIndex),
+        .totalRows = records.size(),
+        .activityIndex = activityIndex,
+        .activityTypeIndex = activityTypeIndex,
+        .targetNameIndex = targetNameIndex,
+        .bioAssayNameIndex = bioAssayNameIndex,
+        .activeRows = activeRows,
+        .inactiveRows = inactiveRows,
+        .unspecifiedRows = unspecifiedRows,
+        .otherActivityRows = otherActivityRows,
+        .retainedBioassayIds = std::move(retainedBioassayIds),
+        .retainedRows = std::move(retainedRows),
+    };
 }
 
 void writeCsvTable(const std::vector<std::string>& headers,
@@ -2195,115 +2335,29 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
         throw BioactivityAnalysisError("Credible interval mass must be within (0, 1)");
     }
 
-    std::ifstream input(csvPath);
-    if (!input) {
-        throw BioactivityAnalysisError("Could not open bioactivity input file: " +
-                                       csvPath.string());
-    }
-
-    auto records = parseCsvRecords(input);
-    if (records.empty()) {
-        throw BioactivityAnalysisError("Bioactivity CSV is empty: " + csvPath.string());
-    }
-
-    auto headers = records.front();
-    if (!headers.empty()) {
-        headers.front() = stripUtf8Bom(headers.front());
-    }
-    records.erase(records.begin());
-
-    std::map<std::string, std::size_t> headerIndex;
-    for (std::size_t index = 0; index < headers.size(); ++index) {
-        headerIndex.emplace(headers[index], index);
-    }
-
-    for (const std::string_view requiredHeader : {"Bioactivity_ID", "BioAssay_AID", "Activity"}) {
-        if (!headerIndex.contains(std::string(requiredHeader))) {
-            throw BioactivityAnalysisError("Bioactivity CSV is missing required column: " +
-                                           std::string(requiredHeader));
-        }
-    }
-
-    const std::size_t activityIndex = headerIndex.at("Activity");
-    const std::optional<std::size_t> activityTypeIndex =
-        optionalColumnIndex(headerIndex, "Activity_Type");
-    const std::optional<std::size_t> targetNameIndex =
-        optionalColumnIndex(headerIndex, "Target_Name");
-    const std::optional<std::size_t> bioAssayNameIndex =
-        optionalColumnIndex(headerIndex, "BioAssay_Name");
-
-    std::size_t activeRows = 0U;
-    std::size_t inactiveRows = 0U;
-    std::size_t unspecifiedRows = 0U;
-    std::size_t otherActivityRows = 0U;
-    std::set<long long> retainedBioassayIds;
-    std::vector<std::vector<std::string>> retainedRows;
-
-    for (auto& row : records) {
-        if (row.size() < headers.size()) {
-            row.resize(headers.size());
-        }
-
-        const std::string normalizedActivity = normalizePosteriorActivity(row[activityIndex]);
-        if (normalizedActivity == "ACTIVE") {
-            ++activeRows;
-        }
-        else if (normalizedActivity == "INACTIVE") {
-            ++inactiveRows;
-        }
-        else if (normalizedActivity == "UNSPECIFIED") {
-            ++unspecifiedRows;
-        }
-        else {
-            ++otherActivityRows;
-        }
-
-        if (normalizedActivity != "ACTIVE" && normalizedActivity != "INACTIVE") {
-            continue;
-        }
-
-        row[activityIndex] = toTitleCase(normalizedActivity);
-        if (activityTypeIndex.has_value()) {
-            row[*activityTypeIndex] =
-                normalizeOptionalLabel(valueAtOrEmpty(row, activityTypeIndex), "Unknown");
-        }
-        if (targetNameIndex.has_value()) {
-            row[*targetNameIndex] =
-                normalizeOptionalLabel(valueAtOrEmpty(row, targetNameIndex), "Unknown");
-        }
-        if (bioAssayNameIndex.has_value()) {
-            row[*bioAssayNameIndex] =
-                normalizeOptionalLabel(valueAtOrEmpty(row, bioAssayNameIndex), "Unknown");
-        }
-
-        retainedBioassayIds.insert(parseRequiredLong(row, headerIndex, "BioAssay_AID"));
-        retainedRows.push_back(row);
-    }
-
-    if (retainedRows.empty()) {
-        throw BioactivityAnalysisError("No Active/Inactive rows were found in " +
-                                       csvPath.filename().string());
-    }
+    BinaryBioactivityContext context = loadBinaryBioactivityContext(csvPath);
+    auto& retainedRows = context.retainedRows;
 
     std::stable_sort(
         retainedRows.begin(), retainedRows.end(), [&](const auto& left, const auto& right) {
-            const std::string_view leftActivity = left.at(activityIndex);
-            const std::string_view rightActivity = right.at(activityIndex);
+            const std::string_view leftActivity = left.at(context.activityIndex);
+            const std::string_view rightActivity = right.at(context.activityIndex);
             if (leftActivity != rightActivity) {
                 return leftActivity < rightActivity;
             }
-            const long long leftBioAssayAid = parseRequiredLong(left, headerIndex, "BioAssay_AID");
+            const long long leftBioAssayAid =
+                parseRequiredLong(left, context.headerIndex, "BioAssay_AID");
             const long long rightBioAssayAid =
-                parseRequiredLong(right, headerIndex, "BioAssay_AID");
+                parseRequiredLong(right, context.headerIndex, "BioAssay_AID");
             if (leftBioAssayAid != rightBioAssayAid) {
                 return leftBioAssayAid < rightBioAssayAid;
             }
-            return parseRequiredLong(left, headerIndex, "Bioactivity_ID") <
-                   parseRequiredLong(right, headerIndex, "Bioactivity_ID");
+            return parseRequiredLong(left, context.headerIndex, "Bioactivity_ID") <
+                   parseRequiredLong(right, context.headerIndex, "Bioactivity_ID");
         });
 
-    const double posteriorAlpha = priorAlpha + static_cast<double>(activeRows);
-    const double posteriorBeta = priorBeta + static_cast<double>(inactiveRows);
+    const double posteriorAlpha = priorAlpha + static_cast<double>(context.activeRows);
+    const double posteriorBeta = priorBeta + static_cast<double>(context.inactiveRows);
     const boost::math::beta_distribution<double> posteriorDistribution(posteriorAlpha,
                                                                        posteriorBeta);
     const double tailProbability = (1.0 - credibleIntervalMass) / 2.0;
@@ -2316,31 +2370,33 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
     for (const std::size_t position : representativeRowPositions(retainedRows.size())) {
         const auto& row = retainedRows[position];
         representativeRows.push_back(PosteriorBioactivityRepresentativeRow{
-            .bioactivityId = parseRequiredLong(row, headerIndex, "Bioactivity_ID"),
-            .bioAssayAid = parseRequiredLong(row, headerIndex, "BioAssay_AID"),
-            .activity = row.at(activityIndex),
+            .bioactivityId = parseRequiredLong(row, context.headerIndex, "Bioactivity_ID"),
+            .bioAssayAid = parseRequiredLong(row, context.headerIndex, "BioAssay_AID"),
+            .activity = row.at(context.activityIndex),
             .activityType =
-                normalizeOptionalLabel(valueAtOrEmpty(row, activityTypeIndex), "Unknown"),
-            .targetName = normalizeOptionalLabel(valueAtOrEmpty(row, targetNameIndex), "Unknown"),
+                normalizeOptionalLabel(valueAtOrEmpty(row, context.activityTypeIndex), "Unknown"),
+            .targetName =
+                normalizeOptionalLabel(valueAtOrEmpty(row, context.targetNameIndex), "Unknown"),
             .bioAssayName =
-                normalizeOptionalLabel(valueAtOrEmpty(row, bioAssayNameIndex), "Unknown"),
+                normalizeOptionalLabel(valueAtOrEmpty(row, context.bioAssayNameIndex), "Unknown"),
         });
     }
 
     return PosteriorBioactivityAnalysisResult{
-        .sourceFile = csvPath.filename().string(),
-        .headers = std::move(headers),
+        .sourceFile = context.sourceFile,
+        .headers = std::move(context.headers),
         .rows = std::move(retainedRows),
         .rowCounts =
             PosteriorBioactivityRowCounts{
-                .totalRows = records.size(),
-                .activeRows = activeRows,
-                .inactiveRows = inactiveRows,
-                .unspecifiedRows = unspecifiedRows,
-                .otherActivityRows = otherActivityRows,
-                .retainedBinaryRows = activeRows + inactiveRows,
-                .droppedNonBinaryRows = records.size() - (activeRows + inactiveRows),
-                .retainedUniqueBioassays = retainedBioassayIds.size(),
+                .totalRows = context.totalRows,
+                .activeRows = context.activeRows,
+                .inactiveRows = context.inactiveRows,
+                .unspecifiedRows = context.unspecifiedRows,
+                .otherActivityRows = context.otherActivityRows,
+                .retainedBinaryRows = context.activeRows + context.inactiveRows,
+                .droppedNonBinaryRows =
+                    context.totalRows - (context.activeRows + context.inactiveRows),
+                .retainedUniqueBioassays = context.retainedBioassayIds.size(),
             },
         .posterior =
             PosteriorBioactivityPosteriorSection{
@@ -2379,8 +2435,8 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
                             },
                         .posteriorProbabilityActiveGt0_5 = 1.0 - cdf(posteriorDistribution, 0.5),
                         .observedActiveFractionInRetainedRows =
-                            static_cast<double>(activeRows) /
-                            static_cast<double>(activeRows + inactiveRows),
+                            static_cast<double>(context.activeRows) /
+                            static_cast<double>(context.activeRows + context.inactiveRows),
                     },
             },
         .analysis =
@@ -2418,6 +2474,201 @@ void writePosteriorBioactivityCsv(const PosteriorBioactivityAnalysisResult& resu
                                   const std::filesystem::path& outputPath)
 {
     writeCsvTable(result.headers, result.rows, outputPath, "posterior bioactivity CSV output path");
+}
+
+BinomialActivityDistributionAnalysisResult
+buildBinomialActivityDistributionAnalysis(const std::filesystem::path& csvPath)
+{
+    BinaryBioactivityContext context = loadBinaryBioactivityContext(csvPath);
+
+    std::map<long long, AssayActivityCollapseRow> assays;
+    for (const auto& row : context.retainedRows) {
+        const long long bioAssayAid = parseRequiredLong(row, context.headerIndex, "BioAssay_AID");
+        auto [iterator, inserted] =
+            assays.try_emplace(bioAssayAid,
+                               AssayActivityCollapseRow{
+                                   .bioAssayAid = bioAssayAid,
+                                   .assayActivity = "Inactive",
+                                   .retainedBinaryRows = 0U,
+                                   .activeRows = 0U,
+                                   .inactiveRows = 0U,
+                                   .mixedEvidence = false,
+                                   .activityType = normalizeOptionalLabel(
+                                       valueAtOrEmpty(row, context.activityTypeIndex), "Unknown"),
+                                   .targetName = normalizeOptionalLabel(
+                                       valueAtOrEmpty(row, context.targetNameIndex), "Unknown"),
+                                   .bioAssayName = normalizeOptionalLabel(
+                                       valueAtOrEmpty(row, context.bioAssayNameIndex), "Unknown"),
+                               });
+
+        auto& assay = iterator->second;
+        assay.retainedBinaryRows += 1U;
+        if (row.at(context.activityIndex) == "Active") {
+            assay.activeRows += 1U;
+            assay.assayActivity = "Active";
+        }
+        else {
+            assay.inactiveRows += 1U;
+        }
+        assay.mixedEvidence = assay.activeRows > 0U && assay.inactiveRows > 0U;
+
+        if (inserted) {
+            assay.activityType =
+                normalizeOptionalLabel(valueAtOrEmpty(row, context.activityTypeIndex), "Unknown");
+            assay.targetName =
+                normalizeOptionalLabel(valueAtOrEmpty(row, context.targetNameIndex), "Unknown");
+            assay.bioAssayName =
+                normalizeOptionalLabel(valueAtOrEmpty(row, context.bioAssayNameIndex), "Unknown");
+        }
+    }
+
+    std::vector<AssayActivityCollapseRow> assayRows;
+    assayRows.reserve(assays.size());
+    for (const auto& [_, assay] : assays) {
+        assayRows.push_back(assay);
+    }
+
+    std::stable_sort(assayRows.begin(), assayRows.end(), [](const auto& left, const auto& right) {
+        if (left.assayActivity != right.assayActivity) {
+            return left.assayActivity < right.assayActivity;
+        }
+        return left.bioAssayAid < right.bioAssayAid;
+    });
+
+    const std::size_t assayTrials = assayRows.size();
+    const std::size_t activeAssayTrials =
+        std::count_if(assayRows.begin(), assayRows.end(), [](const auto& assay) {
+            return assay.assayActivity == "Active";
+        });
+    const std::size_t inactiveAssayTrials = assayTrials - activeAssayTrials;
+    const std::size_t mixedEvidenceAssayTrials = std::count_if(
+        assayRows.begin(), assayRows.end(), [](const auto& assay) { return assay.mixedEvidence; });
+    const double successProbability =
+        static_cast<double>(activeAssayTrials) / static_cast<double>(assayTrials);
+    const boost::math::binomial_distribution<double> distribution(
+        static_cast<unsigned>(assayTrials), successProbability);
+
+    const std::vector<std::string> headers = {
+        "k_active",
+        "probability",
+        "cumulative_probability_leq_k",
+        "cumulative_probability_geq_k",
+    };
+    std::vector<std::vector<std::string>> rows;
+    rows.reserve(assayTrials + 1U);
+    double pmfProbabilitySum = 0.0;
+    for (std::size_t k = 0; k <= assayTrials; ++k) {
+        const double probability = pdf(distribution, static_cast<double>(k));
+        const double cumulativeLeq = cdf(distribution, static_cast<double>(k));
+        const double cumulativeGeq =
+            k == 0U ? 1.0 : 1.0 - cdf(distribution, static_cast<double>(k - 1U));
+        pmfProbabilitySum += probability;
+        rows.push_back({std::to_string(k),
+                        formatDouble(probability),
+                        formatDouble(cumulativeLeq),
+                        formatDouble(cumulativeGeq)});
+    }
+
+    const double observedPmf = pdf(distribution, static_cast<double>(activeAssayTrials));
+    const double observedCumulativeLeq = cdf(distribution, static_cast<double>(activeAssayTrials));
+    const double observedCumulativeGeq =
+        activeAssayTrials == 0U
+            ? 1.0
+            : 1.0 - cdf(distribution, static_cast<double>(activeAssayTrials - 1U));
+
+    std::vector<BinomialActivityRepresentativeAssay> representativeAssays;
+    for (const std::size_t position : representativeRowPositions(assayRows.size())) {
+        const auto& assay = assayRows[position];
+        representativeAssays.push_back(BinomialActivityRepresentativeAssay{
+            .bioAssayAid = assay.bioAssayAid,
+            .assayActivity = assay.assayActivity,
+            .retainedBinaryRows = assay.retainedBinaryRows,
+            .activeRows = assay.activeRows,
+            .inactiveRows = assay.inactiveRows,
+            .mixedEvidence = assay.mixedEvidence,
+            .activityType = assay.activityType,
+            .targetName = assay.targetName,
+            .bioAssayName = assay.bioAssayName,
+        });
+    }
+
+    return BinomialActivityDistributionAnalysisResult{
+        .sourceFile = context.sourceFile,
+        .headers = headers,
+        .rows = std::move(rows),
+        .rowCounts =
+            BinomialActivityRowCounts{
+                .totalRows = context.totalRows,
+                .activeRows = context.activeRows,
+                .inactiveRows = context.inactiveRows,
+                .unspecifiedRows = context.unspecifiedRows,
+                .otherActivityRows = context.otherActivityRows,
+                .retainedBinaryRows = context.activeRows + context.inactiveRows,
+                .droppedNonBinaryRows =
+                    context.totalRows - (context.activeRows + context.inactiveRows),
+                .retainedUniqueBioassays = context.retainedBioassayIds.size(),
+                .assayTrials = assayTrials,
+                .activeAssayTrials = activeAssayTrials,
+                .inactiveAssayTrials = inactiveAssayTrials,
+                .mixedEvidenceAssayTrials = mixedEvidenceAssayTrials,
+                .unanimousActiveAssayTrials = activeAssayTrials - mixedEvidenceAssayTrials,
+                .unanimousInactiveAssayTrials = inactiveAssayTrials,
+            },
+        .binomial =
+            BinomialActivityDistributionSection{
+                .trialDefinition =
+                    BinomialActivityTrialDefinition{
+                        .unit = "unique_BioAssay_AID",
+                        .successLabel = "Active assay",
+                        .failureLabel = "Inactive assay",
+                        .assayResolutionRule = "Active wins if any retained row for the assay is "
+                                               "Active; otherwise the assay is Inactive.",
+                    },
+                .parameters =
+                    BinomialActivityParameters{
+                        .nAssays = assayTrials,
+                        .observedActiveAssays = activeAssayTrials,
+                        .successProbabilityActiveAssay = successProbability,
+                    },
+                .summary =
+                    BinomialActivitySummaryStatistics{
+                        .pmfAtObservedActiveAssayCount = observedPmf,
+                        .cumulativeProbabilityLeqObservedActiveAssayCount = observedCumulativeLeq,
+                        .cumulativeProbabilityGeqObservedActiveAssayCount = observedCumulativeGeq,
+                        .binomialMeanActiveAssays =
+                            static_cast<double>(assayTrials) * successProbability,
+                        .binomialVarianceActiveAssays = static_cast<double>(assayTrials) *
+                                                        successProbability *
+                                                        (1.0 - successProbability),
+                        .pmfProbabilitySum = pmfProbabilitySum,
+                    },
+            },
+        .analysis =
+            BinomialActivityAnalysis{
+                .targetQuantity = "P(K = k active assays in n assays)",
+                .model = "Binomial distribution with plug-in success probability",
+                .equation = "P(K = k) = C(n, k) p^k (1-p)^(n-k)",
+                .parameterEstimation = "p is estimated as the observed active assay fraction "
+                                       "active_assays / n_assays.",
+                .representativeAssays = std::move(representativeAssays),
+                .notes =
+                    {
+                        "The binomial model operates at the assay level rather than the raw "
+                        "retained-row level.",
+                        "Rows with Activity = Unspecified are excluded before assay-level "
+                        "collapsing, consistent with the posterior analysis.",
+                        "This is a frequentist plug-in binomial model using the observed "
+                        "assay-level active fraction, not a posterior-predictive distribution.",
+                    },
+            },
+    };
+}
+
+void writeBinomialActivityDistributionCsv(const BinomialActivityDistributionAnalysisResult& result,
+                                          const std::filesystem::path& outputPath)
+{
+    writeCsvTable(
+        result.headers, result.rows, outputPath, "binomial activity distribution CSV output path");
 }
 
 HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
@@ -3718,6 +3969,20 @@ posteriorBioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory
                                     const std::filesystem::path& sourceFile)
 {
     return outputDirectory / (sourceFile.stem().string() + ".activity_posterior.summary.json");
+}
+
+std::filesystem::path
+binomialActivityDistributionCsvPath(const std::filesystem::path& outputDirectory,
+                                    const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".activity_binomial_pmf.csv");
+}
+
+std::filesystem::path
+binomialActivityDistributionSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                            const std::filesystem::path& sourceFile)
+{
+    return outputDirectory / (sourceFile.stem().string() + ".activity_binomial.summary.json");
 }
 
 std::filesystem::path hillDoseResponseCsvPath(const std::filesystem::path& outputDirectory,
