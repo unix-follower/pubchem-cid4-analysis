@@ -450,6 +450,97 @@ struct HillDoseResponseAnalysisResult {
     HillDoseResponseSummary analysis;
 };
 
+struct PosteriorBioactivityRowCounts {
+    std::size_t totalRows;
+    std::size_t activeRows;
+    std::size_t inactiveRows;
+    std::size_t unspecifiedRows;
+    std::size_t otherActivityRows;
+    std::size_t retainedBinaryRows;
+    std::size_t droppedNonBinaryRows;
+    std::size_t retainedUniqueBioassays;
+};
+
+struct PosteriorBioactivityPrior {
+    std::string family;
+    double alpha;
+    double beta;
+};
+
+struct PosteriorBioactivityLikelihood {
+    std::string family;
+    std::string successLabel;
+    std::string failureLabel;
+};
+
+struct PosteriorBioactivityDistribution {
+    std::string family;
+    double alpha;
+    double beta;
+};
+
+struct PosteriorBioactivityCredibleInterval {
+    double mass;
+    double lower;
+    double upper;
+};
+
+struct PosteriorBioactivitySummaryStatistics {
+    double posteriorMeanProbabilityActive;
+    double posteriorMedianProbabilityActive;
+    std::optional<double> posteriorModeProbabilityActive;
+    double posteriorVariance;
+    PosteriorBioactivityCredibleInterval credibleIntervalProbabilityActive;
+    double posteriorProbabilityActiveGt0_5;
+    double observedActiveFractionInRetainedRows;
+};
+
+struct PosteriorBioactivityPosteriorSection {
+    PosteriorBioactivityPrior prior;
+    PosteriorBioactivityLikelihood likelihood;
+    PosteriorBioactivityDistribution posteriorDistribution;
+    PosteriorBioactivitySummaryStatistics summary;
+};
+
+struct PosteriorBioactivityUpdateEquations {
+    std::string posteriorAlpha;
+    std::string posteriorBeta;
+    std::string posteriorMean;
+};
+
+struct PosteriorBioactivityBinaryEvidenceDefinition {
+    std::vector<std::string> retainedLabels;
+    std::vector<std::string> excludedLabels;
+    std::string interpretation;
+};
+
+struct PosteriorBioactivityRepresentativeRow {
+    long long bioactivityId;
+    long long bioAssayAid;
+    std::string activity;
+    std::string activityType;
+    std::string targetName;
+    std::string bioAssayName;
+};
+
+struct PosteriorBioactivityAnalysis {
+    std::string targetQuantity;
+    std::string model;
+    PosteriorBioactivityUpdateEquations updateEquations;
+    PosteriorBioactivityBinaryEvidenceDefinition binaryEvidenceDefinition;
+    std::vector<PosteriorBioactivityRepresentativeRow> representativeRows;
+    std::vector<std::string> notes;
+};
+
+struct PosteriorBioactivityAnalysisResult {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::vector<std::vector<std::string>> rows;
+    PosteriorBioactivityRowCounts rowCounts;
+    PosteriorBioactivityPosteriorSection posterior;
+    PosteriorBioactivityAnalysis analysis;
+};
+
 struct GradientDescentAtomRow {
     int index;
     std::string symbol;
@@ -577,6 +668,13 @@ void writeBioactivityFilteredCsv(const BioactivityAnalysisResult& result,
                                  const std::filesystem::path& outputPath);
 void writeBioactivityPlotSvg(const BioactivityAnalysisResult& result,
                              const std::filesystem::path& outputPath);
+PosteriorBioactivityAnalysisResult
+buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
+                                  double priorAlpha = 1.0,
+                                  double priorBeta = 1.0,
+                                  double credibleIntervalMass = 0.95);
+void writePosteriorBioactivityCsv(const PosteriorBioactivityAnalysisResult& result,
+                                  const std::filesystem::path& outputPath);
 HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
                                                              double hillCoefficient = 1.0);
 void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
@@ -642,6 +740,11 @@ std::filesystem::path bioactivitySummaryJsonPath(const std::filesystem::path& ou
                                                  const std::filesystem::path& sourceFile);
 std::filesystem::path bioactivityPlotSvgPath(const std::filesystem::path& outputDirectory,
                                              const std::filesystem::path& sourceFile);
+std::filesystem::path posteriorBioactivityCsvPath(const std::filesystem::path& outputDirectory,
+                                                  const std::filesystem::path& sourceFile);
+std::filesystem::path
+posteriorBioactivitySummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                    const std::filesystem::path& sourceFile);
 std::filesystem::path hillDoseResponseCsvPath(const std::filesystem::path& outputDirectory,
                                               const std::filesystem::path& sourceFile);
 std::filesystem::path hillDoseResponseSummaryJsonPath(const std::filesystem::path& outputDirectory,

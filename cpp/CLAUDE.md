@@ -135,6 +135,8 @@ The C++ app now also writes a spring-bond potential JSON artifact derived from t
 
 The bioactivity flow now reads `pubchem_cid_4_bioactivity.csv`, filters to positive numeric `Activity_Type == IC50` rows, computes `pIC50 = -log10(IC50_uM)`, and writes three additive artifacts under `data/out`: a filtered CSV, a summary JSON file, and an SVG plot of the transform curve over the observed IC50 range.
 
+The C++ app now also writes a Bayesian posterior bioactivity analysis under `data/out`: a CSV of retained binary evidence rows where `Activity` is `Active` or `Inactive`, plus a summary JSON for `P(Active | CID=4)` using a conjugate Beta-Binomial update with prior `Beta(1,1)`. Rows labeled `Unspecified` are excluded from the binary update and reported separately in the row counts.
+
 The C++ app now also writes Hill/sigmoidal dose-response reference artifacts under `data/out`: a CSV of positive numeric `Activity_Value` rows interpreted as inferred Hill-scale parameters `K`, including trapezoidal-rule AUC values for the inferred reference curves; a summary JSON that documents the normalized Hill model `f(c) = c^n / (K^n + c^n)` together with midpoint, inflection, and AUC integration interpretation; and an SVG plot of representative reference curves. Because the CID 4 bioactivity CSV contains potency-style summary values rather than raw per-concentration response series, this is a reference-curve analysis rather than a nonlinear fit to experimental dose-response points.
 
 ## CI/CD

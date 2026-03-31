@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
-from scipy import linalg
+from scipy import linalg, stats
 
 import env_utils
 import fs_utils as fs
@@ -30,6 +30,9 @@ DEFAULT_HILL_COEFFICIENT = 1.0
 DEFAULT_HILL_AUC_LOWER_BOUND_SCALE = 1e-2
 DEFAULT_HILL_AUC_UPPER_BOUND_SCALE = 1e2
 DEFAULT_HILL_AUC_GRID_SIZE = 400
+DEFAULT_POSTERIOR_PRIOR_ALPHA = 1.0
+DEFAULT_POSTERIOR_PRIOR_BETA = 1.0
+DEFAULT_POSTERIOR_CREDIBLE_INTERVAL = 0.95
 DEFAULT_GRADIENT_DESCENT_LEARNING_RATE = 5e-5
 DEFAULT_GRADIENT_DESCENT_EPOCHS = 250
 SPRING_DISTANCE_TOLERANCE = 1e-12
@@ -955,6 +958,139 @@ def load_bioactivity_dataframe(filename: str) -> pd.DataFrame:
     return pd.read_csv(resolve_data_path(filename))
 
 
+def build_activity_posterior_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
+    activity = bioactivity_df["Activity"].astype("string").str.strip().str.upper().fillna("UNSPECIFIED")
+    active_mask = activity.eq("ACTIVE")
+    inactive_mask = activity.eq("INACTIVE")
+    unspecified_mask = activity.eq("UNSPECIFIED")
+    binary_mask = active_mask | inactive_mask
+
+    posterior_df = bioactivity_df.loc[binary_mask].copy()
+    posterior_df["Activity"] = activity.loc[binary_mask].str.title()
+    posterior_df["Activity_Type"] = posterior_df["Activity_Type"].astype("string").str.strip().fillna("Unknown")
+    posterior_df["Target_Name"] = posterior_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
+    posterior_df["BioAssay_Name"] = posterior_df["BioAssay_Name"].astype("string").str.strip().fillna("Unknown")
+    posterior_df = posterior_df.sort_values(by=["Activity", "BioAssay_AID", "Bioactivity_ID"]).reset_index(drop=True)
+
+    counts = {
+        "total_rows": int(len(bioactivity_df)),
+        "active_rows": int(active_mask.sum()),
+        "inactive_rows": int(inactive_mask.sum()),
+        "unspecified_rows": int(unspecified_mask.sum()),
+        "other_activity_rows": int((~(active_mask | inactive_mask | unspecified_mask)).sum()),
+        "retained_binary_rows": int(len(posterior_df)),
+        "dropped_non_binary_rows": int(len(bioactivity_df) - len(posterior_df)),
+        "retained_unique_bioassays": int(posterior_df["BioAssay_AID"].nunique()),
+    }
+
+    if posterior_df.empty:
+        raise ValueError("No Active/Inactive rows were found in the bioactivity dataset")
+
+    return posterior_df, counts
+
+
+def summarize_bioactivity_posterior_analysis(
+    posterior_df: pd.DataFrame,
+    counts: dict[str, int],
+    prior_alpha: float = DEFAULT_POSTERIOR_PRIOR_ALPHA,
+    prior_beta: float = DEFAULT_POSTERIOR_PRIOR_BETA,
+    credible_interval: float = DEFAULT_POSTERIOR_CREDIBLE_INTERVAL,
+) -> dict:
+    if prior_alpha <= 0 or prior_beta <= 0:
+        raise ValueError("Posterior prior parameters must be positive")
+    if not 0 < credible_interval < 1:
+        raise ValueError("Credible interval mass must be between 0 and 1")
+
+    active_count = counts["active_rows"]
+    inactive_count = counts["inactive_rows"]
+    retained_count = counts["retained_binary_rows"]
+    posterior_alpha = prior_alpha + active_count
+    posterior_beta = prior_beta + inactive_count
+    tail_probability = (1.0 - credible_interval) / 2.0
+    interval_lower, interval_upper = stats.beta.ppf(
+        [tail_probability, 1.0 - tail_probability],
+        posterior_alpha,
+        posterior_beta,
+    )
+    posterior_mean = posterior_alpha / (posterior_alpha + posterior_beta)
+    posterior_variance = (
+        (posterior_alpha * posterior_beta)
+        / (((posterior_alpha + posterior_beta) ** 2) * (posterior_alpha + posterior_beta + 1.0))
+    )
+    posterior_mode = None
+    if posterior_alpha > 1.0 and posterior_beta > 1.0:
+        posterior_mode = (posterior_alpha - 1.0) / (posterior_alpha + posterior_beta - 2.0)
+
+    representative_positions = sorted({0, len(posterior_df) // 2, len(posterior_df) - 1})
+    representative_rows = posterior_df.iloc[representative_positions]
+
+    return {
+        "row_counts": counts,
+        "posterior": {
+            "prior": {
+                "family": "beta",
+                "alpha": float(prior_alpha),
+                "beta": float(prior_beta),
+            },
+            "likelihood": {
+                "family": "binomial",
+                "success_label": "Active",
+                "failure_label": "Inactive",
+            },
+            "posterior_distribution": {
+                "family": "beta",
+                "alpha": float(posterior_alpha),
+                "beta": float(posterior_beta),
+            },
+            "summary": {
+                "posterior_mean_probability_active": float(posterior_mean),
+                "posterior_median_probability_active": float(stats.beta.median(posterior_alpha, posterior_beta)),
+                "posterior_mode_probability_active": None if posterior_mode is None else float(posterior_mode),
+                "posterior_variance": float(posterior_variance),
+                "credible_interval_probability_active": {
+                    "mass": float(credible_interval),
+                    "lower": float(interval_lower),
+                    "upper": float(interval_upper),
+                },
+                "posterior_probability_active_gt_0_5": float(
+                    1.0 - stats.beta.cdf(0.5, posterior_alpha, posterior_beta)
+                ),
+                "observed_active_fraction_in_retained_rows": float(active_count / retained_count),
+            },
+        },
+        "analysis": {
+            "target_quantity": "P(Active | CID=4)",
+            "model": "Beta-Binomial conjugate update",
+            "update_equations": {
+                "posterior_alpha": "alpha_post = alpha_prior + active_count",
+                "posterior_beta": "beta_post = beta_prior + inactive_count",
+                "posterior_mean": "E[p | data] = alpha_post / (alpha_post + beta_post)",
+            },
+            "binary_evidence_definition": {
+                "retained_labels": ["Active", "Inactive"],
+                "excluded_labels": ["Unspecified"],
+                "interpretation": "Unspecified rows are excluded from the binary posterior update and reported only in row counts.",
+            },
+            "representative_rows": [
+                {
+                    "Bioactivity_ID": int(row["Bioactivity_ID"]),
+                    "BioAssay_AID": int(row["BioAssay_AID"]),
+                    "Activity": str(row["Activity"]),
+                    "Activity_Type": str(row["Activity_Type"]),
+                    "Target_Name": str(row["Target_Name"]),
+                    "BioAssay_Name": str(row["BioAssay_Name"]),
+                }
+                for _, row in representative_rows.iterrows()
+            ],
+            "notes": [
+                "This posterior is an aggregate CID 4 activity probability across retained binary bioassay outcomes.",
+                "The update uses a Beta(1,1) prior and treats Active/Inactive outcomes as exchangeable Bernoulli evidence.",
+                "Rows labeled Unspecified are kept out of the posterior update so they do not contribute artificial failures.",
+            ],
+        },
+    }
+
+
 def build_pic50_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
     activity_type = bioactivity_df["Activity_Type"].astype("string").str.strip().str.upper()
     activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
@@ -1428,6 +1564,36 @@ def write_hill_dose_response_analysis(filename: str, hill_coefficient: float = D
     log.info("Hill dose-response plot written to %s", plot_output_path)
 
 
+def write_bioactivity_posterior_analysis(
+    filename: str,
+    prior_alpha: float = DEFAULT_POSTERIOR_PRIOR_ALPHA,
+    prior_beta: float = DEFAULT_POSTERIOR_PRIOR_BETA,
+    credible_interval: float = DEFAULT_POSTERIOR_CREDIBLE_INTERVAL,
+):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    bioactivity_df = load_bioactivity_dataframe(filename)
+    posterior_df, counts = build_activity_posterior_dataframe(bioactivity_df)
+    summary = summarize_bioactivity_posterior_analysis(
+        posterior_df,
+        counts,
+        prior_alpha=prior_alpha,
+        prior_beta=prior_beta,
+        credible_interval=credible_interval,
+    )
+    output_stem = Path(filename).stem
+    records_output_path = Path(out_dir) / f"{output_stem}.activity_posterior_binary_evidence.csv"
+    summary_output_path = Path(out_dir) / f"{output_stem}.activity_posterior.summary.json"
+
+    posterior_df.to_csv(records_output_path, index=False)
+
+    with summary_output_path.open("w", encoding=UTF_8) as file:
+        json.dump(summary, file, indent=2)
+
+    log.info("Bioactivity posterior evidence rows written to %s", records_output_path)
+    log.info("Bioactivity posterior summary written to %s", summary_output_path)
+
+
 def write_adjacency_matrix(filename: str) -> pd.DataFrame:
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
@@ -1559,6 +1725,7 @@ def main():
     write_laplacian_analysis(json_filename, adjacency_matrix)
     write_bioactivity_analysis(bioactivity_filename)
     write_hill_dose_response_analysis(bioactivity_filename)
+    write_bioactivity_posterior_analysis(bioactivity_filename)
 
 
 if __name__ == "__main__":

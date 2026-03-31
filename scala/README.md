@@ -55,3 +55,9 @@ The same run now also writes Hill/sigmoidal dose-response reference artifacts fr
 - a PNG plot of representative reference Hill curves using `Activity_Value` as the inferred half-maximal concentration scale
 
 Because the CID 4 bioactivity CSV contains potency-style summary values rather than raw per-concentration response series, this Hill output is a reference-curve analysis rather than a nonlinear fit to experimental dose-response points. The implementation uses each positive numeric `Activity_Value` as an inferred `K` value, reports that the log-concentration midpoint occurs at `c = K`, and approximates AUC with the trapezoidal rule over an inferred concentration grid scaled relative to each row's `K`. For the default reference coefficient `n = 1`, there is no positive linear-concentration inflection point.
+
+The same run now also writes a Bayesian posterior bioactivity analysis from `pubchem_cid_4_bioactivity.csv` under `DATA_DIR/out`:
+- a CSV of retained binary evidence rows where `Activity` is `Active` or `Inactive`
+- a summary JSON for the posterior probability $P(\mathrm{Active} \mid \mathrm{CID}=4)$ using a conjugate Beta-Binomial update with prior $\mathrm{Beta}(1,1)$
+
+This posterior output excludes rows with `Activity = Unspecified` from the binary update and reports their count separately in the summary metadata. The posterior parameters are computed as $\alpha_{post} = 1 + n_{active}$ and $\beta_{post} = 1 + n_{inactive}$, and the summary reports the posterior mean, median, variance, a 95% equal-tailed credible interval, and the posterior probability that the latent activity rate exceeds $0.5$.

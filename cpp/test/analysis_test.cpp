@@ -166,6 +166,16 @@ std::string sampleBioactivityCsv()
            "(human),\"Invalid numeric value\"\n";
 }
 
+std::string samplePosteriorBioactivityCsv()
+{
+    return "Bioactivity_ID,BioAssay_AID,Activity,Activity_Type,BioAssay_Name,Target_Name\n"
+           "10,100,Active,,,\n"
+           "11,101,Inactive,IC50,Assay B,Target B\n"
+           "12,102,Unspecified,Potency,Assay C,Target C\n"
+           "13,103,,IC50,,\n"
+           "14,104,Probe,IC50,Assay E,Target E\n";
+}
+
 std::vector<pubchem::AtomRecord> sampleGradientAtoms()
 {
     return {
@@ -959,6 +969,15 @@ TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.ic50_pic50.svg");
+    EXPECT_EQ(pubchem::posteriorBioactivityCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.activity_posterior_binary_evidence.csv");
+    EXPECT_EQ(
+        pubchem::posteriorBioactivitySummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+            .filename()
+            .string(),
+        "pubchem_cid_4_bioactivity.activity_posterior.summary.json");
     EXPECT_EQ(pubchem::hillDoseResponseCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
@@ -1146,6 +1165,72 @@ TEST(BioactivityStrategiesTest, HillAnalysisBuildsReferenceRowsAndSummary)
                 1.0e-6);
 }
 
+TEST(BioactivityStrategiesTest, PosteriorAnalysisBuildsBinaryEvidenceAndSummary)
+{
+    const auto csvPath =
+        writeTempFile("bioactivity-posterior-sample.csv", samplePosteriorBioactivityCsv());
+
+    const auto result = pubchem::buildPosteriorBioactivityAnalysis(csvPath);
+
+    EXPECT_EQ(result.sourceFile, "bioactivity-posterior-sample.csv");
+    EXPECT_EQ(result.rowCounts.totalRows, 5U);
+    EXPECT_EQ(result.rowCounts.activeRows, 1U);
+    EXPECT_EQ(result.rowCounts.inactiveRows, 1U);
+    EXPECT_EQ(result.rowCounts.unspecifiedRows, 2U);
+    EXPECT_EQ(result.rowCounts.otherActivityRows, 1U);
+    EXPECT_EQ(result.rowCounts.retainedBinaryRows, 2U);
+    EXPECT_EQ(result.rowCounts.droppedNonBinaryRows, 3U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
+    ASSERT_EQ(result.rows.size(), 2U);
+    EXPECT_EQ(result.rows.front().at(2), "Active");
+    EXPECT_EQ(result.rows.front().at(3), "Unknown");
+    EXPECT_EQ(result.rows.front().at(4), "Unknown");
+    EXPECT_EQ(result.rows.front().at(5), "Unknown");
+    EXPECT_NEAR(result.posterior.posteriorDistribution.alpha, 2.0, 1.0e-12);
+    EXPECT_NEAR(result.posterior.posteriorDistribution.beta, 2.0, 1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.posteriorMeanProbabilityActive, 0.5, 1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.posteriorMedianProbabilityActive, 0.5, 1.0e-12);
+    ASSERT_TRUE(result.posterior.summary.posteriorModeProbabilityActive.has_value());
+    EXPECT_NEAR(*result.posterior.summary.posteriorModeProbabilityActive, 0.5, 1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.posteriorVariance, 0.05, 1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.credibleIntervalProbabilityActive.lower,
+                0.09429932405024612,
+                1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.credibleIntervalProbabilityActive.upper,
+                0.9057006759497539,
+                1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.posteriorProbabilityActiveGt0_5, 0.5, 1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.observedActiveFractionInRetainedRows, 0.5, 1.0e-12);
+    ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
+    EXPECT_EQ(result.analysis.representativeRows.front().activity, "Active");
+    EXPECT_EQ(result.analysis.representativeRows.back().activity, "Inactive");
+}
+
+TEST(BioactivityStrategiesTest, PosteriorCsvWriterEmitsArtifacts)
+{
+    const auto csvPath =
+        writeTempFile("bioactivity-posterior-writer-sample.csv", samplePosteriorBioactivityCsv());
+    const auto result = pubchem::buildPosteriorBioactivityAnalysis(csvPath);
+    const auto outputDirectory =
+        std::filesystem::temp_directory_path() / "pubchem-cid4-posterior-bioactivity";
+    std::filesystem::create_directories(outputDirectory);
+
+    const auto filteredCsvPath = outputDirectory / "bioactivity.posterior.csv";
+
+    pubchem::writePosteriorBioactivityCsv(result, filteredCsvPath);
+
+    std::ifstream filteredInput(filteredCsvPath);
+    ASSERT_TRUE(filteredInput.good());
+
+    const std::string filteredContents((std::istreambuf_iterator<char>(filteredInput)),
+                                       std::istreambuf_iterator<char>());
+
+    EXPECT_NE(filteredContents.find("Activity"), std::string::npos);
+    EXPECT_NE(filteredContents.find("Active"), std::string::npos);
+    EXPECT_NE(filteredContents.find("Inactive"), std::string::npos);
+    EXPECT_EQ(filteredContents.find("Unspecified"), std::string::npos);
+}
+
 TEST(BioactivityStrategiesTest, HillAnalysisSupportsPositiveLinearInflectionForNGreaterThanOne)
 {
     const auto csvPath = writeTempFile("bioactivity-hill-n2-sample.csv", sampleBioactivityCsv());
@@ -1226,4 +1311,38 @@ TEST(BioactivityStrategiesTest, HillAnalysisMatchesCid4RealData)
     ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
     EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 743069LL);
     EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 158688LL);
+}
+
+TEST(BioactivityStrategiesTest, PosteriorAnalysisMatchesCid4RealData)
+{
+    const auto csvPath = repositoryRoot() / "data" / "pubchem_cid_4_bioactivity.csv";
+
+    const auto result = pubchem::buildPosteriorBioactivityAnalysis(csvPath);
+
+    EXPECT_EQ(result.rowCounts.totalRows, 406U);
+    EXPECT_EQ(result.rowCounts.activeRows, 3U);
+    EXPECT_EQ(result.rowCounts.inactiveRows, 0U);
+    EXPECT_EQ(result.rowCounts.unspecifiedRows, 398U);
+    EXPECT_EQ(result.rowCounts.otherActivityRows, 5U);
+    EXPECT_EQ(result.rowCounts.retainedBinaryRows, 3U);
+    EXPECT_EQ(result.rowCounts.droppedNonBinaryRows, 403U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
+    EXPECT_NEAR(result.posterior.posteriorDistribution.alpha, 4.0, 1.0e-12);
+    EXPECT_NEAR(result.posterior.posteriorDistribution.beta, 1.0, 1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.posteriorMeanProbabilityActive, 0.8, 1.0e-12);
+    EXPECT_NEAR(
+        result.posterior.summary.posteriorMedianProbabilityActive, 0.8408964152537145, 1.0e-12);
+    EXPECT_FALSE(result.posterior.summary.posteriorModeProbabilityActive.has_value());
+    EXPECT_NEAR(result.posterior.summary.posteriorVariance, 0.02666666666666667, 1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.credibleIntervalProbabilityActive.lower,
+                0.3976353643835254,
+                1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.credibleIntervalProbabilityActive.upper,
+                0.9936905367902902,
+                1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.posteriorProbabilityActiveGt0_5, 0.9375, 1.0e-12);
+    EXPECT_NEAR(result.posterior.summary.observedActiveFractionInRetainedRows, 1.0, 1.0e-12);
+    ASSERT_EQ(result.analysis.representativeRows.size(), 3U);
+    EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 1188LL);
+    EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 1259407LL);
 }
