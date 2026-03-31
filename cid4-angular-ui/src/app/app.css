@@ -1,0 +1,78 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  color: #10233d;
+  background:
+    radial-gradient(circle at top left, rgba(255, 216, 167, 0.9), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(102, 164, 135, 0.22), transparent 28%),
+    linear-gradient(155deg, #f7efe2 0%, #eaf4f6 48%, #dce9dc 100%);
+}
+
+.shell {
+  min-height: 100dvh;
+}
+
+.masthead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px clamp(20px, 4vw, 40px) 18px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8b6325;
+}
+
+.brand {
+  color: #10233d;
+  text-decoration: none;
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.primary-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primary-nav a {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #20415d;
+  background: rgba(255, 251, 245, 0.75);
+  border: 1px solid rgba(16, 35, 61, 0.08);
+}
+
+.primary-nav a.active {
+  background: #10233d;
+  color: #f8fbfc;
+}
+
+.primary-nav a:focus-visible,
+.brand:focus-visible {
+  outline: 3px solid #c45a1b;
+  outline-offset: 3px;
+}
+
+.content-frame {
+  padding: 0 clamp(20px, 4vw, 40px) clamp(28px, 5vw, 44px);
+}
+
+@media (max-width: 720px) {
+  .masthead {
+    align-items: start;
+    flex-direction: column;
+  }
+}

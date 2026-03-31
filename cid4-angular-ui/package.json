@@ -14,7 +14,7 @@
     "serve:ssr:cid4-angular-ui": "node dist/cid4-angular-ui/server/server.mjs",
     "lint": "eslint",
     "check-format": "prettier --log-level error --check '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'",
-    "format": "prettier --log-level error --write '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'"
+    "format": "prettier --write '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'"
   },
   "private": true,
   "packageManager": "npm@11.9.0",
@@ -27,7 +27,12 @@
     "@angular/platform-server": "^21.2.0",
     "@angular/router": "^21.2.0",
     "@angular/ssr": "^21.2.3",
+    "@tanstack/angular-query-experimental": "^5.96.0",
+    "@tanstack/query-core": "^5.96.0",
+    "3dmol": "^2.5.4",
+    "cytoscape": "^3.33.1",
     "express": "^5.1.0",
+    "msw": "^2.12.14",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -47,5 +52,10 @@
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.57.1",
     "vitest": "^4.0.8"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

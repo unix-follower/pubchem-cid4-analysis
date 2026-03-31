@@ -1,2 +1,4 @@
 .angular
+.vscode
 dist
+public/mockServiceWorker.js
