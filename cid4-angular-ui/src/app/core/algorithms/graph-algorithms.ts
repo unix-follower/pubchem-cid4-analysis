@@ -1,4 +1,13 @@
-import { AlgorithmGraph, AlgorithmGraphEdge, GraphTraceResult, GraphTraceStep } from "./types"
+import {
+  AlgorithmGraph,
+  AlgorithmGraphEdge,
+  GraphTraceResult,
+  GraphTraceStep,
+  MatrixAnalysis,
+  MolecularGraphMetrics,
+  MorganAnalysisResult,
+  MorganIteration,
+} from "./types"
 
 interface Neighbor {
   nodeId: string
@@ -497,6 +506,143 @@ export function buildMinimumSpanningTreeTrace(graph: AlgorithmGraph): GraphTrace
   }
 }
 
+export function buildMolecularGraphMetrics(graph: AlgorithmGraph): MolecularGraphMetrics {
+  const distances = buildDistanceMatrix(graph, false)
+  const degrees = buildDegreeMap(graph)
+  const nodeMetrics = graph.nodes.map((node) => ({
+    nodeId: node.id,
+    label: node.label,
+    degree: degrees.get(node.id) ?? 0,
+    eccentricity: computeEccentricity(node.id, distances),
+  }))
+  const degreeSequence = [...nodeMetrics]
+    .map((metric) => metric.degree)
+    .sort((left, right) => right - left)
+  const eccentricities = nodeMetrics.map((metric) => metric.eccentricity)
+  const diameter = Math.max(...eccentricities, 0)
+  const radius = eccentricities.length > 0 ? Math.min(...eccentricities) : 0
+  const centerNodeIds = nodeMetrics
+    .filter((metric) => metric.eccentricity === radius)
+    .map((metric) => metric.nodeId)
+
+  return {
+    nodeMetrics,
+    degreeSequence,
+    density: computeGraphDensity(graph),
+    diameter,
+    radius,
+    centerNodeIds,
+    connectedComponentCount: countConnectedComponents(graph),
+  }
+}
+
+export function computeGraphDensity(graph: AlgorithmGraph): number {
+  const nodeCount = graph.nodes.length
+
+  if (nodeCount < 2) {
+    return 0
+  }
+
+  const maxEdges = graph.directed ? nodeCount * (nodeCount - 1) : (nodeCount * (nodeCount - 1)) / 2
+  return roundMetric(graph.edges.length / maxEdges)
+}
+
+export function buildAdjacencyMatrix(graph: AlgorithmGraph): number[][] {
+  const indexByNodeId = new Map(graph.nodes.map((node, index) => [node.id, index]))
+  const matrix = graph.nodes.map(() => graph.nodes.map(() => 0))
+
+  for (const edge of graph.edges) {
+    const sourceIndex = indexByNodeId.get(edge.source)
+    const targetIndex = indexByNodeId.get(edge.target)
+
+    if (sourceIndex === undefined || targetIndex === undefined) {
+      continue
+    }
+
+    matrix[sourceIndex][targetIndex] = edge.weight ?? 1
+
+    if (!graph.directed) {
+      matrix[targetIndex][sourceIndex] = edge.weight ?? 1
+    }
+  }
+
+  return matrix
+}
+
+export function buildLaplacianAnalysis(graph: AlgorithmGraph): MatrixAnalysis {
+  const adjacencyMatrix = buildAdjacencyMatrix(graph)
+  const degreeVector = adjacencyMatrix.map((row) => row.reduce((sum, value) => sum + value, 0))
+  const degreeMatrix = adjacencyMatrix.map((row, rowIndex) =>
+    row.map((_, columnIndex) => (rowIndex === columnIndex ? degreeVector[rowIndex] : 0)),
+  )
+  const laplacianMatrix = adjacencyMatrix.map((row, rowIndex) =>
+    row.map((value, columnIndex) => degreeMatrix[rowIndex][columnIndex] - value),
+  )
+  const eigenvalues = jacobiEigenvalues(laplacianMatrix)
+    .map((value) => roundMetric(value))
+    .sort((left, right) => left - right)
+  const fiedlerValue = eigenvalues.find((value) => value > 0.0001) ?? null
+
+  return {
+    adjacencyMatrix,
+    degreeMatrix,
+    laplacianMatrix,
+    eigenvalues,
+    fiedlerValue,
+  }
+}
+
+export function buildMorganAnalysis(graph: AlgorithmGraph, maxRounds = 4): MorganAnalysisResult {
+  const adjacency = buildAdjacency(graph)
+  const degrees = buildDegreeMap(graph)
+  let labels = Object.fromEntries(graph.nodes.map((node) => [node.id, degrees.get(node.id) ?? 0]))
+  const rounds: MorganIteration[] = [
+    {
+      round: 0,
+      labels,
+      changedNodeIds: [],
+    },
+  ]
+  let stabilizedAfterRound = 0
+
+  for (let round = 1; round <= maxRounds; round += 1) {
+    const nextRawLabels = Object.fromEntries(
+      graph.nodes.map((node) => {
+        const neighborSum = (adjacency.get(node.id) ?? []).reduce(
+          (sum, neighbor) => sum + (labels[neighbor.nodeId] ?? 0),
+          0,
+        )
+
+        return [node.id, (labels[node.id] ?? 0) + neighborSum]
+      }),
+    ) as Record<string, number>
+    const nextLabels = compressLabels(nextRawLabels)
+    const changedNodeIds = graph.nodes
+      .map((node) => node.id)
+      .filter((nodeId) => nextLabels[nodeId] !== labels[nodeId])
+
+    rounds.push({
+      round,
+      labels: nextLabels,
+      changedNodeIds,
+    })
+
+    labels = nextLabels
+
+    if (changedNodeIds.length === 0) {
+      stabilizedAfterRound = round
+      break
+    }
+
+    stabilizedAfterRound = round
+  }
+
+  return {
+    rounds,
+    stabilizedAfterRound,
+  }
+}
+
 function buildAdjacency(graph: AlgorithmGraph): Map<string, Neighbor[]> {
   const adjacency = new Map<string, Neighbor[]>()
 
@@ -529,6 +675,236 @@ function buildAdjacency(graph: AlgorithmGraph): Map<string, Neighbor[]> {
   return adjacency
 }
 
+function buildDegreeMap(graph: AlgorithmGraph): Map<string, number> {
+  const degrees = new Map(graph.nodes.map((node) => [node.id, 0]))
+
+  for (const edge of graph.edges) {
+    degrees.set(edge.source, (degrees.get(edge.source) ?? 0) + 1)
+
+    if (!graph.directed) {
+      degrees.set(edge.target, (degrees.get(edge.target) ?? 0) + 1)
+    }
+  }
+
+  return degrees
+}
+
+function buildDistanceMatrix(
+  graph: AlgorithmGraph,
+  useWeights: boolean,
+): Map<string, Map<string, number>> {
+  const adjacency = buildAdjacency(graph)
+
+  return new Map(
+    graph.nodes.map((node) => [
+      node.id,
+      computeSingleSourceDistances(node.id, adjacency, useWeights),
+    ]),
+  )
+}
+
+function computeEccentricity(nodeId: string, distances: Map<string, Map<string, number>>): number {
+  const values = [...(distances.get(nodeId)?.values() ?? [])].filter((value) =>
+    Number.isFinite(value),
+  )
+  return values.length > 0 ? Math.max(...values) : 0
+}
+
+function countConnectedComponents(graph: AlgorithmGraph): number {
+  const adjacency = buildAdjacency(graph)
+  const visited = new Set<string>()
+  let count = 0
+
+  for (const node of graph.nodes) {
+    if (visited.has(node.id)) {
+      continue
+    }
+
+    count += 1
+    const stack = [node.id]
+
+    while (stack.length > 0) {
+      const current = stack.pop()
+
+      if (!current || visited.has(current)) {
+        continue
+      }
+
+      visited.add(current)
+
+      for (const neighbor of adjacency.get(current) ?? []) {
+        if (!visited.has(neighbor.nodeId)) {
+          stack.push(neighbor.nodeId)
+        }
+      }
+    }
+  }
+
+  return count
+}
+
+function compressLabels(labels: Record<string, number>): Record<string, number> {
+  const orderedEntries = Object.entries(labels).sort((left, right) => {
+    if (left[1] === right[1]) {
+      return left[0].localeCompare(right[0])
+    }
+
+    return left[1] - right[1]
+  })
+  const rankByValue = new Map<number, number>()
+  let currentRank = 0
+
+  for (const [, value] of orderedEntries) {
+    if (!rankByValue.has(value)) {
+      currentRank += 1
+      rankByValue.set(value, currentRank)
+    }
+  }
+
+  return Object.fromEntries(
+    orderedEntries.map(([nodeId, value]) => [nodeId, rankByValue.get(value) ?? 0]),
+  ) as Record<string, number>
+}
+
+function computeSingleSourceDistances(
+  startNodeId: string,
+  adjacency: Map<string, Neighbor[]>,
+  useWeights: boolean,
+): Map<string, number> {
+  const distances = new Map<string, number>([[startNodeId, 0]])
+  const frontier: string[] = [startNodeId]
+
+  while (frontier.length > 0) {
+    const current = frontier.shift()
+
+    if (!current) {
+      continue
+    }
+
+    visitNeighbors(current, adjacency, distances, frontier, useWeights)
+  }
+
+  return distances
+}
+
+function visitNeighbors(
+  current: string,
+  adjacency: Map<string, Neighbor[]>,
+  distances: Map<string, number>,
+  frontier: string[],
+  useWeights: boolean,
+): void {
+  for (const neighbor of adjacency.get(current) ?? []) {
+    const stepCost = useWeights ? neighbor.weight : 1
+    const nextDistance = (distances.get(current) ?? Number.POSITIVE_INFINITY) + stepCost
+
+    if (nextDistance >= (distances.get(neighbor.nodeId) ?? Number.POSITIVE_INFINITY)) {
+      continue
+    }
+
+    distances.set(neighbor.nodeId, nextDistance)
+    frontier.push(neighbor.nodeId)
+  }
+}
+
+function jacobiEigenvalues(matrix: number[][], maxIterations = 128): number[] {
+  const working = matrix.map((row) => [...row])
+  const size = working.length
+
+  if (size === 0) {
+    return []
+  }
+
+  for (let iteration = 0; iteration < maxIterations; iteration += 1) {
+    const pivot = findJacobiPivot(working)
+
+    if (pivot.maxValue < 1e-10) {
+      break
+    }
+
+    const angle = computeJacobiAngle(working, pivot.row, pivot.column)
+    const cosine = Math.cos(angle)
+    const sine = Math.sin(angle)
+    const previous = working.map((row) => [...row])
+
+    rotateJacobiMatrix(working, previous, pivot.row, pivot.column, cosine, sine, size)
+  }
+
+  return working.map((row, index) => row[index])
+}
+
+function findJacobiPivot(matrix: number[][]): { row: number; column: number; maxValue: number } {
+  let maxValue = 0
+  let row = 0
+  let column = 1
+
+  for (let rowIndex = 0; rowIndex < matrix.length; rowIndex += 1) {
+    for (let columnIndex = rowIndex + 1; columnIndex < matrix.length; columnIndex += 1) {
+      const value = Math.abs(matrix[rowIndex][columnIndex])
+
+      if (value > maxValue) {
+        maxValue = value
+        row = rowIndex
+        column = columnIndex
+      }
+    }
+  }
+
+  return { row, column, maxValue }
+}
+
+function computeJacobiAngle(matrix: number[][], pivotRow: number, pivotColumn: number): number {
+  if (matrix[pivotRow][pivotRow] === matrix[pivotColumn][pivotColumn]) {
+    return Math.PI / 4
+  }
+
+  return (
+    0.5 *
+    Math.atan(
+      (2 * matrix[pivotRow][pivotColumn]) /
+        (matrix[pivotColumn][pivotColumn] - matrix[pivotRow][pivotRow]),
+    )
+  )
+}
+
+function rotateJacobiMatrix(
+  working: number[][],
+  previous: number[][],
+  pivotRow: number,
+  pivotColumn: number,
+  cosine: number,
+  sine: number,
+  size: number,
+): void {
+  for (let index = 0; index < size; index += 1) {
+    if (index === pivotRow || index === pivotColumn) {
+      continue
+    }
+
+    working[index][pivotRow] =
+      cosine * previous[index][pivotRow] - sine * previous[index][pivotColumn]
+    working[pivotRow][index] = working[index][pivotRow]
+    working[index][pivotColumn] =
+      sine * previous[index][pivotRow] + cosine * previous[index][pivotColumn]
+    working[pivotColumn][index] = working[index][pivotColumn]
+  }
+
+  const pivotRowValue = previous[pivotRow][pivotRow]
+  const pivotColumnValue = previous[pivotColumn][pivotColumn]
+  const pivotValue = previous[pivotRow][pivotColumn]
+
+  working[pivotRow][pivotRow] =
+    cosine * cosine * pivotRowValue -
+    2 * sine * cosine * pivotValue +
+    sine * sine * pivotColumnValue
+  working[pivotColumn][pivotColumn] =
+    sine * sine * pivotRowValue +
+    2 * sine * cosine * pivotValue +
+    cosine * cosine * pivotColumnValue
+  working[pivotRow][pivotColumn] = 0
+  working[pivotColumn][pivotRow] = 0
+}
+
 function buildStep(
   label: string,
   detail: string,
@@ -555,5 +931,6 @@ function blackNodes(color: Map<string, VisitColor>): string[] {
 }
 
 function roundMetric(value: number): number {
-  return Number(value.toFixed(3))
+  const rounded = Number(value.toFixed(2))
+  return Object.is(rounded, -0) ? 0 : rounded
 }

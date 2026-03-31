@@ -42,6 +42,42 @@ export interface GraphTraceResult {
   metrics?: Record<string, number | string | boolean>
 }
 
+export interface GraphNodeMetric {
+  nodeId: string
+  label: string
+  degree: number
+  eccentricity: number
+}
+
+export interface MolecularGraphMetrics {
+  nodeMetrics: GraphNodeMetric[]
+  degreeSequence: number[]
+  density: number
+  diameter: number
+  radius: number
+  centerNodeIds: string[]
+  connectedComponentCount: number
+}
+
+export interface MatrixAnalysis {
+  adjacencyMatrix: number[][]
+  degreeMatrix: number[][]
+  laplacianMatrix: number[][]
+  eigenvalues: number[]
+  fiedlerValue: number | null
+}
+
+export interface MorganIteration {
+  round: number
+  labels: Record<string, number>
+  changedNodeIds: string[]
+}
+
+export interface MorganAnalysisResult {
+  rounds: MorganIteration[]
+  stabilizedAfterRound: number
+}
+
 export interface SortTraceStep {
   label: string
   detail: string
