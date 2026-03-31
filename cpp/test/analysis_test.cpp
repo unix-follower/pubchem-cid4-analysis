@@ -166,6 +166,45 @@ std::string sampleBioactivityCsv()
            "(human),\"Invalid numeric value\"\n";
 }
 
+std::vector<pubchem::AtomRecord> sampleGradientAtoms()
+{
+    return {
+        pubchem::AtomRecord{.index = 0,
+                            .bondCount = 1,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 2,
+                            .symbol = "He",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 1.0,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 1,
+                            .bondCount = 1,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 4,
+                            .symbol = "Be",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 2.0,
+                            .hybridization = "S"},
+        pubchem::AtomRecord{.index = 2,
+                            .bondCount = 1,
+                            .charge = 0,
+                            .implicitHydrogenCount = 0,
+                            .totalHydrogenCount = 0,
+                            .atomicNumber = 6,
+                            .symbol = "C",
+                            .valency = 0,
+                            .isAromatic = false,
+                            .mass = 3.0,
+                            .hybridization = "SP"},
+    };
+}
+
 } // namespace
 
 TEST(AnalysisHelpersTest, AverageReturnsZeroForEmptyInput)
@@ -642,6 +681,87 @@ TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.hill_dose_response.svg");
+    EXPECT_EQ(pubchem::gradientDescentCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+                  .filename()
+                  .string(),
+              "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.csv");
+    EXPECT_EQ(
+        pubchem::gradientDescentSummaryJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+            .filename()
+            .string(),
+        "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.summary.json");
+    EXPECT_EQ(
+        pubchem::gradientDescentLossPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+            .filename()
+            .string(),
+        "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.loss.svg");
+    EXPECT_EQ(
+        pubchem::gradientDescentFitPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+            .filename()
+            .string(),
+        "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.fit.svg");
+}
+
+TEST(GradientDescentStrategiesTest, AnalysisConvergesTowardClosedFormWeight)
+{
+    const auto result =
+        pubchem::buildGradientDescentAnalysis(sampleGradientAtoms(), "sample.sdf", 0.05, 40U);
+
+    EXPECT_EQ(result.sourceFile, "sample.sdf");
+    EXPECT_EQ(
+        result.headers,
+        (std::vector<std::string>{"epoch", "weight", "gradient", "sum_squared_error", "mse"}));
+    ASSERT_EQ(result.traceRows.size(), 41U);
+    EXPECT_NEAR(result.summary.optimization.closedFormWeight, 2.0, 1.0e-12);
+    EXPECT_NEAR(result.summary.optimization.finalWeight, 2.0, 1.0e-6);
+    EXPECT_LT(result.summary.optimization.finalMeanSquaredError,
+              result.summary.optimization.initialMeanSquaredError);
+    EXPECT_TRUE(result.summary.optimization.lossTrace.monotonicNonincreasingMeanSquaredError);
+    EXPECT_EQ(result.summary.optimization.lossTrace.bestEpoch, result.traceRows.back().epoch);
+    EXPECT_NEAR(result.summary.optimization.gradientChecks.initialWeight.analytic,
+                result.summary.optimization.gradientChecks.initialWeight.finiteDifference,
+                1.0e-5);
+    EXPECT_NEAR(result.summary.optimization.gradientChecks.finalWeight.analytic,
+                result.summary.optimization.gradientChecks.finalWeight.finiteDifference,
+                1.0e-5);
+    EXPECT_EQ(result.summary.dataset.featureMatrixShape, (std::vector<int>{3, 1}));
+}
+
+TEST(GradientDescentStrategiesTest, WritersEmitCsvAndSvgArtifacts)
+{
+    const auto result =
+        pubchem::buildGradientDescentAnalysis(sampleGradientAtoms(), "sample.sdf", 0.05, 20U);
+    const auto outputDirectory =
+        std::filesystem::temp_directory_path() / "pubchem-cid4-gradient-descent";
+    std::filesystem::create_directories(outputDirectory);
+
+    const auto csvPath = outputDirectory / "gradient.csv";
+    const auto lossSvgPath = outputDirectory / "gradient.loss.svg";
+    const auto fitSvgPath = outputDirectory / "gradient.fit.svg";
+
+    pubchem::writeGradientDescentCsv(result, csvPath);
+    pubchem::writeGradientDescentLossPlotSvg(result, lossSvgPath);
+    pubchem::writeGradientDescentFitPlotSvg(result, fitSvgPath);
+
+    std::ifstream csvInput(csvPath);
+    std::ifstream lossSvgInput(lossSvgPath);
+    std::ifstream fitSvgInput(fitSvgPath);
+    ASSERT_TRUE(csvInput.good());
+    ASSERT_TRUE(lossSvgInput.good());
+    ASSERT_TRUE(fitSvgInput.good());
+
+    const std::string csvContents((std::istreambuf_iterator<char>(csvInput)),
+                                  std::istreambuf_iterator<char>());
+    const std::string lossSvgContents((std::istreambuf_iterator<char>(lossSvgInput)),
+                                      std::istreambuf_iterator<char>());
+    const std::string fitSvgContents((std::istreambuf_iterator<char>(fitSvgInput)),
+                                     std::istreambuf_iterator<char>());
+
+    EXPECT_NE(csvContents.find("sum_squared_error"), std::string::npos);
+    EXPECT_NE(csvContents.find("mse"), std::string::npos);
+    EXPECT_NE(lossSvgContents.find("Manual Gradient Descent MSE Trace"), std::string::npos);
+    EXPECT_NE(fitSvgContents.find("Mass to Atomic Number"), std::string::npos);
+    EXPECT_NE(fitSvgContents.find("y_hat ="), std::string::npos);
 }
 
 TEST(BioactivityStrategiesTest, AnalysisFiltersIc50RowsAndComputesPic50)

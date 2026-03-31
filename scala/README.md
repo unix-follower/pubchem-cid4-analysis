@@ -30,6 +30,14 @@ The same run also writes a bonded-distance comparison JSON artifact for the acti
 The same run also writes a bond-angle analysis JSON artifact for the active conformer:
 - bonded angles $A$-$B$-$C$ derived from the 3D coordinates using the dot-product formula, where $A$-$B$ and $B$-$C$ are bonded and $B$ is the central atom
 
+The same run now also writes a manual gradient-descent analysis from the atom feature matrix of the active CID 4 conformer:
+- a CSV trace of per-epoch weight, gradient, summed squared error, and MSE for the no-intercept model $\hat{y} = wx$
+- a summary JSON documenting the hand-derived gradient $\frac{\partial}{\partial w}\sum_i(y_i - wx_i)^2 = 2\sum_i x_i(wx_i - y_i)$ with atom mass as the feature and atomic number as the target
+- a PNG loss curve across epochs
+- a PNG scatter/fit plot for atom mass versus atomic number under the learned weight
+
+This gradient-descent example is intentionally educational rather than general-purpose: it uses the full atom feature matrix of the CID 4 conformer as the dataset, treats `mass` as the single feature, treats `atomicNumber` as the target, optimizes a one-parameter no-intercept regression, and reports the closed-form least-squares solution alongside the iterative result as a numerical check.
+
 The same run now also writes Scala bioactivity artifacts from `pubchem_cid_4_bioactivity.csv` under `DATA_DIR/out`:
 - filtered IC50 rows with computed pIC50 as CSV
 - summary JSON with row counts and descriptive statistics

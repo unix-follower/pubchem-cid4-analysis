@@ -93,3 +93,57 @@ def plot_hill_reference_curves(
     plt.tight_layout()
     plt.savefig(out_file_path, dpi=200)
     plt.close()
+
+
+def plot_gradient_descent_loss_curve(
+    epochs: np.ndarray,
+    mse_values: np.ndarray,
+    out_file_path: str,
+):
+    if epochs.size == 0 or mse_values.size == 0:
+        raise ValueError("Gradient-descent loss plot requires at least one epoch")
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(epochs, mse_values, color="teal", linewidth=2)
+    plt.xlabel("Epoch")
+    plt.ylabel("MSE")
+    plt.title("Manual Gradient Descent MSE Trace")
+    plt.grid(True, linestyle="--", linewidth=0.6, alpha=0.5)
+    plt.tight_layout()
+    plt.savefig(out_file_path, dpi=200)
+    plt.close()
+
+
+def plot_gradient_descent_fit(
+    mass_values: np.ndarray,
+    atomic_number_values: np.ndarray,
+    learned_weight: float,
+    out_file_path: str,
+):
+    if mass_values.size == 0 or atomic_number_values.size == 0:
+        raise ValueError("Gradient-descent fit plot requires at least one atom feature row")
+
+    max_mass = float(np.max(mass_values))
+    line_x = np.linspace(0.0, max_mass * 1.05, 200)
+    line_y = learned_weight * line_x
+
+    plt.figure(figsize=(10, 6))
+    plt.scatter(
+        mass_values,
+        atomic_number_values,
+        color="slateblue",
+        edgecolors="black",
+        linewidths=0.5,
+        s=55,
+        alpha=0.85,
+        label="Atom feature rows",
+    )
+    plt.plot(line_x, line_y, color="crimson", linewidth=2, label=rf"$\hat{{y}} = {learned_weight:.4f}x$")
+    plt.xlabel("Atom mass")
+    plt.ylabel("Atomic number")
+    plt.title("Manual Gradient Descent Fit: Mass to Atomic Number")
+    plt.grid(True, linestyle="--", linewidth=0.6, alpha=0.5)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(out_file_path, dpi=200)
+    plt.close()

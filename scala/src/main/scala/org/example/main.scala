@@ -12,6 +12,8 @@ import org.example.analysis.distance.BondedDistanceAnalysisResult
 import org.example.analysis.distance.BondedDistanceAnalysisService
 import org.example.analysis.distance.DistanceMatrixResult
 import org.example.analysis.distance.DistanceMatrixService
+import org.example.analysis.distance.GradientDescentAnalysisResult
+import org.example.analysis.distance.GradientDescentAnalysisService
 import org.example.analysis.spectrum.EigendecompositionResult
 import org.example.analysis.spectrum.EigendecompositionService
 import org.example.analysis.spectrum.LaplacianAnalysisResult
@@ -196,6 +198,55 @@ private def writeHillDoseResponsePlot(
   val outputPath = outDirectory.resolve(outputFileName)
   HillDoseResponseService.writePlot(result, outputPath)
 
+private def writeGradientDescentSummary(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: GradientDescentAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".json")}.mass_to_atomic_number_gradient_descent.summary.json"
+  val outputPath = outDirectory.resolve(outputFileName)
+  newJsonMapper().writerWithDefaultPrettyPrinter().writeValue(outputPath.toFile, result.summary)
+  outputPath
+
+private def writeGradientDescentTrace(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: GradientDescentAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".json")}.mass_to_atomic_number_gradient_descent.csv"
+  val outputPath = outDirectory.resolve(outputFileName)
+  GradientDescentAnalysisService.writeTraceCsv(result, outputPath)
+
+private def writeGradientDescentLossPlot(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: GradientDescentAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".json")}.mass_to_atomic_number_gradient_descent.loss.png"
+  val outputPath = outDirectory.resolve(outputFileName)
+  GradientDescentAnalysisService.writeLossPlot(result, outputPath)
+
+private def writeGradientDescentFitPlot(
+    dataDirectory: String,
+    sourceFileName: String,
+    result: GradientDescentAnalysisResult
+): Path =
+  val outDirectory = Path.of(dataDirectory, "out")
+  Files.createDirectories(outDirectory)
+
+  val outputFileName = s"${sourceFileName.stripSuffix(".json")}.mass_to_atomic_number_gradient_descent.fit.png"
+  val outputPath = outDirectory.resolve(outputFileName)
+  GradientDescentAnalysisService.writeFitPlot(result, outputPath)
+
 def readJson(method: String, distanceSource: String) = {
   val dataDirectory = fsUtils.getDataDir()
   if (dataDirectory == null) {
@@ -232,6 +283,15 @@ def readJson(method: String, distanceSource: String) = {
     val bondAngleAnalysis = BondAngleAnalysisService.analyze(distanceMatrix, adjacencyMatrix)
     val bondAngleAnalysisOutputPath =
       writeBondAngleAnalysis(dataDirectory, jsonPath.getFileName.toString, bondAngleAnalysis)
+    val gradientDescentAnalysis = GradientDescentAnalysisService.analyze(compound, sdfPath)
+    val gradientDescentTraceOutputPath =
+      writeGradientDescentTrace(dataDirectory, jsonPath.getFileName.toString, gradientDescentAnalysis)
+    val gradientDescentSummaryOutputPath =
+      writeGradientDescentSummary(dataDirectory, jsonPath.getFileName.toString, gradientDescentAnalysis)
+    val gradientDescentLossPlotOutputPath =
+      writeGradientDescentLossPlot(dataDirectory, jsonPath.getFileName.toString, gradientDescentAnalysis)
+    val gradientDescentFitPlotOutputPath =
+      writeGradientDescentFitPlot(dataDirectory, jsonPath.getFileName.toString, gradientDescentAnalysis)
     val eigendecomposition = EigendecompositionService.compute(adjacencyMatrix)
     val eigendecompositionOutputPath =
       writeAdjacencySpectrum(dataDirectory, jsonPath.getFileName.toString, eigendecomposition)
@@ -261,6 +321,10 @@ def readJson(method: String, distanceSource: String) = {
     logger.info(s"Distance matrix output: $distanceMatrixOutputPath")
     logger.info(s"Bonded distance analysis output: $bondedDistanceAnalysisOutputPath")
     logger.info(s"Bond angle analysis output: $bondAngleAnalysisOutputPath")
+    logger.info(s"Gradient descent trace output: $gradientDescentTraceOutputPath")
+    logger.info(s"Gradient descent summary output: $gradientDescentSummaryOutputPath")
+    logger.info(s"Gradient descent loss plot output: $gradientDescentLossPlotOutputPath")
+    logger.info(s"Gradient descent fit plot output: $gradientDescentFitPlotOutputPath")
     logger.info(s"Adjacency matrix output: $outputPath")
     logger.info(s"Adjacency eigendecomposition output: $eigendecompositionOutputPath")
     logger.info(s"Laplacian analysis output: $laplacianOutputPath")
