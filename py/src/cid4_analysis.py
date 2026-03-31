@@ -34,6 +34,7 @@ DEFAULT_POSTERIOR_PRIOR_ALPHA = 1.0
 DEFAULT_POSTERIOR_PRIOR_BETA = 1.0
 DEFAULT_POSTERIOR_CREDIBLE_INTERVAL = 0.95
 DEFAULT_BINOMIAL_TAIL_THRESHOLD = 0.0
+DEFAULT_CHI_SQUARE_EXPECTED_COUNT_THRESHOLD = 5.0
 DEFAULT_GRADIENT_DESCENT_LEARNING_RATE = 5e-5
 DEFAULT_GRADIENT_DESCENT_EPOCHS = 250
 SPRING_DISTANCE_TOLERANCE = 1e-12
@@ -1095,6 +1096,160 @@ def summarize_bioactivity_posterior_analysis(
     }
 
 
+def build_activity_aid_type_chi_square_dataframe(
+    posterior_df: pd.DataFrame,
+    counts: dict[str, int],
+) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, int]]:
+    aid_type = posterior_df["Aid_Type"].astype("string").str.strip().fillna("Unknown")
+    aid_type = aid_type.mask(aid_type.eq(""), "Unknown")
+    contingency_table = pd.crosstab(posterior_df["Activity"], aid_type, dropna=False)
+    contingency_table = contingency_table.sort_index().sort_index(axis=1)
+    contingency_table.index.name = "Activity"
+    contingency_table.columns.name = "Aid_Type"
+
+    contingency_df = (
+        contingency_table.stack(future_stack=True)
+        .rename("observed_count")
+        .reset_index()
+        .sort_values(by=["Activity", "Aid_Type"])
+        .reset_index(drop=True)
+    )
+
+    chi_square_counts = {
+        **counts,
+        "retained_rows_with_aid_type": int(len(posterior_df)),
+        "activity_levels_tested": int(contingency_table.shape[0]),
+        "aid_type_levels_tested": int(contingency_table.shape[1]),
+    }
+
+    if contingency_table.empty:
+        raise ValueError("No Activity/Aid_Type contingency rows were found in the bioactivity dataset")
+
+    return contingency_table, contingency_df, chi_square_counts
+
+
+def compute_activity_aid_type_chi_square(
+    contingency_table: pd.DataFrame,
+    min_expected_count_threshold: float = DEFAULT_CHI_SQUARE_EXPECTED_COUNT_THRESHOLD,
+) -> tuple[pd.DataFrame, dict[str, float | int | bool | None | str]]:
+    if min_expected_count_threshold <= 0:
+        raise ValueError("Chi-square expected-count threshold must be positive")
+
+    observed = contingency_table.to_numpy(dtype=np.float64)
+    has_minimum_shape = observed.shape[0] >= 2 and observed.shape[1] >= 2
+    expected_df = pd.DataFrame(index=contingency_table.index, columns=contingency_table.columns, dtype=np.float64)
+
+    if not has_minimum_shape:
+        expected_df.loc[:, :] = np.nan
+        return expected_df, {
+            "computed": False,
+            "reason_not_computed": "Chi-square test requires at least two observed Activity levels "
+            "and two Aid_Type levels after binary filtering.",
+            "chi2_statistic": None,
+            "p_value": None,
+            "degrees_of_freedom": None,
+            "minimum_expected_count_threshold": float(min_expected_count_threshold),
+            "sparse_expected_cell_count": None,
+            "sparse_expected_cell_fraction": None,
+        }
+
+    chi2_statistic, p_value, degrees_of_freedom, expected = stats.chi2_contingency(observed)
+    expected_df = pd.DataFrame(expected, index=contingency_table.index, columns=contingency_table.columns)
+    sparse_expected_mask = expected_df.lt(min_expected_count_threshold)
+    sparse_expected_cell_count = int(sparse_expected_mask.to_numpy(dtype=np.int64).sum())
+    sparse_expected_cell_fraction = sparse_expected_cell_count / float(expected_df.size)
+
+    return expected_df, {
+        "computed": True,
+        "reason_not_computed": None,
+        "chi2_statistic": float(chi2_statistic),
+        "p_value": float(p_value),
+        "degrees_of_freedom": int(degrees_of_freedom),
+        "minimum_expected_count_threshold": float(min_expected_count_threshold),
+        "sparse_expected_cell_count": sparse_expected_cell_count,
+        "sparse_expected_cell_fraction": float(sparse_expected_cell_fraction),
+    }
+
+
+def summarize_activity_aid_type_chi_square_analysis(
+    contingency_table: pd.DataFrame,
+    contingency_df: pd.DataFrame,
+    expected_df: pd.DataFrame,
+    counts: dict[str, int],
+    chi_square_metrics: dict[str, float | int | bool | None | str],
+) -> dict:
+    representative_cells = contingency_df.sort_values(
+        by=["observed_count", "Activity", "Aid_Type"], ascending=[False, True, True]
+    )
+    representative_cells = representative_cells.head(3).reset_index(drop=True)
+
+    observed_counts = {
+        str(activity): {str(aid_type): int(value) for aid_type, value in row.items()}
+        for activity, row in contingency_table.to_dict(orient="index").items()
+    }
+    expected_counts = {
+        str(activity): {str(aid_type): None if pd.isna(value) else float(value) for aid_type, value in row.items()}
+        for activity, row in expected_df.to_dict(orient="index").items()
+    }
+
+    return {
+        "row_counts": counts,
+        "contingency_table": {
+            "activity_levels": [str(value) for value in contingency_table.index.tolist()],
+            "aid_type_levels": [str(value) for value in contingency_table.columns.tolist()],
+            "observed_counts": observed_counts,
+            "expected_counts": expected_counts,
+        },
+        "chi_square_test": {
+            "variables": {
+                "row": "Activity",
+                "column": "Aid_Type",
+            },
+            "null_hypothesis": "Activity and Aid_Type are statistically independent within "
+            "the retained binary bioactivity rows.",
+            "alternative_hypothesis": "Activity and Aid_Type are statistically associated within "
+            "the retained binary bioactivity rows.",
+            "computed": bool(chi_square_metrics["computed"]),
+            "reason_not_computed": chi_square_metrics["reason_not_computed"],
+            "chi2_statistic": chi_square_metrics["chi2_statistic"],
+            "p_value": chi_square_metrics["p_value"],
+            "degrees_of_freedom": chi_square_metrics["degrees_of_freedom"],
+            "minimum_expected_count_threshold": float(chi_square_metrics["minimum_expected_count_threshold"]),
+            "sparse_expected_cell_count": chi_square_metrics["sparse_expected_cell_count"],
+            "sparse_expected_cell_fraction": chi_square_metrics["sparse_expected_cell_fraction"],
+        },
+        "analysis": {
+            "target_quantity": "Activity ⟂ Aid_Type",
+            "model": "Pearson chi-square test of independence",
+            "binary_evidence_definition": {
+                "retained_labels": ["Active", "Inactive"],
+                "excluded_labels": ["Unspecified"],
+                "interpretation": "The chi-square table is built from the same binary Activity evidence "
+                "used by the posterior analysis.",
+            },
+            "representative_cells": [
+                {
+                    "Activity": str(row["Activity"]),
+                    "Aid_Type": str(row["Aid_Type"]),
+                    "observed_count": int(row["observed_count"]),
+                    "expected_count": None
+                    if pd.isna(expected_df.loc[row["Activity"], row["Aid_Type"]])
+                    else float(expected_df.loc[row["Activity"], row["Aid_Type"]]),
+                }
+                for _, row in representative_cells.iterrows()
+            ],
+            "notes": [
+                "Rows with Activity = Unspecified and other non-binary Activity labels are excluded "
+                "before the contingency table is built.",
+                "Aid_Type values are used as observed in the CSV after trimming whitespace "
+                "and filling blanks with Unknown.",
+                "If fewer than two observed Activity levels or fewer than two Aid_Type levels remain after filtering, "
+                "the summary records that the chi-square test is not statistically identifiable on this dataset slice.",
+            ],
+        },
+    }
+
+
 def build_assay_activity_binomial_dataframe(
     posterior_df: pd.DataFrame,
     counts: dict[str, int],
@@ -1736,6 +1891,41 @@ def write_bioactivity_posterior_analysis(
     log.info("Bioactivity posterior summary written to %s", summary_output_path)
 
 
+def write_activity_aid_type_chi_square_analysis(filename: str):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    bioactivity_df = load_bioactivity_dataframe(filename)
+    posterior_df, posterior_counts = build_activity_posterior_dataframe(bioactivity_df)
+    contingency_table, contingency_df, chi_square_counts = build_activity_aid_type_chi_square_dataframe(
+        posterior_df,
+        posterior_counts,
+    )
+    expected_df, chi_square_metrics = compute_activity_aid_type_chi_square(contingency_table)
+    contingency_output_df = contingency_df.copy()
+    contingency_output_df["expected_count"] = contingency_output_df.apply(
+        lambda row: expected_df.loc[row["Activity"], row["Aid_Type"]],
+        axis=1,
+    )
+    summary = summarize_activity_aid_type_chi_square_analysis(
+        contingency_table,
+        contingency_output_df,
+        expected_df,
+        chi_square_counts,
+        chi_square_metrics,
+    )
+    output_stem = Path(filename).stem
+    records_output_path = Path(out_dir) / f"{output_stem}.activity_aid_type_chi_square_contingency.csv"
+    summary_output_path = Path(out_dir) / f"{output_stem}.activity_aid_type_chi_square.summary.json"
+
+    contingency_output_df.to_csv(records_output_path, index=False)
+
+    with summary_output_path.open("w", encoding=UTF_8) as file:
+        json.dump(summary, file, indent=2)
+
+    log.info("Activity vs Aid_Type chi-square contingency rows written to %s", records_output_path)
+    log.info("Activity vs Aid_Type chi-square summary written to %s", summary_output_path)
+
+
 def write_bioactivity_binomial_analysis(filename: str):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
@@ -1889,6 +2079,7 @@ def main():
     write_bioactivity_analysis(bioactivity_filename)
     write_hill_dose_response_analysis(bioactivity_filename)
     write_bioactivity_posterior_analysis(bioactivity_filename)
+    write_activity_aid_type_chi_square_analysis(bioactivity_filename)
     write_bioactivity_binomial_analysis(bioactivity_filename)
 
 

@@ -187,6 +187,27 @@ std::string sampleBinomialBioactivityCsv()
            "15,104,Probe,IC50,Assay E,Target E\n";
 }
 
+std::string sampleChiSquareBioactivityCsv()
+{
+    return "Bioactivity_ID,BioAssay_AID,Activity,Aid_Type,Activity_Type,BioAssay_Name,Target_Name\n"
+           "10,100,Active,Confirmatory,,,\n"
+           "11,101,Active,Other,IC50,Assay B,Target B\n"
+           "12,102,Inactive,Confirmatory,IC50,Assay C,Target C\n"
+           "13,103,Inactive,Other,,Assay D,Target D\n"
+           "14,104,Unspecified,Other,Potency,Assay E,Target E\n"
+           "15,105,Probe,,IC50,Assay F,Target F\n";
+}
+
+std::string sampleChiSquareDegenerateBioactivityCsv()
+{
+    return "Bioactivity_ID,BioAssay_AID,Activity,Aid_Type,Activity_Type,BioAssay_Name,Target_Name\n"
+           "10,100,Active,Other,,,\n"
+           "11,101,Active,Other,IC50,Assay B,Target B\n"
+           "12,102,Active,Other,IC50,Assay C,Target C\n"
+           "13,103,Unspecified,Other,Potency,Assay D,Target D\n"
+           "14,104,Probe,,IC50,Assay E,Target E\n";
+}
+
 std::vector<pubchem::AtomRecord> sampleGradientAtoms()
 {
     return {
@@ -1325,6 +1346,103 @@ TEST(BioactivityStrategiesTest, BinomialCsvWriterEmitsArtifacts)
     EXPECT_NE(pmfContents.find("0.444444444444444"), std::string::npos);
 }
 
+TEST(BioactivityStrategiesTest, ChiSquareAnalysisBuildsContingencyAndSummary)
+{
+    const auto csvPath =
+        writeTempFile("bioactivity-chi-square-sample.csv", sampleChiSquareBioactivityCsv());
+
+    const auto result = pubchem::buildChiSquareActivityAidTypeAnalysis(csvPath);
+
+    EXPECT_EQ(result.sourceFile, "bioactivity-chi-square-sample.csv");
+    EXPECT_EQ(result.rowCounts.totalRows, 6U);
+    EXPECT_EQ(result.rowCounts.activeRows, 2U);
+    EXPECT_EQ(result.rowCounts.inactiveRows, 2U);
+    EXPECT_EQ(result.rowCounts.unspecifiedRows, 1U);
+    EXPECT_EQ(result.rowCounts.otherActivityRows, 1U);
+    EXPECT_EQ(result.rowCounts.retainedBinaryRows, 4U);
+    EXPECT_EQ(result.rowCounts.droppedNonBinaryRows, 2U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 4U);
+    EXPECT_EQ(result.rowCounts.retainedRowsWithAidType, 4U);
+    EXPECT_EQ(result.rowCounts.activityLevelsTested, 2U);
+    EXPECT_EQ(result.rowCounts.aidTypeLevelsTested, 2U);
+    EXPECT_EQ(
+        result.headers,
+        (std::vector<std::string>{"Activity", "Aid_Type", "observed_count", "expected_count"}));
+    ASSERT_EQ(result.rows.size(), 4U);
+    EXPECT_EQ(result.rows.front().at(0), "Active");
+    EXPECT_EQ(result.rows.front().at(1), "Confirmatory");
+    EXPECT_EQ(result.rows.front().at(2), "1");
+    EXPECT_NEAR(std::stod(result.rows.front().at(3)), 1.0, 1.0e-12);
+    EXPECT_TRUE(result.chiSquareTest.computed);
+    EXPECT_FALSE(result.chiSquareTest.reasonNotComputed.has_value());
+    ASSERT_TRUE(result.chiSquareTest.chi2Statistic.has_value());
+    ASSERT_TRUE(result.chiSquareTest.pValue.has_value());
+    ASSERT_TRUE(result.chiSquareTest.degreesOfFreedom.has_value());
+    EXPECT_NEAR(*result.chiSquareTest.chi2Statistic, 0.0, 1.0e-12);
+    EXPECT_NEAR(*result.chiSquareTest.pValue, 1.0, 1.0e-12);
+    EXPECT_EQ(*result.chiSquareTest.degreesOfFreedom, 1U);
+    ASSERT_TRUE(result.chiSquareTest.sparseExpectedCellCount.has_value());
+    ASSERT_TRUE(result.chiSquareTest.sparseExpectedCellFraction.has_value());
+    EXPECT_EQ(*result.chiSquareTest.sparseExpectedCellCount, 4U);
+    EXPECT_NEAR(*result.chiSquareTest.sparseExpectedCellFraction, 1.0, 1.0e-12);
+    ASSERT_EQ(result.analysis.representativeCells.size(), 3U);
+    EXPECT_EQ(result.analysis.representativeCells.front().activity, "Active");
+    EXPECT_EQ(result.analysis.representativeCells.front().aidType, "Confirmatory");
+}
+
+TEST(BioactivityStrategiesTest, ChiSquareAnalysisHandlesDegenerateTables)
+{
+    const auto csvPath = writeTempFile("bioactivity-chi-square-degenerate.csv",
+                                       sampleChiSquareDegenerateBioactivityCsv());
+
+    const auto result = pubchem::buildChiSquareActivityAidTypeAnalysis(csvPath);
+
+    EXPECT_EQ(result.rowCounts.totalRows, 5U);
+    EXPECT_EQ(result.rowCounts.activeRows, 3U);
+    EXPECT_EQ(result.rowCounts.inactiveRows, 0U);
+    EXPECT_EQ(result.rowCounts.unspecifiedRows, 1U);
+    EXPECT_EQ(result.rowCounts.otherActivityRows, 1U);
+    EXPECT_EQ(result.rowCounts.retainedBinaryRows, 3U);
+    EXPECT_EQ(result.rowCounts.activityLevelsTested, 1U);
+    EXPECT_EQ(result.rowCounts.aidTypeLevelsTested, 1U);
+    EXPECT_FALSE(result.chiSquareTest.computed);
+    ASSERT_TRUE(result.chiSquareTest.reasonNotComputed.has_value());
+    EXPECT_NE(result.chiSquareTest.reasonNotComputed->find("at least two observed Activity levels"),
+              std::string::npos);
+    EXPECT_FALSE(result.chiSquareTest.chi2Statistic.has_value());
+    EXPECT_FALSE(result.chiSquareTest.pValue.has_value());
+    EXPECT_FALSE(result.chiSquareTest.degreesOfFreedom.has_value());
+    ASSERT_EQ(result.rows.size(), 1U);
+    EXPECT_EQ(result.rows.front().at(0), "Active");
+    EXPECT_EQ(result.rows.front().at(1), "Other");
+    EXPECT_EQ(result.rows.front().at(2), "3");
+    EXPECT_TRUE(result.rows.front().at(3).empty());
+}
+
+TEST(BioactivityStrategiesTest, ChiSquareCsvWriterEmitsArtifacts)
+{
+    const auto csvPath =
+        writeTempFile("bioactivity-chi-square-writer.csv", sampleChiSquareBioactivityCsv());
+    const auto result = pubchem::buildChiSquareActivityAidTypeAnalysis(csvPath);
+    const auto outputDirectory =
+        std::filesystem::temp_directory_path() / "pubchem-cid4-chi-square-bioactivity";
+    std::filesystem::create_directories(outputDirectory);
+
+    const auto contingencyCsvPath = outputDirectory / "bioactivity.chi_square.csv";
+
+    pubchem::writeChiSquareActivityAidTypeCsv(result, contingencyCsvPath);
+
+    std::ifstream contingencyInput(contingencyCsvPath);
+    ASSERT_TRUE(contingencyInput.good());
+
+    const std::string contingencyContents((std::istreambuf_iterator<char>(contingencyInput)),
+                                          std::istreambuf_iterator<char>());
+
+    EXPECT_NE(contingencyContents.find("Aid_Type"), std::string::npos);
+    EXPECT_NE(contingencyContents.find("Confirmatory"), std::string::npos);
+    EXPECT_NE(contingencyContents.find("expected_count"), std::string::npos);
+}
+
 TEST(BioactivityStrategiesTest, HillAnalysisSupportsPositiveLinearInflectionForNGreaterThanOne)
 {
     const auto csvPath = writeTempFile("bioactivity-hill-n2-sample.csv", sampleBioactivityCsv());
@@ -1471,4 +1589,32 @@ TEST(BioactivityStrategiesTest, BinomialAnalysisMatchesCid4RealData)
     EXPECT_NEAR(result.binomial.summary.binomialVarianceActiveAssays, 0.0, 1.0e-12);
     EXPECT_NEAR(result.binomial.summary.pmfProbabilitySum, 1.0, 1.0e-12);
     ASSERT_EQ(result.analysis.representativeAssays.size(), 2U);
+}
+
+TEST(BioactivityStrategiesTest, ChiSquareAnalysisMatchesCid4RealData)
+{
+    const auto csvPath = repositoryRoot() / "data" / "pubchem_cid_4_bioactivity.csv";
+
+    const auto result = pubchem::buildChiSquareActivityAidTypeAnalysis(csvPath);
+
+    EXPECT_EQ(result.rowCounts.totalRows, 406U);
+    EXPECT_EQ(result.rowCounts.activeRows, 3U);
+    EXPECT_EQ(result.rowCounts.inactiveRows, 0U);
+    EXPECT_EQ(result.rowCounts.unspecifiedRows, 398U);
+    EXPECT_EQ(result.rowCounts.otherActivityRows, 5U);
+    EXPECT_EQ(result.rowCounts.retainedBinaryRows, 3U);
+    EXPECT_EQ(result.rowCounts.droppedNonBinaryRows, 403U);
+    EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
+    EXPECT_EQ(result.rowCounts.retainedRowsWithAidType, 3U);
+    EXPECT_EQ(result.rowCounts.activityLevelsTested, 1U);
+    EXPECT_EQ(result.rowCounts.aidTypeLevelsTested, 1U);
+    EXPECT_FALSE(result.chiSquareTest.computed);
+    ASSERT_TRUE(result.chiSquareTest.reasonNotComputed.has_value());
+    EXPECT_EQ(*result.chiSquareTest.reasonNotComputed,
+              "Chi-square test requires at least two observed Activity levels and two Aid_Type "
+              "levels after binary filtering.");
+    ASSERT_EQ(result.analysis.representativeCells.size(), 1U);
+    EXPECT_EQ(result.analysis.representativeCells.front().activity, "Active");
+    EXPECT_EQ(result.analysis.representativeCells.front().aidType, "Other");
+    EXPECT_EQ(result.analysis.representativeCells.front().observedCount, 3U);
 }

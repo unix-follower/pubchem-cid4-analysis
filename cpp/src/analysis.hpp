@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <filesystem>
+#include <map>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -616,6 +617,77 @@ struct BinomialActivityDistributionAnalysisResult {
     BinomialActivityAnalysis analysis;
 };
 
+struct ChiSquareActivityAidTypeRowCounts {
+    std::size_t totalRows;
+    std::size_t activeRows;
+    std::size_t inactiveRows;
+    std::size_t unspecifiedRows;
+    std::size_t otherActivityRows;
+    std::size_t retainedBinaryRows;
+    std::size_t droppedNonBinaryRows;
+    std::size_t retainedUniqueBioassays;
+    std::size_t retainedRowsWithAidType;
+    std::size_t activityLevelsTested;
+    std::size_t aidTypeLevelsTested;
+};
+
+struct ChiSquareContingencyTable {
+    std::vector<std::string> activityLevels;
+    std::vector<std::string> aidTypeLevels;
+    std::map<std::string, std::map<std::string, std::size_t>> observedCounts;
+    std::map<std::string, std::map<std::string, std::optional<double>>> expectedCounts;
+};
+
+struct ChiSquareVariables {
+    std::string row;
+    std::string column;
+};
+
+struct ChiSquareTestMetrics {
+    ChiSquareVariables variables;
+    std::string nullHypothesis;
+    std::string alternativeHypothesis;
+    bool computed;
+    std::optional<std::string> reasonNotComputed;
+    std::optional<double> chi2Statistic;
+    std::optional<double> pValue;
+    std::optional<std::size_t> degreesOfFreedom;
+    double minimumExpectedCountThreshold;
+    std::optional<std::size_t> sparseExpectedCellCount;
+    std::optional<double> sparseExpectedCellFraction;
+};
+
+struct ChiSquareRepresentativeCell {
+    std::string activity;
+    std::string aidType;
+    std::size_t observedCount;
+    std::optional<double> expectedCount;
+};
+
+struct ChiSquareBinaryEvidenceDefinition {
+    std::vector<std::string> retainedLabels;
+    std::vector<std::string> excludedLabels;
+    std::string interpretation;
+};
+
+struct ChiSquareActivityAidTypeAnalysis {
+    std::string targetQuantity;
+    std::string model;
+    ChiSquareBinaryEvidenceDefinition binaryEvidenceDefinition;
+    std::vector<ChiSquareRepresentativeCell> representativeCells;
+    std::vector<std::string> notes;
+};
+
+struct ChiSquareActivityAidTypeAnalysisResult {
+    std::string sourceFile;
+    std::vector<std::string> headers;
+    std::vector<std::vector<std::string>> rows;
+    ChiSquareActivityAidTypeRowCounts rowCounts;
+    ChiSquareContingencyTable contingencyTable;
+    ChiSquareTestMetrics chiSquareTest;
+    ChiSquareActivityAidTypeAnalysis analysis;
+};
+
 struct GradientDescentAtomRow {
     int index;
     std::string symbol;
@@ -754,6 +826,11 @@ BinomialActivityDistributionAnalysisResult
 buildBinomialActivityDistributionAnalysis(const std::filesystem::path& csvPath);
 void writeBinomialActivityDistributionCsv(const BinomialActivityDistributionAnalysisResult& result,
                                           const std::filesystem::path& outputPath);
+ChiSquareActivityAidTypeAnalysisResult
+buildChiSquareActivityAidTypeAnalysis(const std::filesystem::path& csvPath,
+                                      double expectedCountThreshold = 5.0);
+void writeChiSquareActivityAidTypeCsv(const ChiSquareActivityAidTypeAnalysisResult& result,
+                                      const std::filesystem::path& outputPath);
 HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
                                                              double hillCoefficient = 1.0);
 void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
@@ -830,6 +907,11 @@ binomialActivityDistributionCsvPath(const std::filesystem::path& outputDirectory
 std::filesystem::path
 binomialActivityDistributionSummaryJsonPath(const std::filesystem::path& outputDirectory,
                                             const std::filesystem::path& sourceFile);
+std::filesystem::path chiSquareActivityAidTypeCsvPath(const std::filesystem::path& outputDirectory,
+                                                      const std::filesystem::path& sourceFile);
+std::filesystem::path
+chiSquareActivityAidTypeSummaryJsonPath(const std::filesystem::path& outputDirectory,
+                                        const std::filesystem::path& sourceFile);
 std::filesystem::path hillDoseResponseCsvPath(const std::filesystem::path& outputDirectory,
                                               const std::filesystem::path& sourceFile);
 std::filesystem::path hillDoseResponseSummaryJsonPath(const std::filesystem::path& outputDirectory,
