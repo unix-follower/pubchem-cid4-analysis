@@ -92,7 +92,18 @@ The runner currently compares these tasks across libraries:
 - filtered bioactivity Active vs Inactive classification
 - positive `Activity_Value` regression using molecular descriptors plus assay metadata
 
+The bioactivity tabular workflows now also include XGBoost summaries written to `data/out/cid4_ml.xgboost_suite.summary.json`. The boosted-tree features go beyond the earlier constant molecular descriptors and basic assay encodings by adding missingness flags for `Protein_Accession`, `Gene_ID`, `PMID`, and `Activity_Value`, numeric taxonomy IDs, encoded `Bioassay_Data_Source`, and keyword flags derived from `BioAssay_Name`, `Target_Name`, and assay source text.
+
 The current virtual environment may not include PyTorch or TensorFlow yet. In that case, the runner still completes and writes explicit `skipped` results for those libraries instead of failing. To install the optional deep-learning stack through the project metadata, add the `deep-learning` dependency group from `pyproject.toml` to your environment setup.
+
+If XGBoost is not yet installed in the active environment, the runner writes an explicit `skipped` result for the boosted-tree summaries rather than failing the rest of the ML analysis. Install it with `uv sync --extra xgboost` when you want the boosted-tree workflows enabled.
+
+The heavier descriptor and cheminformatics integrations are also optional now, so the default `uv sync --locked` environment stays lightweight enough for CI. Install them only when needed:
+- `uv sync --extra descriptor-ml`
+- `uv sync --extra chem-tools`
+```shell
+uv sync --locked --extra xgboost --extra descriptor-ml
+```
 
 For the mixed deliverable, a notebook companion can inspect the generated JSON summaries and reuse the shared `ml` package directly instead of duplicating feature engineering logic. The runner now also writes `cid4_ml.future_scaffolds.summary.json`, which captures the honest blockers and next code targets for a real graph-neural-network or SMILES-RNN implementation.
 

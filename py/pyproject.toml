@@ -2,14 +2,12 @@
 name = "pubchem-cid4-analysis"
 version = "1.0.0"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
-    "deepchem>=2.8.0",
-    "dscribe>=2.1.1",
     "jupyter>=1.1.1",
     "matplotlib>=3.10.6",
     "networkx>=3.5",
-    "numpy==1.26.4",
+    "numpy==2.4.4",
     "pandas>=2.3.2",
     "pandas-stubs==2.3.2.250827",
     "rdkit>=2025.3.5",
@@ -19,12 +17,23 @@ dependencies = [
     "sympy>=1.14.0",
 ]
 
+[project.optional-dependencies]
+descriptor-ml = [
+    "dscribe>=2.1.1",
+]
+xgboost = [
+    "xgboost>=2.1.4",
+]
+chem-tools = [
+    "deepchem>=2.8.0",
+]
+
 [dependency-groups]
 dev = [
     "ruff>=0.12.10",
 ]
 deep-learning = [
-    "tensorflow",
+    "tensorflow>=2.21.0",
     "torch",
     "torchvision",
 ]
