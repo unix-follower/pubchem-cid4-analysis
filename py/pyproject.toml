@@ -21,6 +21,9 @@ dependencies = [
 descriptor-ml = [
     "dscribe>=2.1.1",
 ]
+nltk = [
+    "nltk>=3.9.1",
+]
 xgboost = [
     "xgboost>=2.1.4",
 ]

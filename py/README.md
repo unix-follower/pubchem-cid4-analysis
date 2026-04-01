@@ -100,6 +100,7 @@ If XGBoost is not yet installed in the active environment, the runner writes an 
 
 The heavier descriptor and cheminformatics integrations are also optional now, so the default `uv sync --locked` environment stays lightweight enough for CI. Install them only when needed:
 - `uv sync --extra descriptor-ml`
+- `uv sync --extra nltk`
 - `uv sync --extra chem-tools`
 ```shell
 uv sync --locked --extra xgboost --extra descriptor-ml
@@ -109,3 +110,712 @@ For the mixed deliverable, a notebook companion can inspect the generated JSON s
 
 Notebook companion:
 - `src/cid4_ml_taxonomy_text_baseline.ipynb` reuses `ml.datasets.build_taxonomy_clustering_frame()` to build a small TF-IDF plus logistic-regression baseline over the taxonomy text, then saves notebook artifacts back into `data/out`
+
+## NLTK runner
+The Python workspace now also includes a separate NLTK-oriented NLP runner for the text-heavy CID 4 datasets. It writes JSON summaries into `data/out` for:
+- literature corpus term and collocation analysis
+- literature-versus-patent vocabulary comparison
+- bioactivity assay and target vocabulary extraction
+- taxonomy name normalization and vocabulary cleanup
+- toxicology short-text phrase extraction
+- pathway and reaction wording analysis
+
+Run it from the `py` workspace:
+
+```sh
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_nltk.py
+```
+
+If NLTK is not installed in the active environment, the runner still completes and writes explicit `skipped` results instead of failing. Enable the optional dependency with:
+
+```sh
+uv sync --extra nltk
+```
+
+The runner is chemistry-aware at the token-normalization level. It preserves tokens such as `1-amino-2-propanol`, `NADH`, `IC50`, `ER-alpha`, `PMID`, `DOI`, `AID`, `CID`, and `SID` instead of over-cleaning them as generic English text.
+
+Expected outputs under `data/out`:
+- `cid4_nltk.literature.summary.json`
+- `cid4_nltk.literature_vs_patent.summary.json`
+- `cid4_nltk.bioactivity.summary.json`
+- `cid4_nltk.taxonomy.summary.json`
+- `cid4_nltk.toxicology.summary.json`
+- `cid4_nltk.pathway.summary.json`
+*** Add File: /Users/Artsem_Nikitsenka/projects/pubchem-cid4-analysis/py/src/nlp/__init__.py
+from __future__ import annotations
+
+__all__ = [
+	"datasets",
+	"nltk_workflows",
+	"text_processing",
+]
+*** Add File: /Users/Artsem_Nikitsenka/projects/pubchem-cid4-analysis/py/src/nlp/datasets.py
+from __future__ import annotations
+
+from pathlib import Path
+
+import pandas as pd
+
+import cid4_analysis
+
+LITERATURE_FILENAME = "pubchem_cid_4_literature.csv"
+PATENT_FILENAME = "pubchem_cid_4_patent.csv"
+BIOACTIVITY_FILENAME = "pubchem_cid_4_bioactivity.csv"
+TAXONOMY_FILENAME = "pubchem_cid_4_consolidatedcompoundtaxonomy.csv"
+TOXICOLOGY_FILENAME = "pubchem_sid_134971235_chemidplus.csv"
+PATHWAY_REACTION_FILENAME = "pubchem_cid_4_pathwayreaction.csv"
+
+
+def load_literature_frame(filename: str = LITERATURE_FILENAME) -> pd.DataFrame:
+	return _read_csv(filename)
+
+
+def load_patent_frame(filename: str = PATENT_FILENAME) -> pd.DataFrame:
+	return _read_csv(filename)
+
+
+def load_bioactivity_frame(filename: str = BIOACTIVITY_FILENAME) -> pd.DataFrame:
+	return _read_csv(filename)
+
+
+def load_taxonomy_frame(filename: str = TAXONOMY_FILENAME) -> pd.DataFrame:
+	return _read_csv(filename)
+
+
+def load_toxicology_frame(filename: str = TOXICOLOGY_FILENAME) -> pd.DataFrame:
+	return _read_csv(filename)
+
+
+def load_pathway_reaction_frame(filename: str = PATHWAY_REACTION_FILENAME) -> pd.DataFrame:
+	return _read_csv(filename)
+
+
+def _read_csv(filename: str) -> pd.DataFrame:
+	path = Path(cid4_analysis.resolve_data_path(filename))
+	return pd.read_csv(path)
+*** Add File: /Users/Artsem_Nikitsenka/projects/pubchem-cid4-analysis/py/src/nlp/text_processing.py
+from __future__ import annotations
+
+import re
+from collections.abc import Iterable
+from typing import Any
+
+BASE_STOPWORDS = {
+	"a",
+	"an",
+	"and",
+	"are",
+	"as",
+	"at",
+	"be",
+	"by",
+	"for",
+	"from",
+	"in",
+	"into",
+	"is",
+	"it",
+	"of",
+	"on",
+	"or",
+	"that",
+	"the",
+	"this",
+	"to",
+	"was",
+	"were",
+	"with",
+}
+
+CHEMISTRY_ALLOWLIST = {
+	"1-amino-2-propanol",
+	"1-amino-propan-2-ol",
+	"aminoacetone",
+	"cid",
+	"doi",
+	"er-alpha",
+	"fungicide",
+	"glutathione",
+	"ic50",
+	"isopropanolamine",
+	"metabolism",
+	"nadh",
+	"nad+",
+	"pmid",
+	"sid",
+	"tox21",
+}
+
+TOKEN_PATTERN = re.compile(r"[A-Za-z0-9]+(?:[+\-/][A-Za-z0-9]+)*")
+
+
+def normalize_text(value: Any) -> str:
+	if value is None:
+		return ""
+
+	text = str(value)
+	text = re.sub(r"<[^>]+>", " ", text)
+	text = text.replace("&gt;", ">")
+	text = text.replace("&lt;", "<")
+	text = text.replace("μ", "u")
+	text = re.sub(r"\s+", " ", text)
+	return text.strip()
+
+
+def tokenize_preserving_chemistry(text: str) -> list[str]:
+	normalized = normalize_text(text)
+	return TOKEN_PATTERN.findall(normalized)
+
+
+def lowercase_tokens(tokens: Iterable[str]) -> list[str]:
+	return [token.lower() for token in tokens if token]
+
+
+def filter_stopwords(tokens: Iterable[str], stopwords: set[str] | None = None) -> list[str]:
+	vocabulary = BASE_STOPWORDS if stopwords is None else stopwords
+	filtered: list[str] = []
+	for token in tokens:
+		lowered = token.lower()
+		if lowered in CHEMISTRY_ALLOWLIST:
+			filtered.append(lowered)
+			continue
+		if lowered in vocabulary:
+			continue
+		filtered.append(lowered)
+	return filtered
+
+
+def build_document_text(frame: Any, columns: list[str]) -> list[str]:
+	documents: list[str] = []
+	for _, row in frame.iterrows():
+		parts = [normalize_text(row.get(column, "")) for column in columns]
+		joined = " ".join(part for part in parts if part)
+		if joined:
+			documents.append(joined)
+	return documents
+
+
+def stable_top_items(items: dict[str, int | float], limit: int) -> list[dict[str, int | float | str]]:
+	ranked = sorted(items.items(), key=lambda item: (-float(item[1]), item[0]))
+	return [{"item": key, "value": value} for key, value in ranked[:limit]]
+*** Add File: /Users/Artsem_Nikitsenka/projects/pubchem-cid4-analysis/py/src/nlp/nltk_workflows.py
+from __future__ import annotations
+
+from collections import Counter
+from collections.abc import Iterable
+from math import log2
+from typing import Any
+
+from nlp.datasets import (
+	load_bioactivity_frame,
+	load_literature_frame,
+	load_pathway_reaction_frame,
+	load_patent_frame,
+	load_taxonomy_frame,
+	load_toxicology_frame,
+)
+from nlp.text_processing import (
+	CHEMISTRY_ALLOWLIST,
+	build_document_text,
+	filter_stopwords,
+	lowercase_tokens,
+	normalize_text,
+	stable_top_items,
+	tokenize_preserving_chemistry,
+)
+
+TOP_TERM_LIMIT = 20
+TOP_BIGRAM_LIMIT = 15
+TOP_DISTINCTIVE_LIMIT = 12
+
+
+def run_literature_workflow() -> dict[str, Any]:
+	nltk_module = import_nltk()
+	if isinstance(nltk_module, dict):
+		return nltk_module
+
+	frame = load_literature_frame()
+	documents = build_document_text(
+		frame,
+		["Title", "Abstract", "Keywords", "Citation", "Subject", "Publication_Name"],
+	)
+	analysis = analyze_documents(nltk_module, documents)
+	analysis.update(
+		{
+			"status": "ok",
+			"workflow": "literature",
+			"row_count": int(len(frame)),
+			"document_count": int(len(documents)),
+			"notable_term_counts": count_specific_terms(
+				analysis["tokens"], ["isopropanolamine", "fungicide", "pathway", "metabolism"]
+			),
+		}
+	)
+	del analysis["tokens"]
+	return analysis
+
+
+def run_literature_vs_patent_workflow() -> dict[str, Any]:
+	nltk_module = import_nltk()
+	if isinstance(nltk_module, dict):
+		return nltk_module
+
+	literature_documents = build_document_text(load_literature_frame(), ["Title", "Abstract", "Keywords", "Citation"])
+	patent_documents = build_document_text(load_patent_frame(), ["title", "abstract"])
+
+	literature_analysis = analyze_documents(nltk_module, literature_documents)
+	patent_analysis = analyze_documents(nltk_module, patent_documents)
+
+	literature_counter = Counter(literature_analysis["tokens"])
+	patent_counter = Counter(patent_analysis["tokens"])
+	distinctive_patent = distinctive_terms(patent_counter, literature_counter)
+	distinctive_literature = distinctive_terms(literature_counter, patent_counter)
+
+	result = {
+		"status": "ok",
+		"workflow": "literature-vs-patent",
+		"literature_document_count": int(len(literature_documents)),
+		"patent_document_count": int(len(patent_documents)),
+		"literature_top_terms": literature_analysis["top_terms"],
+		"patent_top_terms": patent_analysis["top_terms"],
+		"literature_top_bigrams": literature_analysis["top_bigrams"],
+		"patent_top_bigrams": patent_analysis["top_bigrams"],
+		"distinctive_literature_terms": distinctive_literature,
+		"distinctive_patent_terms": distinctive_patent,
+	}
+	return result
+
+
+def run_bioactivity_workflow() -> dict[str, Any]:
+	nltk_module = import_nltk()
+	if isinstance(nltk_module, dict):
+		return nltk_module
+
+	frame = load_bioactivity_frame()
+	documents = build_document_text(
+		frame,
+		["BioAssay_Name", "Target_Name", "Activity", "Activity_Type", "citations"],
+	)
+	analysis = analyze_documents(nltk_module, documents)
+	analysis.update(
+		{
+			"status": "ok",
+			"workflow": "bioactivity",
+			"row_count": int(len(frame)),
+			"notable_term_counts": count_specific_terms(
+				analysis["tokens"], ["estrogen", "androgen", "cytochrome", "plasmodium", "yeast"]
+			),
+		}
+	)
+	del analysis["tokens"]
+	return analysis
+
+
+def run_taxonomy_workflow() -> dict[str, Any]:
+	nltk_module = import_nltk()
+	if isinstance(nltk_module, dict):
+		return nltk_module
+
+	frame = load_taxonomy_frame()
+	source_tokens: list[str] = []
+	normalized_pairs: list[dict[str, str | int]] = []
+	for _, row in frame.iterrows():
+		organism = normalize_text(row.get("Source_Organism", ""))
+		taxonomy = normalize_text(row.get("Taxonomy", ""))
+		tokens = prepare_tokens(nltk_module, f"{organism} {taxonomy}")
+		source_tokens.extend(tokens)
+		normalized_pairs.append(
+			{
+				"source_organism": organism,
+				"taxonomy": taxonomy,
+				"normalized_label": " ".join(tokens[:6]),
+				"taxonomy_id": int(row.get("Taxonomy_ID")) if str(row.get("Taxonomy_ID", "")).strip() else -1,
+			}
+		)
+
+	token_counter = Counter(source_tokens)
+	return {
+		"status": "ok",
+		"workflow": "taxonomy",
+		"row_count": int(len(frame)),
+		"top_terms": stable_top_items(dict(token_counter), TOP_TERM_LIMIT),
+		"normalization_preview": normalized_pairs[:10],
+	}
+
+
+def run_toxicology_workflow() -> dict[str, Any]:
+	nltk_module = import_nltk()
+	if isinstance(nltk_module, dict):
+		return nltk_module
+
+	frame = load_toxicology_frame()
+	documents = build_document_text(frame, ["Effect", "Route", "Reference"])
+	analysis = analyze_documents(nltk_module, documents)
+	analysis.update(
+		{
+			"status": "ok",
+			"workflow": "toxicology",
+			"row_count": int(len(frame)),
+			"route_counts": normalize_value_counts(frame["Route"]),
+			"effect_counts": count_specific_terms(analysis["tokens"], ["behavioral", "somnolence", "diarrhea", "excitement"]),
+		}
+	)
+	del analysis["tokens"]
+	return analysis
+
+
+def run_pathway_workflow() -> dict[str, Any]:
+	nltk_module = import_nltk()
+	if isinstance(nltk_module, dict):
+		return nltk_module
+
+	frame = load_pathway_reaction_frame()
+	documents = build_document_text(frame, ["Equation", "Reaction", "Control", "Taxonomy"])
+	analysis = analyze_documents(nltk_module, documents)
+	analysis.update(
+		{
+			"status": "ok",
+			"workflow": "pathway",
+			"row_count": int(len(frame)),
+			"notable_term_counts": count_specific_terms(
+				analysis["tokens"], ["glutathione", "nadh", "aminoacetone", "1-amino-propan-2-ol"]
+			),
+		}
+	)
+	del analysis["tokens"]
+	return analysis
+
+
+def analyze_documents(nltk_module: Any, documents: Iterable[str]) -> dict[str, Any]:
+	all_tokens: list[str] = []
+	all_stems: list[str] = []
+
+	for document in documents:
+		tokens = prepare_tokens(nltk_module, document)
+		all_tokens.extend(tokens)
+		all_stems.extend(stem_tokens(nltk_module, tokens))
+
+	frequency = nltk_module.FreqDist(all_tokens)
+	top_terms = [{"term": term, "count": int(count)} for term, count in frequency.most_common(TOP_TERM_LIMIT)]
+	top_bigrams = extract_top_bigrams(nltk_module, all_tokens)
+
+	return {
+		"token_count": int(len(all_tokens)),
+		"unique_token_count": int(len(set(all_tokens))),
+		"top_terms": top_terms,
+		"top_bigrams": top_bigrams,
+		"top_stems": stable_top_items(dict(Counter(all_stems)), TOP_TERM_LIMIT),
+		"tokens": all_tokens,
+	}
+
+
+def prepare_tokens(nltk_module: Any, text: str) -> list[str]:
+	raw_tokens = tokenize_preserving_chemistry(text)
+	lowered = lowercase_tokens(raw_tokens)
+	stopwords = nltk_stopwords(nltk_module)
+	filtered = filter_stopwords(lowered, stopwords)
+	return [token for token in filtered if token and not token.isdigit()]
+
+
+def stem_tokens(nltk_module: Any, tokens: Iterable[str]) -> list[str]:
+	stemmer = nltk_module.PorterStemmer()
+	stems: list[str] = []
+	for token in tokens:
+		if token in CHEMISTRY_ALLOWLIST or any(character.isdigit() for character in token):
+			stems.append(token)
+			continue
+		stems.append(stemmer.stem(token))
+	return stems
+
+
+def extract_top_bigrams(nltk_module: Any, tokens: list[str]) -> list[dict[str, int | str]]:
+	if len(tokens) < 2:
+		return []
+	finder = nltk_module.collocations.BigramCollocationFinder.from_words(tokens)
+	finder.apply_freq_filter(2)
+	scored = finder.score_ngrams(nltk_module.BigramAssocMeasures().pmi)
+	ranked = sorted(scored, key=lambda item: (-float(item[1]), item[0]))[:TOP_BIGRAM_LIMIT]
+	return [
+		{
+			"bigram": f"{left} {right}",
+			"pmi": float(score),
+		}
+		for (left, right), score in ranked
+	]
+
+
+def count_specific_terms(tokens: list[str], vocabulary: list[str]) -> dict[str, int]:
+	counter = Counter(tokens)
+	return {term: int(counter.get(term.lower(), 0)) for term in vocabulary}
+
+
+def distinctive_terms(primary: Counter[str], reference: Counter[str]) -> list[dict[str, float | str | int]]:
+	primary_total = max(sum(primary.values()), 1)
+	reference_total = max(sum(reference.values()), 1)
+	rows: list[dict[str, float | str | int]] = []
+	for term, count in primary.items():
+		if count < 3:
+			continue
+		primary_share = count / primary_total
+		reference_share = max(reference.get(term, 0) / reference_total, 1e-9)
+		score = log2(primary_share / reference_share)
+		rows.append(
+			{
+				"term": term,
+				"count": int(count),
+				"log_ratio": float(score),
+			}
+		)
+	rows.sort(key=lambda item: (-float(item["log_ratio"]), str(item["term"])))
+	return rows[:TOP_DISTINCTIVE_LIMIT]
+
+
+def normalize_value_counts(series: Any) -> dict[str, int]:
+	normalized = series.astype("string").fillna("Unknown").str.strip().replace("", "Unknown")
+	counts = normalized.value_counts().to_dict()
+	return {str(key): int(value) for key, value in counts.items()}
+
+
+def nltk_stopwords(nltk_module: Any) -> set[str]:
+	try:
+		return set(nltk_module.corpus.stopwords.words("english"))
+	except LookupError:
+		download_nltk_resource(nltk_module, "corpora/stopwords", "stopwords")
+		try:
+			return set(nltk_module.corpus.stopwords.words("english"))
+		except LookupError:
+			from nlp.text_processing import BASE_STOPWORDS
+
+			return set(BASE_STOPWORDS)
+
+
+def import_nltk() -> Any:
+	try:
+		import nltk
+		from nltk import FreqDist
+		from nltk import PorterStemmer
+		from nltk.metrics import BigramAssocMeasures
+		from nltk import collocations
+
+		nltk.FreqDist = FreqDist
+		nltk.PorterStemmer = PorterStemmer
+		nltk.BigramAssocMeasures = BigramAssocMeasures
+		nltk.collocations = collocations
+		return nltk
+	except (ImportError, ModuleNotFoundError) as exc:
+		return {
+			"status": "skipped",
+			"reason": f"NLTK is not installed in the current environment: {exc}",
+		}
+
+
+def download_nltk_resource(nltk_module: Any, locator: str, resource_name: str) -> None:
+	try:
+		nltk_module.data.find(locator)
+		return
+	except LookupError:
+		nltk_module.download(resource_name, quiet=True)
+*** Add File: /Users/Artsem_Nikitsenka/projects/pubchem-cid4-analysis/py/src/cid4_nltk.py
+from __future__ import annotations
+
+import json
+import logging as log
+from pathlib import Path
+
+import env_utils
+import fs_utils
+import log_settings
+from ml.common import to_builtin
+from nlp.nltk_workflows import (
+	run_bioactivity_workflow,
+	run_literature_vs_patent_workflow,
+	run_literature_workflow,
+	run_pathway_workflow,
+	run_taxonomy_workflow,
+	run_toxicology_workflow,
+)
+
+
+def resolve_output_directory() -> Path:
+	data_dir = Path(env_utils.get_data_dir())
+	output_directory = data_dir / "out"
+	fs_utils.create_dir_if_doesnt_exist(str(output_directory))
+	return output_directory
+
+
+def write_json(path: Path, payload: dict) -> None:
+	with path.open("w", encoding="utf-8") as file:
+		json.dump(to_builtin(payload), file, indent=2)
+
+
+def write_nltk_analysis() -> None:
+	output_directory = resolve_output_directory()
+	outputs = {
+		"cid4_nltk.literature.summary.json": run_literature_workflow(),
+		"cid4_nltk.literature_vs_patent.summary.json": run_literature_vs_patent_workflow(),
+		"cid4_nltk.bioactivity.summary.json": run_bioactivity_workflow(),
+		"cid4_nltk.taxonomy.summary.json": run_taxonomy_workflow(),
+		"cid4_nltk.toxicology.summary.json": run_toxicology_workflow(),
+		"cid4_nltk.pathway.summary.json": run_pathway_workflow(),
+	}
+
+	for filename, payload in outputs.items():
+		write_json(output_directory / filename, payload)
+		log.info("NLTK summary written to %s", output_directory / filename)
+
+
+if __name__ == "__main__":
+	log_settings.configure_logging()
+	write_nltk_analysis()
+*** Add File: /Users/Artsem_Nikitsenka/projects/pubchem-cid4-analysis/py/tests/test_nltk_workflows.py
+from __future__ import annotations
+
+import sys
+import types
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = PROJECT_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+	sys.path.insert(0, str(SRC_ROOT))
+
+from nlp.nltk_workflows import analyze_documents, import_nltk, run_literature_workflow  # noqa: E402
+from nlp.text_processing import filter_stopwords, tokenize_preserving_chemistry  # noqa: E402
+
+
+class FakeFreqDist(dict):
+	def __init__(self, tokens: list[str]) -> None:
+		counts: dict[str, int] = {}
+		for token in tokens:
+			counts[token] = counts.get(token, 0) + 1
+		super().__init__(counts)
+
+	def most_common(self, limit: int) -> list[tuple[str, int]]:
+		return sorted(self.items(), key=lambda item: (-item[1], item[0]))[:limit]
+
+
+class FakeStemmer:
+	def stem(self, token: str) -> str:
+		return token.rstrip("s")
+
+
+class FakeBigramAssocMeasures:
+	def pmi(self) -> str:
+		return "pmi"
+
+
+class FakeBigramCollocationFinder:
+	def __init__(self, tokens: list[str]) -> None:
+		self.tokens = tokens
+
+	@classmethod
+	def from_words(cls, tokens: list[str]) -> FakeBigramCollocationFinder:
+		return cls(tokens)
+
+	def apply_freq_filter(self, minimum_frequency: int) -> None:
+		del minimum_frequency
+
+	def score_ngrams(self, measure: object) -> list[tuple[tuple[str, str], float]]:
+		del measure
+		pairs: list[tuple[tuple[str, str], float]] = []
+		for index in range(len(self.tokens) - 1):
+			pairs.append(((self.tokens[index], self.tokens[index + 1]), float(index + 1)))
+		return pairs
+
+
+class FakeStopwords:
+	@staticmethod
+	def words(language: str) -> list[str]:
+		if language != "english":
+			return []
+		return ["the", "and", "for", "of"]
+
+
+def build_fake_nltk_module() -> types.SimpleNamespace:
+	return types.SimpleNamespace(
+		FreqDist=FakeFreqDist,
+		PorterStemmer=FakeStemmer,
+		BigramAssocMeasures=FakeBigramAssocMeasures,
+		collocations=types.SimpleNamespace(BigramCollocationFinder=FakeBigramCollocationFinder),
+		corpus=types.SimpleNamespace(stopwords=FakeStopwords()),
+		data=types.SimpleNamespace(find=lambda locator: locator),
+		download=lambda resource_name, quiet=True: None,
+	)
+
+
+class NltkWorkflowTests(unittest.TestCase):
+	def test_tokenizer_preserves_chemistry_tokens(self) -> None:
+		text = "1-Amino-2-propanol with NADH, IC50, ER-alpha, PMID 123 and CID 4."
+
+		tokens = tokenize_preserving_chemistry(text)
+
+		self.assertIn("1-Amino-2-propanol", tokens)
+		self.assertIn("NADH", tokens)
+		self.assertIn("IC50", tokens)
+		self.assertIn("ER-alpha", tokens)
+		self.assertIn("PMID", tokens)
+		self.assertIn("CID", tokens)
+
+	def test_stopword_filter_preserves_chemistry_allowlist(self) -> None:
+		filtered = filter_stopwords(["the", "and", "isopropanolamine", "NADH", "fungicide"])
+
+		self.assertEqual(filtered, ["isopropanolamine", "nadh", "fungicide"])
+
+	def test_import_nltk_returns_skipped_when_library_missing(self) -> None:
+		original_import = __import__
+
+		def fake_import(name: str, *args: object, **kwargs: object) -> object:
+			if name == "nltk":
+				raise ModuleNotFoundError("No module named 'nltk'")
+			return original_import(name, *args, **kwargs)
+
+		with patch("builtins.__import__", side_effect=fake_import):
+			result = import_nltk()
+
+		self.assertEqual(result["status"], "skipped")
+
+	def test_analyze_documents_uses_expected_result_shape(self) -> None:
+		fake_nltk = build_fake_nltk_module()
+
+		result = analyze_documents(fake_nltk, ["isopropanolamine fungicide pathway", "fungicide pathway"])
+
+		self.assertIn("top_terms", result)
+		self.assertIn("top_bigrams", result)
+		self.assertGreater(result["token_count"], 0)
+
+	def test_literature_workflow_can_run_with_fake_nltk(self) -> None:
+		fake_nltk = build_fake_nltk_module()
+		fake_frame = types.SimpleNamespace(
+			iterrows=lambda: iter(
+				[
+					(
+						0,
+						{
+							"Title": "Isopropanolamine fungicide report",
+							"Abstract": "Pathway metabolism study",
+							"Keywords": "fungicide, metabolism",
+							"Citation": "PMID 1",
+							"Subject": "Chemistry",
+							"Publication_Name": "Journal",
+						},
+					)
+				]
+			),
+			__len__=lambda self: 1,
+		)
+
+		with patch("nlp.nltk_workflows.import_nltk", return_value=fake_nltk), patch(
+			"nlp.nltk_workflows.load_literature_frame", return_value=fake_frame
+		):
+			result = run_literature_workflow()
+
+		self.assertEqual(result["status"], "ok")
+		self.assertEqual(result["workflow"], "literature")
+
+
+if __name__ == "__main__":
+	unittest.main()
