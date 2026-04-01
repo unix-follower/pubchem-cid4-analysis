@@ -32,6 +32,7 @@ import org.example.analysis.spectrum.LaplacianAnalysisResult
 import org.example.analysis.spectrum.LaplacianService
 import org.example.model.Conformer3DCompoundDto
 import org.example.search.lucene.LuceneCli
+import org.example.search.solr.SolrCli
 import org.example.utils as fsUtils
 import org.openscience.cdk.DefaultChemObjectBuilder
 import org.openscience.cdk.interfaces.IAtomContainer
@@ -638,6 +639,15 @@ def main(args: String*): Unit =
       LuceneCli.run(luceneMode)
     case "lucene-build" => LuceneCli.run("build")
     case "lucene-query" => LuceneCli.run("query")
+    case "solr" =>
+      val solrMode =
+        distanceSource match
+          case "export" | "post" | "query" | "all" => distanceSource
+          case _                                   => "all"
+      SolrCli.run(solrMode)
+    case "solr-export" => SolrCli.run("export")
+    case "solr-post"   => SolrCli.run("post")
+    case "solr-query"  => SolrCli.run("query")
     case _ =>
       readJson(method, distanceSource)
       readSdf()

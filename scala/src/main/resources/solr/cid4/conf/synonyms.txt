@@ -1,0 +1,3 @@
+1-amino-2-propanol,1-aminopropan-2-ol,isopropanolamine,monoisopropanolamine
+er-alpha,estrogen receptor alpha
+nadh,nicotinamide adenine dinucleotide

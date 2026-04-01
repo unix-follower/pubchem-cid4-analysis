@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema name="cid4" version="1.7">
+  <uniqueKey>id</uniqueKey>
+
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
+  <fieldType name="pint" class="solr.IntPointField" docValues="true" />
+  <fieldType name="pfloat" class="solr.FloatPointField" docValues="true" />
+  <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory" />
+      <filter class="solr.LowerCaseFilterFactory" />
+      <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true" />
+    </analyzer>
+  </fieldType>
+
+  <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />
+  <field name="doc_type" type="string" indexed="true" stored="true" multiValued="false" />
+  <field name="source_file" type="string" indexed="true" stored="true" multiValued="false" />
+  <field name="row_id" type="string" indexed="true" stored="true" multiValued="false" />
+  <field name="title" type="text_general" indexed="true" stored="true" multiValued="false" />
+  <field name="text" type="text_general" indexed="true" stored="true" multiValued="false" />
+  <field name="raw_payload" type="text_general" indexed="false" stored="true" multiValued="false" />
+
+  <dynamicField name="*_txt" type="text_general" indexed="true" stored="true" multiValued="false" />
+  <dynamicField name="*_ss" type="string" indexed="true" stored="true" multiValued="true" />
+  <dynamicField name="*_i" type="pint" indexed="true" stored="true" multiValued="false" />
+  <dynamicField name="*_f" type="pfloat" indexed="true" stored="true" multiValued="false" />
+
+  <copyField source="title" dest="text" />
+</schema>

@@ -42,6 +42,28 @@ Artifacts are written under `DATA_DIR/out/lucene`:
 - `cid4.lucene.index.summary.json` — document counts by `doc_type` and source file
 - `cid4.lucene.query_examples.summary.json` — fixed example-query results for literature, patents, bioactivity, and pathway lookup
 
+## Run Solr export and optional live queries
+```shell
+sbt "run solr"
+sbt "run solr all"
+sbt "run solr export"
+sbt "run solr post"
+sbt "run solr query"
+```
+
+The Solr mode reuses the Lucene document loaders to build one mixed Solr-ready corpus from literature, patents, bioactivity, taxonomy, pathway, pathway-reaction, CPDat, curated citations, and flattened compound-record data.
+
+Artifacts are written under `DATA_DIR/out/solr`:
+- `cid4.solr.docs.jsonl` — newline-delimited mixed Solr documents ready for `/update`
+- `configsets/cid4/conf/` — exported Solr configset with schema, analyzers, and synonym rules
+- `cid4.solr.summary.json` — export counts plus optional live ingest/query status and example query results
+
+Optional live Solr settings:
+- `SOLR_URL` — base Solr URL such as `http://localhost:8983/solr`
+- `SOLR_COLLECTION` — target collection name, defaults to `cid4`
+
+If `SOLR_URL` is not set, `sbt "run solr"` still writes the JSONL export and configset, then records the live ingest/query phase as `skipped` in the summary.
+
 The default `sbt "run lucene"` mode rebuilds the index and then executes the example query set. The existing adjacency, distance-matrix, spectrum, and bioactivity analysis runs remain unchanged when the first argument is not one of the Lucene modes.
 
 The same run also writes a bond-angle analysis JSON artifact for the active conformer:

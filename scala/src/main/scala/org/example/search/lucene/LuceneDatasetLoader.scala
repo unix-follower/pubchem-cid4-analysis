@@ -262,6 +262,61 @@ object LuceneDatasetLoader:
       )
     }
 
+  def loadCpdatDocuments(path: Path): Iterator[LuceneSourceDocument] =
+    iterateCsv(path).zipWithIndex.map { case (record, index) =>
+      val rowId = firstNonEmpty(recordValue(record, "gid"), recordValue(record, "CID"), index.toString)
+      val title = firstNonEmpty(recordValue(record, "Category"), recordValue(record, "cmpdname"), s"cpdat_$index")
+      LuceneSourceDocument(
+        docId = buildDocId("cpdat", path.getFileName.toString, rowId),
+        docType = "cpdat",
+        sourceFile = path.getFileName.toString,
+        sourceRowId = rowId,
+        title = title,
+        textFields = compactTextFields(
+          "title" -> title,
+          "category" -> recordValue(record, "Category"),
+          "category_description" -> recordValue(record, "Category_Description"),
+          "compound_name" -> recordValue(record, "cmpdname")
+        ),
+        exactFields = compactExactFields(
+          "gid" -> Seq(recordValue(record, "gid")),
+          "cid" -> Seq(recordValue(record, "CID")),
+          "categorization_type" -> Seq(recordValue(record, "Categorization_Type"))
+        ),
+        intFields = Map.empty,
+        floatFields = Map.empty,
+        rawPayload = rowPayload(record)
+      )
+    }
+
+  def loadCuratedCitationDocuments(path: Path): Iterator[LuceneSourceDocument] =
+    val root = jsonMapper.readTree(Files.readString(path))
+    val literature = root.path("Literature")
+    val recordNumber = textValue(literature.path("RecordNumber"))
+    val recordType = textValue(literature.path("RecordType"))
+    val allUrl = textValue(literature.path("AllURL"))
+    Iterator.single(
+      LuceneSourceDocument(
+        docId = buildDocId("curated_citation", path.getFileName.toString, firstNonEmpty(recordNumber, "cid4")),
+        docType = "curated_citation",
+        sourceFile = path.getFileName.toString,
+        sourceRowId = firstNonEmpty(recordNumber, "cid4"),
+        title = "CID 4 curated citation anchor",
+        textFields = compactTextFields(
+          "title" -> "CID 4 curated citation anchor",
+          "citation_anchor" -> allUrl,
+          "record_type" -> recordType
+        ),
+        exactFields = compactExactFields(
+          "record_number" -> Seq(recordNumber),
+          "record_type" -> Seq(recordType)
+        ),
+        intFields = Map.empty,
+        floatFields = Map.empty,
+        rawPayload = root.toPrettyString
+      )
+    )
+
   def loadCompoundRecordDocuments(path: Path): Iterator[LuceneSourceDocument] =
     val root = jsonMapper.readTree(Files.readString(path))
     val record = root.path("Record")
