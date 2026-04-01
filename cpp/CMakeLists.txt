@@ -22,6 +22,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(PUBCHEM_ENABLE_VULKAN_APP "Build the optional CID 4 Vulkan viewer bootstrap" ON)
 option(PUBCHEM_ENABLE_OPENGL_APP "Build the optional CID 4 OpenGL viewer bootstrap" ON)
 option(PUBCHEM_ENABLE_CUDA_APP "Build the optional CID 4 CUDA geometry analyzer" ON)
+option(PUBCHEM_ENABLE_OPENCV_APP "Build the optional CID 4 OpenCV image diagnostics tool" ON)
 
 set(PUBCHEM_RDKIT_PREFIX "$ENV{PUBCHEM_RDKIT_PREFIX}" CACHE PATH "Path to a conda or micromamba environment that provides RDKit")
 if(NOT PUBCHEM_RDKIT_PREFIX AND DEFINED ENV{CONDA_PREFIX})
@@ -56,6 +57,10 @@ target_link_libraries(
 add_library(cid4_scene_loader src/cid4_scene.cpp)
 target_include_directories(cid4_scene_loader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cid4_scene_loader PUBLIC nlohmann_json::nlohmann_json)
+
+add_library(cid4_opencv_support src/cid4_opencv.cpp)
+target_include_directories(cid4_opencv_support PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(cid4_opencv_support PUBLIC cid4_scene_loader nlohmann_json::nlohmann_json)
 
 add_library(cid4_cuda_buffers src/cid4_cuda_buffers.cpp)
 target_include_directories(cid4_cuda_buffers PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -152,11 +157,30 @@ if(PUBCHEM_ENABLE_CUDA_APP)
 	endif()
 endif()
 
+if(PUBCHEM_ENABLE_OPENCV_APP)
+	find_package(OpenCV QUIET CONFIG COMPONENTS core imgcodecs imgproc)
+
+	add_executable(opencv_app src/opencv_app.cpp)
+	set_target_properties(opencv_app PROPERTIES OUTPUT_NAME opencv_app)
+	target_compile_definitions(opencv_app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
+	target_link_libraries(opencv_app PRIVATE cid4_opencv_support)
+
+	if(OpenCV_FOUND)
+		target_compile_definitions(opencv_app PRIVATE PUBCHEM_OPENCV_RUNTIME_AVAILABLE=1)
+		target_include_directories(opencv_app PRIVATE ${OpenCV_INCLUDE_DIRS})
+		target_link_libraries(opencv_app PRIVATE ${OpenCV_LIBS})
+		message(STATUS "OpenCV detected. Building opencv_app with image-processing workflows enabled.")
+	else()
+		target_compile_definitions(opencv_app PRIVATE PUBCHEM_OPENCV_RUNTIME_AVAILABLE=0)
+		message(STATUS "OpenCV not detected. Building opencv_app stub mode for compile-only development.")
+	endif()
+endif()
+
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
-add_executable(tests test/analysis_test.cpp test/cuda_buffers_test.cpp)
-target_link_libraries(tests PRIVATE analysis_core cid4_cuda_buffers GTest::gtest GTest::gtest_main)
+add_executable(tests test/analysis_test.cpp test/cuda_buffers_test.cpp test/opencv_support_test.cpp)
+target_link_libraries(tests PRIVATE analysis_core cid4_cuda_buffers cid4_opencv_support GTest::gtest GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(tests DISCOVERY_TIMEOUT 30)
