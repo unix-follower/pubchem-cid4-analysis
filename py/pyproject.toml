@@ -21,6 +21,10 @@ dependencies = [
 descriptor-ml = [
     "dscribe>=2.1.1",
 ]
+langchain = [
+    "langchain>=0.3.27",
+    "langchain-text-splitters>=0.3.11",
+]
 nltk = [
     "nltk>=3.9.1",
 ]

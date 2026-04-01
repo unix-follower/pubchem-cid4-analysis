@@ -170,6 +170,37 @@ Expected output under `data/out`:
 - `cid4_pgvector.summary.json`
 
 The current embedding provider is intentionally lightweight and deterministic so the pipeline stays testable and CI-friendly. It is good enough for schema, ingestion, and hybrid-query prototyping, and can later be replaced with a stronger embedding model without changing the PostgreSQL storage contract.
+
+## LangChain runner
+The Python workspace now also includes a LangChain-oriented RAG and routing runner for CID 4. It sits on top of the existing document shaping and pgvector work, writes JSON summaries into `data/out`, and supports:
+- literature RAG over titles, abstracts, and citation metadata
+- assay QA over bioactivity rows with metadata-aware retrieval
+- pathway and reaction explanation
+- taxonomy lookup and explanation
+- a small rule-based multi-tool router for multi-source CID 4 questions
+
+Run it from the `py` workspace:
+
+```sh
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_langchain.py
+```
+
+Enable the optional dependency with:
+
+```sh
+uv sync --extra langchain
+```
+
+If LangChain is not installed or `PGVECTOR_DSN` is not set, the runner still completes. It falls back to an in-memory hashed-token retriever and writes explicit runtime metadata showing whether the full LangChain path was active.
+
+Expected outputs under `data/out`:
+- `cid4_langchain.literature.summary.json`
+- `cid4_langchain.assay.summary.json`
+- `cid4_langchain.pathway.summary.json`
+- `cid4_langchain.taxonomy.summary.json`
+- `cid4_langchain.agent.summary.json`
 *** Add File: /Users/Artsem_Nikitsenka/projects/pubchem-cid4-analysis/py/src/nlp/__init__.py
 from __future__ import annotations
 
