@@ -201,6 +201,38 @@ Expected outputs under `data/out`:
 - `cid4_langchain.pathway.summary.json`
 - `cid4_langchain.taxonomy.summary.json`
 - `cid4_langchain.agent.summary.json`
+
+## LangGraph runner
+The Python workspace now also includes a LangGraph-oriented stateful workflow runner for multi-hop CID 4 questions. It reuses the existing LangChain retrieval layer and adds:
+- a compound grounding node sourced from `COMPOUND_CID_4.json`
+- a router workflow over the main CID 4 evidence families
+- an assay-plus-literature evidence chain
+- a pathway-plus-taxonomy explainer with explicit validation
+- provenance-aware JSON summaries under `data/out`
+
+Run it from the `py` workspace:
+
+```sh
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_langgraph.py
+```
+
+Enable the optional dependency with:
+
+```sh
+uv sync --extra langgraph
+```
+
+If LangGraph is not installed or `PGVECTOR_DSN` is not set, the runner still completes. It falls back to deterministic in-process graph execution and records runtime metadata showing whether the full LangGraph stack was active.
+
+Expected outputs under `data/out`:
+- `cid4_langgraph.router.summary.json`
+- `cid4_langgraph.assay_literature.summary.json`
+- `cid4_langgraph.pathway_taxonomy.summary.json`
+- `cid4_langgraph.compound_context.summary.json`
+
+The validation step in the LangGraph workflows checks that the final answer stays grounded in retrieved evidence families and carries identifiers such as AIDs, PMIDs, pathway accessions, or taxonomy IDs when those are expected.
 *** Add File: /Users/Artsem_Nikitsenka/projects/pubchem-cid4-analysis/py/src/nlp/__init__.py
 from __future__ import annotations
 

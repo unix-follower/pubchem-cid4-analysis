@@ -2477,6 +2477,9 @@ langchain = [
     { name = "langchain" },
     { name = "langchain-text-splitters" },
 ]
+langgraph = [
+    { name = "langgraph" },
+]
 nltk = [
     { name = "nltk" },
 ]
@@ -2505,6 +2508,7 @@ requires-dist = [
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "langchain", marker = "extra == 'langchain'", specifier = ">=0.3.27" },
     { name = "langchain-text-splitters", marker = "extra == 'langchain'", specifier = ">=0.3.11" },
+    { name = "langgraph", marker = "extra == 'langgraph'", specifier = ">=0.4.7" },
     { name = "matplotlib", specifier = ">=3.10.6" },
     { name = "networkx", specifier = ">=3.5" },
     { name = "nltk", marker = "extra == 'nltk'", specifier = ">=3.9.1" },
@@ -2520,7 +2524,7 @@ requires-dist = [
     { name = "sympy", specifier = ">=1.14.0" },
     { name = "xgboost", marker = "extra == 'xgboost'", specifier = ">=2.1.4" },
 ]
-provides-extras = ["descriptor-ml", "langchain", "nltk", "pgvector", "xgboost", "chem-tools"]
+provides-extras = ["descriptor-ml", "langgraph", "langchain", "nltk", "pgvector", "xgboost", "chem-tools"]
 
 [package.metadata.requires-dev]
 deep-learning = [
