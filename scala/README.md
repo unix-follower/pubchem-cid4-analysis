@@ -27,6 +27,93 @@ Each run writes a distance-matrix JSON file, an adjacency-matrix JSON file, a ma
 The same run also writes a bonded-distance comparison JSON artifact for the active conformer:
 - bonded vs non-bonded inter-atom distance statistics derived from the 3D distance matrix and PubChem bond list
 
+## Run Lucene indexing and example queries
+```shell
+sbt "run lucene"
+sbt "run lucene all"
+sbt "run lucene build"
+sbt "run lucene query"
+```
+
+The Lucene mode builds one mixed index from the CID 4 literature, patent, bioactivity, taxonomy, pathway, pathway-reaction, and flattened compound-record sources listed in the top-level README.
+
+Artifacts are written under `DATA_DIR/out/lucene`:
+- `index/` — mixed Lucene index
+- `cid4.lucene.index.summary.json` — document counts by `doc_type` and source file
+- `cid4.lucene.query_examples.summary.json` — fixed example-query results for literature, patents, bioactivity, and pathway lookup
+
+## Run Solr export and optional live queries
+```shell
+sbt "run solr"
+sbt "run solr all"
+sbt "run solr export"
+sbt "run solr post"
+sbt "run solr query"
+```
+
+The Solr mode reuses the Lucene document loaders to build one mixed Solr-ready corpus from literature, patents, bioactivity, taxonomy, pathway, pathway-reaction, CPDat, curated citations, and flattened compound-record data.
+
+Artifacts are written under `DATA_DIR/out/solr`:
+- `cid4.solr.docs.jsonl` — newline-delimited mixed Solr documents ready for `/update`
+- `configsets/cid4/conf/` — exported Solr configset with schema, analyzers, and synonym rules
+- `cid4.solr.summary.json` — export counts plus optional live ingest/query status and example query results
+
+Optional live Solr settings:
+- `SOLR_URL` — base Solr URL such as `http://localhost:8983/solr`
+- `SOLR_COLLECTION` — target collection name, defaults to `cid4`
+
+If `SOLR_URL` is not set, `sbt "run solr"` still writes the JSONL export and configset, then records the live ingest/query phase as `skipped` in the summary.
+
+## Run Elasticsearch export and optional live queries
+```shell
+sbt "run elasticsearch"
+sbt "run elasticsearch all"
+sbt "run elasticsearch export"
+sbt "run elasticsearch post"
+sbt "run elasticsearch query"
+```
+
+The Elasticsearch mode reuses the Lucene document loaders to build one mixed JSON corpus from literature, patents, bioactivity, taxonomy, pathway, pathway-reaction, CPDat, curated citations, and flattened compound-record data.
+
+Artifacts are written under `DATA_DIR/out/elasticsearch`:
+- `cid4.elasticsearch.bulk.ndjson` — bulk-ready mixed Elasticsearch documents
+- `config/` — exported index template, settings, and synonym rules
+- `cid4.elasticsearch.summary.json` — export counts plus optional live ingest/query status and example query results
+
+Optional live Elasticsearch settings:
+- `ELASTICSEARCH_URL` — base Elasticsearch URL such as `http://localhost:9200`
+- `ELASTICSEARCH_INDEX` — target index name, defaults to `cid4`
+- `ELASTICSEARCH_API_KEY` — optional API key used as an `Authorization: ApiKey ...` header
+
+If `ELASTICSEARCH_URL` is not set, `sbt "run elasticsearch"` still writes the NDJSON export and bundled config, then records the live ingest/query phase as `skipped` in the summary.
+
+## Run OpenNLP corpus workflows
+```shell
+sbt "run opennlp"
+sbt "run opennlp all"
+sbt "run opennlp literature"
+sbt "run opennlp patent"
+sbt "run opennlp assay"
+sbt "run opennlp pathway"
+sbt "run opennlp taxonomy"
+sbt "run opennlp cpdat"
+sbt "run opennlp toxicology"
+sbt "run opennlp springer"
+```
+
+The OpenNLP mode builds lightweight corpus summaries for literature, patents, assay text, pathway and reaction text, taxonomy strings, CPDat product-use rows, ChemIDplus toxicology rows, and Springer metadata.
+
+Artifacts are written under `DATA_DIR/out/opennlp`:
+- `cid4.opennlp.summary.json` — runtime configuration plus per-workflow summary paths
+- `cid4.opennlp.<workflow>.summary.json` — token, sentence, phrase, and optional categorization summaries for each workflow
+
+Optional OpenNLP settings:
+- `OPENNLP_MODEL_DIR` — directory containing model binaries such as `en-sent.bin`, `en-token.bin`, `en-pos-maxent.bin`, and `en-chunker.bin`
+
+If `OPENNLP_MODEL_DIR` is not set or some model binaries are missing, the workflows still run with a hybrid fallback strategy using regex sentence splitting, `SimpleTokenizer`, and n-gram phrase extraction. Document categorization is trained only for workflows that have useful labels in the underlying dataset.
+
+The default `sbt "run lucene"` mode rebuilds the index and then executes the example query set. The existing adjacency, distance-matrix, spectrum, and bioactivity analysis runs remain unchanged when the first argument is not one of the Lucene modes.
+
 The same run also writes a bond-angle analysis JSON artifact for the active conformer:
 - bonded angles $A$-$B$-$C$ derived from the 3D coordinates using the dot-product formula, where $A$-$B$ and $B$-$C$ are bonded and $B$ is the central atom
 

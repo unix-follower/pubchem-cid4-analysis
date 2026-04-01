@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <luceneMatchVersion>9.8.1</luceneMatchVersion>
+
+  <dataDir>${solr.data.dir:}</dataDir>
+
+  <directoryFactory name="DirectoryFactory" class="solr.NRTCachingDirectoryFactory" />
+  <codecFactory class="solr.SchemaCodecFactory" />
+
+  <updateHandler class="solr.DirectUpdateHandler2" />
+
+  <requestDispatcher handleSelect="true">
+    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048000" formdataUploadLimitInKB="2048" />
+  </requestDispatcher>
+
+  <requestHandler name="/select" class="solr.SearchHandler">
+    <lst name="defaults">
+      <str name="echoParams">explicit</str>
+      <int name="rows">10</int>
+      <str name="df">text</str>
+    </lst>
+  </requestHandler>
+
+  <requestHandler name="/query" class="solr.SearchHandler" />
+  <requestHandler name="/update" class="solr.UpdateRequestHandler" />
+  <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
+    <lst name="defaults">
+      <str name="q">*:*</str>
+    </lst>
+  </requestHandler>
+</config>

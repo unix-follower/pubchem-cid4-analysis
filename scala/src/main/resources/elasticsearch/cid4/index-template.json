@@ -1,0 +1,66 @@
+{
+  "index_patterns": [
+    "cid4*"
+  ],
+  "template": {
+    "settings": {
+      "analysis": {
+        "filter": {
+          "cid4_synonym_filter": {
+            "type": "synonym_graph",
+            "synonyms_path": "analysis/synonyms.txt"
+          }
+        },
+        "analyzer": {
+          "cid4_text": {
+            "tokenizer": "standard",
+            "filter": [
+              "lowercase",
+              "cid4_synonym_filter"
+            ]
+          }
+        },
+        "normalizer": {
+          "cid4_keyword": {
+            "type": "custom",
+            "filter": [
+              "lowercase"
+            ]
+          }
+        }
+      }
+    },
+    "mappings": {
+      "dynamic": true,
+      "properties": {
+        "id": { "type": "keyword" },
+        "doc_type": { "type": "keyword", "normalizer": "cid4_keyword" },
+        "source_file": { "type": "keyword" },
+        "row_id": { "type": "keyword" },
+        "title": {
+          "type": "text",
+          "analyzer": "cid4_text",
+          "fields": {
+            "keyword": { "type": "keyword", "ignore_above": 512 }
+          }
+        },
+        "text": { "type": "text", "analyzer": "cid4_text" },
+        "raw_payload": { "type": "keyword", "index": false, "doc_values": false },
+        "pmid": { "type": "keyword" },
+        "doi": { "type": "keyword", "normalizer": "cid4_keyword" },
+        "aid": { "type": "keyword" },
+        "sid": { "type": "keyword" },
+        "cid": { "type": "keyword" },
+        "taxonomy_id": { "type": "keyword" },
+        "pathway_accession": { "type": "keyword", "normalizer": "cid4_keyword" },
+        "publication_date": { "type": "keyword" },
+        "publication_year": { "type": "integer" },
+        "priority_year": { "type": "integer" },
+        "grant_year": { "type": "integer" },
+        "activity_value": { "type": "float" },
+        "has_dose_response_curve": { "type": "integer" },
+        "rnai_bioassay": { "type": "integer" }
+      }
+    }
+  }
+}
