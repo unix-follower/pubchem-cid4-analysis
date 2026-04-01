@@ -27,6 +27,23 @@ Each run writes a distance-matrix JSON file, an adjacency-matrix JSON file, a ma
 The same run also writes a bonded-distance comparison JSON artifact for the active conformer:
 - bonded vs non-bonded inter-atom distance statistics derived from the 3D distance matrix and PubChem bond list
 
+## Run Lucene indexing and example queries
+```shell
+sbt "run lucene"
+sbt "run lucene all"
+sbt "run lucene build"
+sbt "run lucene query"
+```
+
+The Lucene mode builds one mixed index from the CID 4 literature, patent, bioactivity, taxonomy, pathway, pathway-reaction, and flattened compound-record sources listed in the top-level README.
+
+Artifacts are written under `DATA_DIR/out/lucene`:
+- `index/` — mixed Lucene index
+- `cid4.lucene.index.summary.json` — document counts by `doc_type` and source file
+- `cid4.lucene.query_examples.summary.json` — fixed example-query results for literature, patents, bioactivity, and pathway lookup
+
+The default `sbt "run lucene"` mode rebuilds the index and then executes the example query set. The existing adjacency, distance-matrix, spectrum, and bioactivity analysis runs remain unchanged when the first argument is not one of the Lucene modes.
+
 The same run also writes a bond-angle analysis JSON artifact for the active conformer:
 - bonded angles $A$-$B$-$C$ derived from the 3D coordinates using the dot-product formula, where $A$-$B$ and $B$-$C$ are bonded and $B$ is the central atom
 

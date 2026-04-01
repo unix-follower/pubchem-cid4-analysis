@@ -31,6 +31,7 @@ import org.example.analysis.spectrum.EigendecompositionService
 import org.example.analysis.spectrum.LaplacianAnalysisResult
 import org.example.analysis.spectrum.LaplacianService
 import org.example.model.Conformer3DCompoundDto
+import org.example.search.lucene.LuceneCli
 import org.example.utils as fsUtils
 import org.openscience.cdk.DefaultChemObjectBuilder
 import org.openscience.cdk.interfaces.IAtomContainer
@@ -625,6 +626,18 @@ private def readSdf(): Unit =
   logger.info(f"Exact molecular mass: $averageExactMW")
 
 @main
-def main(method: String = "jgrapht", distanceSource: String = "json"): Unit =
-  readJson(method, distanceSource)
-  readSdf()
+def main(args: String*): Unit =
+  val method = args.headOption.getOrElse("jgrapht")
+  val distanceSource = args.drop(1).headOption.getOrElse("json")
+  method match
+    case "lucene" =>
+      val luceneMode =
+        distanceSource match
+          case "build" | "query" | "all" => distanceSource
+          case _                         => "all"
+      LuceneCli.run(luceneMode)
+    case "lucene-build" => LuceneCli.run("build")
+    case "lucene-query" => LuceneCli.run("query")
+    case _ =>
+      readJson(method, distanceSource)
+      readSdf()
