@@ -31,6 +31,7 @@ import org.example.analysis.spectrum.EigendecompositionService
 import org.example.analysis.spectrum.LaplacianAnalysisResult
 import org.example.analysis.spectrum.LaplacianService
 import org.example.model.Conformer3DCompoundDto
+import org.example.search.elasticsearch.ElasticsearchCli
 import org.example.search.lucene.LuceneCli
 import org.example.search.solr.SolrCli
 import org.example.utils as fsUtils
@@ -648,6 +649,15 @@ def main(args: String*): Unit =
     case "solr-export" => SolrCli.run("export")
     case "solr-post"   => SolrCli.run("post")
     case "solr-query"  => SolrCli.run("query")
+    case "elasticsearch" =>
+      val elasticsearchMode =
+        distanceSource match
+          case "export" | "post" | "query" | "all" => distanceSource
+          case _                                   => "all"
+      ElasticsearchCli.run(elasticsearchMode)
+    case "elasticsearch-export" => ElasticsearchCli.run("export")
+    case "elasticsearch-post"   => ElasticsearchCli.run("post")
+    case "elasticsearch-query"  => ElasticsearchCli.run("query")
     case _ =>
       readJson(method, distanceSource)
       readSdf()

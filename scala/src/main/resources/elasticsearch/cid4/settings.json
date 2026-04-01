@@ -1,0 +1,23 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "filter": {
+        "cid4_synonym_filter": {
+          "type": "synonym_graph",
+          "synonyms_path": "analysis/synonyms.txt"
+        }
+      },
+      "analyzer": {
+        "cid4_text": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "cid4_synonym_filter"
+          ]
+        }
+      }
+    }
+  }
+}
