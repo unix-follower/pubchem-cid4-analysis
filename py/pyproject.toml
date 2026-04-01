@@ -24,6 +24,10 @@ descriptor-ml = [
 nltk = [
     "nltk>=3.9.1",
 ]
+pgvector = [
+    "pgvector>=0.4.1",
+    "psycopg[binary]>=3.2.9",
+]
 xgboost = [
     "xgboost>=2.1.4",
 ]
