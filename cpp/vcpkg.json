@@ -4,6 +4,7 @@
     "boost-graph",
     "boost-iostreams",
     "gtest",
+    "glfw3",
     "nlohmann-json",
     "boost-ublas"
   ]

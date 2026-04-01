@@ -17,6 +17,14 @@ const ELEMENT_MASSES: Record<number, number> = {
 type UnknownRecord = Record<string, unknown>
 
 export function parseConformerPayload(input: unknown): MoleculeGraph {
+  return parsePcCompoundPayload(input, "Molecular Graph")
+}
+
+export function parseStructurePayload(input: unknown): MoleculeGraph {
+  return parsePcCompoundPayload(input, "2D Structure")
+}
+
+function parsePcCompoundPayload(input: unknown, titleSuffix: string): MoleculeGraph {
   const root = expectRecord(input, "root")
   const compounds = expectArray(root["PC_Compounds"], "PC_Compounds")
   const compound = expectRecord(compounds[0], "PC_Compounds[0]")
@@ -48,20 +56,45 @@ export function parseConformerPayload(input: unknown): MoleculeGraph {
     "PC_Compounds[0].coords[0].conformers",
   )
   const conformer = expectRecord(conformers[0], "PC_Compounds[0].coords[0].conformers[0]")
+  const coordinateAtomIds = Array.isArray(coordinateRecord["aid"])
+    ? expectNumberArray(coordinateRecord["aid"], "PC_Compounds[0].coords[0].aid")
+    : atomIds
 
   const x = expectNumberArray(conformer["x"], "PC_Compounds[0].coords[0].conformers[0].x")
   const y = expectNumberArray(conformer["y"], "PC_Compounds[0].coords[0].conformers[0].y")
-  const z = expectNumberArray(conformer["z"], "PC_Compounds[0].coords[0].conformers[0].z")
+  const z = Array.isArray(conformer["z"])
+    ? expectNumberArray(conformer["z"], "PC_Compounds[0].coords[0].conformers[0].z")
+    : new Array(coordinateAtomIds.length).fill(0)
 
-  if (x.length !== atomIds.length || y.length !== atomIds.length || z.length !== atomIds.length) {
+  if (
+    coordinateAtomIds.length !== x.length ||
+    coordinateAtomIds.length !== y.length ||
+    coordinateAtomIds.length !== z.length
+  ) {
     throw new Error("Coordinate arrays must match the atom count")
   }
 
+  const coordinatesByAtomId = new Map(
+    coordinateAtomIds.map((atomId, index) => [
+      atomId,
+      {
+        x: x[index],
+        y: y[index],
+        z: z[index],
+      },
+    ]),
+  )
+
   return {
     cid,
-    title: `CID ${cid} Molecular Graph`,
+    title: `CID ${cid} ${titleSuffix}`,
     atoms: atomIds.map((id, index) => {
       const atomicNumber = atomicNumbers[index]
+      const coordinates = coordinatesByAtomId.get(id)
+
+      if (!coordinates) {
+        throw new Error(`Missing coordinates for atom ${id}`)
+      }
 
       return {
         id,
@@ -69,9 +102,9 @@ export function parseConformerPayload(input: unknown): MoleculeGraph {
         elementSymbol: ELEMENT_SYMBOLS[atomicNumber] ?? `Z${atomicNumber}`,
         mass: ELEMENT_MASSES[atomicNumber] ?? atomicNumber,
         hybridization: null,
-        x: x[index],
-        y: y[index],
-        z: z[index],
+        x: coordinates.x,
+        y: coordinates.y,
+        z: coordinates.z,
       }
     }),
     bonds: bondAid1.map((source, index) => ({

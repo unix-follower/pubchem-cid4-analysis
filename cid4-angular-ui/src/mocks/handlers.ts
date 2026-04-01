@@ -58,7 +58,84 @@ const pathwayFixture = {
   },
 }
 
-const conformerFixture = {
+const baseConformerCoordinates = {
+  x: [
+    1.5903, -1.9942, 0.4693, -0.7967, 0.7313, 0.4149, -0.709, -0.8967, 1.6841, 0.8156, -0.0587,
+    -2.8156, -2.0968, 1.4396,
+  ],
+  y: [
+    -0.8258, 0.1028, -0.0273, -0.643, 1.3933, -0.0317, -0.6871, -1.6812, 1.7603, 1.4252, 2.0827,
+    -0.377, 0.1155, -1.7233,
+  ],
+  z: [
+    0.0378, -0.1015, -0.3404, 0.2606, 0.1435, -1.4353, 1.3526, -0.0775, -0.2541, 1.2355, -0.1681,
+    0.2637, -1.1153, -0.3047,
+  ],
+}
+
+const structure2dCoordinates = {
+  x: [
+    2.5369, 5.135, 3.403, 4.269, 3.403, 3.403, 4.6675, 3.8705, 2.783, 3.403, 4.023, 5.672, 5.135, 2,
+  ],
+  y: [0.75, 0.25, 0.25, 0.75, -0.75, 1.1, 1.225, 1.225, -0.75, -1.37, -0.75, 0.56, -0.37, 0.44],
+}
+
+function buildConformerFixture(index: number) {
+  const rotation = (index - 1) * 0.34
+  const cos = Math.cos(rotation)
+  const sin = Math.sin(rotation)
+  const wobble = (index - 1) * 0.08
+
+  const x = baseConformerCoordinates.x.map((value, atomIndex) => {
+    const y = baseConformerCoordinates.y[atomIndex]
+    return Number((value * cos - y * sin).toFixed(4))
+  })
+
+  const y = baseConformerCoordinates.x.map((value, atomIndex) => {
+    const currentY = baseConformerCoordinates.y[atomIndex]
+    return Number((value * sin + currentY * cos).toFixed(4))
+  })
+
+  const z = baseConformerCoordinates.z.map((value, atomIndex) => {
+    const direction = atomIndex % 2 === 0 ? 1 : -1
+    return Number((value + wobble * direction).toFixed(4))
+  })
+
+  return {
+    PC_Compounds: [
+      {
+        id: {
+          id: {
+            cid: 4,
+          },
+        },
+        atoms: {
+          aid: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+          element: [8, 7, 6, 6, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        },
+        bonds: {
+          aid1: [1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 5],
+          aid2: [3, 14, 4, 12, 13, 4, 5, 6, 7, 8, 9, 10, 11],
+          order: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        },
+        coords: [
+          {
+            aid: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+            conformers: [
+              {
+                x,
+                y,
+                z,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+}
+
+const structure2dFixture = {
   PC_Compounds: [
     {
       id: {
@@ -79,18 +156,8 @@ const conformerFixture = {
         {
           conformers: [
             {
-              x: [
-                1.5903, -1.9942, 0.4693, -0.7967, 0.7313, 0.4149, -0.709, -0.8967, 1.6841, 0.8156,
-                -0.0587, -2.8156, -2.0968, 1.4396,
-              ],
-              y: [
-                -0.8258, 0.1028, -0.0273, -0.643, 1.3933, -0.0317, -0.6871, -1.6812, 1.7603, 1.4252,
-                2.0827, -0.377, 0.1155, -1.7233,
-              ],
-              z: [
-                0.0378, -0.1015, -0.3404, 0.2606, 0.1435, -1.4353, 1.3526, -0.0775, -0.2541, 1.2355,
-                -0.1681, 0.2637, -1.1153, -0.3047,
-              ],
+              x: structure2dCoordinates.x,
+              y: structure2dCoordinates.y,
             },
           ],
         },
@@ -98,6 +165,10 @@ const conformerFixture = {
     },
   ],
 }
+
+const conformerFixtures = new Map(
+  [1, 2, 3, 4, 5, 6].map((index) => [index, buildConformerFixture(index)]),
+)
 
 const compoundFixture = {
   Record: {
@@ -171,9 +242,21 @@ export const handlers = [
       timestamp: new Date().toISOString(),
     } satisfies MockHealthResponse)
   }),
-  http.get("/api/cid4/conformer/1", async () => {
+  http.get("/api/cid4/conformer/:index", async ({ params }) => {
     await delay(180)
-    return HttpResponse.json(conformerFixture)
+
+    const index = Number(params["index"])
+    const fixture = conformerFixtures.get(index)
+
+    if (!fixture) {
+      return HttpResponse.json({ message: `Unknown conformer ${params["index"]}` }, { status: 404 })
+    }
+
+    return HttpResponse.json(fixture)
+  }),
+  http.get("/api/cid4/structure/2d", async () => {
+    await delay(160)
+    return HttpResponse.json(structure2dFixture)
   }),
   http.get("/api/cid4/compound", async () => {
     await delay(140)

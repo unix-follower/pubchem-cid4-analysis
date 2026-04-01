@@ -8,7 +8,12 @@ import {
   findConnectedComponents,
   flattenSections,
 } from "../../core/cid4/graph"
-import { parseCompoundRecordPayload, parseConformerPayload } from "../../core/cid4/parser"
+import { compareMolecules } from "../../core/cid4/comparison"
+import {
+  parseCompoundRecordPayload,
+  parseConformerPayload,
+  parseStructurePayload,
+} from "../../core/cid4/parser"
 import {
   CompoundRecord,
   FlatSectionNode,
@@ -16,6 +21,7 @@ import {
   MoleculeGraph,
   Point,
 } from "../../core/cid4/types"
+import { MoleculeRendererViewerComponent } from "./molecule-renderer-viewer.component"
 
 const VIEWBOX_WIDTH = 720
 const VIEWBOX_HEIGHT = 460
@@ -50,6 +56,67 @@ interface BondControlRow {
   enabled: boolean
 }
 
+type MoleculeDatasetId =
+  | "structure-2d"
+  | "conformer-1"
+  | "conformer-2"
+  | "conformer-3"
+  | "conformer-4"
+  | "conformer-5"
+  | "conformer-6"
+
+interface MoleculeDatasetOption {
+  id: MoleculeDatasetId
+  label: string
+  url: string
+  parser: (payload: unknown) => MoleculeGraph
+}
+
+const MOLECULE_DATASETS: MoleculeDatasetOption[] = [
+  {
+    id: "structure-2d",
+    label: "Structure2D",
+    url: "/api/cid4/structure/2d",
+    parser: parseStructurePayload,
+  },
+  {
+    id: "conformer-1",
+    label: "Conformer 1",
+    url: "/api/cid4/conformer/1",
+    parser: parseConformerPayload,
+  },
+  {
+    id: "conformer-2",
+    label: "Conformer 2",
+    url: "/api/cid4/conformer/2",
+    parser: parseConformerPayload,
+  },
+  {
+    id: "conformer-3",
+    label: "Conformer 3",
+    url: "/api/cid4/conformer/3",
+    parser: parseConformerPayload,
+  },
+  {
+    id: "conformer-4",
+    label: "Conformer 4",
+    url: "/api/cid4/conformer/4",
+    parser: parseConformerPayload,
+  },
+  {
+    id: "conformer-5",
+    label: "Conformer 5",
+    url: "/api/cid4/conformer/5",
+    parser: parseConformerPayload,
+  },
+  {
+    id: "conformer-6",
+    label: "Conformer 6",
+    url: "/api/cid4/conformer/6",
+    parser: parseConformerPayload,
+  },
+]
+
 async function fetchJson(url: string): Promise<unknown> {
   const response = await fetch(url)
 
@@ -60,8 +127,14 @@ async function fetchJson(url: string): Promise<unknown> {
   return response.json() as Promise<unknown>
 }
 
-async function fetchConformer(): Promise<MoleculeGraph> {
-  return parseConformerPayload(await fetchJson("/api/cid4/conformer/1"))
+async function fetchMoleculeDataset(datasetId: MoleculeDatasetId): Promise<MoleculeGraph> {
+  const dataset = MOLECULE_DATASETS.find((option) => option.id === datasetId)
+
+  if (!dataset) {
+    throw new Error(`Unknown dataset ${datasetId}`)
+  }
+
+  return dataset.parser(await fetchJson(dataset.url))
 }
 
 async function fetchCompoundRecord(): Promise<CompoundRecord> {
@@ -71,6 +144,7 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
 @Component({
   selector: "app-data-structures-page",
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MoleculeRendererViewerComponent],
   template: `
     <section class="hero card" aria-labelledby="page-title">
       <div>
@@ -137,8 +211,31 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
               [disabled]="!localMolecule()"
               (click)="restoreApiData()"
             >
-              Use API data
+              Use selected dataset
             </button>
+          </div>
+        </div>
+
+        <div class="dataset-panel">
+          <div>
+            <p class="dataset-title">Dataset source</p>
+            <p class="dataset-copy">
+              Switch between the 2D structure and six conformer snapshots while keeping the same
+              graph, matrix, and renderer views in sync.
+            </p>
+          </div>
+
+          <div class="dataset-selector" aria-label="Molecule source selector">
+            @for (option of datasetOptions; track option.id) {
+              <button
+                type="button"
+                class="chip"
+                [class.active]="selectedDatasetId() === option.id && !localMolecule()"
+                (click)="selectDataset(option.id)"
+              >
+                {{ option.label }}
+              </button>
+            }
           </div>
         </div>
 
@@ -151,10 +248,10 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
           (drop)="onDrop($event)"
         >
           <div>
-            <p class="drop-title">Drop a PubChem conformer JSON file here</p>
+            <p class="drop-title">Drop a PubChem coordinate JSON file here</p>
             <p class="drop-copy">
-              The parser reads the PC_Compounds[0] entry, bonds, and the first conformer coordinate
-              set.
+              The parser reads the PC_Compounds[0] entry, bonds, and the first coordinate set,
+              whether the file carries 2D or 3D coordinates.
             </p>
           </div>
           <label class="upload-button">
@@ -234,6 +331,101 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
             }
           </div>
         }
+      </article>
+
+      <article class="card renderer-card">
+        <div class="card-header compact">
+          <div>
+            <p class="eyebrow">Browser Graphics</p>
+            <h2>Strategy-based molecule renderer</h2>
+          </div>
+        </div>
+
+        <p class="aside-copy renderer-copy">
+          WebGL is the compatibility baseline. WebGPU is exposed through the same UI as an
+          experimental progressive-enhancement path.
+        </p>
+
+        <div class="comparison-panel">
+          <label class="bond-toggle comparison-toggle">
+            <input
+              type="checkbox"
+              [checked]="comparisonEnabled()"
+              (change)="setComparisonEnabled($any($event.target).checked)"
+            />
+            <span>Enable comparison overlay</span>
+          </label>
+
+          @if (comparisonEnabled()) {
+            <div class="dataset-selector" aria-label="Comparison reference selector">
+              @for (option of datasetOptions; track option.id) {
+                <button
+                  type="button"
+                  class="chip"
+                  [class.active]="referenceDatasetId() === option.id"
+                  [disabled]="option.id === selectedDatasetId() && !localMolecule()"
+                  (click)="selectReferenceDataset(option.id)"
+                >
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          }
+
+          @if (comparisonEnabled() && comparisonSummary(); as summary) {
+            <div class="comparison-grid">
+              <div class="comparison-stat">
+                <span class="comparison-label">Reference</span>
+                <strong>{{ comparisonReferenceLabel() }}</strong>
+              </div>
+              <div class="comparison-stat">
+                <span class="comparison-label">Mean atom displacement</span>
+                <strong>{{ summary.meanAtomDisplacement.toFixed(3) }}</strong>
+              </div>
+              <div class="comparison-stat">
+                <span class="comparison-label">Max bond delta</span>
+                <strong>{{ summary.maxBondLengthDelta.toFixed(3) }}</strong>
+              </div>
+            </div>
+
+            <div class="comparison-list-grid">
+              <div>
+                <p class="comparison-list-title">Top atom shifts</p>
+                <ul class="comparison-list">
+                  @for (row of summary.topAtomDisplacements; track row.atomId) {
+                    <li>
+                      #{{ row.atomId }} {{ row.elementSymbol }} · {{ row.displacement.toFixed(3) }}
+                    </li>
+                  }
+                </ul>
+              </div>
+
+              <div>
+                <p class="comparison-list-title">Top bond deltas</p>
+                <ul class="comparison-list">
+                  @for (row of summary.topBondDeltas; track row.bondId) {
+                    <li>{{ row.source }} ↔ {{ row.target }} · {{ row.lengthDelta.toFixed(3) }}</li>
+                  }
+                </ul>
+              </div>
+            </div>
+          } @else if (comparisonEnabled() && comparisonReferenceErrorMessage()) {
+            <p class="error-banner" aria-live="assertive">
+              {{ comparisonReferenceErrorMessage() }}
+            </p>
+          } @else if (comparisonEnabled() && !comparisonSummary()) {
+            <p class="status-text">
+              Choose a different reference dataset to draw WebGPU comparison overlays.
+            </p>
+          }
+        </div>
+
+        <app-molecule-renderer-viewer
+          [molecule]="activeMolecule()"
+          [comparisonReference]="comparisonReferenceMolecule()"
+          [comparisonSummary]="comparisonSummary()"
+          [comparisonReferenceLabel]="comparisonReferenceLabel()"
+        />
       </article>
 
       <article class="card aside-card">
@@ -513,6 +705,19 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
         grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.95fr);
       }
 
+      .viewer-card {
+        grid-column: 1;
+      }
+
+      .renderer-card {
+        grid-column: 1;
+      }
+
+      .aside-card {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+
       .panel-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         margin-top: 20px;
@@ -611,6 +816,93 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
         margin: 8px 0 0;
         line-height: 1.55;
         color: #45607e;
+      }
+
+      .renderer-copy {
+        margin-bottom: 16px;
+      }
+
+      .comparison-panel {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 18px;
+        padding: 16px 18px;
+        border-radius: 22px;
+        background: rgba(196, 90, 27, 0.08);
+      }
+
+      .comparison-toggle {
+        width: fit-content;
+      }
+
+      .comparison-grid,
+      .comparison-list-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .comparison-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .comparison-stat {
+        padding: 12px 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.68);
+      }
+
+      .comparison-label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #8b6325;
+      }
+
+      .comparison-list-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .comparison-list-title {
+        margin: 0 0 8px;
+        font-weight: 800;
+      }
+
+      .comparison-list {
+        margin: 0;
+        padding-left: 18px;
+        color: #38516f;
+      }
+
+      .dataset-panel {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+        padding: 16px 18px;
+        border-radius: 22px;
+        background: rgba(16, 35, 61, 0.05);
+      }
+
+      .dataset-title {
+        margin: 0;
+        font-weight: 800;
+      }
+
+      .dataset-copy {
+        margin: 8px 0 0;
+        line-height: 1.55;
+        color: #45607e;
+      }
+
+      .dataset-selector {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: end;
+        gap: 10px;
       }
 
       .upload-button input {
@@ -822,15 +1114,25 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
       @media (max-width: 1100px) {
         .hero,
         .workspace-grid,
-        .panel-grid {
+        .panel-grid,
+        .comparison-grid,
+        .comparison-list-grid {
           grid-template-columns: 1fr;
+        }
+
+        .aside-card,
+        .viewer-card,
+        .renderer-card {
+          grid-column: auto;
+          grid-row: auto;
         }
 
         .card-header {
           flex-direction: column;
         }
 
-        .toolbar {
+        .toolbar,
+        .dataset-selector {
           justify-content: start;
         }
       }
@@ -857,10 +1159,14 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
 export class DataStructuresPage {
   protected readonly viewboxWidth = VIEWBOX_WIDTH
   protected readonly viewboxHeight = VIEWBOX_HEIGHT
+  protected readonly datasetOptions = MOLECULE_DATASETS
 
   protected readonly layoutMode = signal<LayoutMode>("source")
   protected readonly showLabels = signal(true)
   protected readonly selectedAtomId = signal<number | null>(1)
+  protected readonly selectedDatasetId = signal<MoleculeDatasetId>("conformer-1")
+  protected readonly comparisonEnabled = signal(false)
+  protected readonly referenceDatasetId = signal<MoleculeDatasetId>("conformer-2")
   protected readonly disabledBondIds = signal<string[]>([])
   protected readonly localMolecule = signal<MoleculeGraph | null>(null)
   protected readonly localFileName = signal<string | null>(null)
@@ -870,13 +1176,18 @@ export class DataStructuresPage {
   protected readonly dragPositions = signal<Record<string, Point>>({})
 
   protected readonly moleculeQuery = injectQuery(() => ({
-    queryKey: ["cid4", "conformer", 1],
-    queryFn: fetchConformer,
+    queryKey: ["cid4", "molecule", this.selectedDatasetId()],
+    queryFn: () => fetchMoleculeDataset(this.selectedDatasetId()),
   }))
 
   protected readonly compoundQuery = injectQuery(() => ({
     queryKey: ["cid4", "compound"],
     queryFn: fetchCompoundRecord,
+  }))
+
+  protected readonly comparisonReferenceQuery = injectQuery(() => ({
+    queryKey: ["cid4", "molecule", "reference", this.referenceDatasetId()],
+    queryFn: () => fetchMoleculeDataset(this.referenceDatasetId()),
   }))
 
   protected readonly activeMolecule = computed(
@@ -912,7 +1223,42 @@ export class DataStructuresPage {
   })
   protected readonly dataSourceLabel = computed(() => {
     const fileName = this.localFileName()
-    return fileName ? `Dropped file: ${fileName}` : "Mock API /api/cid4/conformer/1"
+
+    if (fileName) {
+      return `Dropped file: ${fileName}`
+    }
+
+    return this.selectedDatasetOption()?.label ?? "Mock API dataset"
+  })
+  protected readonly selectedDatasetOption = computed(
+    () =>
+      MOLECULE_DATASETS.find((option) => option.id === this.selectedDatasetId()) ??
+      MOLECULE_DATASETS[0],
+  )
+  protected readonly comparisonReferenceMolecule = computed(() => {
+    if (!this.comparisonEnabled()) {
+      return null
+    }
+
+    if (!this.localMolecule() && this.referenceDatasetId() === this.selectedDatasetId()) {
+      return null
+    }
+
+    return this.comparisonReferenceQuery.data() ?? null
+  })
+  protected readonly comparisonSummary = computed(() => {
+    const activeMolecule = this.activeMolecule()
+    const referenceMolecule = this.comparisonReferenceMolecule()
+
+    if (!activeMolecule || !referenceMolecule) {
+      return null
+    }
+
+    return compareMolecules(activeMolecule, referenceMolecule)
+  })
+  protected readonly comparisonReferenceLabel = computed(() => {
+    const reference = MOLECULE_DATASETS.find((option) => option.id === this.referenceDatasetId())
+    return reference?.label ?? null
   })
   protected readonly atomHeaders = computed(
     () => this.activeMolecule()?.atoms.map((atom) => atom.id) ?? [],
@@ -994,8 +1340,18 @@ export class DataStructuresPage {
   protected readonly selectedAtom = computed(
     () => this.activeMolecule()?.atoms.find((atom) => atom.id === this.selectedAtomId()) ?? null,
   )
-  protected readonly moleculeErrorMessage = computed(() => formatError(this.moleculeQuery.error()))
-  protected readonly compoundErrorMessage = computed(() => formatError(this.compoundQuery.error()))
+  protected readonly moleculeErrorMessage = computed(() => {
+    const error = this.moleculeQuery.error()
+    return error ? formatError(error) : null
+  })
+  protected readonly compoundErrorMessage = computed(() => {
+    const error = this.compoundQuery.error()
+    return error ? formatError(error) : null
+  })
+  protected readonly comparisonReferenceErrorMessage = computed(() => {
+    const error = this.comparisonReferenceQuery.error()
+    return error ? formatError(error) : null
+  })
 
   protected atomFill(componentIndex: number | null): string {
     if (componentIndex === null) {
@@ -1028,6 +1384,24 @@ export class DataStructuresPage {
 
   protected selectAtom(atomId: number): void {
     this.selectedAtomId.set(atomId)
+  }
+
+  protected selectDataset(datasetId: MoleculeDatasetId): void {
+    if (datasetId === this.selectedDatasetId() && !this.localMolecule()) {
+      return
+    }
+
+    this.selectedDatasetId.set(datasetId)
+    this.restoreApiData()
+    this.selectedAtomId.set(1)
+  }
+
+  protected selectReferenceDataset(datasetId: MoleculeDatasetId): void {
+    this.referenceDatasetId.set(datasetId)
+  }
+
+  protected setComparisonEnabled(enabled: boolean): void {
+    this.comparisonEnabled.set(enabled)
   }
 
   protected async onFileSelected(event: Event): Promise<void> {

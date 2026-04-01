@@ -19,6 +19,10 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+option(PUBCHEM_ENABLE_VULKAN_APP "Build the optional CID 4 Vulkan viewer bootstrap" ON)
+option(PUBCHEM_ENABLE_OPENGL_APP "Build the optional CID 4 OpenGL viewer bootstrap" ON)
+option(PUBCHEM_ENABLE_CUDA_APP "Build the optional CID 4 CUDA geometry analyzer" ON)
+
 set(PUBCHEM_RDKIT_PREFIX "$ENV{PUBCHEM_RDKIT_PREFIX}" CACHE PATH "Path to a conda or micromamba environment that provides RDKit")
 if(NOT PUBCHEM_RDKIT_PREFIX AND DEFINED ENV{CONDA_PREFIX})
 	set(PUBCHEM_RDKIT_PREFIX "$ENV{CONDA_PREFIX}" CACHE PATH "Path to a conda or micromamba environment that provides RDKit" FORCE)
@@ -49,6 +53,14 @@ target_link_libraries(
 	PUBLIC ${ARMADILLO_LIBRARIES} Boost::graph nlohmann_json::nlohmann_json RDKit::GraphMol RDKit::RDGeneral
 )
 
+add_library(cid4_scene_loader src/cid4_scene.cpp)
+target_include_directories(cid4_scene_loader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(cid4_scene_loader PUBLIC nlohmann_json::nlohmann_json)
+
+add_library(cid4_cuda_buffers src/cid4_cuda_buffers.cpp)
+target_include_directories(cid4_cuda_buffers PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(cid4_cuda_buffers PUBLIC cid4_scene_loader)
+
 add_executable(app src/app.cpp)
 set_target_properties(app PROPERTIES OUTPUT_NAME app)
 target_compile_definitions(app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
@@ -64,11 +76,87 @@ target_link_libraries(app
 		RDKit::RDGeneral
 )
 
+if(PUBCHEM_ENABLE_VULKAN_APP)
+	find_package(Vulkan QUIET)
+
+	add_executable(vulkan_app src/vulkan_app.cpp)
+	set_target_properties(vulkan_app PROPERTIES OUTPUT_NAME vulkan_app)
+	target_compile_definitions(vulkan_app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
+	target_link_libraries(vulkan_app PRIVATE cid4_scene_loader)
+
+	if(Vulkan_FOUND)
+		target_compile_definitions(vulkan_app PRIVATE PUBCHEM_VULKAN_RUNTIME_AVAILABLE=1)
+		target_link_libraries(vulkan_app PRIVATE Vulkan::Vulkan)
+		message(STATUS "Vulkan SDK detected. Building vulkan_app with Vulkan runtime probing enabled.")
+	else()
+		target_compile_definitions(vulkan_app PRIVATE PUBCHEM_VULKAN_RUNTIME_AVAILABLE=0)
+		message(STATUS "Vulkan SDK not detected. Building vulkan_app stub mode for compile-only development.")
+	endif()
+endif()
+
+if(PUBCHEM_ENABLE_OPENGL_APP)
+	find_package(OpenGL QUIET)
+	find_package(glfw3 QUIET CONFIG)
+
+	add_executable(opengl_app src/opengl_app.cpp)
+	set_target_properties(opengl_app PROPERTIES OUTPUT_NAME opengl_app)
+	target_compile_definitions(opengl_app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
+	target_link_libraries(opengl_app PRIVATE cid4_scene_loader)
+
+	if(OpenGL_FOUND AND glfw3_FOUND)
+		target_compile_definitions(opengl_app PRIVATE PUBCHEM_OPENGL_RUNTIME_AVAILABLE=1)
+		target_link_libraries(opengl_app PRIVATE OpenGL::GL glfw)
+		message(STATUS "OpenGL and GLFW detected. Building opengl_app with runtime probing enabled.")
+	else()
+		target_compile_definitions(opengl_app PRIVATE PUBCHEM_OPENGL_RUNTIME_AVAILABLE=0)
+		message(STATUS "OpenGL and/or GLFW not detected. Building opengl_app stub mode for compile-only development.")
+	endif()
+endif()
+
+if(PUBCHEM_ENABLE_CUDA_APP)
+	include(CheckLanguage)
+	check_language(CUDA)
+
+	set(PUBCHEM_CUDA_TOOLCHAIN_READY OFF)
+	if(CMAKE_CUDA_COMPILER)
+		enable_language(CUDA)
+		find_package(CUDAToolkit QUIET)
+		if(CUDAToolkit_FOUND)
+			set(PUBCHEM_CUDA_TOOLCHAIN_READY ON)
+		endif()
+	endif()
+
+	add_executable(cuda_app src/cuda_app.cpp)
+	set_target_properties(cuda_app PROPERTIES OUTPUT_NAME cuda_app)
+	target_compile_definitions(cuda_app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
+	target_link_libraries(cuda_app PRIVATE cid4_cuda_buffers)
+
+	if(PUBCHEM_CUDA_TOOLCHAIN_READY)
+		add_library(cid4_cuda_runtime src/cid4_cuda_runtime.cu)
+		target_include_directories(cid4_cuda_runtime PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+		set_target_properties(
+			cid4_cuda_runtime
+			PROPERTIES
+				CUDA_STANDARD 17
+				CUDA_STANDARD_REQUIRED ON
+				CUDA_SEPARABLE_COMPILATION ON
+		)
+		target_link_libraries(cid4_cuda_runtime PUBLIC CUDAToolkit::cudart cid4_cuda_buffers)
+
+		target_compile_definitions(cuda_app PRIVATE PUBCHEM_CUDA_RUNTIME_AVAILABLE=1)
+		target_link_libraries(cuda_app PRIVATE cid4_cuda_runtime)
+		message(STATUS "CUDA toolkit detected. Building cuda_app with CUDA distance-matrix execution enabled.")
+	else()
+		target_compile_definitions(cuda_app PRIVATE PUBCHEM_CUDA_RUNTIME_AVAILABLE=0)
+		message(STATUS "CUDA toolkit not detected. Building cuda_app stub mode for compile-only development.")
+	endif()
+endif()
+
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
-add_executable(tests test/analysis_test.cpp)
-target_link_libraries(tests PRIVATE analysis_core GTest::gtest GTest::gtest_main)
+add_executable(tests test/analysis_test.cpp test/cuda_buffers_test.cpp)
+target_link_libraries(tests PRIVATE analysis_core cid4_cuda_buffers GTest::gtest GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(tests DISCOVERY_TIMEOUT 30)

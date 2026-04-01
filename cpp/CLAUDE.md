@@ -24,8 +24,29 @@ vcpkg install                 # Install dependencies from vcpkg.json
 cmake --preset=vcpkg          # Configure with vcpkg toolchain and external RDKit
 cmake --build --preset=vcpkg  # Build project
 
+# Disable the optional Vulkan bootstrap target if needed
+cmake --preset=vcpkg -DPUBCHEM_ENABLE_VULKAN_APP=OFF
+
+# Disable the optional OpenGL bootstrap target if needed
+cmake --preset=vcpkg -DPUBCHEM_ENABLE_OPENGL_APP=OFF
+
+# Disable the optional CUDA geometry analyzer if needed
+cmake --preset=vcpkg -DPUBCHEM_ENABLE_CUDA_APP=OFF
+
 # Run the application
 ./build/app
+
+# Run the optional Vulkan bootstrap
+./build/vulkan_app
+./build/vulkan_app --skip-runtime-probe
+
+# Run the optional OpenGL bootstrap
+./build/opengl_app
+./build/opengl_app --skip-runtime-probe
+
+# Run the optional CUDA geometry analyzer
+./build/cuda_app
+./build/cuda_app --skip-runtime-probe
 
 # Run with an explicit adjacency method
 ./build/app --method arrays
@@ -116,6 +137,12 @@ Since this is an educational project, implementations typically involve:
 5. **Machine learning**: Feature engineering from molecular descriptors, regression/classification
 
 The main executable is `app` (built from `src/app.cpp`). Add new implementation files as needed and update `CMakeLists.txt` to link them.
+
+The repository now also exposes an optional `vulkan_app` executable for compile-first native graphics work. It always builds when `PUBCHEM_ENABLE_VULKAN_APP=ON`, but it only enables Vulkan runtime probing when `find_package(Vulkan)` succeeds during CMake configuration. On machines without a Vulkan SDK or loader, the target falls back to a stub mode that still parses CID 4 geometry and compiles cleanly.
+
+The repository also exposes an optional `opengl_app` executable for the lower-complexity native graphics path. It always builds when `PUBCHEM_ENABLE_OPENGL_APP=ON`, but it only enables OpenGL runtime probing when both `find_package(OpenGL)` and `find_package(glfw3 CONFIG)` succeed during CMake configuration. On machines without a usable OpenGL and GLFW development stack, the target falls back to a stub mode that still parses CID 4 geometry and compiles cleanly.
+
+The repository also exposes an optional `cuda_app` executable for CUDA-oriented geometry analysis. It always builds when `PUBCHEM_ENABLE_CUDA_APP=ON`, but it only enables CUDA runtime execution when CMake can enable the CUDA language and find a CUDA toolkit. On machines without an NVIDIA CUDA toolchain, the target falls back to a stub mode that still batches CID 4 conformer coordinates and computes CPU reference distance matrices so the integration remains compile-safe.
 
 The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. The eigendecomposition flow exposes a separate `--eigenmethod` selector with `armadillo` and `boost`. The Laplacian flow also exposes a strategy selector with `--laplacian-method <armadillo|boost>`.
 
