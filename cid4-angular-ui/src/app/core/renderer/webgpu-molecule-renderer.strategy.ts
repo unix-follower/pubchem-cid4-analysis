@@ -51,8 +51,10 @@ interface GpuDevice {
   createCommandEncoder(): GpuCommandEncoder
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface GpuShaderModule {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface GpuRenderPipeline {}
 
 interface GpuBuffer {

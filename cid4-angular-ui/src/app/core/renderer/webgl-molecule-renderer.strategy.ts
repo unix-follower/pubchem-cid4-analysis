@@ -35,6 +35,7 @@ export class WebGlMoleculeRendererStrategy extends MoleculeRendererStrategy {
   async render(
     molecule: MoleculeGraph,
     options: MoleculeRenderOptions,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _comparisonReference?: MoleculeGraph | null,
   ): Promise<RendererMetrics> {
     if (!this.viewer) {
