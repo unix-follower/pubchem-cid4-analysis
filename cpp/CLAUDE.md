@@ -33,6 +33,13 @@ cmake --preset=vcpkg -DPUBCHEM_ENABLE_OPENGL_APP=OFF
 # Disable the optional CUDA geometry analyzer if needed
 cmake --preset=vcpkg -DPUBCHEM_ENABLE_CUDA_APP=OFF
 
+# Disable the optional OpenCV image diagnostics tool if needed
+cmake --preset=vcpkg -DPUBCHEM_ENABLE_OPENCV_APP=OFF
+
+# Enable the OpenCV manifest feature before configuring if you want real image processing
+export PUBCHEM_VCPKG_FEATURES=opencv-app
+./build.sh
+
 # Run the application
 ./build/app
 
@@ -47,6 +54,11 @@ cmake --preset=vcpkg -DPUBCHEM_ENABLE_CUDA_APP=OFF
 # Run the optional CUDA geometry analyzer
 ./build/cuda_app
 ./build/cuda_app --skip-runtime-probe
+
+# Run the optional OpenCV image diagnostics tool
+./build/opencv_app --task segment-2d
+./build/opencv_app --task compare-conformers
+./build/opencv_app --task overlay-structure
 
 # Run with an explicit adjacency method
 ./build/app --method arrays
@@ -143,6 +155,8 @@ The repository now also exposes an optional `vulkan_app` executable for compile-
 The repository also exposes an optional `opengl_app` executable for the lower-complexity native graphics path. It always builds when `PUBCHEM_ENABLE_OPENGL_APP=ON`, but it only enables OpenGL runtime probing when both `find_package(OpenGL)` and `find_package(glfw3 CONFIG)` succeed during CMake configuration. On machines without a usable OpenGL and GLFW development stack, the target falls back to a stub mode that still parses CID 4 geometry and compiles cleanly.
 
 The repository also exposes an optional `cuda_app` executable for CUDA-oriented geometry analysis. It always builds when `PUBCHEM_ENABLE_CUDA_APP=ON`, but it only enables CUDA runtime execution when CMake can enable the CUDA language and find a CUDA toolkit. On machines without an NVIDIA CUDA toolchain, the target falls back to a stub mode that still batches CID 4 conformer coordinates and computes CPU reference distance matrices so the integration remains compile-safe.
+
+The repository also exposes an optional `opencv_app` executable for OpenCV-driven image diagnostics. It always builds when `PUBCHEM_ENABLE_OPENCV_APP=ON`, but it only enables real image workflows when `find_package(OpenCV)` succeeds during CMake configuration. On machines without OpenCV available, the target falls back to a stub mode that still validates CID 4 scene loading and CLI wiring so the integration remains compile-safe. To install the OpenCV dependency through vcpkg manifest mode, enable the `opencv-app` feature before running `vcpkg install` or `build.sh`.
 
 The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. The eigendecomposition flow exposes a separate `--eigenmethod` selector with `armadillo` and `boost`. The Laplacian flow also exposes a strategy selector with `--laplacian-method <armadillo|boost>`.
 
