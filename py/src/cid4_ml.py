@@ -33,6 +33,7 @@ from ml.sklearn_workflows import (
 )
 from ml.tensorflow_workflows import run_tensorflow_classification, run_tensorflow_regression
 from ml.torch_workflows import run_torch_classification, run_torch_regression
+from ml.xgboost_workflows import run_xgboost_classification, run_xgboost_regression
 
 
 def resolve_output_directory() -> Path:
@@ -76,11 +77,13 @@ def write_ml_analysis() -> None:
         },
         "bioactivity_binary_classification": {
             "sklearn": run_logistic_regression(bioactivity_dataset),
+            "xgboost": run_xgboost_classification(bioactivity_dataset),
             "pytorch": run_torch_classification(bioactivity_dataset),
             "tensorflow": run_tensorflow_classification(bioactivity_dataset),
         },
         "activity_value_regression": {
             "sklearn": run_linear_regression(regression_dataset),
+            "xgboost": run_xgboost_regression(regression_dataset),
             "pytorch": run_torch_regression(regression_dataset),
             "tensorflow": run_tensorflow_regression(regression_dataset),
         },
@@ -99,16 +102,22 @@ def write_ml_analysis() -> None:
         "pca": run_pca(heavy_atom_pca_dataset),
         "naive_bayes": run_naive_bayes(atom_heavy_dataset),
     }
+    xgboost_suite = {
+        "bioactivity_binary_classification": run_xgboost_classification(bioactivity_dataset),
+        "activity_value_regression": run_xgboost_regression(regression_dataset),
+    }
     scaffold_summary = build_scaffold_summary(atom_heavy_dataset)
 
     write_json(output_directory / "cid4_ml.cross_library_comparison.summary.json", comparison_results)
     write_json(output_directory / "cid4_ml.sklearn_suite.summary.json", sklearn_suite)
+    write_json(output_directory / "cid4_ml.xgboost_suite.summary.json", xgboost_suite)
     write_json(output_directory / "cid4_ml.future_scaffolds.summary.json", scaffold_summary)
 
     log.info(
         "ML cross-library comparison written to %s", output_directory / "cid4_ml.cross_library_comparison.summary.json"
     )
     log.info("ML sklearn suite written to %s", output_directory / "cid4_ml.sklearn_suite.summary.json")
+    log.info("ML XGBoost suite written to %s", output_directory / "cid4_ml.xgboost_suite.summary.json")
     log.info("ML scaffold recommendations written to %s", output_directory / "cid4_ml.future_scaffolds.summary.json")
 
 

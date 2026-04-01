@@ -32,6 +32,31 @@ HEAVY_ATOM_PCA_COLUMNS = [
     "isAromaticInt",
 ]
 
+BIOASSAY_NAME_KEYWORDS = {
+    "BioAssay_Name_Has_qHTS": ("qhts",),
+    "BioAssay_Name_Has_IC50": ("ic50",),
+    "BioAssay_Name_Has_Counter_Screen": ("counter screen",),
+    "BioAssay_Name_Has_Estrogen": ("estrogen",),
+    "BioAssay_Name_Has_Androgen": ("androgen",),
+    "BioAssay_Name_Has_Cytochrome": ("cytochrome",),
+    "BioAssay_Name_Has_Plasmodium": ("plasmodium",),
+    "BioAssay_Name_Has_Yeast": ("yeast",),
+}
+
+TARGET_NAME_KEYWORDS = {
+    "Target_Name_Has_Estrogen": ("estrogen",),
+    "Target_Name_Has_Androgen": ("androgen",),
+    "Target_Name_Has_Cytochrome": ("cytochrome",),
+    "Target_Name_Has_Plasmodium": ("plasmodium",),
+    "Target_Name_Has_Yeast": ("yeast",),
+}
+
+SOURCE_KEYWORDS = {
+    "Bioassay_Source_Has_Tox21": ("tox21",),
+    "Bioassay_Source_Has_ChEMBL": ("chembl",),
+    "Bioassay_Source_Has_DTP_NCI": ("dtp", "nci"),
+}
+
 
 def build_atom_feature_frame(filename: str = ATOM_SDF_FILENAME) -> tuple[pd.DataFrame, Chem.Mol]:
     molecules = cid4_analysis.load_sdf_molecules(filename)
@@ -91,29 +116,8 @@ def build_bioactivity_binary_classification_dataset(
     filtered_df, _ = cid4_analysis.build_activity_posterior_dataframe(bioactivity_df)
     atom_feature_df, molecule = build_atom_feature_frame(atom_filename)
     descriptor_map = build_molecular_descriptors(atom_feature_df, molecule)
-    frame = filtered_df.copy()
-    frame["Aid_Type_Encoded"] = encode_categories(frame["Aid_Type"])
-    frame["Activity_Type_Encoded"] = encode_categories(frame["Activity_Type"])
-    frame["Has_Dose_Response_Curve"] = pd.to_numeric(frame["Has_Dose_Response_Curve"], errors="coerce").fillna(0)
-    frame["RNAi_BioAssay"] = pd.to_numeric(frame["RNAi_BioAssay"], errors="coerce").fillna(0)
+    frame, feature_columns = build_bioactivity_model_frame(filtered_df, descriptor_map)
     frame["activityBinary"] = frame["Activity"].astype(str).str.upper().eq("ACTIVE").astype(int)
-
-    for key, value in descriptor_map.items():
-        frame[key] = value
-
-    feature_columns = [
-        "C_count",
-        "H_count",
-        "N_count",
-        "O_count",
-        "bond_count_total",
-        "mol_weight",
-        "has_chiral_center",
-        "Aid_Type_Encoded",
-        "Has_Dose_Response_Curve",
-        "RNAi_BioAssay",
-        "Activity_Type_Encoded",
-    ]
 
     return PreparedDataset(
         name="bioactivity-active-vs-inactive",
@@ -137,28 +141,7 @@ def build_activity_value_regression_dataset(
     filtered_df["Activity_Value"] = activity_value.loc[retained_mask]
     atom_feature_df, molecule = build_atom_feature_frame(atom_filename)
     descriptor_map = build_molecular_descriptors(atom_feature_df, molecule)
-    frame = filtered_df.copy()
-    frame["Aid_Type_Encoded"] = encode_categories(frame["Aid_Type"])
-    frame["Activity_Type_Encoded"] = encode_categories(frame["Activity_Type"])
-    frame["Has_Dose_Response_Curve"] = pd.to_numeric(frame["Has_Dose_Response_Curve"], errors="coerce").fillna(0)
-    frame["RNAi_BioAssay"] = pd.to_numeric(frame["RNAi_BioAssay"], errors="coerce").fillna(0)
-
-    for key, value in descriptor_map.items():
-        frame[key] = value
-
-    feature_columns = [
-        "C_count",
-        "H_count",
-        "N_count",
-        "O_count",
-        "bond_count_total",
-        "mol_weight",
-        "has_chiral_center",
-        "Aid_Type_Encoded",
-        "Has_Dose_Response_Curve",
-        "RNAi_BioAssay",
-        "Activity_Type_Encoded",
-    ]
+    frame, feature_columns = build_bioactivity_model_frame(filtered_df, descriptor_map)
 
     return PreparedDataset(
         name="bioactivity-activity-value-regression",
@@ -210,6 +193,67 @@ def build_molecular_descriptors(atom_feature_df: pd.DataFrame, molecule: Chem.Mo
         "mol_weight": float(atom_feature_df["mass"].astype(float).sum()),
         "has_chiral_center": int(len(chiral_centers) > 0),
     }
+
+
+def build_bioactivity_model_frame(
+    source_frame: pd.DataFrame, descriptor_map: dict[str, Any]
+) -> tuple[pd.DataFrame, list[str]]:
+    frame = source_frame.copy()
+    frame["Aid_Type_Encoded"] = encode_categories(frame["Aid_Type"])
+    frame["Activity_Type_Encoded"] = encode_categories(frame["Activity_Type"])
+    frame["Bioassay_Data_Source_Encoded"] = encode_categories(frame["Bioassay_Data_Source"])
+    frame["Has_Dose_Response_Curve"] = pd.to_numeric(frame["Has_Dose_Response_Curve"], errors="coerce").fillna(0)
+    frame["RNAi_BioAssay"] = pd.to_numeric(frame["RNAi_BioAssay"], errors="coerce").fillna(0)
+    frame["Taxonomy_ID_Numeric"] = pd.to_numeric(frame["Taxonomy_ID"], errors="coerce").fillna(-1)
+    frame["Target_Taxonomy_ID_Numeric"] = pd.to_numeric(frame["Target_Taxonomy_ID"], errors="coerce").fillna(-1)
+    frame["Has_Protein_Accession"] = has_non_empty_text(frame["Protein_Accession"])
+    frame["Has_Gene_ID"] = has_non_empty_text(frame["Gene_ID"])
+    frame["Has_PMID"] = has_non_empty_text(frame["PMID"])
+    frame["Has_Activity_Value"] = has_non_empty_text(frame["Activity_Value"])
+
+    for key, value in descriptor_map.items():
+        frame[key] = value
+
+    add_keyword_flags(frame, "BioAssay_Name", BIOASSAY_NAME_KEYWORDS)
+    add_keyword_flags(frame, "Target_Name", TARGET_NAME_KEYWORDS)
+    add_keyword_flags(frame, "Bioassay_Data_Source", SOURCE_KEYWORDS)
+
+    feature_columns = [
+        "C_count",
+        "H_count",
+        "N_count",
+        "O_count",
+        "bond_count_total",
+        "mol_weight",
+        "has_chiral_center",
+        "Aid_Type_Encoded",
+        "Activity_Type_Encoded",
+        "Bioassay_Data_Source_Encoded",
+        "Has_Dose_Response_Curve",
+        "RNAi_BioAssay",
+        "Taxonomy_ID_Numeric",
+        "Target_Taxonomy_ID_Numeric",
+        "Has_Protein_Accession",
+        "Has_Gene_ID",
+        "Has_PMID",
+        "Has_Activity_Value",
+        *BIOASSAY_NAME_KEYWORDS,
+        *TARGET_NAME_KEYWORDS,
+        *SOURCE_KEYWORDS,
+    ]
+    return frame, feature_columns
+
+
+def add_keyword_flags(frame: pd.DataFrame, column_name: str, definitions: dict[str, tuple[str, ...]]) -> None:
+    normalized = frame[column_name].astype("string").fillna("").str.lower()
+    for feature_name, keywords in definitions.items():
+        pattern = "|".join(keywords)
+        frame[feature_name] = normalized.str.contains(pattern, regex=True).astype(int)
+
+
+def has_non_empty_text(series: pd.Series) -> pd.Series:
+    normalized = series.astype("string").fillna("").str.strip()
+    return normalized.ne("").astype(int)
 
 
 def encode_categories(series: pd.Series) -> pd.Series:
