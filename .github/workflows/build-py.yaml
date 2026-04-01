@@ -13,10 +13,10 @@ on:
       python-version:
         description: Desired python version
         required: false
-        default: "3.13.12"
+        default: "3.12"
 
 env:
-  PYTHON_VERSION: ${{ inputs.python-version || '3.13.12' }}
+  PYTHON_VERSION: ${{ inputs.python-version || '3.12' }}
 
 jobs:
   build:
@@ -48,7 +48,7 @@ jobs:
       - name: Run unit tests
         working-directory: py
         shell: bash
-        run: python -m unittest discover -s tests -v
+        run: uv run python -m unittest discover -s tests -v
 
       - name: Build python app
         working-directory: py
