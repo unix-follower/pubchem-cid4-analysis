@@ -150,7 +150,7 @@ def build_activity_value_regression_dataset(
         feature_columns=feature_columns,
         target_column="Activity_Value",
         class_names=None,
-        description="Positive numeric Activity_Value regression dataset using " \
+        description="Positive numeric Activity_Value regression dataset using "
         "molecular descriptors and assay metadata.",
     )
 

@@ -14,8 +14,8 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from ml.common import PreparedDataset
-from ml.xgboost_workflows import run_xgboost_classification, run_xgboost_regression
+from ml.common import PreparedDataset  # noqa: E402
+from ml.xgboost_workflows import run_xgboost_classification, run_xgboost_regression  # noqa: E402
 
 
 class FakeXGBClassifier:
@@ -23,7 +23,7 @@ class FakeXGBClassifier:
         self.feature_importances_ = np.array([0.7, 0.3], dtype=np.float64)
         self.majority_class = 0
 
-    def fit(self, x_values: np.ndarray, y_values: np.ndarray) -> "FakeXGBClassifier":
+    def fit(self, x_values: np.ndarray, y_values: np.ndarray) -> FakeXGBClassifier:
         del x_values
         self.majority_class = int(np.bincount(y_values.astype(int)).argmax())
         return self
@@ -37,7 +37,7 @@ class FakeXGBRegressor:
         self.feature_importances_ = np.array([0.6, 0.4], dtype=np.float64)
         self.prediction_value = 0.0
 
-    def fit(self, x_values: np.ndarray, y_values: np.ndarray) -> "FakeXGBRegressor":
+    def fit(self, x_values: np.ndarray, y_values: np.ndarray) -> FakeXGBRegressor:
         del x_values
         self.prediction_value = float(np.mean(y_values.astype(np.float64)))
         return self
