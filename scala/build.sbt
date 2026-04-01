@@ -23,6 +23,7 @@ lazy val root = (project in file("."))
         "org.apache.lucene" % "lucene-queryparser" % "9.12.1",
         "org.apache.lucene" % "lucene-highlighter" % "9.12.1",
         "org.apache.solr" % "solr-solrj" % "9.8.1",
+        "org.apache.opennlp" % "opennlp-tools" % "2.5.4",
         "tools.jackson.module" %% "jackson-module-scala" % "3.1.0",
         "org.openscience.cdk" % "cdk-bundle" % "2.12",
         "com.google.guava" % "guava" % "33.5.0-jre",

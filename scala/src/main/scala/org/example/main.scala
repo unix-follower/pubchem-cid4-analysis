@@ -31,6 +31,7 @@ import org.example.analysis.spectrum.EigendecompositionService
 import org.example.analysis.spectrum.LaplacianAnalysisResult
 import org.example.analysis.spectrum.LaplacianService
 import org.example.model.Conformer3DCompoundDto
+import org.example.nlp.opennlp.OpenNlpCli
 import org.example.search.elasticsearch.ElasticsearchCli
 import org.example.search.lucene.LuceneCli
 import org.example.search.solr.SolrCli
@@ -658,6 +659,21 @@ def main(args: String*): Unit =
     case "elasticsearch-export" => ElasticsearchCli.run("export")
     case "elasticsearch-post"   => ElasticsearchCli.run("post")
     case "elasticsearch-query"  => ElasticsearchCli.run("query")
+    case "opennlp" =>
+      val openNlpMode =
+        distanceSource match
+          case "literature" | "patent" | "assay" | "pathway" | "taxonomy" | "cpdat" | "toxicology" |
+              "springer" | "all" => distanceSource
+          case _ => "all"
+      OpenNlpCli.run(openNlpMode)
+    case "opennlp-literature" => OpenNlpCli.run("literature")
+    case "opennlp-patent"     => OpenNlpCli.run("patent")
+    case "opennlp-assay"      => OpenNlpCli.run("assay")
+    case "opennlp-pathway"    => OpenNlpCli.run("pathway")
+    case "opennlp-taxonomy"   => OpenNlpCli.run("taxonomy")
+    case "opennlp-cpdat"      => OpenNlpCli.run("cpdat")
+    case "opennlp-toxicology" => OpenNlpCli.run("toxicology")
+    case "opennlp-springer"   => OpenNlpCli.run("springer")
     case _ =>
       readJson(method, distanceSource)
       readSdf()
