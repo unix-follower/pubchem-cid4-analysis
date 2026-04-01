@@ -18,6 +18,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+apache-age = [
+    "psycopg[binary]>=3.2.9",
+]
 descriptor-ml = [
     "dscribe>=2.1.1",
 ]
