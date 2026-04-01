@@ -36,7 +36,9 @@ jobs:
       - name: Install dependencies
         working-directory: py
         shell: bash
-        run: pip install uv
+        run: |
+          pip install uv
+          uv sync --locked
 
       - name: Check code formatting
         working-directory: py
