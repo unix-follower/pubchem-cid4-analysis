@@ -142,6 +142,46 @@ The route contract matches the other backends:
 - `GET /api/algorithms/bioactivity`
 - `GET /api/algorithms/taxonomy`
 
+## C++ Plain OpenSSL API
+
+The C++ project now includes a bare-minimum HTTPS backend alongside the existing Crow, Oatpp, and Drogon servers. It lives under `cpp/`, reuses the shared C++ route/config helpers, and uses raw sockets plus OpenSSL instead of a higher-level HTTP framework.
+
+Build and run it with:
+
+```bash
+cd cpp
+cmake -S . -B build
+cmake --build build --target plain_openssl_api_server -j4
+./build/plain_openssl_api_server --host 127.0.0.1 --port 9446
+```
+
+Optional runtime settings:
+- `CPP_PLAIN_HOST` and `CPP_PLAIN_PORT` override bind address and port
+- `CPP_HOST` and `CPP_PORT` are also accepted
+- `CPP_PLAIN_MODE` supports `thread-per-request`, `thread-pool`, `blocking`, and `nonblocking`
+- `CPP_PLAIN_THREADS` sets worker count for `thread-pool` mode
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` remain generic fallbacks
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+
+The route contract matches the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+Verification:
+
+```bash
+curl -k https://127.0.0.1:9446/api/health
+curl -k "https://127.0.0.1:9446/api/health?mode=error"
+curl -k https://127.0.0.1:9446/api/cid4/conformer/1
+curl -k https://127.0.0.1:9446/api/cid4/compound
+```
+
 ---
 
 ## 1. Mathematics

@@ -166,3 +166,58 @@ TEST(Cid4HttpTest, FixturePayloadsExposeExpectedTopLevelFields)
     EXPECT_TRUE(pubchem::cid4http::bioactivityFixture().contains("records"));
     EXPECT_TRUE(pubchem::cid4http::taxonomyFixture().contains("organisms"));
 }
+
+TEST(Cid4HttpTest, RouteApiRequestReturnsHealthyPayload)
+{
+    const auto directory = createTempDataDir();
+    const auto response = pubchem::cid4http::routeApiRequest(
+        "GET", "/api/health", directory, "cpp-plain", "Plain OpenSSL");
+
+    EXPECT_EQ(response.statusCode, 200);
+    const auto payload = nlohmann::json::parse(response.body);
+    EXPECT_EQ(payload.at("source").get<std::string>(), "cpp-plain");
+    EXPECT_EQ(payload.at("message").get<std::string>(), "Plain OpenSSL transport is healthy");
+}
+
+TEST(Cid4HttpTest, RouteApiRequestReturnsErrorModePayload)
+{
+    const auto directory = createTempDataDir();
+    const auto response = pubchem::cid4http::routeApiRequest(
+        "GET", "/api/health?mode=error", directory, "cpp-plain", "Plain OpenSSL");
+
+    EXPECT_EQ(response.statusCode, 503);
+    const auto payload = nlohmann::json::parse(response.body);
+    EXPECT_EQ(payload.at("message").get<std::string>(), "Transport error from Plain OpenSSL");
+}
+
+TEST(Cid4HttpTest, RouteApiRequestValidatesConformerIndex)
+{
+    const auto directory = createTempDataDir();
+    const auto response = pubchem::cid4http::routeApiRequest(
+        "GET", "/api/cid4/conformer/99", directory, "cpp-plain", "Plain OpenSSL");
+
+    EXPECT_EQ(response.statusCode, 404);
+    const auto payload = nlohmann::json::parse(response.body);
+    EXPECT_EQ(payload.at("message").get<std::string>(), "Unknown conformer 99");
+}
+
+TEST(Cid4HttpTest, RouteApiRequestSupportsOptions)
+{
+    const auto directory = createTempDataDir();
+    const auto response = pubchem::cid4http::routeApiRequest(
+        "OPTIONS", "/api/health", directory, "cpp-plain", "Plain OpenSSL");
+
+    EXPECT_EQ(response.statusCode, 204);
+    EXPECT_TRUE(response.body.empty());
+}
+
+TEST(Cid4HttpTest, RouteApiRequestRejectsUnsupportedMethods)
+{
+    const auto directory = createTempDataDir();
+    const auto response = pubchem::cid4http::routeApiRequest(
+        "POST", "/api/health", directory, "cpp-plain", "Plain OpenSSL");
+
+    EXPECT_EQ(response.statusCode, 405);
+    const auto payload = nlohmann::json::parse(response.body);
+    EXPECT_EQ(payload.at("message").get<std::string>(), "Method not allowed");
+}

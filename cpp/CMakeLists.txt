@@ -47,6 +47,7 @@ find_package(oatpp CONFIG REQUIRED)
 find_package(oatpp-openssl CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(RDKit CONFIG REQUIRED)
+find_package(Threads REQUIRED)
 
 set(pubchem_rdkit_rpath)
 if(PUBCHEM_RDKIT_PREFIX AND EXISTS "${PUBCHEM_RDKIT_PREFIX}/lib")
@@ -111,6 +112,13 @@ target_link_libraries(oat_api_server PRIVATE cid4_http_support oatpp::oatpp oatp
 add_executable(drogon_api_server src/drogon_api_server.cpp)
 set_target_properties(drogon_api_server PROPERTIES OUTPUT_NAME drogon_api_server)
 target_link_libraries(drogon_api_server PRIVATE cid4_http_support Drogon::Drogon OpenSSL::SSL OpenSSL::Crypto)
+
+add_executable(plain_openssl_api_server src/plain_openssl_api_server.cpp)
+set_target_properties(plain_openssl_api_server PROPERTIES OUTPUT_NAME plain_openssl_api_server)
+target_link_libraries(
+	plain_openssl_api_server
+	PRIVATE cid4_http_support OpenSSL::SSL OpenSSL::Crypto Threads::Threads
+)
 
 if(PUBCHEM_ENABLE_VULKAN_APP)
 	find_package(Vulkan QUIET)

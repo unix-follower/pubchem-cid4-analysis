@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <optional>
 #include <string>
+#include <string_view>
 
 #include <nlohmann/json.hpp>
 
@@ -16,6 +17,12 @@ struct ServerConfig {
     std::filesystem::path certFile;
     std::filesystem::path keyFile;
     std::optional<std::string> keyPassword;
+};
+
+struct ApiResponse {
+    int statusCode;
+    std::string body;
+    std::string contentType = "application/json";
 };
 
 std::filesystem::path resolveDataDir();
@@ -31,6 +38,11 @@ std::filesystem::path compoundPath(const std::filesystem::path& dataDir);
 
 std::string loadJsonPayload(const std::filesystem::path& path);
 std::string isoTimestampUtc();
+ApiResponse routeApiRequest(std::string_view method,
+                            std::string_view target,
+                            const std::filesystem::path& dataDir,
+                            std::string_view sourceLabel,
+                            std::string_view transportName);
 
 nlohmann::json healthPayload(std::string_view source, std::string_view message);
 nlohmann::json pathwayFixture();

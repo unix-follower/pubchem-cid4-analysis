@@ -1,10 +1,12 @@
 #include "cid4_http.hpp"
 
+#include <algorithm>
 #include <array>
 #include <chrono>
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
+#include <limits>
 #include <sstream>
 #include <stdexcept>
 
@@ -84,9 +86,85 @@ std::optional<std::uint16_t> firstPortValue(const std::vector<const char*>& name
 bool hasRequiredFiles(const std::filesystem::path& directory)
 {
     return std::filesystem::is_directory(directory) &&
-           std::ranges::all_of(kRequiredDataFiles, [&directory](const char* fileName) {
-               return std::filesystem::is_regular_file(directory / fileName);
-           });
+           std::all_of(kRequiredDataFiles.begin(),
+                       kRequiredDataFiles.end(),
+                       [&directory](const char* fileName) {
+                           return std::filesystem::is_regular_file(directory / fileName);
+                       });
+}
+
+std::string_view requestPath(std::string_view target)
+{
+    const auto queryOffset = target.find('?');
+    if (queryOffset == std::string_view::npos) {
+        return target;
+    }
+
+    return target.substr(0, queryOffset);
+}
+
+std::optional<std::string_view> queryValue(std::string_view target, std::string_view key)
+{
+    const auto queryOffset = target.find('?');
+    if (queryOffset == std::string_view::npos || queryOffset + 1 >= target.size()) {
+        return std::nullopt;
+    }
+
+    auto query = target.substr(queryOffset + 1);
+    while (!query.empty()) {
+        const auto separator = query.find('&');
+        const auto part = separator == std::string_view::npos ? query : query.substr(0, separator);
+        const auto equals = part.find('=');
+        const auto candidateKey = equals == std::string_view::npos ? part : part.substr(0, equals);
+        if (candidateKey == key) {
+            if (equals == std::string_view::npos || equals + 1 >= part.size()) {
+                return std::string_view{};
+            }
+
+            return part.substr(equals + 1);
+        }
+
+        if (separator == std::string_view::npos) {
+            break;
+        }
+        query.remove_prefix(separator + 1);
+    }
+
+    return std::nullopt;
+}
+
+ApiResponse jsonResponse(int statusCode, const nlohmann::json& payload)
+{
+    return ApiResponse{.statusCode = statusCode, .body = payload.dump()};
+}
+
+ApiResponse textResponse(int statusCode, std::string payload, std::string contentType)
+{
+    return ApiResponse{
+        .statusCode = statusCode,
+        .body = std::move(payload),
+        .contentType = std::move(contentType),
+    };
+}
+
+std::optional<int> parseConformerIndex(std::string_view value)
+{
+    if (value.empty()) {
+        return std::nullopt;
+    }
+
+    try {
+        std::size_t consumed = 0;
+        const auto parsed = std::stoi(std::string(value), &consumed);
+        if (consumed != value.size()) {
+            return std::nullopt;
+        }
+
+        return parsed;
+    }
+    catch (const std::exception&) {
+        return std::nullopt;
+    }
 }
 
 std::filesystem::path resolveDefaultDataDirCandidate()
@@ -267,6 +345,85 @@ std::string isoTimestampUtc()
     output << std::put_time(&utcTime, "%Y-%m-%dT%H:%M:%S") << '.' << std::setw(3)
            << std::setfill('0') << fractional.count() << 'Z';
     return output.str();
+}
+
+ApiResponse routeApiRequest(std::string_view method,
+                            std::string_view target,
+                            const std::filesystem::path& dataDir,
+                            std::string_view sourceLabel,
+                            std::string_view transportName)
+{
+    if (method == "OPTIONS") {
+        return textResponse(204, {}, "text/plain");
+    }
+
+    if (method != "GET") {
+        return jsonResponse(405, nlohmann::json{{"message", "Method not allowed"}});
+    }
+
+    const auto path = requestPath(target);
+    if (path == "/api/health") {
+        if (const auto mode = queryValue(target, "mode"); mode.has_value() && *mode == "error") {
+            return jsonResponse(
+                503,
+                healthPayload(sourceLabel,
+                              std::string("Transport error from ") + std::string(transportName)));
+        }
+
+        return jsonResponse(
+            200, healthPayload(sourceLabel, std::string(transportName) + " transport is healthy"));
+    }
+
+    if (path == "/api/cid4/structure/2d") {
+        try {
+            return textResponse(200, loadJsonPayload(structure2dPath(dataDir)), "application/json");
+        }
+        catch (const std::exception& error) {
+            return jsonResponse(404, nlohmann::json{{"message", error.what()}});
+        }
+    }
+
+    if (path == "/api/cid4/compound") {
+        try {
+            return textResponse(200, loadJsonPayload(compoundPath(dataDir)), "application/json");
+        }
+        catch (const std::exception& error) {
+            return jsonResponse(404, nlohmann::json{{"message", error.what()}});
+        }
+    }
+
+    constexpr std::string_view conformerPrefix = "/api/cid4/conformer/";
+    if (path.size() >= conformerPrefix.size() &&
+        path.substr(0, conformerPrefix.size()) == conformerPrefix) {
+        const auto indexText = path.substr(conformerPrefix.size());
+        const auto index = parseConformerIndex(indexText);
+        if (!index.has_value() || !isSupportedConformerIndex(*index)) {
+            return jsonResponse(
+                404, nlohmann::json{{"message", "Unknown conformer " + std::string(indexText)}});
+        }
+
+        try {
+            return textResponse(
+                200, loadJsonPayload(conformerPath(dataDir, *index)), "application/json");
+        }
+        catch (const std::exception& error) {
+            return jsonResponse(404, nlohmann::json{{"message", error.what()}});
+        }
+    }
+
+    if (path == "/api/algorithms/pathway") {
+        return jsonResponse(200, pathwayFixture());
+    }
+
+    if (path == "/api/algorithms/bioactivity") {
+        return jsonResponse(200, bioactivityFixture());
+    }
+
+    if (path == "/api/algorithms/taxonomy") {
+        return jsonResponse(200, taxonomyFixture());
+    }
+
+    return jsonResponse(404, nlohmann::json{{"message", "Not found"}});
 }
 
 nlohmann::json healthPayload(std::string_view source, std::string_view message)
