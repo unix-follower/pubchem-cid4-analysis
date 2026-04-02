@@ -9,6 +9,297 @@ The dataset contains:
 - **Graph** — DOT directed graph: compound → species associations with two subgraph clusters (mammals, birds)
 - **Pathway** — Glutathione Metabolism III (E. coli)
 
+## TypeScript Express API
+
+A dedicated Node/TypeScript HTTPS backend lives in `cid4-express-api/`. It is additive and does not replace the current frontend MSW setup in `cid4-angular-ui/`.
+
+The Express backend serves the same route contract used by the existing Python and C++ backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+### Install and run
+
+```bash
+cd cid4-express-api
+npm install
+npm run build
+node dist/server.js --host 127.0.0.1 --port 9557
+```
+
+For local development without a prior build:
+
+```bash
+cd cid4-express-api
+npm install
+npm run dev
+```
+
+### Configuration
+
+- `DATA_DIR` can point at a custom CID 4 data directory.
+- `EXPRESS_HOST` and `EXPRESS_PORT` override the bind address and port.
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` are used as generic fallbacks.
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly.
+- If explicit TLS env vars are not provided, the backend falls back to `data/out/crypto/cid4_crypto.summary.json` and its PEM paths.
+
+### Verification
+
+```bash
+curl -k https://127.0.0.1:9557/api/health
+curl -k "https://127.0.0.1:9557/api/health?mode=error"
+curl -k https://127.0.0.1:9557/api/cid4/conformer/1
+curl -k https://127.0.0.1:9557/api/cid4/structure/2d
+curl -k https://127.0.0.1:9557/api/cid4/compound
+curl -k https://127.0.0.1:9557/api/algorithms/pathway
+```
+
+The frontends can continue using MSW by default. The Express backend is intended for live backend verification, integration work, or direct API development.
+
+## NestJS API
+
+A dedicated NestJS HTTPS backend lives in `cid4-nest-api/`. It is additive, parallels the Express backend, and keeps the current frontend MSW setup unchanged.
+
+The NestJS backend serves the same route contract used by the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+### Install and run
+
+```bash
+cd cid4-nest-api
+npm install
+npm run build
+node dist/main.js --host 127.0.0.1 --port 9567
+```
+
+For local development without a prior build:
+
+```bash
+cd cid4-nest-api
+npm install
+npm run dev
+```
+
+### Configuration
+
+- `DATA_DIR` can point at a custom CID 4 data directory.
+- `NEST_HOST` and `NEST_PORT` override the bind address and port.
+- `NESTJS_HOST` and `NESTJS_PORT` are also accepted.
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` are used as generic fallbacks.
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly.
+- If explicit TLS env vars are not provided, the backend falls back to `data/out/crypto/cid4_crypto.summary.json` and its PEM paths.
+
+### Verification
+
+```bash
+curl -k https://127.0.0.1:9567/api/health
+curl -k "https://127.0.0.1:9567/api/health?mode=error"
+curl -k https://127.0.0.1:9567/api/cid4/conformer/1
+curl -k https://127.0.0.1:9567/api/cid4/structure/2d
+curl -k https://127.0.0.1:9567/api/cid4/compound
+curl -k https://127.0.0.1:9567/api/algorithms/pathway
+```
+
+The frontends can continue using MSW by default. The NestJS backend is intended for live backend verification, integration work, or direct API development alongside the Express implementation.
+
+## Scala JDK Concurrent API
+
+The Scala project now includes a pure-JDK HTTPS backend alongside the existing Tomcat and Netty implementations. It lives under `scala/`, reuses the shared Scala route layer, avoids Servlet-style frameworks, and uses virtual threads plus JDK concurrency primitives for request handling.
+
+Run it with:
+
+```bash
+cd scala
+sbt "run jdk"
+```
+
+Optional runtime settings:
+- `JDK_HOST` and `JDK_PORT` override bind address and port
+- `VTHREAD_HOST` and `VTHREAD_PORT` are also accepted
+- `JDK_IO_MODE` supports `blocking`, `nonblocking`, and `hybrid`
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` remain generic fallbacks
+- `KEYSTORE_PATH`, `KEYSTORE_PASSWORD`, and `KEYSTORE_TYPE` control TLS keystore resolution
+
+The route contract matches the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+## C++ Plain OpenSSL API
+
+The C++ project now includes a bare-minimum HTTPS backend alongside the existing Crow, Oatpp, and Drogon servers. It lives under `cpp/`, reuses the shared C++ route/config helpers, and uses raw sockets plus OpenSSL instead of a higher-level HTTP framework.
+
+Build and run it with:
+
+```bash
+cd cpp
+cmake -S . -B build
+cmake --build build --target plain_openssl_api_server -j4
+./build/plain_openssl_api_server --host 127.0.0.1 --port 9446
+```
+
+Optional runtime settings:
+- `CPP_PLAIN_HOST` and `CPP_PLAIN_PORT` override bind address and port
+- `CPP_HOST` and `CPP_PORT` are also accepted
+- `CPP_PLAIN_MODE` supports `thread-per-request`, `thread-pool`, `blocking`, and `nonblocking`
+- `CPP_PLAIN_THREADS` sets worker count for `thread-pool` mode
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` remain generic fallbacks
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+
+The route contract matches the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+Verification:
+
+```bash
+curl -k https://127.0.0.1:9446/api/health
+curl -k "https://127.0.0.1:9446/api/health?mode=error"
+curl -k https://127.0.0.1:9446/api/cid4/conformer/1
+curl -k https://127.0.0.1:9446/api/cid4/compound
+```
+
+## C++ Boost.Asio API
+
+The C++ project also includes a bare-minimum Boost.Asio HTTPS backend alongside the plain OpenSSL, Crow, Oatpp, and Drogon servers. It lives under `cpp/`, reuses the shared C++ route/config helpers, and uses Boost.Asio for accept, TLS stream, and request lifecycle management.
+
+Build and run it with:
+
+```bash
+cd cpp
+cmake -S . -B build
+cmake --build build --target boost_asio_api_server -j4
+./build/boost_asio_api_server --host 127.0.0.1 --port 9447
+```
+
+Optional runtime settings:
+- `CPP_ASIO_HOST` and `CPP_ASIO_PORT` override bind address and port
+- `CPP_HOST` and `CPP_PORT` are also accepted
+- `CPP_ASIO_MODE` supports `thread-per-request`, `thread-pool`, `blocking`, and `nonblocking`
+- `CPP_ASIO_THREADS` sets worker count for `thread-pool` mode
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` remain generic fallbacks
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+
+The route contract matches the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+Verification:
+
+```bash
+curl -k https://127.0.0.1:9447/api/health
+curl -k "https://127.0.0.1:9447/api/health?mode=error"
+curl -k https://127.0.0.1:9447/api/cid4/conformer/1
+curl -k https://127.0.0.1:9447/api/cid4/compound
+```
+
+## Python AsyncIO API
+
+The Python project also includes a bare-minimum asyncio HTTPS backend alongside the existing FastAPI, Starlette, and Flask runners. It lives under `py/`, uses stdlib `asyncio` plus `ssl`, and reuses a shared Python route/config helper so the `/api/...` contract stays aligned across the Python transports.
+
+Build and run it with:
+
+```bash
+cd py
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_asyncio.py --host 127.0.0.1 --port 8444
+```
+
+Optional runtime settings:
+- `ASYNCIO_HOST` and `ASYNCIO_PORT` override bind address and port
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` remain generic fallbacks
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+
+The route contract matches the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+Verification:
+
+```bash
+curl -k https://127.0.0.1:8444/api/health
+curl -k "https://127.0.0.1:8444/api/health?mode=error"
+curl -k https://127.0.0.1:8444/api/cid4/conformer/1
+curl -k https://127.0.0.1:8444/api/cid4/compound
+```
+
+## Scala Tomcat Security
+
+The Scala Tomcat server can now load startup security toggles from `scala/conf/security.properties` or from the path pointed to by `SECURITY_CONFIG_PATH`. The toggles cover CORS, XSS response headers, CSRF guidance mode, SSRF validation for Solr and Elasticsearch URLs, and exactly one protected-route auth mode: OAuth2/OIDC via Keycloak, Basic auth, or Digest auth.
+
+Feature toggles:
+- `security.cors.enabled`
+- `security.xssHeaders.enabled`
+- `security.csrf.enabled`
+- `security.ssrf.enabled`
+- `security.auth.oauth2.enabled`
+- `security.auth.basic.enabled`
+- `security.auth.digest.enabled`
+
+Chained verification examples:
+
+```bash
+curl -isk https://127.0.0.1:8443/api/health \
+&& printf '\n---\n' \
+&& curl -isk https://127.0.0.1:8443/api/cid4/compound
+```
+
+```bash
+curl -isk -H 'Origin: https://ui.example.test' https://127.0.0.1:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk -H 'Origin: https://blocked.example.test' https://127.0.0.1:8443/api/cid4/compound
+```
+
+```bash
+curl -isk https://127.0.0.1:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk -u demo:demo-password https://127.0.0.1:8443/api/cid4/compound
+```
+
+```bash
+curl -isk https://127.0.0.1:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk --digest -u demo:demo-password https://127.0.0.1:8443/api/cid4/compound
+```
+
+The full Tomcat security configuration and Keycloak verification flow are documented in `scala/README.md`.
+
 ---
 
 ## 1. Mathematics

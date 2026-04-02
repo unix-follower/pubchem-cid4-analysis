@@ -4,6 +4,8 @@ import org.apache.solr.client.solrj.SolrQuery
 import org.apache.solr.client.solrj.impl.Http2SolrClient
 import org.apache.solr.common.SolrInputDocument
 import org.apache.solr.common.params.HighlightParams
+import org.example.http.ApiConfig
+import org.example.http.OutboundUrlValidator
 import org.example.search.lucene.LuceneDocumentBatch
 import org.example.search.lucene.LuceneSourceDocument
 import org.slf4j.LoggerFactory
@@ -14,6 +16,7 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.concurrent.TimeUnit
 import scala.jdk.CollectionConverters.*
 import scala.util.Using
 
@@ -148,7 +151,7 @@ object SolrRuntimeService:
       batches: Seq[LuceneDocumentBatch],
       batchSize: Int = 500
   ): SolrIngestSummary =
-    val client = new Http2SolrClient.Builder(solrUrl).build()
+    val client = newClient(validatedBaseUrl(solrUrl))
     var postedDocuments = 0
     val buffer = scala.collection.mutable.ArrayBuffer.empty[SolrInputDocument]
 
@@ -173,9 +176,18 @@ object SolrRuntimeService:
     finally client.close()
 
   def runExampleQueries(solrUrl: String, collection: String): Seq[SolrQueryExampleResult] =
-    val client = new Http2SolrClient.Builder(solrUrl).build()
+    val client = newClient(validatedBaseUrl(solrUrl))
     try solrExamples.map(example => executeExample(client, collection, example))
     finally client.close()
+
+  private def newClient(solrUrl: String): Http2SolrClient =
+    new Http2SolrClient.Builder(solrUrl)
+      .withConnectionTimeout(10, TimeUnit.SECONDS)
+      .withIdleTimeout(30, TimeUnit.SECONDS)
+      .build()
+
+  private def validatedBaseUrl(rawUrl: String): String =
+    OutboundUrlValidator.validate("Solr", rawUrl, ApiConfig.loadSecurityConfig()).toString.stripSuffix("/")
 
   private def executeExample(
       client: Http2SolrClient,

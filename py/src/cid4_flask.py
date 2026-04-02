@@ -1,0 +1,62 @@
+from __future__ import annotations
+
+import argparse
+import os
+import ssl
+
+import log_settings
+from fastapi_cid4.config import resolve_data_dir, resolve_server_config
+from flask_cid4 import create_app
+
+
+def build_argument_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Run the CID 4 Flask HTTPS server.")
+    parser.add_argument("--host", help="Override the bind host.")
+    parser.add_argument("--port", type=int, help="Override the bind port.")
+    return parser
+
+
+def main() -> None:
+    try:
+        import flask
+    except ModuleNotFoundError as exc:
+        raise RuntimeError("Install the optional flask extra to run the Flask server.") from exc
+
+    del flask
+    log_settings.configure_logging()
+    args = build_argument_parser().parse_args()
+
+    data_dir = resolve_data_dir()
+    server_config = resolve_server_config(data_dir)
+
+    host = args.host or os.environ.get("FLASK_HOST") or server_config.host
+    port = args.port or _parse_port_override(os.environ.get("FLASK_PORT")) or server_config.port
+    app = create_app(data_dir)
+    ssl_context = _build_ssl_context(server_config)
+
+    app.run(host=host, port=port, ssl_context=ssl_context)
+
+
+def _build_ssl_context(server_config) -> ssl.SSLContext:
+    context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
+    context.load_cert_chain(
+        certfile=str(server_config.cert_file),
+        keyfile=str(server_config.key_file),
+        password=server_config.key_password,
+    )
+    return context
+
+
+def _parse_port_override(value: str | None) -> int | None:
+    if not value:
+        return None
+    try:
+        parsed = int(value)
+    except ValueError:
+        return None
+    return parsed if parsed > 0 else None
+
+
+if __name__ == "__main__":
+    main()

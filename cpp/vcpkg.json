@@ -1,11 +1,17 @@
 {
   "dependencies": [
     "armadillo",
+    "boost-asio",
     "boost-graph",
     "boost-iostreams",
+    "boost-system",
+    "crow",
+    "drogon",
     "gtest",
     "glfw3",
     "nlohmann-json",
+    "oatpp",
+    "oatpp-openssl",
     "boost-ublas"
   ],
   "features": {

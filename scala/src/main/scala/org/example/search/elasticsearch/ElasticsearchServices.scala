@@ -1,5 +1,7 @@
 package org.example.search.elasticsearch
 
+import org.example.http.ApiConfig
+import org.example.http.OutboundUrlValidator
 import org.example.search.lucene.LuceneDocumentBatch
 import org.example.search.lucene.LuceneSourceDocument
 import org.slf4j.LoggerFactory
@@ -17,6 +19,7 @@ import java.net.http.HttpResponse
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.Duration
 import scala.jdk.CollectionConverters.*
 import scala.util.Using
 
@@ -126,7 +129,10 @@ object ElasticsearchExportService:
 object ElasticsearchRuntimeService:
   private val logger = LoggerFactory.getLogger(getClass)
   private val jsonMapper: ObjectMapper = JsonMapper.builder().addModule(DefaultScalaModule()).build()
-  private val httpClient = HttpClient.newHttpClient()
+  private val httpClient = HttpClient.newBuilder()
+    .followRedirects(HttpClient.Redirect.NEVER)
+    .connectTimeout(Duration.ofSeconds(10))
+    .build()
   private val exactFieldNames = Seq(
     "pmid",
     "doi",
@@ -144,7 +150,8 @@ object ElasticsearchRuntimeService:
       batches: Seq[LuceneDocumentBatch],
       batchSize: Int = 500
   ): ElasticsearchIngestSummary =
-    ensureIndexTemplate(elasticsearchUrl, indexName, configDirectory)
+    val baseUrl = validatedBaseUrl(elasticsearchUrl)
+    ensureIndexTemplate(baseUrl, indexName, configDirectory)
     val payloadBuilder = new StringBuilder()
     var bufferedCount = 0
     var postedDocuments = 0
@@ -154,7 +161,7 @@ object ElasticsearchRuntimeService:
         appendBulkRecord(payloadBuilder, indexName, sourceDocument)
         bufferedCount += 1
         if bufferedCount >= batchSize then
-          postBulkPayload(elasticsearchUrl, payloadBuilder.result())
+          postBulkPayload(baseUrl, payloadBuilder.result())
           postedDocuments += bufferedCount
           payloadBuilder.clear()
           bufferedCount = 0
@@ -162,14 +169,15 @@ object ElasticsearchRuntimeService:
     }
 
     if bufferedCount > 0 then
-      postBulkPayload(elasticsearchUrl, payloadBuilder.result())
+      postBulkPayload(baseUrl, payloadBuilder.result())
       postedDocuments += bufferedCount
 
     logger.info(s"Posted $postedDocuments document(s) to Elasticsearch index '$indexName'")
     ElasticsearchIngestSummary("posted", indexName, postedDocuments, batchSize)
 
   def runExampleQueries(elasticsearchUrl: String, indexName: String): Seq[ElasticsearchQueryExampleResult] =
-    queryExamples.map(example => executeExample(elasticsearchUrl, indexName, example))
+    val baseUrl = validatedBaseUrl(elasticsearchUrl)
+    queryExamples.map(example => executeExample(baseUrl, indexName, example))
 
   private def ensureIndexTemplate(elasticsearchUrl: String, indexName: String, configDirectory: Path): Unit =
     val templatePath = configDirectory.resolve("index-template.json")
@@ -376,6 +384,9 @@ object ElasticsearchRuntimeService:
       throw new IllegalStateException(s"Failed to $action. HTTP $statusCode: ${response.body()}")
 
   private def stripTrailingSlash(value: String): String = value.stripSuffix("/")
+
+  private def validatedBaseUrl(rawUrl: String): String =
+    OutboundUrlValidator.validate("Elasticsearch", rawUrl, ApiConfig.loadSecurityConfig()).toString.stripSuffix("/")
 
   private final case class ElasticsearchQueryDefinition(
       name: String,

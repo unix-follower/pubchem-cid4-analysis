@@ -60,6 +60,12 @@ export PUBCHEM_VCPKG_FEATURES=opencv-app
 ./build/opencv_app --task compare-conformers
 ./build/opencv_app --task overlay-structure
 
+# Run the bare-minimum plain OpenSSL API server
+./build/plain_openssl_api_server --host 127.0.0.1 --port 9446
+
+# Run the bare-minimum Boost.Asio API server
+./build/boost_asio_api_server --host 127.0.0.1 --port 9447
+
 # Run with an explicit adjacency method
 ./build/app --method arrays
 ./build/app --method armadillo
@@ -157,6 +163,8 @@ The repository also exposes an optional `opengl_app` executable for the lower-co
 The repository also exposes an optional `cuda_app` executable for CUDA-oriented geometry analysis. It always builds when `PUBCHEM_ENABLE_CUDA_APP=ON`, but it only enables CUDA runtime execution when CMake can enable the CUDA language and find a CUDA toolkit. On machines without an NVIDIA CUDA toolchain, the target falls back to a stub mode that still batches CID 4 conformer coordinates and computes CPU reference distance matrices so the integration remains compile-safe.
 
 The repository also exposes an optional `opencv_app` executable for OpenCV-driven image diagnostics. It always builds when `PUBCHEM_ENABLE_OPENCV_APP=ON`, but it only enables real image workflows when `find_package(OpenCV)` succeeds during CMake configuration. On machines without OpenCV available, the target falls back to a stub mode that still validates CID 4 scene loading and CLI wiring so the integration remains compile-safe. To install the OpenCV dependency through vcpkg manifest mode, enable the `opencv-app` feature before running `vcpkg install` or `build.sh`.
+
+The repository also exposes two minimal HTTPS backends for transport-level comparison work: `plain_openssl_api_server` uses raw sockets plus OpenSSL directly, while `boost_asio_api_server` uses Boost.Asio with OpenSSL-backed TLS streams. Both reuse the shared `cid4_http` route/config helpers and support the same runtime mode surface with `thread-per-request` and `thread-pool` execution modes.
 
 The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. The eigendecomposition flow exposes a separate `--eigenmethod` selector with `armadillo` and `boost`. The Laplacian flow also exposes a strategy selector with `--laplacian-method <armadillo|boost>`.
 
