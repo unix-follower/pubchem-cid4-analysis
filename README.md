@@ -114,6 +114,34 @@ curl -k https://127.0.0.1:9567/api/algorithms/pathway
 
 The frontends can continue using MSW by default. The NestJS backend is intended for live backend verification, integration work, or direct API development alongside the Express implementation.
 
+## Scala JDK Concurrent API
+
+The Scala project now includes a pure-JDK HTTPS backend alongside the existing Tomcat and Netty implementations. It lives under `scala/`, reuses the shared Scala route layer, avoids Servlet-style frameworks, and uses virtual threads plus JDK concurrency primitives for request handling.
+
+Run it with:
+
+```bash
+cd scala
+sbt "run jdk"
+```
+
+Optional runtime settings:
+- `JDK_HOST` and `JDK_PORT` override bind address and port
+- `VTHREAD_HOST` and `VTHREAD_PORT` are also accepted
+- `JDK_IO_MODE` supports `blocking`, `nonblocking`, and `hybrid`
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` remain generic fallbacks
+- `KEYSTORE_PATH`, `KEYSTORE_PASSWORD`, and `KEYSTORE_TYPE` control TLS keystore resolution
+
+The route contract matches the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
 ---
 
 ## 1. Mathematics

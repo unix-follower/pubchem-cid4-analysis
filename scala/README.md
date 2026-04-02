@@ -15,15 +15,20 @@ For consistent results with import rewrites, run Scalafix before Scalafmt.
 sbt "run server"
 sbt "run tomcat"
 sbt "run netty"
+sbt "run jdk"
 ```
 
-Both the embedded Apache Tomcat server and the Netty 4 server expose the same `/api/...` routes currently defined in the Angular MSW layer and serve them over TLS.
+The embedded Apache Tomcat server, the Netty 4 server, and the pure-JDK virtual-thread server all expose the same `/api/...` routes currently defined in the Angular MSW layer and serve them over TLS.
 
 Server modes:
 - `server` and `tomcat` start the embedded Tomcat implementation
 - `netty` starts the Netty 4 implementation with the same endpoint surface
+- `jdk`, `virtual`, and `loom` start the pure-JDK HTTPS implementation with virtual-thread request handling and JDK concurrency primitives only
 
 Runtime configuration:
+- `JDK_HOST` and `JDK_PORT` override bind address and port for the pure-JDK server
+- `VTHREAD_HOST` and `VTHREAD_PORT` are also accepted by the pure-JDK server
+- `JDK_IO_MODE` controls file-response I/O mode for the pure-JDK server and supports `blocking`, `nonblocking`, and `hybrid`
 - `SERVER_HOST` defaults to `0.0.0.0`
 - `SERVER_PORT` defaults to `8443`
 - `KEYSTORE_PATH` and `KEYSTORE_PASSWORD` can be set explicitly for TLS
@@ -38,6 +43,7 @@ Data resolution:
 Quick verification:
 ```shell
 curl -k https://localhost:8443/api/health
+curl -k "https://localhost:8443/api/health?mode=error"
 curl -k https://localhost:8443/api/cid4/structure/2d
 curl -k https://localhost:8443/api/cid4/conformer/1
 curl -k https://localhost:8443/api/algorithms/pathway
@@ -45,7 +51,14 @@ curl -k https://localhost:8443/api/algorithms/bioactivity
 curl -k https://localhost:8443/api/algorithms/taxonomy
 ```
 
-The Netty server reuses the same Scala route logic as Tomcat, so route behavior and payloads stay aligned.
+The Netty server and the pure-JDK server both reuse the same Scala route logic as Tomcat, so route behavior and payloads stay aligned.
+
+The pure-JDK server avoids Servlet and other HTTP frameworks entirely. It uses:
+- `com.sun.net.httpserver.HttpsServer` for HTTPS request handling
+- `Executors.newVirtualThreadPerTaskExecutor()` for blocking-friendly request execution on virtual threads
+- `CompletableFuture` plus `AsynchronousFileChannel` for non-blocking file-backed JSON responses
+
+In `hybrid` mode, small file responses stay on the request virtual thread while larger file responses are read with asynchronous file I/O.
 
 ## Run adjacency matrix generation
 ```shell

@@ -16,6 +16,8 @@ final case class TlsConfig(
 )
 
 object ApiConfig:
+  private val DefaultHostEnvNames = Seq("SERVER_HOST")
+  private val DefaultPortEnvNames = Seq("SERVER_PORT", "PORT")
   private val RequiredDataFiles = Seq(
     "COMPOUND_CID_4.json",
     "Structure2D_COMPOUND_CID_4.json",
@@ -41,8 +43,15 @@ object ApiConfig:
     }
 
   def loadTlsConfig(dataDir: Path): TlsConfig =
-    val host = Option(System.getenv("SERVER_HOST")).filter(_.nonEmpty).getOrElse("0.0.0.0")
-    val port = parseIntEnv("SERVER_PORT").orElse(parseIntEnv("PORT")).getOrElse(8443)
+    loadTlsConfig(dataDir, DefaultHostEnvNames, DefaultPortEnvNames)
+
+  def loadTlsConfig(
+      dataDir: Path,
+      hostEnvNames: Seq[String],
+      portEnvNames: Seq[String]
+  ): TlsConfig =
+    val host = firstEnvValue(hostEnvNames).getOrElse("0.0.0.0")
+    val port = firstParsedIntEnv(portEnvNames).getOrElse(8443)
     val keystoreType = Option(System.getenv("KEYSTORE_TYPE")).filter(_.nonEmpty).getOrElse("PKCS12")
 
     val config =
@@ -108,3 +117,12 @@ object ApiConfig:
       .filter(_.nonEmpty)
       .flatMap(value => Try(value.toInt).toOption)
       .filter(_ > 0)
+
+  private def firstEnvValue(names: Seq[String]): Option[String] =
+    names.iterator
+      .flatMap(name => Option(System.getenv(name)).filter(_.nonEmpty))
+      .toSeq
+      .headOption
+
+  private def firstParsedIntEnv(names: Seq[String]): Option[Int] =
+    names.iterator.flatMap(parseIntEnv).toSeq.headOption
