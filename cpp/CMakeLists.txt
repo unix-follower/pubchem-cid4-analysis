@@ -39,7 +39,7 @@ if(APPLE AND EXISTS "/usr/local/opt/openssl@3")
 endif()
 
 find_package(Armadillo CONFIG REQUIRED)
-find_package(Boost REQUIRED COMPONENTS graph)
+find_package(Boost REQUIRED COMPONENTS graph system)
 find_package(Crow CONFIG REQUIRED)
 find_package(Drogon CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
@@ -118,6 +118,13 @@ set_target_properties(plain_openssl_api_server PROPERTIES OUTPUT_NAME plain_open
 target_link_libraries(
 	plain_openssl_api_server
 	PRIVATE cid4_http_support OpenSSL::SSL OpenSSL::Crypto Threads::Threads
+)
+
+add_executable(boost_asio_api_server src/boost_asio_api_server.cpp)
+set_target_properties(boost_asio_api_server PROPERTIES OUTPUT_NAME boost_asio_api_server)
+target_link_libraries(
+	boost_asio_api_server
+	PRIVATE cid4_http_support Boost::system OpenSSL::SSL OpenSSL::Crypto Threads::Threads
 )
 
 if(PUBCHEM_ENABLE_VULKAN_APP)

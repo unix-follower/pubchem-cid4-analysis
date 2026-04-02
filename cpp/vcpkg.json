@@ -1,8 +1,10 @@
 {
   "dependencies": [
     "armadillo",
+    "boost-asio",
     "boost-graph",
     "boost-iostreams",
+    "boost-system",
     "crow",
     "drogon",
     "gtest",
