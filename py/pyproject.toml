@@ -29,6 +29,11 @@ crypto = [
 descriptor-ml = [
     "dscribe>=2.1.1",
 ]
+fastapi = [
+    "fastapi>=0.116.1",
+    "httpx>=0.28.1",
+    "uvicorn>=0.35.0",
+]
 langgraph = [
     "langgraph>=0.4.7",
 ]

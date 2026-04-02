@@ -5,6 +5,40 @@ export DATA_DIR="$(pwd)/../data"
 python src/cid4_analysis.py
 ```
 
+## FastAPI server
+The Python workspace also includes a FastAPI HTTPS server that mirrors the same `/api/...` surface used by the Angular app and by the Scala Tomcat and Netty implementations.
+
+Install the optional server dependencies:
+
+```sh
+uv sync --extra fastapi
+```
+
+Run it from the `py` workspace:
+
+```sh
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_fastapi.py
+```
+
+TLS configuration:
+- `FASTAPI_HOST` or `SERVER_HOST` defaults to `0.0.0.0`
+- `FASTAPI_PORT`, `SERVER_PORT`, or `PORT` defaults to `8443`
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+
+If explicit TLS files are not set, the server falls back to the PEM certificate, encrypted private key, and demo password recorded in `data/out/crypto/cid4_crypto.summary.json`.
+
+Quick verification:
+
+```sh
+curl -k https://localhost:8443/api/health
+curl -k https://localhost:8443/api/cid4/structure/2d
+curl -k https://localhost:8443/api/cid4/conformer/1
+curl -k https://localhost:8443/api/algorithms/pathway
+curl -k "https://localhost:8443/api/health?mode=error"
+```
+
 The standard Python run now also writes bioactivity artifacts from `pubchem_cid_4_bioactivity.csv` into `data/out`:
 - filtered IC50 rows with computed pIC50
 - summary JSON with row counts and descriptive statistics
