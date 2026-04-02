@@ -10,6 +10,43 @@ sbt scalafixAll
 
 For consistent results with import rewrites, run Scalafix before Scalafmt.
 
+## Run HTTPS API
+```shell
+sbt "run server"
+sbt "run tomcat"
+sbt "run netty"
+```
+
+Both the embedded Apache Tomcat server and the Netty 4 server expose the same `/api/...` routes currently defined in the Angular MSW layer and serve them over TLS.
+
+Server modes:
+- `server` and `tomcat` start the embedded Tomcat implementation
+- `netty` starts the Netty 4 implementation with the same endpoint surface
+
+Runtime configuration:
+- `SERVER_HOST` defaults to `0.0.0.0`
+- `SERVER_PORT` defaults to `8443`
+- `KEYSTORE_PATH` and `KEYSTORE_PASSWORD` can be set explicitly for TLS
+- `KEYSTORE_TYPE` defaults to `PKCS12`
+
+If `KEYSTORE_PATH` and `KEYSTORE_PASSWORD` are not set, the server falls back to the PKCS#12 bundle recorded in `data/out/crypto/cid4_crypto.summary.json`.
+
+Data resolution:
+- `DATA_DIR` is used when set
+- otherwise the server looks for the repository `data/` directory relative to the Scala project
+
+Quick verification:
+```shell
+curl -k https://localhost:8443/api/health
+curl -k https://localhost:8443/api/cid4/structure/2d
+curl -k https://localhost:8443/api/cid4/conformer/1
+curl -k https://localhost:8443/api/algorithms/pathway
+curl -k https://localhost:8443/api/algorithms/bioactivity
+curl -k https://localhost:8443/api/algorithms/taxonomy
+```
+
+The Netty server reuses the same Scala route logic as Tomcat, so route behavior and payloads stay aligned.
+
 ## Run adjacency matrix generation
 ```shell
 sbt "run arrays json"

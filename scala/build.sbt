@@ -7,6 +7,8 @@ ThisBuild / organizationName := "pubchem_cid4_analysis"
 ThisBuild / semanticdbEnabled := true
 
 val logbackVersion = "1.5.32"
+val nettyVersion = "4.1.120.Final"
+val tomcatVersion = "10.1.41"
 
 lazy val root = (project in file("."))
   .settings(
@@ -16,6 +18,12 @@ lazy val root = (project in file("."))
         "org.slf4j" % "slf4j-api" % "2.0.17",
         "ch.qos.logback" % "logback-core" % logbackVersion,
         "ch.qos.logback" % "logback-classic" % logbackVersion,
+        "io.netty" % "netty-buffer" % nettyVersion,
+        "io.netty" % "netty-codec-http" % nettyVersion,
+        "io.netty" % "netty-common" % nettyVersion,
+        "io.netty" % "netty-handler" % nettyVersion,
+        "io.netty" % "netty-transport" % nettyVersion,
+        "org.apache.tomcat.embed" % "tomcat-embed-core" % tomcatVersion,
         "org.apache.commons" % "commons-math3" % "3.6.1",
         "org.apache.commons" % "commons-csv" % "1.14.1",
         "org.apache.lucene" % "lucene-core" % "9.12.1",

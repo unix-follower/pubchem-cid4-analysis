@@ -30,6 +30,8 @@ import org.example.analysis.spectrum.EigendecompositionResult
 import org.example.analysis.spectrum.EigendecompositionService
 import org.example.analysis.spectrum.LaplacianAnalysisResult
 import org.example.analysis.spectrum.LaplacianService
+import org.example.http.ApiServer
+import org.example.http.NettyServer
 import org.example.model.Conformer3DCompoundDto
 import org.example.nlp.opennlp.OpenNlpCli
 import org.example.search.elasticsearch.ElasticsearchCli
@@ -674,6 +676,8 @@ def main(args: String*): Unit =
     case "opennlp-cpdat"      => OpenNlpCli.run("cpdat")
     case "opennlp-toxicology" => OpenNlpCli.run("toxicology")
     case "opennlp-springer"   => OpenNlpCli.run("springer")
+    case "server" | "tomcat"  => ApiServer.startAndAwait()
+    case "netty"              => NettyServer.startAndAwait()
     case _ =>
       readJson(method, distanceSource)
       readSdf()
