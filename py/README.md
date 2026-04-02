@@ -72,6 +72,41 @@ curl -k https://localhost:8443/api/algorithms/taxonomy
 curl -k "https://localhost:8443/api/health?mode=error"
 ```
 
+## Flask server
+The Python workspace also includes a Flask HTTPS server that exposes the same `/api/...` surface as the FastAPI, Starlette, Scala Tomcat, and Scala Netty backends.
+
+Install the optional server dependencies:
+
+```sh
+uv sync --extra flask
+```
+
+Run it from the `py` workspace:
+
+```sh
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_flask.py
+```
+
+TLS configuration is shared with the other Python runners:
+- `FLASK_HOST` overrides the bind host for the Flask runner
+- `FLASK_PORT` overrides the bind port for the Flask runner
+- `FASTAPI_HOST` or `SERVER_HOST` defaults to `0.0.0.0`
+- `FASTAPI_PORT`, `SERVER_PORT`, or `PORT` defaults to `8443`
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+
+If explicit TLS files are not set, the Flask server falls back to the PEM certificate, encrypted private key, and demo password recorded in `data/out/crypto/cid4_crypto.summary.json`.
+
+Quick verification:
+
+```sh
+curl -k https://localhost:8443/api/health
+curl -k https://localhost:8443/api/cid4/compound
+curl -k https://localhost:8443/api/algorithms/bioactivity
+curl -k "https://localhost:8443/api/health?mode=error"
+```
+
 The standard Python run now also writes bioactivity artifacts from `pubchem_cid_4_bioactivity.csv` into `data/out`:
 - filtered IC50 rows with computed pIC50
 - summary JSON with row counts and descriptive statistics
