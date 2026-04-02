@@ -61,6 +61,59 @@ curl -k https://127.0.0.1:9557/api/algorithms/pathway
 
 The frontends can continue using MSW by default. The Express backend is intended for live backend verification, integration work, or direct API development.
 
+## NestJS API
+
+A dedicated NestJS HTTPS backend lives in `cid4-nest-api/`. It is additive, parallels the Express backend, and keeps the current frontend MSW setup unchanged.
+
+The NestJS backend serves the same route contract used by the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+### Install and run
+
+```bash
+cd cid4-nest-api
+npm install
+npm run build
+node dist/main.js --host 127.0.0.1 --port 9567
+```
+
+For local development without a prior build:
+
+```bash
+cd cid4-nest-api
+npm install
+npm run dev
+```
+
+### Configuration
+
+- `DATA_DIR` can point at a custom CID 4 data directory.
+- `NEST_HOST` and `NEST_PORT` override the bind address and port.
+- `NESTJS_HOST` and `NESTJS_PORT` are also accepted.
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` are used as generic fallbacks.
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly.
+- If explicit TLS env vars are not provided, the backend falls back to `data/out/crypto/cid4_crypto.summary.json` and its PEM paths.
+
+### Verification
+
+```bash
+curl -k https://127.0.0.1:9567/api/health
+curl -k "https://127.0.0.1:9567/api/health?mode=error"
+curl -k https://127.0.0.1:9567/api/cid4/conformer/1
+curl -k https://127.0.0.1:9567/api/cid4/structure/2d
+curl -k https://127.0.0.1:9567/api/cid4/compound
+curl -k https://127.0.0.1:9567/api/algorithms/pathway
+```
+
+The frontends can continue using MSW by default. The NestJS backend is intended for live backend verification, integration work, or direct API development alongside the Express implementation.
+
 ---
 
 ## 1. Mathematics
