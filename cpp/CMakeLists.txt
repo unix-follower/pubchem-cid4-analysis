@@ -18,6 +18,7 @@ project(pubchem_cid4_analysis VERSION 1.0.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CROW_ENABLE_SSL ON)
 
 option(PUBCHEM_ENABLE_VULKAN_APP "Build the optional CID 4 Vulkan viewer bootstrap" ON)
 option(PUBCHEM_ENABLE_OPENGL_APP "Build the optional CID 4 OpenGL viewer bootstrap" ON)
@@ -33,9 +34,15 @@ if(PUBCHEM_RDKIT_PREFIX)
 	list(PREPEND CMAKE_PREFIX_PATH "${PUBCHEM_RDKIT_PREFIX}")
 endif()
 
+if(APPLE AND EXISTS "/usr/local/opt/openssl@3")
+	set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl@3")
+endif()
+
 find_package(Armadillo CONFIG REQUIRED)
 find_package(Boost REQUIRED COMPONENTS graph)
+find_package(Crow CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
+find_package(OpenSSL REQUIRED)
 find_package(RDKit CONFIG REQUIRED)
 
 set(pubchem_rdkit_rpath)
@@ -66,6 +73,14 @@ add_library(cid4_cuda_buffers src/cid4_cuda_buffers.cpp)
 target_include_directories(cid4_cuda_buffers PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cid4_cuda_buffers PUBLIC cid4_scene_loader)
 
+add_library(cid4_http_support src/cid4_http.cpp)
+target_include_directories(cid4_http_support PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_compile_definitions(
+	cid4_http_support
+	PUBLIC PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data"
+)
+target_link_libraries(cid4_http_support PUBLIC nlohmann_json::nlohmann_json)
+
 add_executable(app src/app.cpp)
 set_target_properties(app PROPERTIES OUTPUT_NAME app)
 target_compile_definitions(app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
@@ -80,6 +95,11 @@ target_link_libraries(app
 		RDKit::GraphMol
 		RDKit::RDGeneral
 )
+
+add_executable(crow_api_server src/crow_api_server.cpp)
+set_target_properties(crow_api_server PROPERTIES OUTPUT_NAME crow_api_server)
+target_compile_definitions(crow_api_server PRIVATE CROW_ENABLE_SSL)
+target_link_libraries(crow_api_server PRIVATE cid4_http_support Crow::Crow OpenSSL::SSL OpenSSL::Crypto)
 
 if(PUBCHEM_ENABLE_VULKAN_APP)
 	find_package(Vulkan QUIET)
@@ -180,7 +200,11 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(tests test/analysis_test.cpp test/cuda_buffers_test.cpp test/opencv_support_test.cpp)
-target_link_libraries(tests PRIVATE analysis_core cid4_cuda_buffers cid4_opencv_support GTest::gtest GTest::gtest_main)
+target_sources(tests PRIVATE test/cid4_http_test.cpp)
+target_link_libraries(
+	tests
+	PRIVATE analysis_core cid4_cuda_buffers cid4_opencv_support cid4_http_support GTest::gtest GTest::gtest_main
+)
 
 include(GoogleTest)
 gtest_discover_tests(tests DISCOVERY_TIMEOUT 30)

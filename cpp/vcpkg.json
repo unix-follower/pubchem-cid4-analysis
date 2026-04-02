@@ -3,6 +3,7 @@
     "armadillo",
     "boost-graph",
     "boost-iostreams",
+    "crow",
     "gtest",
     "glfw3",
     "nlohmann-json",
