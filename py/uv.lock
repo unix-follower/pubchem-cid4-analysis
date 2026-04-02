@@ -2668,6 +2668,11 @@ pgvector = [
     { name = "pgvector" },
     { name = "psycopg", extra = ["binary"] },
 ]
+starlette = [
+    { name = "httpx" },
+    { name = "starlette" },
+    { name = "uvicorn" },
+]
 xgboost = [
     { name = "xgboost" },
 ]
@@ -2691,6 +2696,7 @@ requires-dist = [
     { name = "dscribe", marker = "extra == 'descriptor-ml'", specifier = ">=2.1.1" },
     { name = "fastapi", marker = "extra == 'fastapi'", specifier = ">=0.116.1" },
     { name = "httpx", marker = "extra == 'fastapi'", specifier = ">=0.28.1" },
+    { name = "httpx", marker = "extra == 'starlette'", specifier = ">=0.28.1" },
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "langchain", marker = "extra == 'langchain'", specifier = ">=0.3.27" },
     { name = "langchain-text-splitters", marker = "extra == 'langchain'", specifier = ">=0.3.11" },
@@ -2708,11 +2714,13 @@ requires-dist = [
     { name = "scikit-learn", specifier = ">=1.7.1" },
     { name = "scipy", specifier = ">=1.16.1" },
     { name = "seaborn", specifier = ">=0.13.2" },
+    { name = "starlette", marker = "extra == 'starlette'", specifier = ">=0.47.3" },
     { name = "sympy", specifier = ">=1.14.0" },
     { name = "uvicorn", marker = "extra == 'fastapi'", specifier = ">=0.35.0" },
+    { name = "uvicorn", marker = "extra == 'starlette'", specifier = ">=0.35.0" },
     { name = "xgboost", marker = "extra == 'xgboost'", specifier = ">=2.1.4" },
 ]
-provides-extras = ["apache-age", "crypto", "descriptor-ml", "fastapi", "langgraph", "langchain", "nltk", "pgvector", "xgboost", "chem-tools"]
+provides-extras = ["apache-age", "crypto", "descriptor-ml", "fastapi", "starlette", "langgraph", "langchain", "nltk", "pgvector", "xgboost", "chem-tools"]
 
 [package.metadata.requires-dev]
 deep-learning = [
