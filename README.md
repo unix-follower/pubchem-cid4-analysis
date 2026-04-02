@@ -222,6 +222,43 @@ curl -k https://127.0.0.1:9447/api/cid4/conformer/1
 curl -k https://127.0.0.1:9447/api/cid4/compound
 ```
 
+## Python AsyncIO API
+
+The Python project also includes a bare-minimum asyncio HTTPS backend alongside the existing FastAPI, Starlette, and Flask runners. It lives under `py/`, uses stdlib `asyncio` plus `ssl`, and reuses a shared Python route/config helper so the `/api/...` contract stays aligned across the Python transports.
+
+Build and run it with:
+
+```bash
+cd py
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_asyncio.py --host 127.0.0.1 --port 8444
+```
+
+Optional runtime settings:
+- `ASYNCIO_HOST` and `ASYNCIO_PORT` override bind address and port
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` remain generic fallbacks
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+
+The route contract matches the other backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+Verification:
+
+```bash
+curl -k https://127.0.0.1:8444/api/health
+curl -k "https://127.0.0.1:8444/api/health?mode=error"
+curl -k https://127.0.0.1:8444/api/cid4/conformer/1
+curl -k https://127.0.0.1:8444/api/cid4/compound
+```
+
 ---
 
 ## 1. Mathematics

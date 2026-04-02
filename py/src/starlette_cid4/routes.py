@@ -1,78 +1,26 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 from starlette.applications import Starlette
-from starlette.exceptions import HTTPException
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
-from starlette.responses import FileResponse, JSONResponse
+from starlette.responses import Response
 from starlette.routing import Route
 
-BIOACTIVITY_FIXTURE: dict[str, Any] = {
-    "records": [
-        {"aid": 743069, "assay": "Tox21 ER-alpha agonist", "activityValue": 355.1},
-        {"aid": 743070, "assay": "Tox21 ER-alpha antagonist", "activityValue": 18.2},
-        {"aid": 651820, "assay": "NCI growth inhibition", "activityValue": 92.4},
-        {"aid": 540317, "assay": "Cell viability counter-screen", "activityValue": 112.7},
-        {"aid": 504332, "assay": "ChEMBL potency panel", "activityValue": 8.6},
-        {"aid": 720699, "assay": "Nuclear receptor confirmation", "activityValue": 61.9},
-        {"aid": 743053, "assay": "Tox21 luciferase artifact", "activityValue": 140.4},
-        {"aid": 743122, "assay": "Dose-response validation", "activityValue": 28.8},
-        {"aid": 1259368, "assay": "Secondary pharmacology", "activityValue": 4.2},
-        {"aid": 1345073, "assay": "Metabolism pathway screen", "activityValue": 205.5},
-    ]
-}
-
-TAXONOMY_FIXTURE: dict[str, Any] = {
-    "organisms": [
-        {"taxonomyId": 9913, "sourceOrganism": "Bos taurus"},
-        {"taxonomyId": 9913, "sourceOrganism": "Bos taurus"},
-        {"taxonomyId": 9823, "sourceOrganism": "Sus scrofa"},
-        {"taxonomyId": 9031, "sourceOrganism": "Gallus gallus"},
-        {"taxonomyId": 9031, "sourceOrganism": "Gallus gallus"},
-        {"taxonomyId": 9103, "sourceOrganism": "Meleagris gallopavo"},
-        {"taxonomyId": 9986, "sourceOrganism": "Oryctolagus cuniculus"},
-        {"taxonomyId": 9685, "sourceOrganism": "Felis catus"},
-    ]
-}
-
-PATHWAY_FIXTURE: dict[str, Any] = {
-    "graph": {
-        "id": "glutathione-metabolism-iii",
-        "title": "Glutathione Metabolism III",
-        "directed": True,
-        "nodes": [
-            {"id": "step-1", "label": "Import precursor"},
-            {"id": "step-2", "label": "Activate cysteine"},
-            {"id": "step-3", "label": "Ligate glutamate"},
-            {"id": "step-4", "label": "Add glycine"},
-            {"id": "step-5", "label": "Reduce intermediate"},
-            {"id": "step-6", "label": "Export product"},
-        ],
-        "edges": [
-            {"id": "step-1-2", "source": "step-1", "target": "step-2"},
-            {"id": "step-2-3", "source": "step-2", "target": "step-3"},
-            {"id": "step-3-4", "source": "step-3", "target": "step-4"},
-            {"id": "step-3-5", "source": "step-3", "target": "step-5"},
-            {"id": "step-4-6", "source": "step-4", "target": "step-6"},
-            {"id": "step-5-6", "source": "step-5", "target": "step-6"},
-        ],
-    }
-}
+from cid4_api import ApiResponse, route_api_request
 
 
 def create_app(data_dir: Path) -> Starlette:
     routes = [
-        Route("/api/health", endpoint=health),
-        Route("/api/cid4/conformer/{index}", endpoint=conformer),
-        Route("/api/cid4/structure/2d", endpoint=structure_2d),
-        Route("/api/cid4/compound", endpoint=compound),
-        Route("/api/algorithms/pathway", endpoint=pathway),
-        Route("/api/algorithms/bioactivity", endpoint=bioactivity),
-        Route("/api/algorithms/taxonomy", endpoint=taxonomy),
+        Route("/api/health", endpoint=health, methods=["GET", "OPTIONS"]),
+        Route("/api/cid4/conformer/{index}", endpoint=conformer, methods=["GET", "OPTIONS"]),
+        Route("/api/cid4/structure/2d", endpoint=structure_2d, methods=["GET", "OPTIONS"]),
+        Route("/api/cid4/compound", endpoint=compound, methods=["GET", "OPTIONS"]),
+        Route("/api/algorithms/pathway", endpoint=pathway, methods=["GET", "OPTIONS"]),
+        Route("/api/algorithms/bioactivity", endpoint=bioactivity, methods=["GET", "OPTIONS"]),
+        Route("/api/algorithms/taxonomy", endpoint=taxonomy, methods=["GET", "OPTIONS"]),
     ]
     middleware = [
         Middleware(
@@ -87,72 +35,53 @@ def create_app(data_dir: Path) -> Starlette:
     return app
 
 
-def health(request: Request) -> JSONResponse:
-    mode = request.query_params.get("mode")
-    if mode == "error":
-        return JSONResponse(
-            status_code=503,
-            content={
-                "message": "Transport error from Starlette",
-                "source": "starlette",
-                "timestamp": _timestamp(),
-            },
-        )
+def health(request: Request) -> Response:
+    return _response_for(request)
 
-    return JSONResponse(
-        {
-            "message": "Starlette transport is healthy",
-            "source": "starlette",
-            "timestamp": _timestamp(),
-        }
+
+def conformer(request: Request) -> Response:
+    return _response_for(request)
+
+
+def structure_2d(request: Request) -> Response:
+    return _response_for(request)
+
+
+def compound(request: Request) -> Response:
+    return _response_for(request)
+
+
+def pathway(request: Request) -> Response:
+    return _response_for(request)
+
+
+def bioactivity(request: Request) -> Response:
+    return _response_for(request)
+
+
+def taxonomy(request: Request) -> Response:
+    return _response_for(request)
+
+
+def _response_for(request: Request) -> Response:
+    api_response = route_api_request(
+        request.method,
+        _target_from_request(request),
+        request.app.state.data_dir,
+        source="starlette",
+        transport_name="Starlette",
     )
+    return _to_starlette_response(api_response)
 
 
-def conformer(request: Request) -> FileResponse:
-    try:
-        index = int(request.path_params["index"])
-    except (KeyError, TypeError, ValueError) as exc:
-        raise HTTPException(status_code=404, detail="Unknown conformer") from exc
-
-    if index < 1 or index > 6:
-        raise HTTPException(status_code=404, detail=f"Unknown conformer {index}")
-
-    data_dir = request.app.state.data_dir
-    return _json_file_response(data_dir / f"Conformer3D_COMPOUND_CID_4({index}).json")
+def _target_from_request(request: Request) -> str:
+    query_string = request.url.query
+    return request.url.path if not query_string else f"{request.url.path}?{query_string}"
 
 
-def structure_2d(request: Request) -> FileResponse:
-    data_dir = request.app.state.data_dir
-    return _json_file_response(data_dir / "Structure2D_COMPOUND_CID_4.json")
-
-
-def compound(request: Request) -> FileResponse:
-    data_dir = request.app.state.data_dir
-    return _json_file_response(data_dir / "COMPOUND_CID_4.json")
-
-
-def pathway(request: Request) -> JSONResponse:
-    del request
-    return JSONResponse(PATHWAY_FIXTURE)
-
-
-def bioactivity(request: Request) -> JSONResponse:
-    del request
-    return JSONResponse(BIOACTIVITY_FIXTURE)
-
-
-def taxonomy(request: Request) -> JSONResponse:
-    del request
-    return JSONResponse(TAXONOMY_FIXTURE)
-
-
-def _json_file_response(path: Path) -> FileResponse:
-    if not path.is_file():
-        raise HTTPException(status_code=404, detail=f"Missing JSON payload {path.name}")
-    return FileResponse(path, media_type="application/json")
-
-
-def _timestamp() -> str:
-    from datetime import UTC, datetime
-
-    return datetime.now(UTC).isoformat()
+def _to_starlette_response(api_response: ApiResponse) -> Response:
+    return Response(
+        content=api_response.body,
+        media_type=api_response.content_type,
+        status_code=api_response.status_code,
+    )
