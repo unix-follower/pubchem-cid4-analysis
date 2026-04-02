@@ -236,7 +236,8 @@ int main(int argc, char** argv)
 
     try {
         const auto dataDir = pubchem::cid4http::resolveDataDir();
-        auto config = pubchem::cid4http::resolveServerConfig(dataDir);
+        auto config =
+            pubchem::cid4http::resolveServerConfig(dataDir, {"OATPP_HOST"}, {"OATPP_PORT"});
 
         if (const auto cliHost = hostOverride(argc, argv); !cliHost.empty()) {
             config.host = cliHost;

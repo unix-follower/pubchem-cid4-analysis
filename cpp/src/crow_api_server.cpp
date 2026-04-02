@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     try {
         crow::SimpleApp app;
         const auto dataDir = pubchem::cid4http::resolveDataDir();
-        auto config = pubchem::cid4http::resolveServerConfig(dataDir);
+        auto config = pubchem::cid4http::resolveServerConfig(dataDir, {"CROW_HOST"}, {"CROW_PORT"});
 
         if (const auto cliHost = hostOverride(argc, argv); !cliHost.empty()) {
             config.host = cliHost;

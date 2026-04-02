@@ -49,7 +49,7 @@ std::filesystem::path createTempDataDir()
     const auto uniqueSuffix =
         std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());
     const auto directory =
-        std::filesystem::temp_directory_path() / "pubchem-cid4-crow-tests" / uniqueSuffix;
+        std::filesystem::temp_directory_path() / "pubchem-cid4-http-tests" / uniqueSuffix;
     std::filesystem::create_directories(directory);
     std::ofstream(directory / "COMPOUND_CID_4.json") << "{}";
     std::ofstream(directory / "Structure2D_COMPOUND_CID_4.json") << R"({"PC_Compounds": []})";
@@ -100,13 +100,50 @@ TEST(Cid4HttpTest, ResolveServerConfigFallsBackToCryptoSummary)
                                << "  }\n"
                                << "}";
 
-    const auto config = pubchem::cid4http::resolveServerConfig(directory);
+    const auto config =
+        pubchem::cid4http::resolveServerConfig(directory, {"CROW_HOST"}, {"CROW_PORT"});
     EXPECT_EQ(config.host, "127.0.0.1");
     EXPECT_EQ(config.port, 9443);
     ASSERT_TRUE(config.keyPassword.has_value());
     EXPECT_EQ(*config.keyPassword, "test-secret");
     EXPECT_EQ(config.certFile, certPath);
     EXPECT_EQ(config.keyFile, keyPath);
+}
+
+TEST(Cid4HttpTest, ResolveServerConfigUsesGenericServerFallbacks)
+{
+    ScopedEnvironmentVariable cert("TLS_CERT_FILE");
+    ScopedEnvironmentVariable key("TLS_KEY_FILE");
+    ScopedEnvironmentVariable password("TLS_KEY_PASSWORD");
+    ScopedEnvironmentVariable host("SERVER_HOST");
+    ScopedEnvironmentVariable port("SERVER_PORT");
+
+    cert.unset();
+    key.unset();
+    password.unset();
+    host.set("127.0.0.2");
+    port.set("9555");
+
+    const auto directory = createTempDataDir();
+    const auto certPath = directory / "cid4.demo.cert.pem";
+    const auto keyPath = directory / "cid4.demo.key.pem";
+    std::ofstream(certPath) << "demo-cert";
+    std::ofstream(keyPath) << "demo-key";
+
+    const auto summaryPath = directory / "out" / "crypto" / "cid4_crypto.summary.json";
+    std::filesystem::create_directories(summaryPath.parent_path());
+    std::ofstream(summaryPath) << "{\n"
+                               << "  \"x509_and_pkcs12\": {\n"
+                               << "    \"pem_paths\": {\n"
+                               << "      \"certificate\": \"" << certPath.string() << "\",\n"
+                               << "      \"private_key\": \"" << keyPath.string() << "\"\n"
+                               << "    }\n"
+                               << "  }\n"
+                               << "}";
+
+    const auto config = pubchem::cid4http::resolveServerConfig(directory);
+    EXPECT_EQ(config.host, "127.0.0.2");
+    EXPECT_EQ(config.port, 9555);
 }
 
 TEST(Cid4HttpTest, SupportedConformerIndexIsBounded)

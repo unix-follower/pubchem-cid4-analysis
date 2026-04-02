@@ -4,6 +4,7 @@
     "boost-graph",
     "boost-iostreams",
     "crow",
+    "drogon",
     "gtest",
     "glfw3",
     "nlohmann-json",

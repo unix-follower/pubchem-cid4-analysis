@@ -19,6 +19,9 @@ struct ServerConfig {
 };
 
 std::filesystem::path resolveDataDir();
+ServerConfig resolveServerConfig(const std::filesystem::path& dataDir,
+                                 std::initializer_list<const char*> preferredHostEnvNames,
+                                 std::initializer_list<const char*> preferredPortEnvNames);
 ServerConfig resolveServerConfig(const std::filesystem::path& dataDir);
 
 bool isSupportedConformerIndex(int index);

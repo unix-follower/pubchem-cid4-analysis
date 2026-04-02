@@ -41,6 +41,7 @@ endif()
 find_package(Armadillo CONFIG REQUIRED)
 find_package(Boost REQUIRED COMPONENTS graph)
 find_package(Crow CONFIG REQUIRED)
+find_package(Drogon CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(oatpp CONFIG REQUIRED)
 find_package(oatpp-openssl CONFIG REQUIRED)
@@ -106,6 +107,10 @@ target_link_libraries(crow_api_server PRIVATE cid4_http_support Crow::Crow OpenS
 add_executable(oat_api_server src/oat_api_server.cpp)
 set_target_properties(oat_api_server PROPERTIES OUTPUT_NAME oat_api_server)
 target_link_libraries(oat_api_server PRIVATE cid4_http_support oatpp::oatpp oatpp::oatpp-openssl OpenSSL::SSL OpenSSL::Crypto)
+
+add_executable(drogon_api_server src/drogon_api_server.cpp)
+set_target_properties(drogon_api_server PROPERTIES OUTPUT_NAME drogon_api_server)
+target_link_libraries(drogon_api_server PRIVATE cid4_http_support Drogon::Drogon OpenSSL::SSL OpenSSL::Crypto)
 
 if(PUBCHEM_ENABLE_VULKAN_APP)
 	find_package(Vulkan QUIET)

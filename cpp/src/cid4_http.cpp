@@ -28,7 +28,39 @@ std::optional<std::string> firstEnvValue(std::initializer_list<const char*> name
     return std::nullopt;
 }
 
+std::optional<std::string> firstEnvValue(const std::vector<const char*>& names)
+{
+    for (const char* name : names) {
+        if (const char* value = std::getenv(name); value != nullptr && value[0] != '\0') {
+            return std::string(value);
+        }
+    }
+
+    return std::nullopt;
+}
+
 std::optional<std::uint16_t> firstPortValue(std::initializer_list<const char*> names)
+{
+    for (const char* name : names) {
+        const auto value = firstEnvValue({name});
+        if (!value.has_value()) {
+            continue;
+        }
+
+        try {
+            const auto parsed = std::stoul(*value);
+            if (parsed > 0 && parsed <= 65535) {
+                return static_cast<std::uint16_t>(parsed);
+            }
+        }
+        catch (const std::exception&) {
+        }
+    }
+
+    return std::nullopt;
+}
+
+std::optional<std::uint16_t> firstPortValue(const std::vector<const char*>& names)
 {
     for (const char* name : names) {
         const auto value = firstEnvValue({name});
@@ -138,9 +170,24 @@ std::filesystem::path resolveDataDir()
 
 ServerConfig resolveServerConfig(const std::filesystem::path& dataDir)
 {
-    const auto host = firstEnvValue({"OATPP_HOST", "CROW_HOST", "SERVER_HOST"}).value_or("0.0.0.0");
-    const auto port =
-        firstPortValue({"OATPP_PORT", "CROW_PORT", "SERVER_PORT", "PORT"}).value_or(8443);
+    return resolveServerConfig(dataDir, {}, {});
+}
+
+ServerConfig resolveServerConfig(const std::filesystem::path& dataDir,
+                                 std::initializer_list<const char*> preferredHostEnvNames,
+                                 std::initializer_list<const char*> preferredPortEnvNames)
+{
+    std::vector<const char*> hostEnvNames(preferredHostEnvNames.begin(),
+                                          preferredHostEnvNames.end());
+    hostEnvNames.push_back("SERVER_HOST");
+
+    std::vector<const char*> portEnvNames(preferredPortEnvNames.begin(),
+                                          preferredPortEnvNames.end());
+    portEnvNames.push_back("SERVER_PORT");
+    portEnvNames.push_back("PORT");
+
+    const auto host = firstEnvValue(hostEnvNames).value_or("0.0.0.0");
+    const auto port = firstPortValue(portEnvNames).value_or(8443);
 
     const auto certFile = firstEnvValue({"TLS_CERT_FILE"});
     const auto keyFile = firstEnvValue({"TLS_KEY_FILE"});
