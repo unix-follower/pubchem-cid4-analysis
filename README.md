@@ -9,6 +9,58 @@ The dataset contains:
 - **Graph** — DOT directed graph: compound → species associations with two subgraph clusters (mammals, birds)
 - **Pathway** — Glutathione Metabolism III (E. coli)
 
+## TypeScript Express API
+
+A dedicated Node/TypeScript HTTPS backend lives in `cid4-express-api/`. It is additive and does not replace the current frontend MSW setup in `cid4-angular-ui/`.
+
+The Express backend serves the same route contract used by the existing Python and C++ backends:
+- `GET /api/health`
+- `GET /api/health?mode=error`
+- `GET /api/cid4/conformer/:index`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+### Install and run
+
+```bash
+cd cid4-express-api
+npm install
+npm run build
+node dist/server.js --host 127.0.0.1 --port 9557
+```
+
+For local development without a prior build:
+
+```bash
+cd cid4-express-api
+npm install
+npm run dev
+```
+
+### Configuration
+
+- `DATA_DIR` can point at a custom CID 4 data directory.
+- `EXPRESS_HOST` and `EXPRESS_PORT` override the bind address and port.
+- `SERVER_HOST`, `SERVER_PORT`, and `PORT` are used as generic fallbacks.
+- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly.
+- If explicit TLS env vars are not provided, the backend falls back to `data/out/crypto/cid4_crypto.summary.json` and its PEM paths.
+
+### Verification
+
+```bash
+curl -k https://127.0.0.1:9557/api/health
+curl -k "https://127.0.0.1:9557/api/health?mode=error"
+curl -k https://127.0.0.1:9557/api/cid4/conformer/1
+curl -k https://127.0.0.1:9557/api/cid4/structure/2d
+curl -k https://127.0.0.1:9557/api/cid4/compound
+curl -k https://127.0.0.1:9557/api/algorithms/pathway
+```
+
+The frontends can continue using MSW by default. The Express backend is intended for live backend verification, integration work, or direct API development.
+
 ---
 
 ## 1. Mathematics
