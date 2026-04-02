@@ -138,8 +138,9 @@ std::filesystem::path resolveDataDir()
 
 ServerConfig resolveServerConfig(const std::filesystem::path& dataDir)
 {
-    const auto host = firstEnvValue({"CROW_HOST", "SERVER_HOST"}).value_or("0.0.0.0");
-    const auto port = firstPortValue({"CROW_PORT", "SERVER_PORT", "PORT"}).value_or(8443);
+    const auto host = firstEnvValue({"OATPP_HOST", "CROW_HOST", "SERVER_HOST"}).value_or("0.0.0.0");
+    const auto port =
+        firstPortValue({"OATPP_PORT", "CROW_PORT", "SERVER_PORT", "PORT"}).value_or(8443);
 
     const auto certFile = firstEnvValue({"TLS_CERT_FILE"});
     const auto keyFile = firstEnvValue({"TLS_KEY_FILE"});
