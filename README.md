@@ -259,6 +259,47 @@ curl -k https://127.0.0.1:8444/api/cid4/conformer/1
 curl -k https://127.0.0.1:8444/api/cid4/compound
 ```
 
+## Scala Tomcat Security
+
+The Scala Tomcat server can now load startup security toggles from `scala/conf/security.properties` or from the path pointed to by `SECURITY_CONFIG_PATH`. The toggles cover CORS, XSS response headers, CSRF guidance mode, SSRF validation for Solr and Elasticsearch URLs, and exactly one protected-route auth mode: OAuth2/OIDC via Keycloak, Basic auth, or Digest auth.
+
+Feature toggles:
+- `security.cors.enabled`
+- `security.xssHeaders.enabled`
+- `security.csrf.enabled`
+- `security.ssrf.enabled`
+- `security.auth.oauth2.enabled`
+- `security.auth.basic.enabled`
+- `security.auth.digest.enabled`
+
+Chained verification examples:
+
+```bash
+curl -isk https://127.0.0.1:8443/api/health \
+&& printf '\n---\n' \
+&& curl -isk https://127.0.0.1:8443/api/cid4/compound
+```
+
+```bash
+curl -isk -H 'Origin: https://ui.example.test' https://127.0.0.1:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk -H 'Origin: https://blocked.example.test' https://127.0.0.1:8443/api/cid4/compound
+```
+
+```bash
+curl -isk https://127.0.0.1:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk -u demo:demo-password https://127.0.0.1:8443/api/cid4/compound
+```
+
+```bash
+curl -isk https://127.0.0.1:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk --digest -u demo:demo-password https://127.0.0.1:8443/api/cid4/compound
+```
+
+The full Tomcat security configuration and Keycloak verification flow are documented in `scala/README.md`.
+
 ---
 
 ## 1. Mathematics

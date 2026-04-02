@@ -97,7 +97,8 @@ int main(int argc, char** argv)
             config.port = *cliPort;
         }
 
-        CROW_ROUTE(app, "/api/health")([](const crow::request& req) {
+        CROW_ROUTE(app, "/api/health")
+        ([](const crow::request& req) {
             const char* mode = req.url_params.get("mode");
             if (mode != nullptr && std::string_view(mode) == "error") {
                 return jsonResponse(
@@ -108,7 +109,8 @@ int main(int argc, char** argv)
                 200, pubchem::cid4http::healthPayload("crow", "Crow transport is healthy"));
         });
 
-        CROW_ROUTE(app, "/api/cid4/conformer/<int>")([dataDir](int index) {
+        CROW_ROUTE(app, "/api/cid4/conformer/<int>")
+        ([dataDir](int index) {
             try {
                 return jsonResponse(200,
                                     pubchem::cid4http::loadJsonPayload(
@@ -123,7 +125,8 @@ int main(int argc, char** argv)
             }
         });
 
-        CROW_ROUTE(app, "/api/cid4/structure/2d")([dataDir] {
+        CROW_ROUTE(app, "/api/cid4/structure/2d")
+        ([dataDir] {
             try {
                 return jsonResponse(200,
                                     pubchem::cid4http::loadJsonPayload(
@@ -134,7 +137,8 @@ int main(int argc, char** argv)
             }
         });
 
-        CROW_ROUTE(app, "/api/cid4/compound")([dataDir] {
+        CROW_ROUTE(app, "/api/cid4/compound")
+        ([dataDir] {
             try {
                 return jsonResponse(
                     200,
@@ -145,14 +149,14 @@ int main(int argc, char** argv)
             }
         });
 
-        CROW_ROUTE(app, "/api/algorithms/pathway")(
-            [] { return jsonResponse(200, pubchem::cid4http::pathwayFixture()); });
+        CROW_ROUTE(app, "/api/algorithms/pathway")
+        ([] { return jsonResponse(200, pubchem::cid4http::pathwayFixture()); });
 
-        CROW_ROUTE(app, "/api/algorithms/bioactivity")(
-            [] { return jsonResponse(200, pubchem::cid4http::bioactivityFixture()); });
+        CROW_ROUTE(app, "/api/algorithms/bioactivity")
+        ([] { return jsonResponse(200, pubchem::cid4http::bioactivityFixture()); });
 
-        CROW_ROUTE(app, "/api/algorithms/taxonomy")(
-            [] { return jsonResponse(200, pubchem::cid4http::taxonomyFixture()); });
+        CROW_ROUTE(app, "/api/algorithms/taxonomy")
+        ([] { return jsonResponse(200, pubchem::cid4http::taxonomyFixture()); });
 
         auto sslContext = buildSslContext(config);
         std::cout << "Crow API server listening on https://" << config.host << ':' << config.port

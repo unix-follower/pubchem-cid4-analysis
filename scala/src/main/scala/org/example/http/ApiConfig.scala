@@ -1,9 +1,11 @@
 package org.example.http
 
 import java.io.InputStream
+import java.io.Reader
 import java.nio.file.Files
 import java.nio.file.Path
 import java.security.KeyStore
+import java.util.Properties
 import javax.net.ssl.KeyManagerFactory
 import scala.util.Try
 
@@ -16,6 +18,7 @@ final case class TlsConfig(
 )
 
 object ApiConfig:
+  private val DefaultSecurityConfigPath = Path.of("conf", "security.properties").toAbsolutePath.normalize()
   private val DefaultHostEnvNames = Seq("SERVER_HOST")
   private val DefaultPortEnvNames = Seq("SERVER_PORT", "PORT")
   private val RequiredDataFiles = Seq(
@@ -89,6 +92,107 @@ object ApiConfig:
     keyManagerFactory.init(keyStore, tlsConfig.keystorePassword.toCharArray)
     keyManagerFactory
 
+  def loadSecurityConfig(): SecurityConfig =
+    loadSecurityConfig(resolveSecurityConfigPath())
+
+  def loadSecurityConfig(configPath: Path): SecurityConfig =
+    val properties = new Properties()
+    if Files.isRegularFile(configPath) then
+      val reader: Reader = Files.newBufferedReader(configPath)
+      try properties.load(reader)
+      finally reader.close()
+
+    val features = SecurityFeatures(
+      corsEnabled = propertyBoolean(properties, "security.cors.enabled", default = false),
+      xssHeadersEnabled = propertyBoolean(properties, "security.xssHeaders.enabled", default = false),
+      csrfEnabled = propertyBoolean(properties, "security.csrf.enabled", default = false),
+      ssrfEnabled = propertyBoolean(properties, "security.ssrf.enabled", default = false)
+    )
+
+    val cors = CorsPolicy(
+      allowedOrigins = propertyCsv(properties, "security.cors.allowedOrigins").map(_.stripSuffix("/")).toSet,
+      allowedMethods = propertyCsv(properties, "security.cors.allowedMethods", Seq("GET", "OPTIONS")),
+      allowedHeaders = propertyCsv(properties, "security.cors.allowedHeaders", Seq("Authorization", "Content-Type"))
+    )
+
+    val oauth2Enabled = propertyBoolean(properties, "security.auth.oauth2.enabled", default = false)
+    val basicEnabled = propertyBoolean(properties, "security.auth.basic.enabled", default = false)
+    val digestEnabled = propertyBoolean(properties, "security.auth.digest.enabled", default = false)
+    val enabledModes = Seq(oauth2Enabled, basicEnabled, digestEnabled).count(identity)
+    if enabledModes > 1 then
+      throw new IllegalStateException(
+        s"Security config $configPath enables multiple auth modes. Enable at most one of OAuth2, Basic, or Digest."
+      )
+
+    val oauth2 =
+      if oauth2Enabled then
+        val issuer = propertyValue(properties, "security.auth.oauth2.issuer").getOrElse {
+          throw new IllegalStateException("OAuth2 is enabled but security.auth.oauth2.issuer is missing")
+        }
+        Some(
+          OAuth2Settings(
+            issuer = issuer,
+            audience = propertyValue(properties, "security.auth.oauth2.audience"),
+            jwksUri = propertyValue(properties, "security.auth.oauth2.jwksUri"),
+            realm = propertyValue(properties, "security.auth.oauth2.realm").getOrElse("CID4 API")
+          )
+        )
+      else None
+
+    val basic =
+      if basicEnabled then
+        Some(
+          BasicAuthSettings(
+            realm = propertyValue(properties, "security.auth.basic.realm").getOrElse("CID4 Basic Realm"),
+            username = propertyValue(properties, "security.auth.basic.username")
+              .orElse(envValue("BASIC_AUTH_USERNAME"))
+              .getOrElse(throw new IllegalStateException("Basic auth is enabled but no username is configured")),
+            password = propertyValue(properties, "security.auth.basic.password")
+              .orElse(envValue("BASIC_AUTH_PASSWORD"))
+              .getOrElse(throw new IllegalStateException("Basic auth is enabled but no password is configured"))
+          )
+        )
+      else None
+
+    val digest =
+      if digestEnabled then
+        Some(
+          DigestAuthSettings(
+            realm = propertyValue(properties, "security.auth.digest.realm").getOrElse("CID4 Digest Realm"),
+            username = propertyValue(properties, "security.auth.digest.username")
+              .orElse(envValue("DIGEST_AUTH_USERNAME"))
+              .getOrElse(throw new IllegalStateException("Digest auth is enabled but no username is configured")),
+            password = propertyValue(properties, "security.auth.digest.password")
+              .orElse(envValue("DIGEST_AUTH_PASSWORD"))
+              .getOrElse(throw new IllegalStateException("Digest auth is enabled but no password is configured")),
+            nonceTtlSeconds = propertyInt(properties, "security.auth.digest.nonceTtlSeconds", 300)
+          )
+        )
+      else None
+
+    val authMode =
+      if oauth2Enabled then AuthMode.OAuth2
+      else if basicEnabled then AuthMode.Basic
+      else if digestEnabled then AuthMode.Digest
+      else AuthMode.Disabled
+
+    val ssrf = SsrfPolicy(
+      allowedSchemes =
+        propertyCsv(properties, "security.ssrf.allowedSchemes", Seq("http", "https")).map(_.toLowerCase).toSet,
+      allowedHosts = propertyCsv(properties, "security.ssrf.allowedHosts").map(_.toLowerCase).toSet,
+      allowedPorts =
+        propertyCsv(properties, "security.ssrf.allowedPorts").flatMap(value => Try(value.toInt).toOption).toSet,
+      allowPrivateNetworks = propertyBoolean(properties, "security.ssrf.allowPrivateNetworks", default = false)
+    )
+
+    SecurityConfig(
+      propertiesPath = configPath,
+      features = features,
+      cors = cors,
+      auth = AuthSettings(authMode, oauth2, basic, digest),
+      ssrf = ssrf
+    )
+
   private def isDataDir(path: Path): Boolean =
     Files.isDirectory(path) && RequiredDataFiles.forall(fileName => Files.isRegularFile(path.resolve(fileName)))
 
@@ -126,3 +230,25 @@ object ApiConfig:
 
   private def firstParsedIntEnv(names: Seq[String]): Option[Int] =
     names.iterator.flatMap(parseIntEnv).toSeq.headOption
+
+  private def resolveSecurityConfigPath(): Path =
+    envValue("SECURITY_CONFIG_PATH")
+      .map(path => Path.of(path).toAbsolutePath.normalize())
+      .getOrElse(DefaultSecurityConfigPath)
+
+  private def envValue(name: String): Option[String] =
+    Option(System.getenv(name)).map(_.trim).filter(_.nonEmpty)
+
+  private def propertyValue(properties: Properties, key: String): Option[String] =
+    Option(properties.getProperty(key)).map(_.trim).filter(_.nonEmpty)
+
+  private def propertyBoolean(properties: Properties, key: String, default: Boolean): Boolean =
+    propertyValue(properties, key).map(_.toBooleanOption.getOrElse(default)).getOrElse(default)
+
+  private def propertyInt(properties: Properties, key: String, default: Int): Int =
+    propertyValue(properties, key).flatMap(value => Try(value.toInt).toOption).getOrElse(default)
+
+  private def propertyCsv(properties: Properties, key: String, default: Seq[String] = Seq.empty): Seq[String] =
+    propertyValue(properties, key)
+      .map(_.split(',').toSeq.map(_.trim).filter(_.nonEmpty))
+      .getOrElse(default)

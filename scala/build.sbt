@@ -8,6 +8,7 @@ ThisBuild / semanticdbEnabled := true
 
 val logbackVersion = "1.5.32"
 val nettyVersion = "4.1.120.Final"
+val nimbusVersion = "9.39.3"
 val tomcatVersion = "10.1.41"
 
 lazy val root = (project in file("."))
@@ -24,6 +25,7 @@ lazy val root = (project in file("."))
         "io.netty" % "netty-handler" % nettyVersion,
         "io.netty" % "netty-transport" % nettyVersion,
         "org.apache.tomcat.embed" % "tomcat-embed-core" % tomcatVersion,
+        "com.nimbusds" % "nimbus-jose-jwt" % nimbusVersion,
         "org.apache.commons" % "commons-math3" % "3.6.1",
         "org.apache.commons" % "commons-csv" % "1.14.1",
         "org.apache.lucene" % "lucene-core" % "9.12.1",
@@ -39,6 +41,7 @@ lazy val root = (project in file("."))
         "org.apache.tinkerpop" % "gremlin-core" % "3.8.0",
         "org.apache.tinkerpop" % "tinkergraph-gremlin" % "3.8.0",
         "org.scala-graph" %% "graph-core" % "2.0.3",
-        "org.knowm.xchart" % "xchart" % "3.8.8"
+        "org.knowm.xchart" % "xchart" % "3.8.8",
+        "org.scalameta" %% "munit" % "1.0.0" % Test
       )
   )

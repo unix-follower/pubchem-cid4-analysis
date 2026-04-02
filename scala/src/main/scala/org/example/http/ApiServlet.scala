@@ -8,21 +8,26 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 
-final class ApiServlet(dataDir: Path) extends HttpServlet:
+final class ApiServlet(dataDir: Path, security: HttpSecurity) extends HttpServlet:
   override def doOptions(request: HttpServletRequest, response: HttpServletResponse): Unit =
-    applyCorsHeaders(response)
+    security.applyResponseHeaders(request, response)
     response.setStatus(HttpServletResponse.SC_NO_CONTENT)
 
   override def doGet(request: HttpServletRequest, response: HttpServletResponse): Unit =
-    applyCorsHeaders(response)
-    val result = ApiRoutes.route(
-      method = "GET",
-      rawPath = Option(request.getPathInfo).getOrElse("/"),
-      query = ApiRoutes.queryMap(request.getParameterMap),
-      dataDir = dataDir,
-      sourceLabel = "scala-tomcat"
-    )
-    writeRouteResult(response, result)
+    security.applyResponseHeaders(request, response)
+    security.authorize(request) match
+      case Left(failure) =>
+        security.challenge(response, failure)
+        writeJson(response, failure.statusCode, failure.payload)
+      case Right(_) =>
+        val result = ApiRoutes.route(
+          method = "GET",
+          rawPath = Option(request.getPathInfo).getOrElse("/"),
+          query = ApiRoutes.queryMap(request.getParameterMap),
+          dataDir = dataDir,
+          sourceLabel = "scala-tomcat"
+        )
+        writeRouteResult(response, result)
 
   private def writeJsonFile(response: HttpServletResponse, path: Path): Unit =
     if !Files.isRegularFile(path) then
@@ -54,6 +59,3 @@ final class ApiServlet(dataDir: Path) extends HttpServlet:
         response.getOutputStream.write(Files.readAllBytes(path))
       case ApiRoutes.EmptyResult(statusCode) =>
         response.setStatus(statusCode)
-
-  private def applyCorsHeaders(response: HttpServletResponse): Unit =
-    ApiRoutes.corsHeaders.foreach((name, value) => response.setHeader(name, value))

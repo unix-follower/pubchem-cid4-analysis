@@ -33,8 +33,112 @@ Runtime configuration:
 - `SERVER_PORT` defaults to `8443`
 - `KEYSTORE_PATH` and `KEYSTORE_PASSWORD` can be set explicitly for TLS
 - `KEYSTORE_TYPE` defaults to `PKCS12`
+- `SECURITY_CONFIG_PATH` optionally points to the startup security properties file for the Tomcat server
 
 If `KEYSTORE_PATH` and `KEYSTORE_PASSWORD` are not set, the server falls back to the PKCS#12 bundle recorded in `data/out/crypto/cid4_crypto.summary.json`.
+
+## Tomcat security toggles
+
+The Tomcat server now reads feature toggles from `conf/security.properties` before startup. Exactly one auth mode may be enabled at a time.
+
+Available booleans:
+- `security.cors.enabled`
+- `security.xssHeaders.enabled`
+- `security.csrf.enabled`
+- `security.ssrf.enabled`
+- `security.auth.oauth2.enabled`
+- `security.auth.basic.enabled`
+- `security.auth.digest.enabled`
+
+Typical values in `conf/security.properties`:
+
+```properties
+security.cors.enabled=true
+security.cors.allowedOrigins=https://ui.example.test
+security.xssHeaders.enabled=true
+security.csrf.enabled=false
+security.ssrf.enabled=true
+
+security.auth.oauth2.enabled=true
+security.auth.oauth2.issuer=https://keycloak.example.test/realms/cid4
+security.auth.oauth2.audience=cid4-api
+security.auth.oauth2.realm=CID4 API
+
+security.auth.basic.enabled=false
+security.auth.digest.enabled=false
+```
+
+Basic and Digest auth can also read credentials from the properties file, but environment variables remain preferable for secrets.
+
+## Security verification
+
+### XSS headers
+
+```shell
+curl -isk https://localhost:8443/api/health \
+&& printf '\n---\n' \
+&& curl -isk https://localhost:8443/api/cid4/compound | grep -E 'Content-Security-Policy|X-Content-Type-Options|X-Frame-Options|Referrer-Policy'
+```
+
+### CSRF guidance
+
+The current Tomcat API serves only `GET` and `OPTIONS`, so the `security.csrf.enabled` flag is documentation-oriented in this first pass rather than a token-enforcement mechanism. Use the following output format to confirm the current risk profile and response headers while reviewing browser-auth assumptions for Basic and Digest modes:
+
+```shell
+curl -isk https://localhost:8443/api/health \
+&& printf '\n---\n' \
+&& curl -isk -X OPTIONS -H 'Origin: https://ui.example.test' https://localhost:8443/api/cid4/compound
+```
+
+### CORS allowlist
+
+```shell
+curl -isk -H 'Origin: https://ui.example.test' https://localhost:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk -H 'Origin: https://blocked.example.test' https://localhost:8443/api/cid4/compound
+```
+
+### OAuth2 / OpenID Connect with Keycloak
+
+Acquire a Keycloak access token first, then run the protected-route checks:
+
+```shell
+export KC_TOKEN="$(curl -sk -X POST 'https://keycloak.example.test/realms/cid4/protocol/openid-connect/token' \
+	-H 'Content-Type: application/x-www-form-urlencoded' \
+	--data-urlencode 'grant_type=password' \
+	--data-urlencode 'client_id=cid4-api' \
+	--data-urlencode 'username=demo' \
+	--data-urlencode 'password=demo-password' | jq -r '.access_token')" \
+&& curl -isk https://localhost:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk -H "Authorization: Bearer ${KC_TOKEN}" https://localhost:8443/api/cid4/compound
+```
+
+### Basic auth
+
+```shell
+curl -isk https://localhost:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk -u demo:demo-password https://localhost:8443/api/cid4/compound
+```
+
+### Digest auth
+
+```shell
+curl -isk https://localhost:8443/api/cid4/compound \
+&& printf '\n---\n' \
+&& curl -isk --digest -u demo:demo-password https://localhost:8443/api/cid4/compound
+```
+
+### SSRF policy for Solr and Elasticsearch
+
+When `security.ssrf.enabled=true`, only allowlisted schemes, hosts, and ports from `conf/security.properties` are accepted.
+
+```shell
+SOLR_URL=http://127.0.0.1:8983/solr sbt "run solr query" \
+&& printf '\n---\n' \
+&& ELASTICSEARCH_URL=http://127.0.0.1:9200 sbt "run elasticsearch query"
+```
 
 Data resolution:
 - `DATA_DIR` is used when set
@@ -42,13 +146,19 @@ Data resolution:
 
 Quick verification:
 ```shell
-curl -k https://localhost:8443/api/health
-curl -k "https://localhost:8443/api/health?mode=error"
-curl -k https://localhost:8443/api/cid4/structure/2d
-curl -k https://localhost:8443/api/cid4/conformer/1
-curl -k https://localhost:8443/api/algorithms/pathway
-curl -k https://localhost:8443/api/algorithms/bioactivity
-curl -k https://localhost:8443/api/algorithms/taxonomy
+curl -k https://localhost:8443/api/health \
+&& printf '\n---\n' \
+&& curl -k "https://localhost:8443/api/health?mode=error" \
+&& printf '\n---\n' \
+&& curl -k https://localhost:8443/api/cid4/structure/2d \
+&& printf '\n---\n' \
+&& curl -k https://localhost:8443/api/cid4/conformer/1 \
+&& printf '\n---\n' \
+&& curl -k https://localhost:8443/api/algorithms/pathway \
+&& printf '\n---\n' \
+&& curl -k https://localhost:8443/api/algorithms/bioactivity \
+&& printf '\n---\n' \
+&& curl -k https://localhost:8443/api/algorithms/taxonomy
 ```
 
 The Netty server and the pure-JDK server both reuse the same Scala route logic as Tomcat, so route behavior and payloads stay aligned.

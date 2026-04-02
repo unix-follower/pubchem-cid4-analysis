@@ -17,7 +17,7 @@ object ApiRoutes:
   val corsHeaders: Map[String, String] = Map(
     "Access-Control-Allow-Origin" -> "*",
     "Access-Control-Allow-Methods" -> "GET, OPTIONS",
-    "Access-Control-Allow-Headers" -> "Content-Type"
+    "Access-Control-Allow-Headers" -> "Authorization, Content-Type"
   )
 
   def queryMap(parameterMap: java.util.Map[String, Array[String]]): Map[String, String] =
@@ -36,6 +36,9 @@ object ApiRoutes:
       case "OPTIONS" => EmptyResult(204)
       case "GET"     => routeGet(normalizePath(rawPath), query, dataDir, sourceLabel)
       case _         => JsonResult(405, Map("message" -> s"Unsupported method $method"))
+
+  def isPublicPath(rawPath: String): Boolean =
+    normalizePath(rawPath) == "/health"
 
   private def routeGet(
       path: String,
