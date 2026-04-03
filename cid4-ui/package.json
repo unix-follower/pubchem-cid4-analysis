@@ -15,7 +15,7 @@
     "test-update-snap": "jest -u",
     "test:watch": "jest --watch",
     "check-format": "prettier --log-level error --check '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'",
-    "format": "prettier --log-level error --write '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'"
+    "format": "prettier --write '**/*.{js,jsx,ts,tsx,cjs,mjs,json,css,html}'"
   },
   "dependencies": {
     "next": "16.2.1",

@@ -226,7 +226,15 @@ export function ChatAuthProvider({ children }: Readonly<{ children: ReactNode }>
       setSelectedProtocol: setSelectedProtocolState,
       fetchApi,
     }),
-    [authState, ensureAuthenticated, fetchApi, loginWithOAuth2Token, logout, restoreSession, selectedProtocol],
+    [
+      authState,
+      ensureAuthenticated,
+      fetchApi,
+      loginWithOAuth2Token,
+      logout,
+      restoreSession,
+      selectedProtocol,
+    ],
   )
 
   return <ChatAuthContext.Provider value={value}>{children}</ChatAuthContext.Provider>
