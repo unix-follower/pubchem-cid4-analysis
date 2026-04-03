@@ -213,6 +213,16 @@ def normalized_route_label(raw_target: str) -> str:
         return "/api/cid4/structure/2d"
     if path == "/api/cid4/compound":
         return "/api/cid4/compound"
+    if path == "/api/llm/status":
+        return "/api/llm/status"
+    if path == "/api/llm/train":
+        return "/api/llm/train"
+    if path == "/api/llm/generate":
+        return "/api/llm/generate"
+    if path == "/api/llm/generate/stream":
+        return "/api/llm/generate/stream"
+    if path == "/ws/llm/generate":
+        return "/ws/llm/generate"
     if path == "/api/algorithms/pathway":
         return "/api/algorithms/pathway"
     if path == "/api/algorithms/bioactivity":

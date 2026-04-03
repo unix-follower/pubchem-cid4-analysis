@@ -1,14 +1,17 @@
 import "@testing-library/jest-dom"
-import { render, screen } from "@testing-library/react"
+
 import Page from "@/app/page"
 
-describe("Home page", () => {
-  test("renders home page", () => {
-    // when
-    render(<Page />)
+const redirect = jest.fn()
 
-    // then
-    const main = screen.getByText("To get started, edit the page.tsx file.")
-    expect(main).toBeInTheDocument()
+jest.mock("next/navigation", () => ({
+  redirect: (...args: unknown[]) => redirect(...args),
+}))
+
+describe("Home page", () => {
+  test("redirects to the auth flow", () => {
+    Page()
+
+    expect(redirect).toHaveBeenCalledWith("/auth")
   })
 })

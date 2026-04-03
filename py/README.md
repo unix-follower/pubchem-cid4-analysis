@@ -48,6 +48,78 @@ curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_h
 
 Successful and handled-error responses now include `X-Request-Id`, `X-Trace-Id`, `X-Span-Id`, and `traceparent` headers. FastAPI request-completed log lines include the normalized route, status, duration, and correlation identifiers, and Prometheus metrics are exposed on the separate listener.
 
+FastAPI also now includes a small custom LLM workflow behind three shared endpoints plus two streaming transports:
+- `GET /api/llm/status` reports backend availability, whether a trained artifact exists, and where the checkpoint and metadata files are expected for the selected framework.
+- `POST /api/llm/train` trains a small GRU-based character language model from the existing CID4 domain documents and writes artifacts under `data/out`.
+- `POST /api/llm/generate` loads the trained artifact and generates text continuations from a prompt.
+- `POST /api/llm/generate/stream` streams generation events over Server-Sent Events.
+- `WS /ws/llm/generate` streams generation events over WebSocket.
+
+The LLM feature reuses the existing CID4 text corpora from the literature, patent, assay, pathway, taxonomy, and product-use datasets. It is intentionally narrow: the current implementation is a small repo-local model, not a general-purpose foundation model. The same FastAPI routes now support both `pytorch` and `tensorflow` backends through a `framework` selector, and requests default to `pytorch` when the field is omitted. The new streaming routes emit a shared event model with `start`, `token`, `complete`, and `error` messages.
+
+To enable the training and generation endpoints, install both the FastAPI extra and the existing deep-learning dependency group:
+
+```sh
+uv sync --extra fastapi --group deep-learning
+```
+
+If the selected backend is not installed in the active environment, `GET /api/llm/status` still works and reports the backend-specific availability field such as `torch_available: false` or `tensorflow_available: false`, while the train and generate endpoints return an explicit JSON error instead of failing at import time.
+
+Example requests:
+
+```sh
+curl -k https://localhost:8443/api/llm/status
+curl -k 'https://localhost:8443/api/llm/status?framework=tensorflow'
+curl -k -X POST https://localhost:8443/api/llm/train \
+	-H 'Content-Type: application/json' \
+	-d '{
+		"framework": "pytorch",
+		"domains": ["literature", "assay", "pathway"],
+		"output_name": "cid4_demo_lm",
+		"epochs": 4,
+		"sequence_length": 48,
+		"batch_size": 16,
+		"max_chars": 20000
+	}'
+curl -k -X POST https://localhost:8443/api/llm/train \
+	-H 'Content-Type: application/json' \
+	-d '{
+		"framework": "tensorflow",
+		"domains": ["literature", "taxonomy"],
+		"output_name": "cid4_demo_tf_lm",
+		"epochs": 4,
+		"sequence_length": 48,
+		"batch_size": 16,
+		"max_chars": 20000
+	}'
+curl -k -X POST https://localhost:8443/api/llm/generate \
+	-H 'Content-Type: application/json' \
+	-d '{
+		"framework": "pytorch",
+		"model_name": "cid4_demo_lm",
+		"prompt": "CID 4 literature summary:",
+		"max_new_tokens": 120,
+		"temperature": 0.8,
+		"top_k": 8
+	}'
+curl -N -k -X POST https://localhost:8443/api/llm/generate/stream \
+	-H 'Content-Type: application/json' \
+	-d '{
+		"framework": "pytorch",
+		"model_name": "cid4_demo_lm",
+		"prompt": "CID 4 literature summary:",
+		"max_new_tokens": 40,
+		"temperature": 0.8,
+		"top_k": 8
+	}'
+```
+
+Artifacts are written to `data/out` using framework-specific names so both backends can coexist. PyTorch uses `pytorch_llm_<model_name>.pt` plus metadata JSON, and TensorFlow uses `tensorflow_llm_<model_name>.keras` plus metadata JSON. The status route reports the exact artifact paths for the selected framework and model name.
+
+Streaming response contracts:
+- SSE emits `event: start`, repeated `event: token`, and a final `event: complete` frame, or `event: error` if generation cannot start.
+- WebSocket accepts one JSON request after connect and responds with the same logical event payloads as JSON messages.
+
 ## AsyncIO server
 The Python workspace also includes a bare-minimum asyncio HTTPS server that exposes the same `/api/...` surface as the FastAPI, Starlette, Flask, Scala, and C++ backends without adding another web framework.
 
