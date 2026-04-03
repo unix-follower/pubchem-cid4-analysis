@@ -222,6 +222,29 @@ curl -k https://127.0.0.1:9447/api/cid4/conformer/1
 curl -k https://127.0.0.1:9447/api/cid4/compound
 ```
 
+## C++ Crow Load Testing
+
+The repository now includes a top-level load-testing toolkit under `load-tests/` for the C++ Crow HTTPS backend. It includes one starting scenario each for Apache JMeter, Gatling, and k6, all targeting the same mixed GET route set used by the Crow server:
+
+- `GET /api/health`
+- `GET /api/cid4/conformer/1`
+- `GET /api/cid4/structure/2d`
+- `GET /api/cid4/compound`
+- `GET /api/algorithms/pathway`
+- `GET /api/algorithms/bioactivity`
+- `GET /api/algorithms/taxonomy`
+
+Start Crow first:
+
+```bash
+cd cpp
+cmake -S . -B build
+cmake --build build --target crow_api_server -j4
+./build/crow_api_server --host 127.0.0.1 --port 8443
+```
+
+Then use `load-tests/README.md` for the per-tool commands, the temporary Java truststore step for JMeter and Gatling, and the result-classification guidance for good, normal, and bad outcomes.
+
 ## Python AsyncIO API
 
 The Python project also includes a bare-minimum asyncio HTTPS backend alongside the existing FastAPI, Starlette, and Flask runners. It lives under `py/`, uses stdlib `asyncio` plus `ssl`, and reuses a shared Python route/config helper so the `/api/...` contract stays aligned across the Python transports.

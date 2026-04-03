@@ -166,6 +166,8 @@ The repository also exposes an optional `opencv_app` executable for OpenCV-drive
 
 The repository also exposes two minimal HTTPS backends for transport-level comparison work: `plain_openssl_api_server` uses raw sockets plus OpenSSL directly, while `boost_asio_api_server` uses Boost.Asio with OpenSSL-backed TLS streams. Both reuse the shared `cid4_http` route/config helpers and support the same runtime mode surface with `thread-per-request` and `thread-pool` execution modes.
 
+The Crow backend also has a top-level load-testing toolkit under `../load-tests`. Use it when comparing Crow performance with Apache JMeter, Gatling, and k6. The shared scenarios target the read-only `/api/...` routes and expect the Crow server to run over HTTPS, typically on `https://127.0.0.1:8443`. Because the repo uses a self-signed demo certificate by default, JVM-based tools should import `../data/out/crypto/cid4_crypto.demo.cert.pem` into a temporary truststore before running JMeter or Gatling. Keep generated reports under `../load-tests/results/` rather than under `cpp/`.
+
 The current adjacency-matrix implementation exposes a method-string strategy surface with `arrays`, `armadillo`, and `boost-graph`. The eigendecomposition flow exposes a separate `--eigenmethod` selector with `armadillo` and `boost`. The Laplacian flow also exposes a strategy selector with `--laplacian-method <armadillo|boost>`.
 
 The distance-matrix flow exposes a dedicated `--distance-method <json|sdf>` selector. The `json` strategy reads `PC_Compounds[0].coords[0].conformers[0]` from the numbered conformer JSON file, while the `sdf` strategy reads the first valid RDKit conformer from the numbered SDF file.
