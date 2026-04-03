@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "cid4_http.hpp"
+#include "cid4_observability.hpp"
 
 #include <chrono>
 #include <cstdlib>
@@ -220,4 +221,78 @@ TEST(Cid4HttpTest, RouteApiRequestRejectsUnsupportedMethods)
     EXPECT_EQ(response.statusCode, 405);
     const auto payload = nlohmann::json::parse(response.body);
     EXPECT_EQ(payload.at("message").get<std::string>(), "Method not allowed");
+}
+
+TEST(Cid4HttpTest, ResolveObservabilityConfigUsesServiceSpecificEnvironmentFirst)
+{
+    ScopedEnvironmentVariable serviceEnabled("OATPP_OBSERVABILITY_ENABLED");
+    ScopedEnvironmentVariable globalEnabled("OBSERVABILITY_ENABLED");
+    ScopedEnvironmentVariable serviceLogLevel("OATPP_LOG_LEVEL");
+    ScopedEnvironmentVariable globalLogLevel("LOG_LEVEL");
+
+    serviceEnabled.set("false");
+    globalEnabled.set("true");
+    serviceLogLevel.set("debug");
+    globalLogLevel.set("error");
+
+    const auto config =
+        pubchem::cid4observability::resolveObservabilityConfig("OATPP", "pubchem-cid4-oatpp");
+    EXPECT_FALSE(config.enabled);
+    EXPECT_EQ(config.logLevel, "debug");
+    EXPECT_EQ(config.serviceName, "pubchem-cid4-oatpp");
+}
+
+TEST(Cid4HttpTest, ResolveObservabilityConfigParsesPortsAndServiceName)
+{
+    ScopedEnvironmentVariable metricsPort("OBSERVABILITY_METRICS_PORT");
+    ScopedEnvironmentVariable serviceName("OTEL_SERVICE_NAME");
+    ScopedEnvironmentVariable tracingEnabled("OBSERVABILITY_TRACING_ENABLED");
+
+    metricsPort.set("9777");
+    serviceName.set("cid4-oatpp-test");
+    tracingEnabled.set("false");
+
+    const auto config =
+        pubchem::cid4observability::resolveObservabilityConfig("OATPP", "pubchem-cid4-oatpp");
+    EXPECT_EQ(config.metricsPort, 9777);
+    EXPECT_EQ(config.serviceName, "cid4-oatpp-test");
+    EXPECT_FALSE(config.tracingEnabled);
+}
+
+TEST(Cid4HttpTest, ResolveObservabilityConfigUsesCrowSpecificEnvironmentFirst)
+{
+    ScopedEnvironmentVariable serviceEnabled("CROW_OBSERVABILITY_ENABLED");
+    ScopedEnvironmentVariable globalEnabled("OBSERVABILITY_ENABLED");
+    ScopedEnvironmentVariable serviceMetricsPort("CROW_METRICS_PORT");
+    ScopedEnvironmentVariable globalMetricsPort("OBSERVABILITY_METRICS_PORT");
+
+    serviceEnabled.set("false");
+    globalEnabled.set("true");
+    serviceMetricsPort.set("9666");
+    globalMetricsPort.set("9777");
+
+    const auto config =
+        pubchem::cid4observability::resolveObservabilityConfig("CROW", "pubchem-cid4-crow");
+    EXPECT_FALSE(config.enabled);
+    EXPECT_EQ(config.metricsPort, 9666);
+    EXPECT_EQ(config.serviceName, "pubchem-cid4-crow");
+}
+
+TEST(Cid4HttpTest, ResolveObservabilityConfigUsesDrogonSpecificEnvironmentFirst)
+{
+    ScopedEnvironmentVariable serviceEnabled("DROGON_OBSERVABILITY_ENABLED");
+    ScopedEnvironmentVariable globalEnabled("OBSERVABILITY_ENABLED");
+    ScopedEnvironmentVariable serviceLogLevel("DROGON_LOG_LEVEL");
+    ScopedEnvironmentVariable globalLogLevel("LOG_LEVEL");
+
+    serviceEnabled.set("false");
+    globalEnabled.set("true");
+    serviceLogLevel.set("warn");
+    globalLogLevel.set("error");
+
+    const auto config =
+        pubchem::cid4observability::resolveObservabilityConfig("DROGON", "pubchem-cid4-drogon");
+    EXPECT_FALSE(config.enabled);
+    EXPECT_EQ(config.logLevel, "warn");
+    EXPECT_EQ(config.serviceName, "pubchem-cid4-drogon");
 }

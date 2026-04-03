@@ -12,31 +12,46 @@ object ApiServer:
   private val logger = LoggerFactory.getLogger(this.getClass)
 
   def startAndAwait(): Unit =
+    var observability: Option[ObservabilitySupport.Runtime] = None
+
     val dataDir = ApiConfig.resolveDataDir()
     val tlsConfig = ApiConfig.loadTlsConfig(dataDir)
     val securityConfig = ApiConfig.loadSecurityConfig()
+    val observabilityConfig =
+      ObservabilitySupport.resolveObservabilityConfig("TOMCAT", "pubchem-cid4-tomcat")
     val baseDir = Files.createTempDirectory("cid4-tomcat")
     val webRoot = Files.createDirectories(baseDir.resolve("webroot"))
 
-    val tomcat = new Tomcat()
-    tomcat.setBaseDir(baseDir.toString)
-    tomcat.setHostname(tlsConfig.host)
-    tomcat.setConnector(buildHttpsConnector(tlsConfig))
+    try
+      val runtime = ObservabilitySupport.initialize(observabilityConfig)
+      observability = Some(runtime)
 
-    val context = tomcat.addContext("", webRoot.toString)
-    Tomcat.addServlet(context, "cid4-api", new ApiServlet(dataDir, new HttpSecurity(securityConfig)))
-    context.addServletMappingDecoded("/api/*", "cid4-api")
+      val tomcat = new Tomcat()
+      tomcat.setBaseDir(baseDir.toString)
+      tomcat.setHostname(tlsConfig.host)
+      tomcat.setConnector(buildHttpsConnector(tlsConfig))
 
-    logger.info(
-      s"Starting CID4 HTTPS API on https://${tlsConfig.host}:${tlsConfig.port} using ${tlsConfig.keystoreType} keystore ${tlsConfig.keystorePath} with auth mode ${securityConfig.auth.mode} and security config ${securityConfig.propertiesPath}"
-    )
-    if securityConfig.features.csrfEnabled then
-      logger.warn(
-        "CSRF verification guidance is enabled in config, but the current Tomcat API only serves GET and OPTIONS and does not enforce a CSRF token flow."
+      val context = tomcat.addContext("", webRoot.toString)
+      Tomcat.addServlet(context, "cid4-api", new ApiServlet(dataDir, new HttpSecurity(securityConfig), runtime))
+      context.addServletMappingDecoded("/api/*", "cid4-api")
+
+      if securityConfig.features.csrfEnabled then
+        logger.warn(
+          "CSRF verification guidance is enabled in config, but the current Tomcat API only serves GET and OPTIONS and does not enforce a CSRF token flow."
+        )
+
+      tomcat.start()
+      runtime.logStartup(tlsConfig.host, tlsConfig.port)
+      logger.info(
+        s"CID4 HTTPS API is ready with auth mode ${securityConfig.auth.mode} and security config ${securityConfig.propertiesPath}"
       )
-    tomcat.start()
-    logger.info("CID4 HTTPS API is ready")
-    tomcat.getServer.await()
+      try tomcat.getServer.await()
+      finally runtime.shutdown()
+    catch
+      case error: Exception =>
+        observability.foreach(_.logStartupFailure(Option(error.getMessage).getOrElse(error.getClass.getSimpleName)))
+        observability.foreach(_.shutdown())
+        throw error
 
   private def buildHttpsConnector(tlsConfig: TlsConfig): Connector =
     val connector = new Connector("org.apache.coyote.http11.Http11NioProtocol")

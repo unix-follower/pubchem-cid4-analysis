@@ -4,8 +4,9 @@ from pathlib import Path
 
 from flask import Flask
 
+from cid4_observability import Runtime
 from flask_cid4.routes import create_app as create_routes_app
 
 
-def create_app(data_dir: Path) -> Flask:
-    return create_routes_app(data_dir)
+def create_app(data_dir: Path, observability: Runtime | None = None) -> Flask:
+    return create_routes_app(data_dir, observability)

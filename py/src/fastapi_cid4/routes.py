@@ -5,10 +5,11 @@ from pathlib import Path
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from cid4_api import ApiResponse, route_api_request
+from cid4_api import ApiResponse, normalized_route_label, route_api_request
+from cid4_observability import RequestScope, Runtime
 
 
-def create_app(data_dir: Path) -> FastAPI:
+def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
     app = FastAPI(title="CID4 FastAPI", docs_url=None, redoc_url=None)
     app.add_middleware(
         CORSMiddleware,
@@ -16,6 +17,28 @@ def create_app(data_dir: Path) -> FastAPI:
         allow_methods=["GET", "OPTIONS"],
         allow_headers=["Content-Type"],
     )
+
+    if observability is not None:
+
+        @app.middleware("http")
+        async def observe_requests(request: Request, call_next):
+            scope = RequestScope(
+                observability,
+                request.method,
+                normalized_route_label(request.url.path),
+                _target_from_request(request),
+                request.headers.get("X-Request-Id"),
+            )
+            request.state.cid4_request_scope = scope
+            try:
+                response = await call_next(request)
+            except Exception:
+                scope.finish(500)
+                raise
+
+            _apply_observability_headers(response, scope)
+            scope.finish(response.status_code)
+            return response
 
     @app.api_route("/api/health", methods=["GET", "OPTIONS"], response_model=None)
     def health(request: Request) -> Response:
@@ -71,3 +94,8 @@ def _to_fastapi_response(api_response: ApiResponse) -> Response:
         media_type=api_response.content_type,
         status_code=api_response.status_code,
     )
+
+
+def _apply_observability_headers(response: Response, scope: RequestScope) -> None:
+    for name, value in scope.response_headers.items():
+        response.headers[name] = value

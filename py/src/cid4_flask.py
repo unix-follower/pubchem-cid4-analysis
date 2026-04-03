@@ -5,6 +5,7 @@ import os
 import ssl
 
 import log_settings
+from cid4_observability import initialize, resolve_observability_config, shutdown
 from fastapi_cid4.config import resolve_data_dir, resolve_server_config
 from flask_cid4 import create_app
 
@@ -17,6 +18,8 @@ def build_argument_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    observability = None
+
     try:
         import flask
     except ModuleNotFoundError as exc:
@@ -28,13 +31,25 @@ def main() -> None:
 
     data_dir = resolve_data_dir()
     server_config = resolve_server_config(data_dir)
+    observability_config = resolve_observability_config("FLASK", "pubchem-cid4-flask")
 
     host = args.host or os.environ.get("FLASK_HOST") or server_config.host
     port = args.port or _parse_port_override(os.environ.get("FLASK_PORT")) or server_config.port
-    app = create_app(data_dir)
+    observability = initialize(observability_config)
+    app = create_app(data_dir, observability)
     ssl_context = _build_ssl_context(server_config)
 
-    app.run(host=host, port=port, ssl_context=ssl_context)
+    if observability is not None:
+        observability.log_startup(host, port)
+
+    try:
+        app.run(host=host, port=port, ssl_context=ssl_context)
+    except Exception as exc:
+        if observability is not None:
+            observability.log_startup_failure(str(exc))
+        raise
+    finally:
+        shutdown(observability)
 
 
 def _build_ssl_context(server_config) -> ssl.SSLContext:

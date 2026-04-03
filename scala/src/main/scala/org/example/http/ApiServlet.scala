@@ -8,26 +8,54 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 
-final class ApiServlet(dataDir: Path, security: HttpSecurity) extends HttpServlet:
+final class ApiServlet(
+    dataDir: Path,
+    security: HttpSecurity,
+    observability: ObservabilitySupport.Runtime
+) extends HttpServlet:
   override def doOptions(request: HttpServletRequest, response: HttpServletResponse): Unit =
     security.applyResponseHeaders(request, response)
-    response.setStatus(HttpServletResponse.SC_NO_CONTENT)
+    val scope = new ObservabilitySupport.RequestScope(
+      runtime = observability,
+      method = "OPTIONS",
+      route = ApiRoutes.normalizedRouteLabel(Option(request.getPathInfo).getOrElse("/")),
+      target = requestTarget(request),
+      incomingRequestId = requestIdHeader(request)
+    )
+    applyObservabilityHeaders(response, scope)
+    var statusCode = HttpServletResponse.SC_NO_CONTENT
+    try response.setStatus(statusCode)
+    finally scope.finish(statusCode)
 
   override def doGet(request: HttpServletRequest, response: HttpServletResponse): Unit =
     security.applyResponseHeaders(request, response)
-    security.authorize(request) match
-      case Left(failure) =>
-        security.challenge(response, failure)
-        writeJson(response, failure.statusCode, failure.payload)
-      case Right(_) =>
-        val result = ApiRoutes.route(
-          method = "GET",
-          rawPath = Option(request.getPathInfo).getOrElse("/"),
-          query = ApiRoutes.queryMap(request.getParameterMap),
-          dataDir = dataDir,
-          sourceLabel = "scala-tomcat"
-        )
-        writeRouteResult(response, result)
+    val scope = new ObservabilitySupport.RequestScope(
+      runtime = observability,
+      method = "GET",
+      route = ApiRoutes.normalizedRouteLabel(Option(request.getPathInfo).getOrElse("/")),
+      target = requestTarget(request),
+      incomingRequestId = requestIdHeader(request)
+    )
+    applyObservabilityHeaders(response, scope)
+
+    var statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+    try
+      security.authorize(request) match
+        case Left(failure) =>
+          security.challenge(response, failure)
+          statusCode = failure.statusCode
+          writeJson(response, failure.statusCode, failure.payload)
+        case Right(_) =>
+          val result = ApiRoutes.route(
+            method = "GET",
+            rawPath = Option(request.getPathInfo).getOrElse("/"),
+            query = ApiRoutes.queryMap(request.getParameterMap),
+            dataDir = dataDir,
+            sourceLabel = "scala-tomcat"
+          )
+          statusCode = result.statusCode
+          writeRouteResult(response, result)
+    finally scope.finish(statusCode)
 
   private def writeJsonFile(response: HttpServletResponse, path: Path): Unit =
     if !Files.isRegularFile(path) then
@@ -59,3 +87,16 @@ final class ApiServlet(dataDir: Path, security: HttpSecurity) extends HttpServle
         response.getOutputStream.write(Files.readAllBytes(path))
       case ApiRoutes.EmptyResult(statusCode) =>
         response.setStatus(statusCode)
+
+  private def applyObservabilityHeaders(
+      response: HttpServletResponse,
+      scope: ObservabilitySupport.RequestScope
+  ): Unit =
+    scope.responseHeaders.foreach((name, value) => response.setHeader(name, value))
+
+  private def requestIdHeader(request: HttpServletRequest): Option[String] =
+    Option(request.getHeader("X-Request-Id")).map(_.trim).filter(_.nonEmpty)
+
+  private def requestTarget(request: HttpServletRequest): String =
+    val path = Option(request.getRequestURI).filter(_.nonEmpty).getOrElse("/api")
+    Option(request.getQueryString).filter(_.nonEmpty).map(query => s"$path?$query").getOrElse(path)

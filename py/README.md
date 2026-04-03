@@ -26,6 +26,11 @@ TLS configuration:
 - `FASTAPI_HOST` or `SERVER_HOST` defaults to `0.0.0.0`
 - `FASTAPI_PORT`, `SERVER_PORT`, or `PORT` defaults to `8443`
 - `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+- `FASTAPI_OBSERVABILITY_ENABLED` or `OBSERVABILITY_ENABLED` toggle the FastAPI observability runtime
+- `FASTAPI_LOGGING_ENABLED`, `FASTAPI_METRICS_ENABLED`, and `FASTAPI_TRACING_ENABLED` override the generic observability toggles for FastAPI
+- `FASTAPI_LOG_LEVEL` overrides the observability logger level
+- `FASTAPI_METRICS_HOST` and `FASTAPI_METRICS_PORT` configure the separate Prometheus scrape listener, which defaults to `0.0.0.0:9464`
+- `FASTAPI_SERVICE_NAME` overrides the default service label `pubchem-cid4-fastapi`
 
 If explicit TLS files are not set, the server falls back to the PEM certificate, encrypted private key, and demo password recorded in `data/out/crypto/cid4_crypto.summary.json`.
 
@@ -37,7 +42,11 @@ curl -k https://localhost:8443/api/cid4/structure/2d
 curl -k https://localhost:8443/api/cid4/conformer/1
 curl -k https://localhost:8443/api/algorithms/pathway
 curl -k "https://localhost:8443/api/health?mode=error"
+curl -isk https://localhost:8443/api/health
+curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
 ```
+
+Successful and handled-error responses now include `X-Request-Id`, `X-Trace-Id`, `X-Span-Id`, and `traceparent` headers. FastAPI request-completed log lines include the normalized route, status, duration, and correlation identifiers, and Prometheus metrics are exposed on the separate listener.
 
 ## AsyncIO server
 The Python workspace also includes a bare-minimum asyncio HTTPS server that exposes the same `/api/...` surface as the FastAPI, Starlette, Flask, Scala, and C++ backends without adding another web framework.
@@ -124,6 +133,11 @@ TLS configuration is shared with the other Python runners:
 - `FASTAPI_HOST` or `SERVER_HOST` defaults to `0.0.0.0`
 - `FASTAPI_PORT`, `SERVER_PORT`, or `PORT` defaults to `8443`
 - `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
+- `FLASK_OBSERVABILITY_ENABLED` or `OBSERVABILITY_ENABLED` toggle the Flask observability runtime
+- `FLASK_LOGGING_ENABLED`, `FLASK_METRICS_ENABLED`, and `FLASK_TRACING_ENABLED` override the generic observability toggles for Flask
+- `FLASK_LOG_LEVEL` overrides the observability logger level
+- `FLASK_METRICS_HOST` and `FLASK_METRICS_PORT` configure the separate Prometheus scrape listener, which defaults to `0.0.0.0:9464`
+- `FLASK_SERVICE_NAME` overrides the default service label `pubchem-cid4-flask`
 
 If explicit TLS files are not set, the Flask server falls back to the PEM certificate, encrypted private key, and demo password recorded in `data/out/crypto/cid4_crypto.summary.json`.
 
@@ -134,7 +148,11 @@ curl -k https://localhost:8443/api/health
 curl -k https://localhost:8443/api/cid4/compound
 curl -k https://localhost:8443/api/algorithms/bioactivity
 curl -k "https://localhost:8443/api/health?mode=error"
+curl -isk https://localhost:8443/api/health
+curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
 ```
+
+Successful and handled-error responses now include `X-Request-Id`, `X-Trace-Id`, `X-Span-Id`, and `traceparent` headers. Flask request-completed log lines include the normalized route, status, duration, and correlation identifiers, and Prometheus metrics are exposed on the separate listener.
 
 The standard Python run now also writes bioactivity artifacts from `pubchem_cid_4_bioactivity.csv` into `data/out`:
 - filtered IC50 rows with computed pIC50

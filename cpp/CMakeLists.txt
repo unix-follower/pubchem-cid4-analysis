@@ -46,7 +46,9 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(oatpp CONFIG REQUIRED)
 find_package(oatpp-openssl CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(prometheus-cpp CONFIG REQUIRED)
 find_package(RDKit CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 find_package(Threads REQUIRED)
 
 set(pubchem_rdkit_rpath)
@@ -85,6 +87,16 @@ target_compile_definitions(
 )
 target_link_libraries(cid4_http_support PUBLIC nlohmann_json::nlohmann_json)
 
+add_library(cid4_observability src/cid4_observability.cpp)
+target_include_directories(cid4_observability PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(
+	cid4_observability
+	PUBLIC
+		nlohmann_json::nlohmann_json
+		prometheus-cpp::pull
+		spdlog::spdlog
+)
+
 add_executable(app src/app.cpp)
 set_target_properties(app PROPERTIES OUTPUT_NAME app)
 target_compile_definitions(app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
@@ -103,15 +115,15 @@ target_link_libraries(app
 add_executable(crow_api_server src/crow_api_server.cpp)
 set_target_properties(crow_api_server PROPERTIES OUTPUT_NAME crow_api_server)
 target_compile_definitions(crow_api_server PRIVATE CROW_ENABLE_SSL)
-target_link_libraries(crow_api_server PRIVATE cid4_http_support Crow::Crow OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(crow_api_server PRIVATE cid4_http_support cid4_observability Crow::Crow OpenSSL::SSL OpenSSL::Crypto)
 
 add_executable(oat_api_server src/oat_api_server.cpp)
 set_target_properties(oat_api_server PROPERTIES OUTPUT_NAME oat_api_server)
-target_link_libraries(oat_api_server PRIVATE cid4_http_support oatpp::oatpp oatpp::oatpp-openssl OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(oat_api_server PRIVATE cid4_http_support cid4_observability oatpp::oatpp oatpp::oatpp-openssl OpenSSL::SSL OpenSSL::Crypto)
 
 add_executable(drogon_api_server src/drogon_api_server.cpp)
 set_target_properties(drogon_api_server PROPERTIES OUTPUT_NAME drogon_api_server)
-target_link_libraries(drogon_api_server PRIVATE cid4_http_support Drogon::Drogon OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(drogon_api_server PRIVATE cid4_http_support cid4_observability Drogon::Drogon OpenSSL::SSL OpenSSL::Crypto)
 
 add_executable(plain_openssl_api_server src/plain_openssl_api_server.cpp)
 set_target_properties(plain_openssl_api_server PROPERTIES OUTPUT_NAME plain_openssl_api_server)
@@ -229,7 +241,7 @@ add_executable(tests test/analysis_test.cpp test/cuda_buffers_test.cpp test/open
 target_sources(tests PRIVATE test/cid4_http_test.cpp)
 target_link_libraries(
 	tests
-	PRIVATE analysis_core cid4_cuda_buffers cid4_opencv_support cid4_http_support GTest::gtest GTest::gtest_main
+	PRIVATE analysis_core cid4_cuda_buffers cid4_opencv_support cid4_http_support cid4_observability GTest::gtest GTest::gtest_main
 )
 
 include(GoogleTest)

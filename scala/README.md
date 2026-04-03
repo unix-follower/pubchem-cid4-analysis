@@ -31,6 +31,11 @@ Runtime configuration:
 - `JDK_IO_MODE` controls file-response I/O mode for the pure-JDK server and supports `blocking`, `nonblocking`, and `hybrid`
 - `SERVER_HOST` defaults to `0.0.0.0`
 - `SERVER_PORT` defaults to `8443`
+- `TOMCAT_OBSERVABILITY_ENABLED` or `OBSERVABILITY_ENABLED` toggle the Tomcat observability runtime
+- `TOMCAT_LOGGING_ENABLED`, `TOMCAT_METRICS_ENABLED`, and `TOMCAT_TRACING_ENABLED` override the generic observability toggles for Tomcat
+- `TOMCAT_LOG_LEVEL` overrides the observability logger level
+- `TOMCAT_METRICS_HOST` and `TOMCAT_METRICS_PORT` configure the separate Prometheus scrape listener, which defaults to `0.0.0.0:9464`
+- `TOMCAT_SERVICE_NAME` overrides the default service label `pubchem-cid4-tomcat`
 - `KEYSTORE_PATH` and `KEYSTORE_PASSWORD` can be set explicitly for TLS
 - `KEYSTORE_TYPE` defaults to `PKCS12`
 - `SECURITY_CONFIG_PATH` optionally points to the startup security properties file for the Tomcat server
@@ -160,6 +165,17 @@ curl -k https://localhost:8443/api/health \
 && printf '\n---\n' \
 && curl -k https://localhost:8443/api/algorithms/taxonomy
 ```
+
+Observability verification:
+```shell
+curl -isk https://localhost:8443/api/health \
+&& printf '\n---\n' \
+curl -isk 'https://localhost:8443/api/cid4/conformer/99' \
+&& printf '\n---\n' \
+curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
+```
+
+Successful and handled-error responses now include `X-Request-Id`, `X-Trace-Id`, `X-Span-Id`, and `traceparent` headers. The Tomcat runtime emits request-completed log lines with route, status, duration, and correlation identifiers, and exposes Prometheus text format on the separate metrics listener.
 
 The Netty server and the pure-JDK server both reuse the same Scala route logic as Tomcat, so route behavior and payloads stay aligned.
 
