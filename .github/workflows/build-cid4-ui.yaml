@@ -32,9 +32,19 @@ jobs:
         run: npm ci
 
       - name: Check code formatting
+        id: check_format
+        continue-on-error: true
         shell: bash
         working-directory: cid4-ui
         run: npm run check-format
+
+      - name: Show format logs on check failure
+        if: steps.check_format.outcome == 'failure'
+        shell: bash
+        working-directory: cid4-ui
+        run: |
+          npm run format
+          exit 1
 
       - name: Run ESLint
         shell: bash
