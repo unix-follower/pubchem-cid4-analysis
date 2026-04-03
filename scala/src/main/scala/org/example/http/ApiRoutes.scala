@@ -25,6 +25,9 @@ object ApiRoutes:
       case (key, values) if values != null && values.nonEmpty => key -> values.head
     }.toMap
 
+  def normalizedRouteLabel(rawPath: String): String =
+    normalizedRouteLabelForPath(normalizePath(rawPath))
+
   def route(
       method: String,
       rawPath: String,
@@ -85,6 +88,18 @@ object ApiRoutes:
   private def fileResult(path: Path): RouteResult =
     if Files.isRegularFile(path) then FileResult(200, path)
     else JsonResult(404, Map("message" -> s"Missing JSON payload ${path.getFileName}"))
+
+  private def normalizedRouteLabelForPath(path: String): String =
+    path match
+      case "/health"                                                     => "/api/health"
+      case "/cid4/structure/2d"                                          => "/api/cid4/structure/2d"
+      case "/cid4/compound"                                              => "/api/cid4/compound"
+      case "/algorithms/pathway"                                         => "/api/algorithms/pathway"
+      case "/algorithms/bioactivity"                                     => "/api/algorithms/bioactivity"
+      case "/algorithms/taxonomy"                                        => "/api/algorithms/taxonomy"
+      case conformerPath if conformerPath.startsWith("/cid4/conformer/") => "/api/cid4/conformer/{index}"
+      case "/"                                                           => "/api/"
+      case other                                                         => s"/api$other"
 
   private def normalizePath(rawPath: String): String =
     val withLeadingSlash =

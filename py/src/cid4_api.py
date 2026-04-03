@@ -205,6 +205,27 @@ def route_api_request(
     return _json_response(404, {"message": "Not found"})
 
 
+def normalized_route_label(raw_target: str) -> str:
+    path = urlsplit(raw_target).path or "/"
+    if path == "/api/health":
+        return "/api/health"
+    if path == "/api/cid4/structure/2d":
+        return "/api/cid4/structure/2d"
+    if path == "/api/cid4/compound":
+        return "/api/cid4/compound"
+    if path == "/api/algorithms/pathway":
+        return "/api/algorithms/pathway"
+    if path == "/api/algorithms/bioactivity":
+        return "/api/algorithms/bioactivity"
+    if path == "/api/algorithms/taxonomy":
+        return "/api/algorithms/taxonomy"
+    if path.startswith("/api/cid4/conformer/"):
+        suffix = path.removeprefix("/api/cid4/conformer/")
+        if suffix and "/" not in suffix:
+            return "/api/cid4/conformer/{index}"
+    return path
+
+
 def timestamp() -> str:
     return datetime.now(UTC).isoformat()
 

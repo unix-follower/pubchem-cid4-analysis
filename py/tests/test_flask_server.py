@@ -14,7 +14,42 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
+from cid4_observability import ObservabilityConfig, initialize, resolve_observability_config, shutdown  # noqa: E402
+
 FLASK_AVAILABLE = importlib.util.find_spec("flask") is not None
+
+
+class FlaskObservabilityConfigTests(unittest.TestCase):
+    def test_resolve_observability_config_uses_flask_specific_values_first(self) -> None:
+        config = resolve_observability_config(
+            "FLASK",
+            "pubchem-cid4-flask",
+            environ={
+                "FLASK_OBSERVABILITY_ENABLED": "false",
+                "OBSERVABILITY_ENABLED": "true",
+                "FLASK_LOG_LEVEL": "debug",
+                "LOG_LEVEL": "error",
+            },
+        )
+
+        self.assertFalse(config.enabled)
+        self.assertEqual(config.log_level, "debug")
+        self.assertEqual(config.service_name, "pubchem-cid4-flask")
+
+    def test_resolve_observability_config_parses_metrics_and_service_name(self) -> None:
+        config = resolve_observability_config(
+            "FLASK",
+            "pubchem-cid4-flask",
+            environ={
+                "OBSERVABILITY_METRICS_PORT": "9777",
+                "OTEL_SERVICE_NAME": "cid4-flask-test",
+                "OBSERVABILITY_TRACING_ENABLED": "false",
+            },
+        )
+
+        self.assertEqual(config.metrics_port, 9777)
+        self.assertEqual(config.service_name, "cid4-flask-test")
+        self.assertFalse(config.tracing_enabled)
 
 
 @unittest.skipUnless(FLASK_AVAILABLE, "flask extra not installed")
@@ -24,9 +59,22 @@ class FlaskServerTests(unittest.TestCase):
         create_app = __import__("flask_cid4.app", fromlist=["create_app"]).create_app
 
         cls.data_dir = PROJECT_ROOT.parent / "data"
-        app = create_app(cls.data_dir)
+        cls.observability = initialize(
+            ObservabilityConfig(
+                enabled=False,
+                logging_enabled=False,
+                metrics_enabled=False,
+                tracing_enabled=False,
+                service_name="cid4-flask-test",
+            )
+        )
+        app = create_app(cls.data_dir, cls.observability)
         app.config["TESTING"] = True
         cls.client = app.test_client()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        shutdown(cls.observability)
 
     def test_health_endpoint(self) -> None:
         response = self.client.get("/api/health")
@@ -36,6 +84,10 @@ class FlaskServerTests(unittest.TestCase):
         self.assertIsNotNone(payload)
         self.assertEqual(payload["source"], "flask")
         self.assertIn("healthy", payload["message"].lower())
+        self.assertIn("X-Request-Id", response.headers)
+        self.assertIn("X-Trace-Id", response.headers)
+        self.assertIn("X-Span-Id", response.headers)
+        self.assertIn("traceparent", response.headers)
 
     def test_health_error_mode(self) -> None:
         response = self.client.get("/api/health?mode=error")
@@ -44,6 +96,13 @@ class FlaskServerTests(unittest.TestCase):
         payload = response.get_json()
         self.assertIsNotNone(payload)
         self.assertEqual(payload["source"], "flask")
+        self.assertIn("X-Request-Id", response.headers)
+
+    def test_preserves_incoming_request_id(self) -> None:
+        response = self.client.get("/api/health", headers={"X-Request-Id": "request-456"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["X-Request-Id"], "request-456")
 
     def test_conformer_route(self) -> None:
         response = self.client.get("/api/cid4/conformer/1")
@@ -52,11 +111,13 @@ class FlaskServerTests(unittest.TestCase):
         payload = response.get_json()
         self.assertIsNotNone(payload)
         self.assertIn("PC_Compounds", payload)
+        self.assertIn("X-Request-Id", response.headers)
 
     def test_unknown_conformer_returns_404(self) -> None:
         response = self.client.get("/api/cid4/conformer/99")
 
         self.assertEqual(response.status_code, 404)
+        self.assertIn("X-Request-Id", response.headers)
 
     def test_compound_and_algorithm_routes(self) -> None:
         compound = self.client.get("/api/cid4/compound")

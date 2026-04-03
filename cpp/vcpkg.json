@@ -12,7 +12,9 @@
     "nlohmann-json",
     "oatpp",
     "oatpp-openssl",
-    "boost-ublas"
+    "boost-ublas",
+    "prometheus-cpp",
+    "spdlog"
   ],
   "features": {
     "opencv-app": {
