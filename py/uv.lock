@@ -2687,10 +2687,12 @@ descriptor-ml = [
 fastapi = [
     { name = "fastapi" },
     { name = "httpx" },
+    { name = "prometheus-client" },
     { name = "uvicorn" },
 ]
 flask = [
     { name = "flask" },
+    { name = "prometheus-client" },
 ]
 langchain = [
     { name = "langchain" },
@@ -2747,6 +2749,8 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.3.2" },
     { name = "pandas-stubs", specifier = "==2.3.2.250827" },
     { name = "pgvector", marker = "extra == 'pgvector'", specifier = ">=0.4.1" },
+    { name = "prometheus-client", marker = "extra == 'fastapi'", specifier = ">=0.22.1" },
+    { name = "prometheus-client", marker = "extra == 'flask'", specifier = ">=0.22.1" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'apache-age'", specifier = ">=3.2.9" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'pgvector'", specifier = ">=3.2.9" },
     { name = "rdkit", specifier = ">=2025.3.5" },
