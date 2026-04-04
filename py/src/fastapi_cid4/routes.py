@@ -72,19 +72,24 @@ def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=list(security_settings.allowed_origins),
-        allow_methods=["GET", "POST", "OPTIONS"],
+        allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
         allow_headers=[
+            "Accept",
             "Authorization",
             "Content-Type",
+            "MCP-Protocol-Version",
+            "Mcp-Session-Id",
             "X-CID4-Auth-Method",
             "X-Request-Id",
             security_settings.csrf_header_name,
         ],
+        expose_headers=["Mcp-Session-Id"],
         allow_credentials=True,
     )
 
     _register_security(app, security_settings)
     _register_observability(app, observability)
+    _register_mcp_routes(app, data_dir, security_settings)
     _register_static_routes(app, data_dir)
     _register_auth_routes(app, security_settings)
     _register_llm_routes(app, security_settings, pytorch_language_model_service, tensorflow_language_model_service)
@@ -243,6 +248,26 @@ def _register_auth_routes(app: FastAPI, security_settings: SecuritySettings) -> 
         response = _json_response({"status": "ok", "authenticated": False})
         clear_session_cookies(response, security_settings)
         return response
+
+
+def _register_mcp_routes(app: FastAPI, data_dir: Path, security_settings: SecuritySettings) -> None:
+    from mcp_cid4.server import create_authenticated_mcp_http_app, create_cid4_mcp_server
+
+    mcp_server = create_cid4_mcp_server(data_dir)
+    app.state.cid4_mcp_server = mcp_server
+    app.mount("/mcp", create_authenticated_mcp_http_app(mcp_server, security_settings))
+
+    @app.on_event("startup")
+    async def startup_mcp_session_manager() -> None:
+        session_manager = mcp_server.session_manager.run()
+        app.state.cid4_mcp_session_manager = session_manager
+        await session_manager.__aenter__()
+
+    @app.on_event("shutdown")
+    async def shutdown_mcp_session_manager() -> None:
+        session_manager = getattr(app.state, "cid4_mcp_session_manager", None)
+        if session_manager is not None:
+            await session_manager.__aexit__(None, None, None)
 
 
 def _register_llm_routes(
