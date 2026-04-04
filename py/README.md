@@ -57,10 +57,18 @@ FastAPI also now includes a small custom LLM workflow behind three shared endpoi
 
 The LLM feature reuses the existing CID4 text corpora from the literature, patent, assay, pathway, taxonomy, and product-use datasets. It is intentionally narrow: the current implementation is a small repo-local model, not a general-purpose foundation model. The same FastAPI routes now support both `pytorch` and `tensorflow` backends through a `framework` selector, and requests default to `pytorch` when the field is omitted. The new streaming routes emit a shared event model with `start`, `token`, `complete`, and `error` messages.
 
+FastAPI now also mounts a first MCP server at `POST/GET /mcp/`. The first implementation exposes read-oriented CID4 tools and resources over MCP Streamable HTTP and reuses the existing FastAPI auth model. HTTP clients should authenticate first through the existing auth routes, then connect to the MCP endpoint with the session cookie. The initial tool set is intentionally narrow and grounded: compound metadata, question routing, domain retrieval, grounded answer synthesis, and grounded-answer validation.
+
 To enable the training and generation endpoints, install both the FastAPI extra and the existing deep-learning dependency group:
 
 ```sh
 uv sync --extra fastapi --group deep-learning
+```
+
+To enable local MCP development tooling, also install the MCP extra:
+
+```sh
+uv sync --extra fastapi --extra mcp
 ```
 
 If the selected backend is not installed in the active environment, `GET /api/llm/status` still works and reports the backend-specific availability field such as `torch_available: false` or `tensorflow_available: false`, while the train and generate endpoints return an explicit JSON error instead of failing at import time.
@@ -119,6 +127,39 @@ Artifacts are written to `data/out` using framework-specific names so both backe
 Streaming response contracts:
 - SSE emits `event: start`, repeated `event: token`, and a final `event: complete` frame, or `event: error` if generation cannot start.
 - WebSocket accepts one JSON request after connect and responds with the same logical event payloads as JSON messages.
+
+## MCP server
+
+The Python workspace now includes a CID4 MCP server with two entry modes:
+
+- Embedded Streamable HTTP under the FastAPI app at `https://localhost:8443/mcp/`
+- Local stdio mode via `python src/cid4_mcp.py`
+
+Install the MCP dependencies:
+
+```sh
+uv sync --extra fastapi --extra mcp
+```
+
+Run the local stdio server from the `py` workspace:
+
+```sh
+source .venv/bin/activate
+export DATA_DIR="$(pwd)/../data"
+python src/cid4_mcp.py
+```
+
+The initial MCP surface is read-focused:
+
+- Resource `cid4://compound/4`
+- Resource `cid4://capabilities`
+- Tool `get_compound_metadata`
+- Tool `route_question`
+- Tool `retrieve_documents`
+- Tool `answer_question`
+- Tool `validate_grounded_answer`
+
+HTTP MCP access reuses the existing CID4 auth model. For browser or HTTP clients, authenticate first with the existing FastAPI auth flow, then connect to `/mcp/` with the issued session cookie. The mounted MCP endpoint rejects unauthenticated requests with `401` instead of redirecting.
 
 ## AsyncIO server
 The Python workspace also includes a bare-minimum asyncio HTTPS server that exposes the same `/api/...` surface as the FastAPI, Starlette, Flask, Scala, and C++ backends without adding another web framework.

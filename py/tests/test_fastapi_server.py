@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import base64
 import hashlib
 import importlib.util
@@ -26,6 +27,7 @@ from cid4_observability import (  # noqa: E402
 
 FASTAPI_AVAILABLE = importlib.util.find_spec("fastapi") is not None
 HTTPX_AVAILABLE = importlib.util.find_spec("httpx") is not None
+MCP_AVAILABLE = importlib.util.find_spec("mcp") is not None
 
 
 class FastApiObservabilityConfigTests(unittest.TestCase):
@@ -489,6 +491,85 @@ class FastApiServerTests(unittest.TestCase):
         self.assertEqual(payload["framework"], "tensorflow")
         self.assertEqual(payload["model_name"], "mocked-tf-model")
         self.assertEqual(payload["model_type"], "gru-keras-language-model")
+
+    @unittest.skipUnless(MCP_AVAILABLE, "mcp extra not installed")
+    def test_mcp_requires_authentication(self) -> None:
+        response = self.client.post(
+            "/mcp/",
+            json={
+                "jsonrpc": "2.0",
+                "id": "init-1",
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2025-06-18",
+                    "capabilities": {},
+                    "clientInfo": {"name": "cid4-test", "version": "1.0.0"},
+                },
+            },
+            headers={
+                "Accept": "application/json, text/event-stream",
+                "MCP-Protocol-Version": "2025-06-18",
+            },
+        )
+
+        self.assertEqual(response.status_code, 401)
+        payload = response.json()
+        self.assertEqual(payload["error"]["code"], "mcp_auth_required")
+
+    @unittest.skipUnless(MCP_AVAILABLE, "mcp extra not installed")
+    def test_mcp_lists_tools_and_reads_resources_with_authenticated_session(self) -> None:
+        async def exercise_mcp() -> None:
+            from httpx import ASGITransport, AsyncClient
+            from mcp import ClientSession
+            from mcp.client.streamable_http import streamable_http_client
+
+            from fastapi_cid4.app import create_app
+
+            app = create_app(self.data_dir, self.observability)
+            session_manager = app.state.cid4_mcp_server.session_manager.run()
+            await session_manager.__aenter__()
+            transport = ASGITransport(app=app)
+            try:
+                async with AsyncClient(transport=transport, base_url="http://testserver") as http_client:
+                    encoded = base64.b64encode(b"analyst:cid4-basic-password").decode("ascii")
+                    login = await http_client.get(
+                        "/api/auth/session",
+                        headers={
+                            "Authorization": f"Basic {encoded}",
+                            "X-CID4-Auth-Method": "basic",
+                        },
+                    )
+                    self.assertEqual(login.status_code, 200)
+
+                    async with (
+                        streamable_http_client("http://testserver/mcp/", http_client=http_client) as (
+                            read_stream,
+                            write_stream,
+                            _,
+                        ),
+                        ClientSession(read_stream, write_stream) as session,
+                    ):
+                        await session.initialize()
+
+                        tools = await session.list_tools()
+                        tool_names = {tool.name for tool in tools.tools}
+                        self.assertIn("get_compound_metadata", tool_names)
+                        self.assertIn("retrieve_documents", tool_names)
+
+                        tool_result = await session.call_tool("get_compound_metadata", {})
+                        self.assertFalse(tool_result.isError)
+                        self.assertEqual(tool_result.structuredContent["compound"]["cid"], 4)
+
+                        resources = await session.list_resources()
+                        resource_uris = {str(resource.uri) for resource in resources.resources}
+                        self.assertIn("cid4://compound/4", resource_uris)
+
+                        resource_result = await session.read_resource("cid4://compound/4")
+                        self.assertTrue(resource_result.contents)
+            finally:
+                await session_manager.__aexit__(None, None, None)
+
+        asyncio.run(exercise_mcp())
 
     def test_llm_generate_stream_sends_sse_events(self) -> None:
         from ml.language_model_common import build_stream_event
