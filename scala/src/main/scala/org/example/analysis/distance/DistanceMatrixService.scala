@@ -8,17 +8,17 @@ import java.io.FileInputStream
 import java.nio.file.Path
 
 final case class DistanceMatrixMetadata(
-    atomCount: Int,
-    coordinateDimension: Int,
+    atomCount: Int | Null = null,
+    coordinateDimension: Int | Null = null,
     sourcePath: String,
     units: String
 )
 
 final case class DistanceMatrixResult(
-    atomIds: Vector[Int],
-    xyzCoordinates: Vector[Vector[Double]],
+    atomIds: Vector[Int] | Null = null,
+    xyzCoordinates: Vector[Vector[Double]] | Null = null,
     distanceMatrix: Vector[Vector[Double]],
-    sourceMethod: String,
+    sourceMethod: String | Null = null,
     metadata: DistanceMatrixMetadata
 )
 
@@ -109,10 +109,7 @@ private object DistanceMatrixMath:
       atomIds = atomIds,
       xyzCoordinates = coordinates,
       distanceMatrix = buildDistanceMatrix(coordinates),
-      sourceMethod = sourceMethod.value,
       metadata = DistanceMatrixMetadata(
-        atomCount = atomIds.size,
-        coordinateDimension = CoordinateDimension,
         sourcePath = sourcePath.toString,
         units = "angstrom"
       )

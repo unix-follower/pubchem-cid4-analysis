@@ -30,7 +30,7 @@ final case class LaplacianMetadata(
 )
 
 final case class LaplacianAnalysisResult(
-    atomIds: Vector[Int],
+    atomIds: Vector[Int] | Null = null,
     degreeMatrix: Vector[Vector[Double]],
     laplacianMatrix: Vector[Vector[Double]],
     laplacianEigenvalues: Vector[Double],
@@ -114,7 +114,6 @@ object LaplacianService:
     }.sum
 
     LaplacianAnalysisResult(
-      atomIds = adjacencyMatrix.atomIds,
       degreeMatrix = degreeMatrix,
       laplacianMatrix = laplacianMatrix,
       laplacianEigenvalues = spectrum.eigenvalues,

@@ -634,7 +634,7 @@ private def readSdf(): Unit =
 @main
 def main(args: String*): Unit =
   val method = args.headOption.getOrElse("jgrapht")
-  val distanceSource = args.drop(1).headOption.getOrElse("json")
+  val distanceSource = args.drop(1).headOption.getOrElse("sdf")
   method match
     case "lucene" =>
       val luceneMode =
