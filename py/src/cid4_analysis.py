@@ -814,7 +814,7 @@ def compute_hill_reference_auc_trapezoid(
     relative_concentration_grid = np.geomspace(lower_bound_scale, upper_bound_scale, grid_size, dtype=np.float64)
     concentration_grid = k_values[:, np.newaxis] * relative_concentration_grid[np.newaxis, :]
     response_grid = hill_response(concentration_grid, k_values[:, np.newaxis], hill_coefficient)
-    return np.trapz(response_grid, concentration_grid, axis=1)
+    return np.trapezoid(response_grid, concentration_grid, axis=1)
 
 
 def hill_response_first_derivative(
@@ -1857,7 +1857,7 @@ def write_laplacian_analysis(
     log.info("Laplacian analysis written to %s", output_path)
 
 
-def write_distance_matrix(sdf_filename: str, json_filename: str):
+def write_distance_matrix(sdf_filename: str):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
     molecules = load_sdf_molecules(sdf_filename)
@@ -1867,24 +1867,14 @@ def write_distance_matrix(sdf_filename: str, json_filename: str):
 
     coordinates = extract_3d_coordinates(molecules[IDX1])
     distance_matrix = build_distance_matrix(coordinates)
-    atom_ids = sorted(load_conformer_compound(json_filename)["atoms"]["aid"])
-
-    if len(atom_ids) != distance_matrix.shape[0]:
-        raise ValueError(
-            f"Expected {len(atom_ids)} atom ids from {json_filename}, found {distance_matrix.shape[0]} coordinates"
-        )
 
     output_path = Path(out_dir) / f"{Path(sdf_filename).stem}.distance_matrix.json"
 
     with output_path.open("w", encoding=UTF_8) as file:
         json.dump(
             {
-                "atom_ids": atom_ids,
-                "xyz_coordinates": coordinates.tolist(),
                 "distance_matrix": distance_matrix.tolist(),
                 "metadata": {
-                    "atom_count": len(atom_ids),
-                    "coordinate_dimension": int(coordinates.shape[1]),
                     "source_sdf": sdf_filename,
                     "units": "angstrom",
                 },
@@ -2393,7 +2383,7 @@ def main():
     atom_feature_df = process_sdf_file(sdf_filename)
     write_atom_gradient_descent_analysis(sdf_filename, atom_feature_df=atom_feature_df)
     write_atom_element_entropy_analysis(sdf_filename, atom_feature_df=atom_feature_df)
-    write_distance_matrix(sdf_filename, json_filename)
+    write_distance_matrix(sdf_filename)
     write_bonded_distance_analysis(sdf_filename, json_filename)
     write_bonded_angle_analysis(sdf_filename, json_filename)
     write_spring_bond_potential_analysis(sdf_filename, json_filename)
