@@ -39,10 +39,6 @@ fastapi = [
 mcp = [
     "mcp[cli]>=1.27.0",
 ]
-flask = [
-    "flask>=3.1.2",
-    "prometheus-client>=0.22.1",
-]
 starlette = [
     "httpx>=0.28.1",
     "starlette>=0.47.3",

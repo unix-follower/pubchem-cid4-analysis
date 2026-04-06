@@ -1,0 +1,31 @@
+[project]
+name = "cid4-flask-api"
+version = "1.0.0"
+description = "HTTP server based on Flask"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.1.2",
+    "prometheus-client>=0.22.1",
+]
+
+[tool.ruff]
+line-length = 120
+# Exclude specific files or directories from linting
+exclude = []
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
