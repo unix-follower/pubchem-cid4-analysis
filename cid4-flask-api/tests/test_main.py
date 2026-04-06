@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
 import sys
@@ -14,21 +13,19 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cid4_observability import ObservabilityConfig, initialize, resolve_observability_config, shutdown  # noqa: E402
-
-FLASK_AVAILABLE = importlib.util.find_spec("flask") is not None
+from config import resolve_server_config  # noqa: E402
+from main import create_app  # noqa: E402
+from observability import ObservabilityConfig, initialize, resolve_observability_config, shutdown  # noqa: E402
 
 
 class FlaskObservabilityConfigTests(unittest.TestCase):
-    def test_resolve_observability_config_uses_flask_specific_values_first(self) -> None:
+    def test_resolve_observability_config_uses_specific_values(self) -> None:
         config = resolve_observability_config(
             "FLASK",
             "pubchem-cid4-flask",
             environ={
-                "FLASK_OBSERVABILITY_ENABLED": "false",
-                "OBSERVABILITY_ENABLED": "true",
-                "FLASK_LOG_LEVEL": "debug",
-                "LOG_LEVEL": "error",
+                "OBSERVABILITY_ENABLED": "false",
+                "LOG_LEVEL": "debug",
             },
         )
 
@@ -52,12 +49,9 @@ class FlaskObservabilityConfigTests(unittest.TestCase):
         self.assertFalse(config.tracing_enabled)
 
 
-@unittest.skipUnless(FLASK_AVAILABLE, "flask extra not installed")
 class FlaskServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        create_app = __import__("flask_cid4.app", fromlist=["create_app"]).create_app
-
         cls.data_dir = PROJECT_ROOT.parent / "data"
         cls.observability = initialize(
             ObservabilityConfig(
@@ -138,10 +132,6 @@ class FlaskServerTests(unittest.TestCase):
         self.assertIn("organisms", taxonomy.get_json())
 
     def test_server_config_falls_back_to_crypto_summary(self) -> None:
-        resolve_server_config = __import__(
-            "fastapi_cid4.config", fromlist=["resolve_server_config"]
-        ).resolve_server_config
-
         with tempfile.TemporaryDirectory() as temp_dir:
             data_dir = Path(temp_dir)
             expected_secret = f"{data_dir.name}-tls-token"

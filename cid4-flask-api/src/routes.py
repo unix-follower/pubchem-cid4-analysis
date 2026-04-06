@@ -5,7 +5,7 @@ from pathlib import Path
 from flask import Flask, Response, g, request
 
 from cid4_api import ApiResponse, normalized_route_label, route_api_request
-from cid4_observability import RequestScope, Runtime
+from observability import RequestScope, Runtime
 
 
 def create_app(data_dir: Path, observability: Runtime | None = None) -> Flask:

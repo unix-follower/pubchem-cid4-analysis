@@ -3,11 +3,18 @@ from __future__ import annotations
 import argparse
 import os
 import ssl
+from pathlib import Path
+
+from flask import Flask
 
 import log_settings
-from cid4_observability import initialize, resolve_observability_config, shutdown
-from fastapi_cid4.config import resolve_data_dir, resolve_server_config
-from flask_cid4 import create_app
+from config import resolve_data_dir, resolve_server_config
+from observability import Runtime, initialize, resolve_observability_config, shutdown
+from routes import create_app as create_routes_app
+
+
+def create_app(data_dir: Path, observability: Runtime | None = None) -> Flask:
+    return create_routes_app(data_dir, observability)
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
@@ -18,14 +25,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-    observability = None
-
-    try:
-        import flask
-    except ModuleNotFoundError as exc:
-        raise RuntimeError("Install the optional flask extra to run the Flask server.") from exc
-
-    del flask
     log_settings.configure_logging()
     args = build_argument_parser().parse_args()
 
