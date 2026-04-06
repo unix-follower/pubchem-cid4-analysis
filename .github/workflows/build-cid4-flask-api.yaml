@@ -1,4 +1,4 @@
-name: Build python app
+name: Build Flask app
 on:
   pull_request:
     paths:
