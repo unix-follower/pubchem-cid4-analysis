@@ -39,34 +39,37 @@ jobs:
           environment-name: cid4-age
           create-args: >-
             -c conda-forge
-            -p ./.micromamba/cid4_age
-            python=3.12
+            python=${{ env.PYTHON_VERSION }}
             rdkit
           cache-environment: true
           init-shell: bash
         
       - name: Install dependencies
         working-directory: cid4-age
-        shell: bash
+        shell: micromamba-shell {0}
         run: |
-          source ./.micromamba/cid4_age/bin/activate
-          pip install uv
-          
-          uv venv --python ./.micromamba/cid4_age/bin/python --system-site-packages .venv
+          python -m pip install uv
+          uv venv --python "$(which python)" --system-site-packages .venv
           source .venv/bin/activate
           uv sync --locked
 
       - name: Check code formatting
         working-directory: cid4-age
-        shell: bash
-        run: uv tool run ruff check
+        shell: micromamba-shell {0}
+        run: |
+          source .venv/bin/activate
+          uv tool run ruff check
 
       - name: Run unit tests
         working-directory: cid4-age
-        shell: bash
-        run: uv run python -m unittest discover -s tests -v
+        shell: micromamba-shell {0}
+        run: |
+          source .venv/bin/activate
+          uv run python -m unittest discover -s tests -v
 
       - name: Build python app
         working-directory: cid4-age
-        shell: bash
-        run: uv build
+        shell: micromamba-shell {0}
+        run: |
+          source .venv/bin/activate
+          uv build
