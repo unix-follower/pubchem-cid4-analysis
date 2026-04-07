@@ -10,8 +10,6 @@
     "gtest",
     "glfw3",
     "nlohmann-json",
-    "oatpp",
-    "oatpp-openssl",
     "boost-ublas",
     "prometheus-cpp",
     "spdlog"

@@ -21,3 +21,7 @@ data/pubchem_cid_4_patent.csv
 *__pycache__*
 .ipynb_checkpoints/
 .micromamba
+
+### C++ ###
+CMakeUserPresets.json
+vcpkg_installed

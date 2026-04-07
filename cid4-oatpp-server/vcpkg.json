@@ -1,0 +1,10 @@
+{
+  "dependencies": [
+    "nlohmann-json",
+    "oatpp",
+    "oatpp-openssl",
+    "prometheus-cpp",
+    "spdlog",
+    "gtest"
+  ]
+}
