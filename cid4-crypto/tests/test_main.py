@@ -11,7 +11,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from crypto_cid4.hashing import build_file_manifest, hmac_sha256  # noqa: E402
+from hashing import build_file_manifest, hmac_sha256  # noqa: E402
 
 CRYPTO_AVAILABLE = importlib.util.find_spec("cryptography") is not None
 BCRYPT_AVAILABLE = importlib.util.find_spec("bcrypt") is not None
@@ -38,7 +38,7 @@ class CryptoWorkflowTests(unittest.TestCase):
 
     @unittest.skipUnless(CRYPTO_AVAILABLE, "cryptography extra not installed")
     def test_symmetric_roundtrip_examples(self) -> None:
-        from crypto_cid4.symmetric import build_symmetric_examples  # noqa: E402
+        from symmetric import build_symmetric_examples  # noqa: E402
 
         result = build_symmetric_examples(b"cid4 symmetric payload")
 
@@ -48,7 +48,7 @@ class CryptoWorkflowTests(unittest.TestCase):
 
     @unittest.skipUnless(CRYPTO_AVAILABLE, "cryptography extra not installed")
     def test_asymmetric_examples_verify(self) -> None:
-        from crypto_cid4.asymmetric import build_asymmetric_examples  # noqa: E402
+        from asymmetric import build_asymmetric_examples  # noqa: E402
 
         result = build_asymmetric_examples(b"cid4 asymmetric payload")
 
@@ -61,7 +61,7 @@ class CryptoWorkflowTests(unittest.TestCase):
 
     @unittest.skipUnless(CRYPTO_AVAILABLE, "cryptography extra not installed")
     def test_certificate_and_pkcs12_examples(self) -> None:
-        from crypto_cid4.certificates import build_certificate_examples  # noqa: E402
+        from certificates import build_certificate_examples  # noqa: E402
 
         with tempfile.TemporaryDirectory() as temp_dir:
             result = build_certificate_examples(Path(temp_dir), "changeit")
@@ -72,10 +72,11 @@ class CryptoWorkflowTests(unittest.TestCase):
             self.assertTrue(Path(result["pkcs12"]["path"]).exists())
 
     @unittest.skipUnless(
-        CRYPTO_AVAILABLE and BCRYPT_AVAILABLE and ARGON2_AVAILABLE, "crypto password extras not installed"
+        CRYPTO_AVAILABLE and BCRYPT_AVAILABLE and ARGON2_AVAILABLE,
+        "crypto password extras not installed",
     )
     def test_password_hash_examples_verify(self) -> None:
-        from crypto_cid4.passwords import build_password_hash_examples  # noqa: E402
+        from passwords import build_password_hash_examples  # noqa: E402
 
         result = build_password_hash_examples("cid4-password")
 

@@ -1,0 +1,13 @@
+[project]
+name = "cid4-crypto"
+version = "1.0.0"
+description = "Encryption, signatures, password hashing, and certificate workflows"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "argon2-cffi>=25.1.0",
+    "bcrypt>=5.0.0",
+    "cryptography>=46.0.6",
+    "numpy>=2.4.4",
+    "pandas>=3.0.2",
+]
