@@ -36,6 +36,8 @@ jobs:
       - name: Setup micromamba environment
         uses: mamba-org/setup-micromamba@v2
         with:
+          working-directory: cid4-age
+          environment-name: cid4-age
           create-args: >-
             -c conda-forge
             -p ./.micromamba/cid4_age
