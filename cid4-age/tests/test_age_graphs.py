@@ -9,7 +9,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from age_cid4.graphs import (  # noqa: E402
+from graphs import (  # noqa: E402
     build_assay_graph,
     build_molecular_graph,
     build_organism_graph,
@@ -17,7 +17,7 @@ from age_cid4.graphs import (  # noqa: E402
     build_unified_graph,
     parse_dot_organism_graph,
 )
-from age_cid4.queries import build_query_catalog  # noqa: E402
+from queries import build_query_catalog  # noqa: E402
 
 
 class AgeGraphTests(unittest.TestCase):
@@ -59,7 +59,9 @@ class AgeGraphTests(unittest.TestCase):
         queries = build_query_catalog()
 
         self.assertGreater(graph.to_summary()["node_count"], 14)
-        self.assertTrue(any(query["id"] == "compound_assay_target_taxon" for query in queries))
+        self.assertTrue(
+            any(query["id"] == "compound_assay_target_taxon" for query in queries)
+        )
         self.assertTrue(any("shortestPath" in query["cypher"] for query in queries))
 
 

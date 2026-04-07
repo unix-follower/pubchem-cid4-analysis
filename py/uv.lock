@@ -2675,9 +2675,6 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
-apache-age = [
-    { name = "psycopg", extra = ["binary"] },
-]
 chem-tools = [
     { name = "deepchem" },
 ]
@@ -2750,7 +2747,6 @@ requires-dist = [
     { name = "pandas-stubs", specifier = "==2.3.2.250827" },
     { name = "pgvector", marker = "extra == 'pgvector'", specifier = ">=0.4.1" },
     { name = "prometheus-client", marker = "extra == 'fastapi'", specifier = ">=0.22.1" },
-    { name = "psycopg", extras = ["binary"], marker = "extra == 'apache-age'", specifier = ">=3.2.9" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'pgvector'", specifier = ">=3.2.9" },
     { name = "rdkit", specifier = ">=2025.3.5" },
     { name = "scikit-learn", specifier = ">=1.7.1" },
@@ -2760,7 +2756,7 @@ requires-dist = [
     { name = "uvicorn", marker = "extra == 'fastapi'", specifier = ">=0.35.0" },
     { name = "xgboost", marker = "extra == 'xgboost'", specifier = ">=2.1.4" },
 ]
-provides-extras = ["apache-age", "crypto", "descriptor-ml", "fastapi", "mcp", "langgraph", "langchain", "nltk", "pgvector", "xgboost", "chem-tools"]
+provides-extras = ["crypto", "descriptor-ml", "fastapi", "mcp", "langgraph", "langchain", "nltk", "pgvector", "xgboost", "chem-tools"]
 
 [package.metadata.requires-dev]
 deep-learning = [

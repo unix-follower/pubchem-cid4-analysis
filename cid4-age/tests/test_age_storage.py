@@ -9,8 +9,8 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from age_cid4.graphs import GraphEdge, GraphNode, PropertyGraph  # noqa: E402
-from age_cid4.storage import (  # noqa: E402
+from graphs import GraphEdge, GraphNode, PropertyGraph  # noqa: E402
+from storage import (  # noqa: E402
     AgeConfig,
     build_edge_merge_cypher,
     build_node_merge_cypher,
@@ -21,7 +21,11 @@ from age_cid4.storage import (  # noqa: E402
 class AgeStorageTests(unittest.TestCase):
     def test_build_node_merge_cypher_includes_graph_id_and_properties(self) -> None:
         query = build_node_merge_cypher(
-            GraphNode(graph_id="compound:4", label="Compound", properties={"cid": 4, "name": "1-Amino-2-propanol"})
+            GraphNode(
+                graph_id="compound:4",
+                label="Compound",
+                properties={"cid": 4, "name": "1-Amino-2-propanol"},
+            )
         )
 
         self.assertIn("MERGE (n:Compound", query)
@@ -45,8 +49,14 @@ class AgeStorageTests(unittest.TestCase):
 
     def test_ingest_graph_dry_runs_without_dsn(self) -> None:
         graph = PropertyGraph()
-        graph.add_node(GraphNode(graph_id="compound:4", label="Compound", properties={"cid": 4}))
-        graph.add_node(GraphNode(graph_id="atom:1", label="Atom", properties={"aid": 1, "element": "O"}))
+        graph.add_node(
+            GraphNode(graph_id="compound:4", label="Compound", properties={"cid": 4})
+        )
+        graph.add_node(
+            GraphNode(
+                graph_id="atom:1", label="Atom", properties={"aid": 1, "element": "O"}
+            )
+        )
         graph.add_edge(
             GraphEdge(
                 source_id="compound:4",
