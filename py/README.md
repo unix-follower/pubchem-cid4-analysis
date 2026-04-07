@@ -206,39 +206,6 @@ For the mixed deliverable, a notebook companion can inspect the generated JSON s
 Notebook companion:
 - `src/cid4_ml_taxonomy_text_baseline.ipynb` reuses `ml.datasets.build_taxonomy_clustering_frame()` to build a small TF-IDF plus logistic-regression baseline over the taxonomy text, then saves notebook artifacts back into `data/out`
 
-## NLTK runner
-The Python workspace now also includes a separate NLTK-oriented NLP runner for the text-heavy CID 4 datasets. It writes JSON summaries into `data/out` for:
-- literature corpus term and collocation analysis
-- literature-versus-patent vocabulary comparison
-- bioactivity assay and target vocabulary extraction
-- taxonomy name normalization and vocabulary cleanup
-- toxicology short-text phrase extraction
-- pathway and reaction wording analysis
-
-Run it from the `py` workspace:
-
-```sh
-source .venv/bin/activate
-export DATA_DIR="$(pwd)/../data"
-python src/cid4_nltk.py
-```
-
-If NLTK is not installed in the active environment, the runner still completes and writes explicit `skipped` results instead of failing. Enable the optional dependency with:
-
-```sh
-uv sync --extra nltk
-```
-
-The runner is chemistry-aware at the token-normalization level. It preserves tokens such as `1-amino-2-propanol`, `NADH`, `IC50`, `ER-alpha`, `PMID`, `DOI`, `AID`, `CID`, and `SID` instead of over-cleaning them as generic English text.
-
-Expected outputs under `data/out`:
-- `cid4_nltk.literature.summary.json`
-- `cid4_nltk.literature_vs_patent.summary.json`
-- `cid4_nltk.bioactivity.summary.json`
-- `cid4_nltk.taxonomy.summary.json`
-- `cid4_nltk.toxicology.summary.json`
-- `cid4_nltk.pathway.summary.json`
-
 ## pgvector runner
 The Python workspace now also includes a pgvector-oriented ingestion runner for semantic-search prototypes over the CID 4 text and row datasets. It normalizes literature, patents, bioactivity rows, pathway records, taxonomy rows, and CPDat rows into a shared document shape, generates deterministic hashed-token embeddings, and writes a JSON summary into `data/out`.
 

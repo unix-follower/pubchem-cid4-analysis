@@ -13,8 +13,8 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from nlp.nltk_workflows import analyze_documents, import_nltk, run_literature_workflow  # noqa: E402
-from nlp.text_processing import filter_stopwords, tokenize_preserving_chemistry  # noqa: E402
+from nltk_workflows import analyze_documents, import_nltk, run_literature_workflow  # noqa: E402
+from text_processing import filter_stopwords, tokenize_preserving_chemistry  # noqa: E402
 
 
 class FakeFreqDist(dict):
@@ -54,7 +54,9 @@ class FakeBigramCollocationFinder:
         del measure
         pairs: list[tuple[tuple[str, str], float]] = []
         for index in range(len(self.tokens) - 1):
-            pairs.append(((self.tokens[index], self.tokens[index + 1]), float(index + 1)))
+            pairs.append(
+                ((self.tokens[index], self.tokens[index + 1]), float(index + 1))
+            )
         return pairs
 
 
@@ -71,7 +73,9 @@ def build_fake_nltk_module() -> types.SimpleNamespace:
         FreqDist=FakeFreqDist,
         PorterStemmer=FakeStemmer,
         BigramAssocMeasures=FakeBigramAssocMeasures,
-        collocations=types.SimpleNamespace(BigramCollocationFinder=FakeBigramCollocationFinder),
+        collocations=types.SimpleNamespace(
+            BigramCollocationFinder=FakeBigramCollocationFinder
+        ),
         corpus=types.SimpleNamespace(stopwords=FakeStopwords()),
         data=types.SimpleNamespace(find=lambda locator: locator),
         download=lambda resource_name, quiet=True: None,
@@ -92,12 +96,17 @@ class NltkWorkflowTests(unittest.TestCase):
         self.assertIn("CID", tokens)
 
     def test_stopword_filter_preserves_chemistry_allowlist(self) -> None:
-        filtered = filter_stopwords(["the", "and", "isopropanolamine", "NADH", "fungicide"])
+        filtered = filter_stopwords(
+            ["the", "and", "isopropanolamine", "NADH", "fungicide"]
+        )
 
         self.assertEqual(filtered, ["isopropanolamine", "nadh", "fungicide"])
 
     def test_import_nltk_returns_skipped_when_library_missing(self) -> None:
-        with patch("importlib.import_module", side_effect=ModuleNotFoundError("No module named 'nltk'")):
+        with patch(
+            "importlib.import_module",
+            side_effect=ModuleNotFoundError("No module named 'nltk'"),
+        ):
             result = import_nltk()
 
         self.assertEqual(result["status"], "skipped")
@@ -105,7 +114,9 @@ class NltkWorkflowTests(unittest.TestCase):
     def test_analyze_documents_uses_expected_result_shape(self) -> None:
         fake_nltk = build_fake_nltk_module()
 
-        result = analyze_documents(fake_nltk, ["isopropanolamine fungicide pathway", "fungicide pathway"])
+        result = analyze_documents(
+            fake_nltk, ["isopropanolamine fungicide pathway", "fungicide pathway"]
+        )
 
         self.assertIn("top_terms", result)
         self.assertIn("top_bigrams", result)
@@ -127,8 +138,8 @@ class NltkWorkflowTests(unittest.TestCase):
         )
 
         with (
-            patch("nlp.nltk_workflows.import_nltk", return_value=fake_nltk),
-            patch("nlp.nltk_workflows.load_literature_frame", return_value=fake_frame),
+            patch("nltk_workflows.import_nltk", return_value=fake_nltk),
+            patch("nltk_workflows.load_literature_frame", return_value=fake_frame),
         ):
             result = run_literature_workflow()
 
