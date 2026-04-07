@@ -65,6 +65,7 @@ jobs:
         shell: micromamba-shell {0}
         run: |
           source .venv/bin/activate
+          export DATA_DIR="$(pwd)/../data"
           uv run python -m unittest discover -s tests -v
 
       - name: Build python app
