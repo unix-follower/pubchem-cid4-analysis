@@ -1,14 +1,16 @@
 from __future__ import annotations
+from typing import Any
 
 import json
 import logging as log
 from pathlib import Path
+import numpy as np
+import pandas as pd
 
 import env_utils
 import fs_utils
 import log_settings
-from ml.common import to_builtin
-from nlp.nltk_workflows import (
+from nltk_workflows import (
     run_bioactivity_workflow,
     run_literature_vs_patent_workflow,
     run_literature_workflow,
@@ -16,6 +18,26 @@ from nlp.nltk_workflows import (
     run_taxonomy_workflow,
     run_toxicology_workflow,
 )
+
+
+def to_builtin(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): to_builtin(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [to_builtin(item) for item in value]
+    if isinstance(value, tuple):
+        return [to_builtin(item) for item in value]
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    if isinstance(value, np.integer):
+        return int(value)
+    if isinstance(value, np.floating):
+        return float(value)
+    if isinstance(value, np.bool_):
+        return bool(value)
+    if isinstance(value, pd.Series):
+        return value.to_list()
+    return value
 
 
 def resolve_output_directory() -> Path:

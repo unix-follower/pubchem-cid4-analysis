@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-import cid4_analysis
+import env_utils
 
 LITERATURE_FILENAME = "pubchem_cid_4_literature.csv"
 PATENT_FILENAME = "pubchem_cid_4_patent.csv"
@@ -34,10 +34,16 @@ def load_toxicology_frame(filename: str = TOXICOLOGY_FILENAME) -> pd.DataFrame:
     return _read_csv(filename)
 
 
-def load_pathway_reaction_frame(filename: str = PATHWAY_REACTION_FILENAME) -> pd.DataFrame:
+def load_pathway_reaction_frame(
+    filename: str = PATHWAY_REACTION_FILENAME,
+) -> pd.DataFrame:
     return _read_csv(filename)
 
 
+def resolve_data_path(filename: str) -> Path:
+    return Path(env_utils.get_data_dir()) / filename
+
+
 def _read_csv(filename: str) -> pd.DataFrame:
-    path = Path(cid4_analysis.resolve_data_path(filename))
+    path = Path(resolve_data_path(filename))
     return pd.read_csv(path)

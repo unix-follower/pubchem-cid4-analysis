@@ -75,7 +75,9 @@ def lowercase_tokens(tokens: Iterable[str]) -> list[str]:
     return [token.lower() for token in tokens if token]
 
 
-def filter_stopwords(tokens: Iterable[str], stopwords: set[str] | None = None) -> list[str]:
+def filter_stopwords(
+    tokens: Iterable[str], stopwords: set[str] | None = None
+) -> list[str]:
     vocabulary = BASE_STOPWORDS if stopwords is None else stopwords
     filtered: list[str] = []
     for token in tokens:
@@ -87,3 +89,20 @@ def filter_stopwords(tokens: Iterable[str], stopwords: set[str] | None = None) -
             continue
         filtered.append(lowered)
     return filtered
+
+
+def build_document_text(frame: Any, columns: list[str]) -> list[str]:
+    documents: list[str] = []
+    for _, row in frame.iterrows():
+        parts = [normalize_text(row.get(column, "")) for column in columns]
+        joined = " ".join(part for part in parts if part)
+        if joined:
+            documents.append(joined)
+    return documents
+
+
+def stable_top_items(
+    items: dict[str, int | float], limit: int
+) -> list[dict[str, int | float | str]]:
+    ranked = sorted(items.items(), key=lambda item: (-float(item[1]), item[0]))
+    return [{"item": key, "value": value} for key, value in ranked[:limit]]

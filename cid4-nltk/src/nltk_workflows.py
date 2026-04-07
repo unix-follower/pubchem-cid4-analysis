@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from math import log2
 from typing import Any
 
-from nlp.datasets import (
+from datasets import (
     load_bioactivity_frame,
     load_literature_frame,
     load_patent_frame,
@@ -13,7 +13,7 @@ from nlp.datasets import (
     load_taxonomy_frame,
     load_toxicology_frame,
 )
-from nlp.text_processing import (
+from text_processing import (
     BASE_STOPWORDS,
     CHEMISTRY_ALLOWLIST,
     build_document_text,
@@ -49,7 +49,8 @@ def run_literature_workflow() -> dict[str, Any]:
             "row_count": int(len(frame)),
             "document_count": int(len(documents)),
             "notable_term_counts": count_specific_terms(
-                analysis["tokens"], ["isopropanolamine", "fungicide", "pathway", "metabolism"]
+                analysis["tokens"],
+                ["isopropanolamine", "fungicide", "pathway", "metabolism"],
             ),
         }
     )
@@ -64,7 +65,9 @@ def run_literature_vs_patent_workflow() -> dict[str, Any]:
         skipped["workflow"] = "literature-vs-patent"
         return skipped
 
-    literature_documents = build_document_text(load_literature_frame(), ["Title", "Abstract", "Keywords", "Citation"])
+    literature_documents = build_document_text(
+        load_literature_frame(), ["Title", "Abstract", "Keywords", "Citation"]
+    )
     patent_documents = build_document_text(load_patent_frame(), ["title", "abstract"])
 
     literature_analysis = analyze_documents(nltk_module, literature_documents)
@@ -81,8 +84,12 @@ def run_literature_vs_patent_workflow() -> dict[str, Any]:
         "patent_top_terms": patent_analysis["top_terms"],
         "literature_top_bigrams": literature_analysis["top_bigrams"],
         "patent_top_bigrams": patent_analysis["top_bigrams"],
-        "distinctive_literature_terms": distinctive_terms(literature_counter, patent_counter),
-        "distinctive_patent_terms": distinctive_terms(patent_counter, literature_counter),
+        "distinctive_literature_terms": distinctive_terms(
+            literature_counter, patent_counter
+        ),
+        "distinctive_patent_terms": distinctive_terms(
+            patent_counter, literature_counter
+        ),
     }
 
 
@@ -105,7 +112,8 @@ def run_bioactivity_workflow() -> dict[str, Any]:
             "workflow": "bioactivity",
             "row_count": int(len(frame)),
             "notable_term_counts": count_specific_terms(
-                analysis["tokens"], ["estrogen", "androgen", "cytochrome", "plasmodium", "yeast"]
+                analysis["tokens"],
+                ["estrogen", "androgen", "cytochrome", "plasmodium", "yeast"],
             ),
         }
     )
@@ -166,7 +174,8 @@ def run_toxicology_workflow() -> dict[str, Any]:
             "row_count": int(len(frame)),
             "route_counts": normalize_value_counts(frame["Route"]),
             "effect_counts": count_specific_terms(
-                analysis["tokens"], ["behavioral", "somnolence", "diarrhea", "excitement"]
+                analysis["tokens"],
+                ["behavioral", "somnolence", "diarrhea", "excitement"],
             ),
         }
     )
@@ -182,7 +191,9 @@ def run_pathway_workflow() -> dict[str, Any]:
         return skipped
 
     frame = load_pathway_reaction_frame()
-    documents = build_document_text(frame, ["Equation", "Reaction", "Control", "Taxonomy"])
+    documents = build_document_text(
+        frame, ["Equation", "Reaction", "Control", "Taxonomy"]
+    )
     analysis = analyze_documents(nltk_module, documents)
     analysis.update(
         {
@@ -190,7 +201,8 @@ def run_pathway_workflow() -> dict[str, Any]:
             "workflow": "pathway",
             "row_count": int(len(frame)),
             "notable_term_counts": count_specific_terms(
-                analysis["tokens"], ["glutathione", "nadh", "aminoacetone", "1-amino-propan-2-ol"]
+                analysis["tokens"],
+                ["glutathione", "nadh", "aminoacetone", "1-amino-propan-2-ol"],
             ),
         }
     )
@@ -208,7 +220,10 @@ def analyze_documents(nltk_module: Any, documents: Iterable[str]) -> dict[str, A
         all_stems.extend(stem_tokens(nltk_module, tokens))
 
     frequency = nltk_module.FreqDist(all_tokens)
-    top_terms = [{"term": term, "count": int(count)} for term, count in frequency.most_common(TOP_TERM_LIMIT)]
+    top_terms = [
+        {"term": term, "count": int(count)}
+        for term, count in frequency.most_common(TOP_TERM_LIMIT)
+    ]
     top_bigrams = extract_top_bigrams(nltk_module, all_tokens)
 
     return {
@@ -233,20 +248,26 @@ def stem_tokens(nltk_module: Any, tokens: Iterable[str]) -> list[str]:
     stemmer = nltk_module.PorterStemmer()
     stems: list[str] = []
     for token in tokens:
-        if token in CHEMISTRY_ALLOWLIST or any(character.isdigit() for character in token):
+        if token in CHEMISTRY_ALLOWLIST or any(
+            character.isdigit() for character in token
+        ):
             stems.append(token)
             continue
         stems.append(stemmer.stem(token))
     return stems
 
 
-def extract_top_bigrams(nltk_module: Any, tokens: list[str]) -> list[dict[str, int | str | float]]:
+def extract_top_bigrams(
+    nltk_module: Any, tokens: list[str]
+) -> list[dict[str, int | str | float]]:
     if len(tokens) < 2:
         return []
     finder = nltk_module.collocations.BigramCollocationFinder.from_words(tokens)
     finder.apply_freq_filter(2)
     scored = finder.score_ngrams(nltk_module.BigramAssocMeasures().pmi)
-    ranked = sorted(scored, key=lambda item: (-float(item[1]), item[0]))[:TOP_BIGRAM_LIMIT]
+    ranked = sorted(scored, key=lambda item: (-float(item[1]), item[0]))[
+        :TOP_BIGRAM_LIMIT
+    ]
     return [
         {
             "bigram": f"{left} {right}",
@@ -261,7 +282,9 @@ def count_specific_terms(tokens: list[str], vocabulary: list[str]) -> dict[str, 
     return {term: int(counter.get(term.lower(), 0)) for term in vocabulary}
 
 
-def distinctive_terms(primary: Counter[str], reference: Counter[str]) -> list[dict[str, float | str | int]]:
+def distinctive_terms(
+    primary: Counter[str], reference: Counter[str]
+) -> list[dict[str, float | str | int]]:
     primary_total = max(sum(primary.values()), 1)
     reference_total = max(sum(reference.values()), 1)
     rows: list[dict[str, float | str | int]] = []
@@ -306,7 +329,9 @@ def import_nltk() -> Any:
         nltk = importlib.import_module("nltk")
         nltk.FreqDist = importlib.import_module("nltk.probability").FreqDist
         nltk.PorterStemmer = importlib.import_module("nltk.stem").PorterStemmer
-        nltk.BigramAssocMeasures = importlib.import_module("nltk.metrics.association").BigramAssocMeasures
+        nltk.BigramAssocMeasures = importlib.import_module(
+            "nltk.metrics.association"
+        ).BigramAssocMeasures
         nltk.collocations = importlib.import_module("nltk.collocations")
         return nltk
     except (ImportError, ModuleNotFoundError) as exc:
