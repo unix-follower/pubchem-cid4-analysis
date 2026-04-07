@@ -45,6 +45,16 @@ jobs:
         shell: bash
         run: uv tool run ruff check
 
+      - name: Setup micromamba environment
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: cid4_age
+          create-args: >-
+            -c conda-forge
+            rdkit
+          cache-environment: true
+          init-shell: bash
+
       - name: Run unit tests
         working-directory: cid4-age
         shell: bash
