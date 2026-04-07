@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import importlib.util
+from starlette.testclient import TestClient
 import json
 import os
 import sys
@@ -14,17 +14,14 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-STARLETTE_AVAILABLE = importlib.util.find_spec("starlette") is not None
-HTTPX_AVAILABLE = importlib.util.find_spec("httpx") is not None
+
+from config import resolve_server_config # noqa: E402
+from routes import create_app # noqa: E402
 
 
-@unittest.skipUnless(STARLETTE_AVAILABLE and HTTPX_AVAILABLE, "starlette extra not installed")
 class StarletteServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        from starlette.testclient import TestClient
-
-        from starlette_cid4.app import create_app
 
         cls.data_dir = PROJECT_ROOT.parent / "data"
         cls.client = TestClient(create_app(cls.data_dir))
@@ -73,8 +70,6 @@ class StarletteServerTests(unittest.TestCase):
         self.assertIn("organisms", taxonomy.json())
 
     def test_server_config_falls_back_to_crypto_summary(self) -> None:
-        from fastapi_cid4.config import resolve_server_config
-
         with tempfile.TemporaryDirectory() as temp_dir:
             data_dir = Path(temp_dir)
             expected_secret = f"{data_dir.name}-tls-token"

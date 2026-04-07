@@ -15,12 +15,24 @@ from cid4_api import ApiResponse, route_api_request
 def create_app(data_dir: Path) -> Starlette:
     routes = [
         Route("/api/health", endpoint=health, methods=["GET", "OPTIONS"]),
-        Route("/api/cid4/conformer/{index}", endpoint=conformer, methods=["GET", "OPTIONS"]),
-        Route("/api/cid4/structure/2d", endpoint=structure_2d, methods=["GET", "OPTIONS"]),
+        Route(
+            "/api/cid4/conformer/{index}",
+            endpoint=conformer,
+            methods=["GET", "OPTIONS"],
+        ),
+        Route(
+            "/api/cid4/structure/2d", endpoint=structure_2d, methods=["GET", "OPTIONS"]
+        ),
         Route("/api/cid4/compound", endpoint=compound, methods=["GET", "OPTIONS"]),
         Route("/api/algorithms/pathway", endpoint=pathway, methods=["GET", "OPTIONS"]),
-        Route("/api/algorithms/bioactivity", endpoint=bioactivity, methods=["GET", "OPTIONS"]),
-        Route("/api/algorithms/taxonomy", endpoint=taxonomy, methods=["GET", "OPTIONS"]),
+        Route(
+            "/api/algorithms/bioactivity",
+            endpoint=bioactivity,
+            methods=["GET", "OPTIONS"],
+        ),
+        Route(
+            "/api/algorithms/taxonomy", endpoint=taxonomy, methods=["GET", "OPTIONS"]
+        ),
     ]
     middleware = [
         Middleware(
@@ -76,7 +88,9 @@ def _response_for(request: Request) -> Response:
 
 def _target_from_request(request: Request) -> str:
     query_string = request.url.query
-    return request.url.path if not query_string else f"{request.url.path}?{query_string}"
+    return (
+        request.url.path if not query_string else f"{request.url.path}?{query_string}"
+    )
 
 
 def _to_starlette_response(api_response: ApiResponse) -> Response:

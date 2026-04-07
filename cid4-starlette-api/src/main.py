@@ -1,25 +1,23 @@
 from __future__ import annotations
 
 import argparse
+import uvicorn
 
 import log_settings
-from fastapi_cid4.config import resolve_data_dir, resolve_server_config
-from starlette_cid4 import create_app
+from config import resolve_data_dir, resolve_server_config
+from routes import create_app
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run the CID 4 Starlette HTTPS server.")
+    parser = argparse.ArgumentParser(
+        description="Run the CID 4 Starlette HTTPS server."
+    )
     parser.add_argument("--host", help="Override the bind host.")
     parser.add_argument("--port", type=int, help="Override the bind port.")
     return parser
 
 
 def main() -> None:
-    try:
-        import uvicorn
-    except ModuleNotFoundError as exc:
-        raise RuntimeError("Install the optional starlette extra to run the Starlette server.") from exc
-
     log_settings.configure_logging()
     args = build_argument_parser().parse_args()
 
