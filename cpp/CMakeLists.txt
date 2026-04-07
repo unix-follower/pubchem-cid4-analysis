@@ -40,7 +40,6 @@ endif()
 
 find_package(Armadillo CONFIG REQUIRED)
 find_package(Boost REQUIRED COMPONENTS graph system)
-find_package(Crow CONFIG REQUIRED)
 find_package(Drogon CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -109,11 +108,6 @@ target_link_libraries(app
 		RDKit::GraphMol
 		RDKit::RDGeneral
 )
-
-add_executable(crow_api_server src/crow_api_server.cpp)
-set_target_properties(crow_api_server PROPERTIES OUTPUT_NAME crow_api_server)
-target_compile_definitions(crow_api_server PRIVATE CROW_ENABLE_SSL)
-target_link_libraries(crow_api_server PRIVATE cid4_http_support cid4_observability Crow::Crow OpenSSL::SSL OpenSSL::Crypto)
 
 add_executable(drogon_api_server src/drogon_api_server.cpp)
 set_target_properties(drogon_api_server PROPERTIES OUTPUT_NAME drogon_api_server)

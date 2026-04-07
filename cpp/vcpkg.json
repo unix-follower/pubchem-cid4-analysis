@@ -5,7 +5,6 @@
     "boost-graph",
     "boost-iostreams",
     "boost-system",
-    "crow",
     "drogon",
     "gtest",
     "glfw3",
