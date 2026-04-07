@@ -6,17 +6,17 @@ import os
 import secrets
 from pathlib import Path
 from typing import Any
+import numpy as np
+import pandas as pd
 
 import env_utils
 import fs_utils
 import log_settings
-from cid4_analysis import resolve_data_path
-from crypto_cid4.asymmetric import build_asymmetric_examples
-from crypto_cid4.certificates import build_certificate_examples
-from crypto_cid4.hashing import build_file_manifest, hmac_sha256
-from crypto_cid4.passwords import build_password_hash_examples
-from crypto_cid4.symmetric import build_symmetric_examples
-from ml.common import to_builtin
+from asymmetric import build_asymmetric_examples
+from certificates import build_certificate_examples
+from hashing import build_file_manifest, hmac_sha256
+from passwords import build_password_hash_examples
+from symmetric import build_symmetric_examples
 
 PAYLOAD_CANDIDATES = [
     "COMPOUND_CID_4.json",
@@ -34,9 +34,33 @@ def resolve_output_directory() -> Path:
     return output_directory
 
 
+def to_builtin(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): to_builtin(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [to_builtin(item) for item in value]
+    if isinstance(value, tuple):
+        return [to_builtin(item) for item in value]
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    if isinstance(value, np.integer):
+        return int(value)
+    if isinstance(value, np.floating):
+        return float(value)
+    if isinstance(value, np.bool_):
+        return bool(value)
+    if isinstance(value, pd.Series):
+        return value.to_list()
+    return value
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     with path.open("w", encoding="utf-8") as file:
         json.dump(to_builtin(payload), file, indent=2)
+
+
+def resolve_data_path(filename: str) -> Path:
+    return Path(env_utils.get_data_dir()) / filename
 
 
 def select_payload_files() -> list[Path]:
@@ -55,7 +79,9 @@ def build_crypto_summary(output_directory: Path) -> dict[str, Any]:
     manifest_path = output_directory / "cid4_crypto.manifest.json"
     manifest_path.write_bytes(manifest_bytes)
 
-    demo_password = os.environ.get("CID4_CRYPTO_DEMO_PASSWORD") or secrets.token_urlsafe(24)
+    demo_password = os.environ.get(
+        "CID4_CRYPTO_DEMO_PASSWORD"
+    ) or secrets.token_urlsafe(24)
     hmac_key = b"cid4-demo-hmac-key"
     hmac_value = hmac_sha256(hmac_key, manifest_bytes)
     password_hashes = build_password_hash_examples(demo_password)
@@ -76,11 +102,17 @@ def build_crypto_summary(output_directory: Path) -> dict[str, Any]:
         "asymmetric": asymmetric_examples,
         "x509_and_pkcs12": certificate_examples,
         "demo_password": demo_password,
-        "demo_password_source": "environment" if "CID4_CRYPTO_DEMO_PASSWORD" in os.environ else "generated",
+        "demo_password_source": "environment"
+        if "CID4_CRYPTO_DEMO_PASSWORD" in os.environ
+        else "generated",
         "cli_examples": {
             "checksums": [
-                f"sha256sum {payload_paths[0].name}" if payload_paths else "sha256sum COMPOUND_CID_4.json",
-                f"md5 {payload_paths[0].name}" if payload_paths else "md5 COMPOUND_CID_4.json",
+                f"sha256sum {payload_paths[0].name}"
+                if payload_paths
+                else "sha256sum COMPOUND_CID_4.json",
+                f"md5 {payload_paths[0].name}"
+                if payload_paths
+                else "md5 COMPOUND_CID_4.json",
             ],
             "openssl": [
                 "openssl dgst -sha256 -sign cid4_crypto.demo.key.pem -out cid4_crypto.manifest.sig "

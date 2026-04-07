@@ -29,7 +29,9 @@ def build_symmetric_examples(payload: bytes) -> dict[str, Any]:
     chacha_nonce = os.urandom(12)
     chacha = ChaCha20Poly1305(chacha_key)
     chacha_ciphertext = chacha.encrypt(chacha_nonce, payload, b"cid4:chacha20-poly1305")
-    chacha_plaintext = chacha.decrypt(chacha_nonce, chacha_ciphertext, b"cid4:chacha20-poly1305")
+    chacha_plaintext = chacha.decrypt(
+        chacha_nonce, chacha_ciphertext, b"cid4:chacha20-poly1305"
+    )
 
     return {
         "status": "ok",

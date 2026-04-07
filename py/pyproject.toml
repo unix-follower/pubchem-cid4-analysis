@@ -18,11 +18,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-crypto = [
-    "argon2-cffi>=23.1.0",
-    "bcrypt>=4.2.0",
-    "cryptography>=45.0.0",
-]
 descriptor-ml = [
     "dscribe>=2.1.1",
 ]
