@@ -31,10 +31,7 @@ class HashedTokenEmbeddingProvider:
 
         for token in tokens:
             digest = hashlib.sha256(token.encode("utf-8")).digest()
-            bucket = (
-                int.from_bytes(digest[:8], byteorder="big", signed=False)
-                % self.dimension
-            )
+            bucket = int.from_bytes(digest[:8], byteorder="big", signed=False) % self.dimension
             sign = -1.0 if digest[8] % 2 else 1.0
             weight = 1.0 + (digest[9] / 255.0)
             vector[bucket] += sign * weight

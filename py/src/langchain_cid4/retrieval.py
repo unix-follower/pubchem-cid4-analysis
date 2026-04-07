@@ -3,8 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from langchain_cid4.documents import ChunkRecord
 from embedding import HashedTokenEmbeddingProvider
+from langchain_cid4.documents import ChunkRecord
 from storage import PgvectorConfig, import_pgvector_stack, load_config_from_env
 
 
