@@ -4,14 +4,17 @@ import json
 import logging as log
 from collections import Counter
 from pathlib import Path
+import pandas as pd
+import numpy as np
+
+from typing import Any
 
 import env_utils
 import fs_utils
 import log_settings
-from ml.common import to_builtin
-from pgvector.documents import build_all_documents
-from pgvector.embedding import HashedTokenEmbeddingProvider
-from pgvector.storage import ingest_documents, load_config_from_env
+from documents import build_all_documents
+from embedding import HashedTokenEmbeddingProvider
+from storage import ingest_documents, load_config_from_env
 
 
 def resolve_output_directory() -> Path:
@@ -21,6 +24,26 @@ def resolve_output_directory() -> Path:
     return output_directory
 
 
+def to_builtin(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): to_builtin(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [to_builtin(item) for item in value]
+    if isinstance(value, tuple):
+        return [to_builtin(item) for item in value]
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    if isinstance(value, np.integer):
+        return int(value)
+    if isinstance(value, np.floating):
+        return float(value)
+    if isinstance(value, np.bool_):
+        return bool(value)
+    if isinstance(value, pd.Series):
+        return value.to_list()
+    return value
+
+
 def write_json(path: Path, payload: dict) -> None:
     with path.open("w", encoding="utf-8") as file:
         json.dump(to_builtin(payload), file, indent=2)
@@ -28,7 +51,9 @@ def write_json(path: Path, payload: dict) -> None:
 
 def build_pgvector_summary() -> dict:
     config = load_config_from_env()
-    embedding_provider = HashedTokenEmbeddingProvider(dimension=config.embedding_dimension)
+    embedding_provider = HashedTokenEmbeddingProvider(
+        dimension=config.embedding_dimension
+    )
     documents = build_all_documents()
     document_type_counts = Counter(document.doc_type for document in documents)
     ingestion_result = ingest_documents(documents, config, embedding_provider)
@@ -47,7 +72,9 @@ def build_pgvector_summary() -> dict:
     return {
         "status": ingestion_result["status"],
         "document_count": int(len(documents)),
-        "doc_type_counts": {key: int(value) for key, value in sorted(document_type_counts.items())},
+        "doc_type_counts": {
+            key: int(value) for key, value in sorted(document_type_counts.items())
+        },
         "embedding": {
             "provider": embedding_provider.name,
             "dimension": int(embedding_provider.dimension),

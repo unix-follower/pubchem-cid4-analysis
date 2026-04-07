@@ -4,7 +4,12 @@ import hashlib
 from dataclasses import dataclass
 from math import sqrt
 
-from nlp.text_processing import BASE_STOPWORDS, filter_stopwords, lowercase_tokens, tokenize_preserving_chemistry
+from text_processing import (
+    BASE_STOPWORDS,
+    filter_stopwords,
+    lowercase_tokens,
+    tokenize_preserving_chemistry,
+)
 
 
 @dataclass(frozen=True)

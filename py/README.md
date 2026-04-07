@@ -206,33 +206,6 @@ For the mixed deliverable, a notebook companion can inspect the generated JSON s
 Notebook companion:
 - `src/cid4_ml_taxonomy_text_baseline.ipynb` reuses `ml.datasets.build_taxonomy_clustering_frame()` to build a small TF-IDF plus logistic-regression baseline over the taxonomy text, then saves notebook artifacts back into `data/out`
 
-## pgvector runner
-The Python workspace now also includes a pgvector-oriented ingestion runner for semantic-search prototypes over the CID 4 text and row datasets. It normalizes literature, patents, bioactivity rows, pathway records, taxonomy rows, and CPDat rows into a shared document shape, generates deterministic hashed-token embeddings, and writes a JSON summary into `data/out`.
-
-Run it from the `py` workspace:
-
-```sh
-source .venv/bin/activate
-export DATA_DIR="$(pwd)/../data"
-python src/cid4_pgvector.py
-```
-
-If the pgvector dependencies are not installed or `PGVECTOR_DSN` is not set, the runner still completes and writes a dry-run summary instead of failing. Enable the optional dependency with:
-
-```sh
-uv sync --extra pgvector
-```
-
-Environment variables:
-- `PGVECTOR_DSN` - PostgreSQL connection string for a database with the `vector` extension available
-- `PGVECTOR_TABLE` - optional target table name, default `cid4_documents`
-- `PGVECTOR_EMBED_DIM` - optional hashed embedding dimension, default `96`
-
-Expected output under `data/out`:
-- `cid4_pgvector.summary.json`
-
-The current embedding provider is intentionally lightweight and deterministic so the pipeline stays testable and CI-friendly. It is good enough for schema, ingestion, and hybrid-query prototyping, and can later be replaced with a stronger embedding model without changing the PostgreSQL storage contract.
-
 ## LangChain runner
 The Python workspace now also includes a LangChain-oriented RAG and routing runner for CID 4. It sits on top of the existing document shaping and pgvector work, writes JSON summaries into `data/out`, and supports:
 - literature RAG over titles, abstracts, and citation metadata

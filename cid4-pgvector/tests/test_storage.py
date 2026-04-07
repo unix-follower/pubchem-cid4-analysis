@@ -9,9 +9,9 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from pgvector.documents import VectorDocument  # noqa: E402
-from pgvector.embedding import HashedTokenEmbeddingProvider  # noqa: E402
-from pgvector.storage import (  # noqa: E402
+from documents import VectorDocument  # noqa: E402
+from embedding import HashedTokenEmbeddingProvider  # noqa: E402
+from storage import (  # noqa: E402
     PgvectorConfig,
     build_similarity_query_sql,
     build_upsert_sql,
@@ -28,7 +28,9 @@ class PgvectorStorageTests(unittest.TestCase):
         self.assertIn("ON CONFLICT (doc_id)", sql)
 
     def test_build_similarity_query_uses_metadata_filters(self) -> None:
-        sql = build_similarity_query_sql("cid4_documents", {"aid_type": "Confirmatory", "taxonomy_id": "9606"})
+        sql = build_similarity_query_sql(
+            "cid4_documents", {"aid_type": "Confirmatory", "taxonomy_id": "9606"}
+        )
 
         self.assertIn("metadata ->> %s = %s", sql)
         self.assertIn("ORDER BY embedding <=> %s", sql)
@@ -69,7 +71,11 @@ class PgvectorStorageTests(unittest.TestCase):
         ]
 
         result = ingest_documents(
-            documents, PgvectorConfig(dsn=None, table_name="cid4_documents", embedding_dimension=8), provider
+            documents,
+            PgvectorConfig(
+                dsn=None, table_name="cid4_documents", embedding_dimension=8
+            ),
+            provider,
         )
 
         self.assertEqual(result["status"], "dry_run")

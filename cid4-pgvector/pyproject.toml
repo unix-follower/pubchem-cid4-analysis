@@ -1,0 +1,11 @@
+[project]
+name = "cid4-pgvector"
+version = "1.0.0"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.4.4",
+    "pandas>=3.0.2",
+    "pgvector>=0.4.2",
+    "psycopg[binary]>=3.3.3",
+]

@@ -11,12 +11,12 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from pgvector.documents import (  # noqa: E402
+from documents import (  # noqa: E402
     build_bioactivity_documents,
     build_cpdat_documents,
     build_literature_documents,
 )
-from pgvector.embedding import HashedTokenEmbeddingProvider  # noqa: E402
+from embedding import HashedTokenEmbeddingProvider  # noqa: E402
 
 
 class PgvectorDocumentTests(unittest.TestCase):
@@ -46,7 +46,9 @@ class PgvectorDocumentTests(unittest.TestCase):
         self.assertEqual(len(documents), 1)
         self.assertEqual(documents[0].doc_type, "literature")
         self.assertEqual(documents[0].cid, 4)
-        self.assertIn("Isopropanolamine metabolism pathway summary", documents[0].text_payload)
+        self.assertIn(
+            "Isopropanolamine metabolism pathway summary", documents[0].text_payload
+        )
 
     def test_bioactivity_document_captures_structured_filters(self) -> None:
         frame = pd.DataFrame(
