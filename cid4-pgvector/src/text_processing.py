@@ -75,7 +75,9 @@ def lowercase_tokens(tokens: Iterable[str]) -> list[str]:
     return [token.lower() for token in tokens if token]
 
 
-def filter_stopwords(tokens: Iterable[str], stopwords: set[str] | None = None) -> list[str]:
+def filter_stopwords(
+    tokens: Iterable[str], stopwords: set[str] | None = None
+) -> list[str]:
     vocabulary = BASE_STOPWORDS if stopwords is None else stopwords
     filtered: list[str] = []
     for token in tokens:

@@ -1,4 +1,4 @@
-name: Build AGE app
+name: Build cid4-age app
 on:
   pull_request:
     paths:

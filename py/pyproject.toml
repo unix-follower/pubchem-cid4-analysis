@@ -43,10 +43,6 @@ langchain = [
     "langchain>=0.3.27",
     "langchain-text-splitters>=0.3.11",
 ]
-pgvector = [
-    "pgvector>=0.4.1",
-    "psycopg[binary]>=3.2.9",
-]
 xgboost = [
     "xgboost>=2.1.4",
 ]
