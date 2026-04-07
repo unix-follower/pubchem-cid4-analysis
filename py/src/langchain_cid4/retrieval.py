@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from typing import Any
 
 from langchain_cid4.documents import ChunkRecord
-from pgvector.embedding import HashedTokenEmbeddingProvider
-from pgvector.storage import PgvectorConfig, import_pgvector_stack, load_config_from_env
+from embedding import HashedTokenEmbeddingProvider
+from storage import PgvectorConfig, import_pgvector_stack, load_config_from_env
 
 
 @dataclass(frozen=True)

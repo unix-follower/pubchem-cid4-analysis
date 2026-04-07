@@ -12,7 +12,7 @@ if str(SRC_ROOT) not in sys.path:
 from langchain_cid4.documents import ChunkRecord, chunk_documents  # noqa: E402
 from langchain_cid4.retrieval import InMemoryRetriever  # noqa: E402
 from langchain_cid4.workflows import build_grounded_answer, route_question, summarize_hits  # noqa: E402
-from pgvector.documents import VectorDocument  # noqa: E402
+from documents import VectorDocument  # noqa: E402
 
 
 class LangchainWorkflowTests(unittest.TestCase):
