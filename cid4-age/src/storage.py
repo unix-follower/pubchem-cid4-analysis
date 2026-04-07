@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-from age_cid4.graphs import GraphEdge, GraphNode, PropertyGraph
+from graphs import GraphEdge, GraphNode, PropertyGraph
 
 DEFAULT_GRAPH_NAME = "cid4_graph"
 
@@ -37,7 +37,10 @@ def import_age_stack() -> dict[str, Any]:
 
 def ingest_graph(graph: PropertyGraph, config: AgeConfig) -> dict[str, Any]:
     if not graph.nodes:
-        return {"status": "skipped", "reason": "No graph nodes were generated for Apache AGE ingestion."}
+        return {
+            "status": "skipped",
+            "reason": "No graph nodes were generated for Apache AGE ingestion.",
+        }
 
     statements = build_ingestion_statements(graph)
     if not config.dsn:
@@ -94,7 +97,9 @@ def ensure_age_schema(connection: Any, config: AgeConfig) -> None:
     with connection.cursor() as cursor:
         cursor.execute("LOAD 'age'")
         cursor.execute('SET search_path = ag_catalog, "$user", public')
-        cursor.execute("SELECT 1 FROM ag_catalog.ag_graph WHERE name = %s", [config.graph_name])
+        cursor.execute(
+            "SELECT 1 FROM ag_catalog.ag_graph WHERE name = %s", [config.graph_name]
+        )
         graph_exists = cursor.fetchone() is not None
         if not graph_exists:
             cursor.execute("SELECT create_graph(%s)", [config.graph_name])

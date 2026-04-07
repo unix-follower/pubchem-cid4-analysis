@@ -16,7 +16,9 @@ def build_query_catalog() -> list[dict[str, Any]]:
         {
             "id": "oxygen_to_nitrogen_shortest_path",
             "title": "Shortest path between oxygen and nitrogen",
-            "cypher": ("MATCH p = shortestPath((o:Atom {element: 'O'})-[:BOND*]-(n:Atom {element: 'N'})) RETURN p"),
+            "cypher": (
+                "MATCH p = shortestPath((o:Atom {element: 'O'})-[:BOND*]-(n:Atom {element: 'N'})) RETURN p"
+            ),
         },
         {
             "id": "compound_assay_target_taxon",

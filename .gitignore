@@ -15,3 +15,9 @@ out/
 .DS_Store
 
 data/pubchem_cid_4_patent.csv
+
+### Python ###
+*.pyc
+*__pycache__*
+.ipynb_checkpoints/
+.micromamba
