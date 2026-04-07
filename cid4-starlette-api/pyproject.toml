@@ -1,7 +1,7 @@
 [project]
 name = "cid4-starlette-api"
 version = "1.0.0"
-description = "HTTP server based on Flask"
+description = "HTTP server based on Starlette"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
