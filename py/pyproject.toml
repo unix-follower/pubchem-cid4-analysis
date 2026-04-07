@@ -39,11 +39,6 @@ fastapi = [
 mcp = [
     "mcp[cli]>=1.27.0",
 ]
-starlette = [
-    "httpx>=0.28.1",
-    "starlette>=0.47.3",
-    "uvicorn>=0.35.0",
-]
 langgraph = [
     "langgraph>=0.4.7",
 ]

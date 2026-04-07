@@ -1,0 +1,56 @@
+name: Build Starlette app
+on:
+  pull_request:
+    paths:
+      - .github/workflows/build-cid4-starlette-api.yaml
+      - cid4-starlette-api/**
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+    inputs:
+      python-version:
+        description: Desired python version
+        required: false
+        default: "3.12"
+
+env:
+  PYTHON_VERSION: ${{ inputs.python-version || '3.12' }}
+
+jobs:
+  build:
+    runs-on:
+      - ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+        
+      - name: Install dependencies
+        working-directory: cid4-starlette-api
+        shell: bash
+        run: |
+          pip install uv
+          uv sync --locked
+
+      - name: Check code formatting
+        working-directory: cid4-starlette-api
+        shell: bash
+        run: uv tool run ruff check
+
+      - name: Run unit tests
+        working-directory: cid4-starlette-api
+        shell: bash
+        run: uv run python -m unittest discover -s tests -v
+
+      - name: Build python app
+        working-directory: cid4-starlette-api
+        shell: bash
+        run: uv build
