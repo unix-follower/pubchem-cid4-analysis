@@ -1,0 +1,7 @@
+[project]
+name = "cid4-asyncio-api"
+version = "1.0.0"
+description = "HTTP server based on asyncio"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []

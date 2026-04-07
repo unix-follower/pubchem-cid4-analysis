@@ -9,7 +9,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cid4_asyncio import build_response_from_request_head, render_http_response  # noqa: E402
+from main import build_response_from_request_head, render_http_response  # noqa: E402
 
 
 class AsyncIoServerTests(unittest.TestCase):
@@ -18,7 +18,9 @@ class AsyncIoServerTests(unittest.TestCase):
         cls.data_dir = PROJECT_ROOT.parent / "data"
 
     def test_build_response_from_request_head_routes_health(self) -> None:
-        response = build_response_from_request_head("GET /api/health HTTP/1.1", self.data_dir)
+        response = build_response_from_request_head(
+            "GET /api/health HTTP/1.1", self.data_dir
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('"source": "asyncio"', response.body)
@@ -29,7 +31,9 @@ class AsyncIoServerTests(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_render_http_response_sets_allow_header_for_method_errors(self) -> None:
-        response = build_response_from_request_head("POST /api/health HTTP/1.1", self.data_dir)
+        response = build_response_from_request_head(
+            "POST /api/health HTTP/1.1", self.data_dir
+        )
         payload = render_http_response(response)
 
         self.assertIn("HTTP/1.1 405 Method Not Allowed", payload)

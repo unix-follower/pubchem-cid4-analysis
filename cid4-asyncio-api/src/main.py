@@ -6,7 +6,12 @@ import logging
 import ssl
 
 import log_settings
-from cid4_api import ApiResponse, resolve_data_dir, resolve_server_config, route_api_request
+from cid4_api import (
+    ApiResponse,
+    resolve_data_dir,
+    resolve_server_config,
+    route_api_request,
+)
 
 LOGGER = logging.getLogger(__name__)
 MAX_REQUEST_HEAD_BYTES = 16_384
@@ -26,8 +31,8 @@ def main() -> None:
     data_dir = resolve_data_dir()
     server_config = resolve_server_config(
         data_dir,
-        preferred_host_env_names=("ASYNCIO_HOST",),
-        preferred_port_env_names=("ASYNCIO_PORT",),
+        preferred_host_env_names=("HOST",),
+        preferred_port_env_names=("PORT",),
     )
 
     host = args.host or server_config.host
@@ -50,7 +55,9 @@ async def serve(host: str, port: int, data_dir, ssl_context: ssl.SSLContext) -> 
         await server.serve_forever()
 
 
-async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter, data_dir) -> None:
+async def handle_client(
+    reader: asyncio.StreamReader, writer: asyncio.StreamWriter, data_dir
+) -> None:
     response = ApiResponse(status_code=400, body='{"message":"Malformed HTTP request"}')
 
     try:
@@ -63,7 +70,9 @@ async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWrit
         LOGGER.info("Client disconnected before request completion")
     except Exception:
         LOGGER.exception("Unexpected asyncio server error")
-        response = ApiResponse(status_code=500, body='{"message":"Internal server error"}')
+        response = ApiResponse(
+            status_code=500, body='{"message":"Internal server error"}'
+        )
 
     try:
         writer.write(render_http_response(response).encode("utf-8"))
@@ -128,7 +137,9 @@ async def _read_request_head(reader: asyncio.StreamReader) -> str:
             break
         buffer.extend(chunk)
         if b"\r\n\r\n" in buffer:
-            return bytes(buffer).split(b"\r\n\r\n", 1)[0].decode("utf-8", errors="replace")
+            return (
+                bytes(buffer).split(b"\r\n\r\n", 1)[0].decode("utf-8", errors="replace")
+            )
         if len(buffer) > MAX_REQUEST_HEAD_BYTES:
             break
     return ""
