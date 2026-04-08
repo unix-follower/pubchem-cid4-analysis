@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "cid4_http.hpp"
-#include "cid4_observability.hpp"
+#include "observability.hpp"
 
 #include <chrono>
 #include <cstdlib>

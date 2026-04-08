@@ -5,12 +5,9 @@
     "boost-graph",
     "boost-iostreams",
     "boost-system",
-    "drogon",
-    "gtest",
     "nlohmann-json",
     "boost-ublas",
-    "prometheus-cpp",
-    "spdlog"
+    "gtest"
   ],
   "features": {
     "opencv-app": {

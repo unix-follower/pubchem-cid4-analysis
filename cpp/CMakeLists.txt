@@ -18,7 +18,6 @@ project(pubchem_cid4_analysis VERSION 1.0.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CROW_ENABLE_SSL ON)
 
 option(PUBCHEM_ENABLE_OPENCV_APP "Build the optional CID 4 OpenCV image diagnostics tool" ON)
 
@@ -37,12 +36,9 @@ endif()
 
 find_package(Armadillo CONFIG REQUIRED)
 find_package(Boost REQUIRED COMPONENTS graph system)
-find_package(Drogon CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
-find_package(prometheus-cpp CONFIG REQUIRED)
 find_package(RDKit CONFIG REQUIRED)
-find_package(spdlog CONFIG REQUIRED)
 find_package(Threads REQUIRED)
 
 set(pubchem_rdkit_rpath)
@@ -77,16 +73,6 @@ target_compile_definitions(
 )
 target_link_libraries(cid4_http_support PUBLIC nlohmann_json::nlohmann_json)
 
-add_library(cid4_observability src/cid4_observability.cpp)
-target_include_directories(cid4_observability PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(
-	cid4_observability
-	PUBLIC
-		nlohmann_json::nlohmann_json
-		prometheus-cpp::pull
-		spdlog::spdlog
-)
-
 add_executable(app src/app.cpp)
 set_target_properties(app PROPERTIES OUTPUT_NAME app)
 target_compile_definitions(app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
@@ -101,10 +87,6 @@ target_link_libraries(app
 		RDKit::GraphMol
 		RDKit::RDGeneral
 )
-
-add_executable(drogon_api_server src/drogon_api_server.cpp)
-set_target_properties(drogon_api_server PROPERTIES OUTPUT_NAME drogon_api_server)
-target_link_libraries(drogon_api_server PRIVATE cid4_http_support cid4_observability Drogon::Drogon OpenSSL::SSL OpenSSL::Crypto)
 
 add_executable(boost_asio_api_server src/boost_asio_api_server.cpp)
 set_target_properties(boost_asio_api_server PROPERTIES OUTPUT_NAME boost_asio_api_server)
@@ -136,10 +118,9 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(tests test/analysis_test.cpp test/opencv_support_test.cpp)
-target_sources(tests PRIVATE test/cid4_http_test.cpp)
 target_link_libraries(
 	tests
-	PRIVATE analysis_core cid4_opencv_support cid4_http_support cid4_observability GTest::gtest GTest::gtest_main
+	PRIVATE analysis_core cid4_opencv_support GTest::gtest GTest::gtest_main
 )
 
 include(GoogleTest)
