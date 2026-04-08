@@ -7,7 +7,6 @@
     "boost-system",
     "drogon",
     "gtest",
-    "glfw3",
     "nlohmann-json",
     "boost-ublas",
     "prometheus-cpp",
