@@ -1,9 +1,7 @@
 {
   "dependencies": [
     "armadillo",
-    "boost-asio",
     "boost-graph",
-    "boost-iostreams",
     "boost-system",
     "nlohmann-json",
     "boost-ublas",
