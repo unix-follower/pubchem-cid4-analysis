@@ -20,7 +20,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CROW_ENABLE_SSL ON)
 
-option(PUBCHEM_ENABLE_VULKAN_APP "Build the optional CID 4 Vulkan viewer bootstrap" ON)
 option(PUBCHEM_ENABLE_OPENGL_APP "Build the optional CID 4 OpenGL viewer bootstrap" ON)
 option(PUBCHEM_ENABLE_CUDA_APP "Build the optional CID 4 CUDA geometry analyzer" ON)
 option(PUBCHEM_ENABLE_OPENCV_APP "Build the optional CID 4 OpenCV image diagnostics tool" ON)
@@ -119,24 +118,6 @@ target_link_libraries(
 	boost_asio_api_server
 	PRIVATE cid4_http_support Boost::system OpenSSL::SSL OpenSSL::Crypto Threads::Threads
 )
-
-if(PUBCHEM_ENABLE_VULKAN_APP)
-	find_package(Vulkan QUIET)
-
-	add_executable(vulkan_app src/vulkan_app.cpp)
-	set_target_properties(vulkan_app PROPERTIES OUTPUT_NAME vulkan_app)
-	target_compile_definitions(vulkan_app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
-	target_link_libraries(vulkan_app PRIVATE cid4_scene_loader)
-
-	if(Vulkan_FOUND)
-		target_compile_definitions(vulkan_app PRIVATE PUBCHEM_VULKAN_RUNTIME_AVAILABLE=1)
-		target_link_libraries(vulkan_app PRIVATE Vulkan::Vulkan)
-		message(STATUS "Vulkan SDK detected. Building vulkan_app with Vulkan runtime probing enabled.")
-	else()
-		target_compile_definitions(vulkan_app PRIVATE PUBCHEM_VULKAN_RUNTIME_AVAILABLE=0)
-		message(STATUS "Vulkan SDK not detected. Building vulkan_app stub mode for compile-only development.")
-	endif()
-endif()
 
 if(PUBCHEM_ENABLE_OPENGL_APP)
 	find_package(OpenGL QUIET)
