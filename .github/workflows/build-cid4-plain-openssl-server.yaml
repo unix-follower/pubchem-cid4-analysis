@@ -1,0 +1,70 @@
+name: Build cid4-plain-openssl-server
+on:
+  pull_request:
+    paths:
+      - .github/workflows/build-cid4-plain-openssl-server.yaml
+      - cid4-plain-openssl-server/**
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          # Install the latest stable version
+          sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+
+      - name: Check C++ formatting
+        run: |
+          clang-format --version
+          find . -regex '.*\.\(cpp\|hpp\|cc\|cxx\)' | xargs clang-format --dry-run --Werror
+
+      - name: Install Ubuntu build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
+
+      # Install latest CMake and Ninja.
+      - uses: lukka/get-cmake@latest
+      # Setup vcpkg: ensures vcpkg is downloaded and built.
+      # Since vcpkg.json is being used later on to install the packages
+      # when `run-cmake` runs, no packages are installed at this time
+      # (and vcpkg does not run).
+      - name: Setup new (or from cache) vcpkg (and does not build any package)
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: fc349a7b35348173d4d24621ae04ad80e2375957
+
+      - name: Configure CMake
+        working-directory: cid4-plain-openssl-server
+        shell: bash
+        run: cmake --preset=vcpkg
+
+      - name: Check C++ static analysis
+        working-directory: cid4-plain-openssl-server
+        shell: bash
+        run: |
+          find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
+            | xargs -0 clang-tidy -p build
+
+      - name: Run CMake consuming CMakePreset.json and run vcpkg to build packages
+        uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: cid4-plain-openssl-server/CMakeLists.txt
+          # This is the name of the CMakePresets.json's configuration to use to generate
+          # the project files. This configuration leverages the vcpkg.cmake toolchain file to
+          # run vcpkg and install all dependencies specified in vcpkg.json.
+          configurePreset: vcpkg
+          # This is the name of the CMakePresets.json's configuration to build the project.
+          buildPreset: vcpkg
+          testPreset: vcpkg

@@ -113,13 +113,6 @@ add_executable(drogon_api_server src/drogon_api_server.cpp)
 set_target_properties(drogon_api_server PROPERTIES OUTPUT_NAME drogon_api_server)
 target_link_libraries(drogon_api_server PRIVATE cid4_http_support cid4_observability Drogon::Drogon OpenSSL::SSL OpenSSL::Crypto)
 
-add_executable(plain_openssl_api_server src/plain_openssl_api_server.cpp)
-set_target_properties(plain_openssl_api_server PROPERTIES OUTPUT_NAME plain_openssl_api_server)
-target_link_libraries(
-	plain_openssl_api_server
-	PRIVATE cid4_http_support OpenSSL::SSL OpenSSL::Crypto Threads::Threads
-)
-
 add_executable(boost_asio_api_server src/boost_asio_api_server.cpp)
 set_target_properties(boost_asio_api_server PROPERTIES OUTPUT_NAME boost_asio_api_server)
 target_link_libraries(
