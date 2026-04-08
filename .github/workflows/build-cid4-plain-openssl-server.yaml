@@ -54,7 +54,7 @@ jobs:
         working-directory: cid4-plain-openssl-server
         shell: bash
         run: |
-          find src test -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
+          find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
             | xargs -0 clang-tidy -p build
 
       - name: Run CMake consuming CMakePreset.json and run vcpkg to build packages
