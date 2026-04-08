@@ -1,4 +1,4 @@
-#include "cid4_observability.hpp"
+#include "observability.hpp"
 
 #include <prometheus/counter.h>
 #include <prometheus/exposer.h>

@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "drogon",
+    "nlohmann-json",
+    "prometheus-cpp",
+    "spdlog",
+    "gtest"
+  ]
+}
