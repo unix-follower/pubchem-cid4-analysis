@@ -37,9 +37,7 @@ endif()
 find_package(Armadillo CONFIG REQUIRED)
 find_package(Boost REQUIRED COMPONENTS graph system)
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(OpenSSL REQUIRED)
 find_package(RDKit CONFIG REQUIRED)
-find_package(Threads REQUIRED)
 
 set(pubchem_rdkit_rpath)
 if(PUBCHEM_RDKIT_PREFIX AND EXISTS "${PUBCHEM_RDKIT_PREFIX}/lib")
@@ -65,14 +63,6 @@ add_library(cid4_opencv_support src/cid4_opencv.cpp)
 target_include_directories(cid4_opencv_support PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cid4_opencv_support PUBLIC cid4_scene_loader nlohmann_json::nlohmann_json)
 
-add_library(cid4_http_support src/cid4_http.cpp)
-target_include_directories(cid4_http_support PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_compile_definitions(
-	cid4_http_support
-	PUBLIC PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data"
-)
-target_link_libraries(cid4_http_support PUBLIC nlohmann_json::nlohmann_json)
-
 add_executable(app src/app.cpp)
 set_target_properties(app PROPERTIES OUTPUT_NAME app)
 target_compile_definitions(app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
@@ -86,13 +76,6 @@ target_link_libraries(app
 		RDKit::FileParsers
 		RDKit::GraphMol
 		RDKit::RDGeneral
-)
-
-add_executable(boost_asio_api_server src/boost_asio_api_server.cpp)
-set_target_properties(boost_asio_api_server PROPERTIES OUTPUT_NAME boost_asio_api_server)
-target_link_libraries(
-	boost_asio_api_server
-	PRIVATE cid4_http_support Boost::system OpenSSL::SSL OpenSSL::Crypto Threads::Threads
 )
 
 if(PUBCHEM_ENABLE_OPENCV_APP)
