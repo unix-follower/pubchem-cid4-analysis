@@ -19,6 +19,10 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_library(cid4_scene_loader src/cid4_scene.cpp)
+target_include_directories(cid4_scene_loader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(cid4_scene_loader PUBLIC nlohmann_json::nlohmann_json)
+
 add_library(cid4_cuda_buffers src/cid4_cuda_buffers.cpp)
 target_include_directories(cid4_cuda_buffers PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cid4_cuda_buffers PUBLIC cid4_scene_loader)
