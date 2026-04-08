@@ -32,7 +32,7 @@ jobs:
       - name: Install Ubuntu build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy
+          sudo apt-get install -y clang-tidy autoconf autoconf-archive automake libtool
 
       # Install latest CMake and Ninja.
       - uses: lukka/get-cmake@latest
