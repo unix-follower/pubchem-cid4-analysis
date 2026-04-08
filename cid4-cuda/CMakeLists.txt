@@ -19,6 +19,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(nlohmann_json CONFIG REQUIRED)
+
 add_library(cid4_scene_loader src/cid4_scene.cpp)
 target_include_directories(cid4_scene_loader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cid4_scene_loader PUBLIC nlohmann_json::nlohmann_json)
