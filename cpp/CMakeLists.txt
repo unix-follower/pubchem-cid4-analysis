@@ -20,7 +20,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CROW_ENABLE_SSL ON)
 
-option(PUBCHEM_ENABLE_CUDA_APP "Build the optional CID 4 CUDA geometry analyzer" ON)
 option(PUBCHEM_ENABLE_OPENCV_APP "Build the optional CID 4 OpenCV image diagnostics tool" ON)
 
 set(PUBCHEM_RDKIT_PREFIX "$ENV{PUBCHEM_RDKIT_PREFIX}" CACHE PATH "Path to a conda or micromamba environment that provides RDKit")
@@ -70,10 +69,6 @@ add_library(cid4_opencv_support src/cid4_opencv.cpp)
 target_include_directories(cid4_opencv_support PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cid4_opencv_support PUBLIC cid4_scene_loader nlohmann_json::nlohmann_json)
 
-add_library(cid4_cuda_buffers src/cid4_cuda_buffers.cpp)
-target_include_directories(cid4_cuda_buffers PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(cid4_cuda_buffers PUBLIC cid4_scene_loader)
-
 add_library(cid4_http_support src/cid4_http.cpp)
 target_include_directories(cid4_http_support PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_compile_definitions(
@@ -118,45 +113,6 @@ target_link_libraries(
 	PRIVATE cid4_http_support Boost::system OpenSSL::SSL OpenSSL::Crypto Threads::Threads
 )
 
-if(PUBCHEM_ENABLE_CUDA_APP)
-	include(CheckLanguage)
-	check_language(CUDA)
-
-	set(PUBCHEM_CUDA_TOOLCHAIN_READY OFF)
-	if(CMAKE_CUDA_COMPILER)
-		enable_language(CUDA)
-		find_package(CUDAToolkit QUIET)
-		if(CUDAToolkit_FOUND)
-			set(PUBCHEM_CUDA_TOOLCHAIN_READY ON)
-		endif()
-	endif()
-
-	add_executable(cuda_app src/cuda_app.cpp)
-	set_target_properties(cuda_app PROPERTIES OUTPUT_NAME cuda_app)
-	target_compile_definitions(cuda_app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
-	target_link_libraries(cuda_app PRIVATE cid4_cuda_buffers)
-
-	if(PUBCHEM_CUDA_TOOLCHAIN_READY)
-		add_library(cid4_cuda_runtime src/cid4_cuda_runtime.cu)
-		target_include_directories(cid4_cuda_runtime PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-		set_target_properties(
-			cid4_cuda_runtime
-			PROPERTIES
-				CUDA_STANDARD 17
-				CUDA_STANDARD_REQUIRED ON
-				CUDA_SEPARABLE_COMPILATION ON
-		)
-		target_link_libraries(cid4_cuda_runtime PUBLIC CUDAToolkit::cudart cid4_cuda_buffers)
-
-		target_compile_definitions(cuda_app PRIVATE PUBCHEM_CUDA_RUNTIME_AVAILABLE=1)
-		target_link_libraries(cuda_app PRIVATE cid4_cuda_runtime)
-		message(STATUS "CUDA toolkit detected. Building cuda_app with CUDA distance-matrix execution enabled.")
-	else()
-		target_compile_definitions(cuda_app PRIVATE PUBCHEM_CUDA_RUNTIME_AVAILABLE=0)
-		message(STATUS "CUDA toolkit not detected. Building cuda_app stub mode for compile-only development.")
-	endif()
-endif()
-
 if(PUBCHEM_ENABLE_OPENCV_APP)
 	find_package(OpenCV QUIET CONFIG COMPONENTS core imgcodecs imgproc)
 
@@ -179,11 +135,11 @@ endif()
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
-add_executable(tests test/analysis_test.cpp test/cuda_buffers_test.cpp test/opencv_support_test.cpp)
+add_executable(tests test/analysis_test.cpp test/opencv_support_test.cpp)
 target_sources(tests PRIVATE test/cid4_http_test.cpp)
 target_link_libraries(
 	tests
-	PRIVATE analysis_core cid4_cuda_buffers cid4_opencv_support cid4_http_support cid4_observability GTest::gtest GTest::gtest_main
+	PRIVATE analysis_core cid4_opencv_support cid4_http_support cid4_observability GTest::gtest GTest::gtest_main
 )
 
 include(GoogleTest)
