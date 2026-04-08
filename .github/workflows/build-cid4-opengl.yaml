@@ -1,9 +1,9 @@
-name: Build C++ app
+name: Build cid4-opengl
 on:
   pull_request:
     paths:
-      - .github/workflows/build-cpp.yaml
-      - cpp/**
+      - .github/workflows/build-cid4-opengl.yaml
+      - cid4-opengl/**
     types:
       - opened
       - reopened
@@ -32,7 +32,13 @@ jobs:
       - name: Install Ubuntu build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy
+          sudo apt-get install -y \
+            clang-tidy \
+            libglu1-mesa-dev \
+            libxcursor-dev \
+            libxinerama-dev \
+            pkg-config \
+            xorg-dev
 
       # Install latest CMake and Ninja.
       - uses: lukka/get-cmake@latest
@@ -45,37 +51,22 @@ jobs:
         with:
           vcpkgGitCommitId: fc349a7b35348173d4d24621ae04ad80e2375957
 
-      - name: Setup micromamba RDKit environment
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-name: rdkit
-          create-args: >-
-            -c conda-forge
-            librdkit-dev
-            libboost-devel
-          cache-environment: true
-          init-shell: bash
-
-      - name: Export RDKit prefix
-        shell: bash -el {0}
-        run: echo "PUBCHEM_RDKIT_PREFIX=$MAMBA_ROOT_PREFIX/envs/rdkit" >> "$GITHUB_ENV"
-
       - name: Configure CMake
-        working-directory: cpp
+        working-directory: cid4-opengl
         shell: bash
         run: cmake --preset=vcpkg
 
       - name: Check C++ static analysis
-        working-directory: cpp
+        working-directory: cid4-opengl
         shell: bash
         run: |
-          find src test -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
+          find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
             | xargs -0 clang-tidy -p build
 
       - name: Run CMake consuming CMakePreset.json and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
-          cmakeListsTxtPath: cpp/CMakeLists.txt
+          cmakeListsTxtPath: cid4-opengl/CMakeLists.txt
           # This is the name of the CMakePresets.json's configuration to use to generate
           # the project files. This configuration leverages the vcpkg.cmake toolchain file to
           # run vcpkg and install all dependencies specified in vcpkg.json.
