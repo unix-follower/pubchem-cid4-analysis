@@ -7,13 +7,5 @@
     "nlohmann-json",
     "boost-ublas",
     "gtest"
-  ],
-  "features": {
-    "opencv-app": {
-      "description": "Enable the optional OpenCV-backed CID 4 image diagnostics tool.",
-      "dependencies": [
-        "opencv"
-      ]
-    }
-  }
+  ]
 }

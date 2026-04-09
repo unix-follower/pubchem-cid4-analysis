@@ -19,8 +19,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-option(PUBCHEM_ENABLE_OPENCV_APP "Build the optional CID 4 OpenCV image diagnostics tool" ON)
-
 set(PUBCHEM_RDKIT_PREFIX "$ENV{PUBCHEM_RDKIT_PREFIX}" CACHE PATH "Path to a conda or micromamba environment that provides RDKit")
 if(NOT PUBCHEM_RDKIT_PREFIX AND DEFINED ENV{CONDA_PREFIX})
 	set(PUBCHEM_RDKIT_PREFIX "$ENV{CONDA_PREFIX}" CACHE PATH "Path to a conda or micromamba environment that provides RDKit" FORCE)
@@ -28,10 +26,6 @@ endif()
 
 if(PUBCHEM_RDKIT_PREFIX)
 	list(PREPEND CMAKE_PREFIX_PATH "${PUBCHEM_RDKIT_PREFIX}")
-endif()
-
-if(APPLE AND EXISTS "/usr/local/opt/openssl@3")
-	set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl@3")
 endif()
 
 find_package(Armadillo CONFIG REQUIRED)
@@ -55,14 +49,6 @@ target_link_libraries(
 	PUBLIC ${ARMADILLO_LIBRARIES} Boost::graph nlohmann_json::nlohmann_json RDKit::GraphMol RDKit::RDGeneral
 )
 
-add_library(cid4_scene_loader src/cid4_scene.cpp)
-target_include_directories(cid4_scene_loader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(cid4_scene_loader PUBLIC nlohmann_json::nlohmann_json)
-
-add_library(cid4_opencv_support src/cid4_opencv.cpp)
-target_include_directories(cid4_opencv_support PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(cid4_opencv_support PUBLIC cid4_scene_loader nlohmann_json::nlohmann_json)
-
 add_executable(app src/app.cpp)
 set_target_properties(app PROPERTIES OUTPUT_NAME app)
 target_compile_definitions(app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
@@ -78,32 +64,13 @@ target_link_libraries(app
 		RDKit::RDGeneral
 )
 
-if(PUBCHEM_ENABLE_OPENCV_APP)
-	find_package(OpenCV QUIET CONFIG COMPONENTS core imgcodecs imgproc)
-
-	add_executable(opencv_app src/opencv_app.cpp)
-	set_target_properties(opencv_app PROPERTIES OUTPUT_NAME opencv_app)
-	target_compile_definitions(opencv_app PRIVATE PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data")
-	target_link_libraries(opencv_app PRIVATE cid4_opencv_support)
-
-	if(OpenCV_FOUND)
-		target_compile_definitions(opencv_app PRIVATE PUBCHEM_OPENCV_RUNTIME_AVAILABLE=1)
-		target_include_directories(opencv_app PRIVATE ${OpenCV_INCLUDE_DIRS})
-		target_link_libraries(opencv_app PRIVATE ${OpenCV_LIBS})
-		message(STATUS "OpenCV detected. Building opencv_app with image-processing workflows enabled.")
-	else()
-		target_compile_definitions(opencv_app PRIVATE PUBCHEM_OPENCV_RUNTIME_AVAILABLE=0)
-		message(STATUS "OpenCV not detected. Building opencv_app stub mode for compile-only development.")
-	endif()
-endif()
-
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
-add_executable(tests test/analysis_test.cpp test/opencv_support_test.cpp)
+add_executable(tests test/analysis_test.cpp)
 target_link_libraries(
 	tests
-	PRIVATE analysis_core cid4_opencv_support GTest::gtest GTest::gtest_main
+	PRIVATE analysis_core GTest::gtest GTest::gtest_main
 )
 
 include(GoogleTest)
