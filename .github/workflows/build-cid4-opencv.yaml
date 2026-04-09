@@ -32,8 +32,22 @@ jobs:
       - name: Install Ubuntu build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy ninja-build autoconf autoconf-archive automake libtool \
-            libx11-dev libxft-dev libxext-dev libltdl-dev libxi-dev libxtst-dev
+          sudo apt-get install -y clang-tidy \
+            ninja-build \
+            autoconf \
+            autoconf-archive \
+            automake \
+            libtool \
+            libx11-dev \
+            libxft-dev \
+            libxext-dev \
+            libltdl-dev \
+            libxi-dev \
+            libxtst-dev \
+            pkg-config \
+            libxrandr-dev \
+            libxinerama-dev \
+            libxcursor-dev
 
       # Install latest CMake and Ninja.
       - uses: lukka/get-cmake@latest
