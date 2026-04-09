@@ -50,10 +50,7 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable(tests test/opencv_support_test.cpp)
-target_link_libraries(
-	tests
-	PRIVATE analysis_core cid4_opencv_support GTest::gtest GTest::gtest_main
-)
+target_link_libraries(tests PRIVATE cid4_opencv_support GTest::gtest GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(tests DISCOVERY_TIMEOUT 30)
