@@ -60,7 +60,9 @@ jobs:
       - name: Run unit tests
         working-directory: cid4-fastapi
         shell: bash
-        run: uv run python -m unittest discover -s tests -v
+        run: |
+          export DATA_DIR="$(pwd)/../data"
+          uv run python -m unittest discover -s tests -v
 
       - name: Build python app
         working-directory: cid4-fastapi
