@@ -24,6 +24,7 @@ from cid4_observability import (  # noqa: E402
     resolve_observability_config,
     shutdown,
 )
+from cid4_fastapi import create_app
 
 FASTAPI_AVAILABLE = importlib.util.find_spec("fastapi") is not None
 HTTPX_AVAILABLE = importlib.util.find_spec("httpx") is not None
@@ -92,8 +93,6 @@ class FastApiServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         from fastapi.testclient import TestClient
-
-        from fastapi_cid4.app import create_app
 
         cls.data_dir = PROJECT_ROOT.parent / "data"
         cls.observability = initialize(
@@ -522,8 +521,6 @@ class FastApiServerTests(unittest.TestCase):
             from httpx import ASGITransport, AsyncClient
             from mcp import ClientSession
             from mcp.client.streamable_http import streamable_http_client
-
-            from fastapi_cid4.app import create_app
 
             app = create_app(self.data_dir, self.observability)
             session_manager = app.state.cid4_mcp_server.session_manager.run()
