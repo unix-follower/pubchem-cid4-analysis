@@ -1,0 +1,29 @@
+[project]
+name = "cid4-fastapi"
+version = "1.0.0"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.116.1",
+    "httpx>=0.28.1",
+    "mcp>=1.27.0",
+    "prometheus-client>=0.22.1",
+    "uvicorn>=0.35.0",
+    "mcp[cli]>=1.27.0",
+    "langgraph>=0.4.7",
+    "langchain>=0.3.27",
+    "langchain-text-splitters>=0.3.11",
+    "xgboost>=2.1.4",
+    "numpy>=2.4.4",
+    "pandas>=3.0.2",
+    "scikit-learn>=1.8.0",
+    "networkx>=3.6.1",
+]
+
+[project.optional-dependencies]
+descriptor-ml = [
+    "dscribe>=2.1.1",
+]
+chem-tools = [
+    "deepchem>=2.8.0",
+]
