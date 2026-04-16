@@ -11,8 +11,6 @@ from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
 from scipy import linalg, stats
 
-import env_utils
-import fs_utils as fs
 import log_settings
 from constants import ARR_1ST_IDX as IDX1
 from constants import UTF_8
@@ -24,6 +22,8 @@ from matplotlib_utils import (
     plot_hill_reference_curves,
     plot_pic50_transform,
 )
+from utils import env_utils
+from utils import fs_utils as fs
 
 CONFORMER_ATOM_COUNT = 14
 NULL_SPACE_TOLERANCE = 1e-10

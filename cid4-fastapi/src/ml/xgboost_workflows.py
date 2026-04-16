@@ -8,7 +8,6 @@ from ml.common import (
     PreparedDataset,
     build_supervised_split,
     classification_metrics,
-    regression_metrics,
 )
 
 
@@ -58,48 +57,6 @@ def run_xgboost_classification(dataset: PreparedDataset) -> dict[str, Any]:
         "evaluation_note": split.evaluation_note,
         "metrics": classification_metrics(
             split.y_test, predictions, dataset.class_names
-        ),
-        "feature_importances": ranked_feature_importances(
-            dataset, model.feature_importances_
-        ),
-        "model_parameters": {
-            "n_estimators": model_kwargs["n_estimators"],
-            "max_depth": model_kwargs["max_depth"],
-            "learning_rate": model_kwargs["learning_rate"],
-            "objective": model_kwargs["objective"],
-        },
-    }
-
-
-def run_xgboost_regression(dataset: PreparedDataset) -> dict[str, Any]:
-    try:
-        from xgboost import XGBRegressor
-    except (ImportError, ModuleNotFoundError) as exc:
-        return skipped_result(dataset, exc)
-
-    split = build_supervised_split(dataset, scale_features=False)
-    model_kwargs: dict[str, Any] = {
-        "n_estimators": 220,
-        "max_depth": 4,
-        "learning_rate": 0.05,
-        "subsample": 0.9,
-        "colsample_bytree": 0.9,
-        "random_state": 42,
-        "tree_method": "hist",
-        "verbosity": 0,
-        "objective": "reg:squarederror",
-    }
-    model = XGBRegressor(**model_kwargs)
-    model.fit(split.x_train, split.y_train.astype(np.float64))
-    predictions = model.predict(split.x_test)
-
-    return {
-        "status": "ok",
-        "library": "xgboost",
-        "dataset": dataset.summary(),
-        "evaluation_note": split.evaluation_note,
-        "metrics": regression_metrics(
-            split.y_test.astype(np.float64), predictions.astype(np.float64)
         ),
         "feature_importances": ranked_feature_importances(
             dataset, model.feature_importances_

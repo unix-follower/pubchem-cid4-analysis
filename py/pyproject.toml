@@ -15,16 +15,12 @@ dependencies = [
     "scipy>=1.16.1",
     "seaborn>=0.13.2",
     "sympy>=1.14.0",
+    "xgboost>=3.2.0",
 ]
 
 [dependency-groups]
 dev = [
     "ruff>=0.12.10",
-]
-deep-learning = [
-    "tensorflow>=2.21.0",
-    "torch",
-    "torchvision",
 ]
 
 [tool.ruff]

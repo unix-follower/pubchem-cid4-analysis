@@ -1,3 +1,5 @@
+pubchem_cid4_analysis.egg-info
+
 ### ML ###
 *.pkl
 *.keras
