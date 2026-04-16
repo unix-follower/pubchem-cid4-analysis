@@ -15,7 +15,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from ml.common import PreparedDataset  # noqa: E402
-from ml.xgboost_workflows import run_xgboost_classification, run_xgboost_regression  # noqa: E402
+from ml.xgboost_workflows import run_xgboost_classification  # noqa: E402
 
 
 class FakeXGBClassifier:
@@ -95,32 +95,6 @@ class XGBoostWorkflowTests(unittest.TestCase):
         fake_module = types.SimpleNamespace(XGBClassifier=FakeXGBClassifier)
         with patch.dict(sys.modules, {"xgboost": fake_module}):
             result = run_xgboost_classification(dataset)
-
-        self.assertEqual(result["status"], "ok")
-        self.assertEqual(result["library"], "xgboost")
-        self.assertEqual(len(result["feature_importances"]), 2)
-        self.assertIn("metrics", result)
-
-    def test_regression_uses_xgboost_result_shape(self) -> None:
-        dataset = PreparedDataset(
-            name="regression",
-            task_type="regression",
-            frame=pd.DataFrame(
-                {
-                    "feature_a": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                    "feature_b": [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-                    "target": [0.2, 0.4, 0.7, 1.0, 1.1, 1.6, 1.9, 2.1, 2.4, 2.8],
-                }
-            ),
-            feature_columns=["feature_a", "feature_b"],
-            target_column="target",
-            description="Synthetic regression dataset.",
-            class_names=None,
-        )
-
-        fake_module = types.SimpleNamespace(XGBRegressor=FakeXGBRegressor)
-        with patch.dict(sys.modules, {"xgboost": fake_module}):
-            result = run_xgboost_regression(dataset)
 
         self.assertEqual(result["status"], "ok")
         self.assertEqual(result["library"], "xgboost")

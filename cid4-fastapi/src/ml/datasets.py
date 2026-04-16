@@ -22,16 +22,6 @@ ATOM_FEATURE_COLUMNS = [
     "charge",
 ]
 
-HEAVY_ATOM_PCA_COLUMNS = [
-    "atomicNumber",
-    "bondCount",
-    "totalHydrogenCount",
-    "valency",
-    "mass",
-    "hybridizationEncoded",
-    "isAromaticInt",
-]
-
 BIOASSAY_NAME_KEYWORDS = {
     "BioAssay_Name_Has_qHTS": ("qhts",),
     "BioAssay_Name_Has_IC50": ("ic50",),
@@ -144,64 +134,6 @@ def build_bioactivity_binary_classification_dataset(
     )
 
 
-def build_activity_value_regression_dataset(
-    bioactivity_filename: str = BIOACTIVITY_FILENAME,
-    atom_filename: str = ATOM_SDF_FILENAME,
-) -> PreparedDataset:
-    bioactivity_df = cid4_analysis.load_bioactivity_dataframe(bioactivity_filename)
-    activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
-    retained_mask = activity_value.notna() & activity_value.gt(0)
-    filtered_df = bioactivity_df.loc[retained_mask].copy()
-    filtered_df["Activity_Value"] = activity_value.loc[retained_mask]
-    atom_feature_df, molecule = build_atom_feature_frame(atom_filename)
-    descriptor_map = build_molecular_descriptors(atom_feature_df, molecule)
-    frame, feature_columns = build_bioactivity_model_frame(filtered_df, descriptor_map)
-
-    return PreparedDataset(
-        name="bioactivity-activity-value-regression",
-        task_type="regression",
-        frame=frame,
-        feature_columns=feature_columns,
-        target_column="Activity_Value",
-        class_names=None,
-        description="Positive numeric Activity_Value regression dataset using "
-        "molecular descriptors and assay metadata.",
-    )
-
-
-def build_heavy_atom_pca_dataset(filename: str = ATOM_SDF_FILENAME) -> PreparedDataset:
-    atom_feature_df, _ = build_atom_feature_frame(filename)
-    heavy_atom_df = atom_feature_df.loc[atom_feature_df["isHeavyAtom"].eq(1)].copy()
-    frame = heavy_atom_df.loc[:, ["atomLabel", *HEAVY_ATOM_PCA_COLUMNS]].copy()
-
-    return PreparedDataset(
-        name="heavy-atom-pca",
-        task_type="embedding",
-        frame=frame,
-        feature_columns=HEAVY_ATOM_PCA_COLUMNS,
-        target_column=None,
-        class_names=None,
-        description="Heavy-atom feature matrix for PCA and related unsupervised analysis.",
-    )
-
-
-def build_taxonomy_clustering_frame(filename: str = TAXONOMY_FILENAME) -> pd.DataFrame:
-    taxonomy_df = pd.read_csv(cid4_analysis.resolve_data_path(filename)).copy()
-    taxonomy_df["Taxonomy_ID"] = pd.to_numeric(
-        taxonomy_df["Taxonomy_ID"], errors="coerce"
-    )
-    taxonomy_df = taxonomy_df.dropna(
-        subset=["Taxonomy_ID", "Source_Organism"]
-    ).reset_index(drop=True)
-    taxonomy_df["Taxonomy_ID"] = taxonomy_df["Taxonomy_ID"].astype(int)
-    taxonomy_df["animalClass"] = (
-        taxonomy_df["Taxonomy"].astype(str).map(infer_taxonomy_class)
-    )
-    return taxonomy_df.loc[
-        :, ["Source_Organism", "Taxonomy", "Taxonomy_ID", "animalClass"]
-    ]
-
-
 def build_molecular_descriptors(
     atom_feature_df: pd.DataFrame, molecule: Chem.Mol
 ) -> dict[str, Any]:
@@ -298,67 +230,3 @@ def encode_categories(series: pd.Series) -> pd.Series:
     category_order = sorted(values.unique().tolist())
     mapping = {value: index for index, value in enumerate(category_order)}
     return values.map(mapping).astype(int)
-
-
-def infer_taxonomy_class(value: str) -> str:
-    lowered = value.lower()
-    bird_keywords = {
-        "chicken",
-        "emu",
-        "ostrich",
-        "duck",
-        "goose",
-        "guineafowl",
-        "pheasant",
-        "pigeon",
-        "quail",
-        "turkey",
-        "waterfowl",
-        "ptarmigan",
-        "gallus",
-        "dromaius",
-        "struthio",
-        "anas",
-        "anser",
-        "numida",
-        "phasian",
-        "columba",
-        "meleagris",
-        "melanitta",
-        "lagopus",
-        "anatidae",
-        "columbidae",
-        "phasianidae",
-    }
-    mammal_keywords = {
-        "sheep",
-        "cattle",
-        "beefalo",
-        "hare",
-        "pig",
-        "rabbit",
-        "buffalo",
-        "elk",
-        "horse",
-        "goat",
-        "deer",
-        "bison",
-        "bos",
-        "ovis",
-        "sus",
-        "lepus",
-        "oryctolagus",
-        "leporidae",
-        "cervus",
-        "cervidae",
-        "equus",
-        "capra",
-        "bubalus",
-        "odocoileus",
-    }
-
-    if any(keyword in lowered for keyword in bird_keywords):
-        return "bird"
-    if any(keyword in lowered for keyword in mammal_keywords):
-        return "mammal"
-    return "unknown"
