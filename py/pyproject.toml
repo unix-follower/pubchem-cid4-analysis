@@ -17,34 +17,6 @@ dependencies = [
     "sympy>=1.14.0",
 ]
 
-[project.optional-dependencies]
-descriptor-ml = [
-    "dscribe>=2.1.1",
-]
-fastapi = [
-    "fastapi>=0.116.1",
-    "httpx>=0.28.1",
-    "mcp>=1.27.0",
-    "prometheus-client>=0.22.1",
-    "uvicorn>=0.35.0",
-]
-mcp = [
-    "mcp[cli]>=1.27.0",
-]
-langgraph = [
-    "langgraph>=0.4.7",
-]
-langchain = [
-    "langchain>=0.3.27",
-    "langchain-text-splitters>=0.3.11",
-]
-xgboost = [
-    "xgboost>=2.1.4",
-]
-chem-tools = [
-    "deepchem>=2.8.0",
-]
-
 [dependency-groups]
 dev = [
     "ruff>=0.12.10",

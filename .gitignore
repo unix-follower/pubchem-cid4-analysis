@@ -17,6 +17,7 @@ out/
 data/pubchem_cid_4_patent.csv
 
 ### Python ###
+.venv
 *.pyc
 *__pycache__*
 .ipynb_checkpoints/

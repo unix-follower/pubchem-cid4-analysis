@@ -1,10 +1,17 @@
 from __future__ import annotations
 
 import argparse
+import uvicorn
+from pathlib import Path
+
+from fastapi import FastAPI
+
+from cid4_observability import Runtime
+from fastapi_cid4.routes import create_app as create_routes_app
 
 import log_settings
 from cid4_observability import initialize, resolve_observability_config, shutdown
-from fastapi_cid4 import create_app, resolve_data_dir, resolve_server_config
+from fastapi_cid4.config import resolve_data_dir, resolve_server_config
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
@@ -14,14 +21,11 @@ def build_argument_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
+    return create_routes_app(data_dir, observability)
+
+
 def main() -> None:
-    observability = None
-
-    try:
-        import uvicorn
-    except ModuleNotFoundError as exc:
-        raise RuntimeError("Install the optional fastapi extra to run the FastAPI server.") from exc
-
     log_settings.configure_logging()
     args = build_argument_parser().parse_args()
 

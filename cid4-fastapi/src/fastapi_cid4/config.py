@@ -9,8 +9,6 @@ from cid4_api import ServerConfig
 from cid4_api import resolve_data_dir as shared_resolve_data_dir
 from cid4_api import resolve_server_config as shared_resolve_server_config
 
-FastApiServerConfig = ServerConfig
-
 
 @dataclass(frozen=True)
 class SecuritySettings:
@@ -83,7 +81,7 @@ def resolve_data_dir() -> Path:
     return shared_resolve_data_dir()
 
 
-def resolve_server_config(data_dir: Path) -> FastApiServerConfig:
+def resolve_server_config(data_dir: Path) -> ServerConfig:
     return shared_resolve_server_config(
         data_dir,
         preferred_host_env_names=("FASTAPI_HOST",),
