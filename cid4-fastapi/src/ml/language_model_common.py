@@ -73,13 +73,23 @@ class StreamEvent:
 
 
 def sanitize_model_name(model_name: str) -> str:
-    cleaned = "".join(character for character in model_name if character.isalnum() or character in {"-", "_"})
+    cleaned = "".join(
+        character
+        for character in model_name
+        if character.isalnum() or character in {"-", "_"}
+    )
     if not cleaned:
-        raise LlmServiceError(400, "invalid_model_name", "Model name must contain letters, numbers, '-' or '_'.")
+        raise LlmServiceError(
+            400,
+            "invalid_model_name",
+            "Model name must contain letters, numbers, '-' or '_'.",
+        )
     return cleaned
 
 
-def build_corpus(domains: tuple[str, ...], max_chars: int) -> tuple[str, dict[str, Any]]:
+def build_corpus(
+    domains: tuple[str, ...], max_chars: int
+) -> tuple[str, dict[str, Any]]:
     unsupported = [domain for domain in domains if domain not in SUPPORTED_LLM_DOMAINS]
     if unsupported:
         raise LlmServiceError(
@@ -116,9 +126,12 @@ def build_corpus(domains: tuple[str, ...], max_chars: int) -> tuple[str, dict[st
     }
 
 
-def artifact_paths(output_dir: Path, framework_prefix: str, model_name: str, checkpoint_suffix: str) -> dict[str, Path]:
+def artifact_paths(
+    output_dir: Path, framework_prefix: str, model_name: str, checkpoint_suffix: str
+) -> dict[str, Path]:
     return {
-        "checkpoint": output_dir / f"{framework_prefix}_llm_{model_name}{checkpoint_suffix}",
+        "checkpoint": output_dir
+        / f"{framework_prefix}_llm_{model_name}{checkpoint_suffix}",
         "metadata": output_dir / f"{framework_prefix}_llm_{model_name}.metadata.json",
     }
 
@@ -129,7 +142,9 @@ def load_metadata_if_available(metadata_path: Path) -> dict[str, Any] | None:
     return json.loads(metadata_path.read_text(encoding="utf-8"))
 
 
-def build_stream_event(event: Literal["start", "token", "complete", "error"], **payload: Any) -> StreamEvent:
+def build_stream_event(
+    event: Literal["start", "token", "complete", "error"], **payload: Any
+) -> StreamEvent:
     return StreamEvent(event=event, payload=payload)
 
 

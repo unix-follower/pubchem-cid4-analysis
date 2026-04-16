@@ -31,7 +31,10 @@ from ml.sklearn_workflows import (
     run_random_forest,
     run_svm,
 )
-from ml.tensorflow_workflows import run_tensorflow_classification, run_tensorflow_regression
+from ml.tensorflow_workflows import (
+    run_tensorflow_classification,
+    run_tensorflow_regression,
+)
 from ml.torch_workflows import run_torch_classification, run_torch_regression
 from ml.xgboost_workflows import run_xgboost_classification, run_xgboost_regression
 
@@ -60,9 +63,15 @@ def write_ml_analysis() -> None:
     taxonomy_frame = build_taxonomy_clustering_frame()
 
     atom_feature_df.to_csv(output_directory / "cid4_ml.atom_features.csv", index=False)
-    bioactivity_dataset.frame.to_csv(output_directory / "cid4_ml.bioactivity_binary_features.csv", index=False)
-    regression_dataset.frame.to_csv(output_directory / "cid4_ml.bioactivity_regression_features.csv", index=False)
-    taxonomy_frame.to_csv(output_directory / "cid4_ml.taxonomy_features.csv", index=False)
+    bioactivity_dataset.frame.to_csv(
+        output_directory / "cid4_ml.bioactivity_binary_features.csv", index=False
+    )
+    regression_dataset.frame.to_csv(
+        output_directory / "cid4_ml.bioactivity_regression_features.csv", index=False
+    )
+    taxonomy_frame.to_csv(
+        output_directory / "cid4_ml.taxonomy_features.csv", index=False
+    )
 
     comparison_results = {
         "atom_heavy_vs_hydrogen": {
@@ -103,22 +112,39 @@ def write_ml_analysis() -> None:
         "naive_bayes": run_naive_bayes(atom_heavy_dataset),
     }
     xgboost_suite = {
-        "bioactivity_binary_classification": run_xgboost_classification(bioactivity_dataset),
+        "bioactivity_binary_classification": run_xgboost_classification(
+            bioactivity_dataset
+        ),
         "activity_value_regression": run_xgboost_regression(regression_dataset),
     }
     scaffold_summary = build_scaffold_summary(atom_heavy_dataset)
 
-    write_json(output_directory / "cid4_ml.cross_library_comparison.summary.json", comparison_results)
+    write_json(
+        output_directory / "cid4_ml.cross_library_comparison.summary.json",
+        comparison_results,
+    )
     write_json(output_directory / "cid4_ml.sklearn_suite.summary.json", sklearn_suite)
     write_json(output_directory / "cid4_ml.xgboost_suite.summary.json", xgboost_suite)
-    write_json(output_directory / "cid4_ml.future_scaffolds.summary.json", scaffold_summary)
+    write_json(
+        output_directory / "cid4_ml.future_scaffolds.summary.json", scaffold_summary
+    )
 
     log.info(
-        "ML cross-library comparison written to %s", output_directory / "cid4_ml.cross_library_comparison.summary.json"
+        "ML cross-library comparison written to %s",
+        output_directory / "cid4_ml.cross_library_comparison.summary.json",
     )
-    log.info("ML sklearn suite written to %s", output_directory / "cid4_ml.sklearn_suite.summary.json")
-    log.info("ML XGBoost suite written to %s", output_directory / "cid4_ml.xgboost_suite.summary.json")
-    log.info("ML scaffold recommendations written to %s", output_directory / "cid4_ml.future_scaffolds.summary.json")
+    log.info(
+        "ML sklearn suite written to %s",
+        output_directory / "cid4_ml.sklearn_suite.summary.json",
+    )
+    log.info(
+        "ML XGBoost suite written to %s",
+        output_directory / "cid4_ml.xgboost_suite.summary.json",
+    )
+    log.info(
+        "ML scaffold recommendations written to %s",
+        output_directory / "cid4_ml.future_scaffolds.summary.json",
+    )
 
 
 if __name__ == "__main__":

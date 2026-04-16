@@ -29,7 +29,9 @@ class FakeXGBClassifier:
         return self
 
     def predict(self, x_values: np.ndarray) -> np.ndarray:
-        return np.full(shape=(len(x_values),), fill_value=self.majority_class, dtype=np.int64)
+        return np.full(
+            shape=(len(x_values),), fill_value=self.majority_class, dtype=np.int64
+        )
 
 
 class FakeXGBRegressor:
@@ -43,11 +45,15 @@ class FakeXGBRegressor:
         return self
 
     def predict(self, x_values: np.ndarray) -> np.ndarray:
-        return np.full(shape=(len(x_values),), fill_value=self.prediction_value, dtype=np.float64)
+        return np.full(
+            shape=(len(x_values),), fill_value=self.prediction_value, dtype=np.float64
+        )
 
 
 class XGBoostWorkflowTests(unittest.TestCase):
-    def test_classification_returns_insufficient_data_for_single_class_targets(self) -> None:
+    def test_classification_returns_insufficient_data_for_single_class_targets(
+        self,
+    ) -> None:
         dataset = PreparedDataset(
             name="single-class",
             task_type="classification",

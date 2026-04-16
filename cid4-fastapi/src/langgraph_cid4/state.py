@@ -35,7 +35,9 @@ SUPPORTING_ID_KEYS = (
 )
 
 
-def build_initial_state(question: str, workflow: str, *, question_type: str = "") -> GraphState:
+def build_initial_state(
+    question: str, workflow: str, *, question_type: str = ""
+) -> GraphState:
     return {
         "workflow": workflow,
         "question": question,

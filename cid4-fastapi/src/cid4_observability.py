@@ -6,7 +6,13 @@ import threading
 from dataclasses import dataclass
 from time import perf_counter
 
-from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, start_http_server
+from prometheus_client import (
+    CollectorRegistry,
+    Counter,
+    Gauge,
+    Histogram,
+    start_http_server,
+)
 
 
 @dataclass(frozen=True)
@@ -72,13 +78,29 @@ def resolve_observability_config(
             return parsed
         return fallback
 
-    enabled_value = first_value(prefixed("OBSERVABILITY_ENABLED"), "OBSERVABILITY_ENABLED")
-    logging_enabled_value = first_value(prefixed("LOGGING_ENABLED"), "OBSERVABILITY_LOGGING_ENABLED")
-    metrics_enabled_value = first_value(prefixed("METRICS_ENABLED"), "OBSERVABILITY_METRICS_ENABLED")
-    tracing_enabled_value = first_value(prefixed("TRACING_ENABLED"), "OBSERVABILITY_TRACING_ENABLED")
-    service_name = first_value(prefixed("SERVICE_NAME"), "OTEL_SERVICE_NAME") or default_service_name
-    log_level = (first_value(prefixed("LOG_LEVEL"), "OBSERVABILITY_LOG_LEVEL", "LOG_LEVEL") or "info").lower()
-    metrics_host = first_value(prefixed("METRICS_HOST"), "OBSERVABILITY_METRICS_HOST") or "0.0.0.0"
+    enabled_value = first_value(
+        prefixed("OBSERVABILITY_ENABLED"), "OBSERVABILITY_ENABLED"
+    )
+    logging_enabled_value = first_value(
+        prefixed("LOGGING_ENABLED"), "OBSERVABILITY_LOGGING_ENABLED"
+    )
+    metrics_enabled_value = first_value(
+        prefixed("METRICS_ENABLED"), "OBSERVABILITY_METRICS_ENABLED"
+    )
+    tracing_enabled_value = first_value(
+        prefixed("TRACING_ENABLED"), "OBSERVABILITY_TRACING_ENABLED"
+    )
+    service_name = (
+        first_value(prefixed("SERVICE_NAME"), "OTEL_SERVICE_NAME")
+        or default_service_name
+    )
+    log_level = (
+        first_value(prefixed("LOG_LEVEL"), "OBSERVABILITY_LOG_LEVEL", "LOG_LEVEL")
+        or "info"
+    ).lower()
+    metrics_host = (
+        first_value(prefixed("METRICS_HOST"), "OBSERVABILITY_METRICS_HOST") or "0.0.0.0"
+    )
     metrics_port = parse_port(
         first_value(prefixed("METRICS_PORT"), "OBSERVABILITY_METRICS_PORT"),
         9464,
@@ -86,9 +108,21 @@ def resolve_observability_config(
 
     return ObservabilityConfig(
         enabled=parse_bool(enabled_value, True) if enabled_value is not None else True,
-        logging_enabled=(parse_bool(logging_enabled_value, True) if logging_enabled_value is not None else True),
-        metrics_enabled=(parse_bool(metrics_enabled_value, True) if metrics_enabled_value is not None else True),
-        tracing_enabled=(parse_bool(tracing_enabled_value, True) if tracing_enabled_value is not None else True),
+        logging_enabled=(
+            parse_bool(logging_enabled_value, True)
+            if logging_enabled_value is not None
+            else True
+        ),
+        metrics_enabled=(
+            parse_bool(metrics_enabled_value, True)
+            if metrics_enabled_value is not None
+            else True
+        ),
+        tracing_enabled=(
+            parse_bool(tracing_enabled_value, True)
+            if tracing_enabled_value is not None
+            else True
+        ),
         service_name=service_name,
         log_level=log_level,
         metrics_host=metrics_host,
@@ -117,7 +151,11 @@ class Runtime:
         if self.config.enabled and self.config.metrics_enabled:
             self._initialize_metrics()
 
-        if self.config.enabled and self.config.tracing_enabled and self.config.logging_enabled:
+        if (
+            self.config.enabled
+            and self.config.tracing_enabled
+            and self.config.logging_enabled
+        ):
             self._logger.info(
                 "event=tracing_enabled service=%s strategy=request-scope",
                 self.config.service_name,
@@ -141,7 +179,19 @@ class Runtime:
             "cid4_http_request_duration_milliseconds",
             "HTTP request duration in milliseconds",
             ["service", "method", "route"],
-            buckets=(1.0, 5.0, 10.0, 25.0, 50.0, 100.0, 250.0, 500.0, 1000.0, 2500.0, 5000.0),
+            buckets=(
+                1.0,
+                5.0,
+                10.0,
+                25.0,
+                50.0,
+                100.0,
+                250.0,
+                500.0,
+                1000.0,
+                2500.0,
+                5000.0,
+            ),
             registry=self._registry,
         )
         self._process_up = Gauge(

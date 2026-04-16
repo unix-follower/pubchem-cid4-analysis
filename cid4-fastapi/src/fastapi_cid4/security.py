@@ -30,7 +30,9 @@ class SessionEnvelope:
     csrf_token: str
 
 
-def resolve_auth_method(raw_value: str | None, settings: SecuritySettings) -> AuthMethod:
+def resolve_auth_method(
+    raw_value: str | None, settings: SecuritySettings
+) -> AuthMethod:
     normalized = (raw_value or settings.default_auth_method).strip().lower()
     if normalized in {"basic", "digest", "oauth2"}:
         return normalized
@@ -42,8 +44,14 @@ def build_auth_redirect_response(
     settings: SecuritySettings,
     auth_method: AuthMethod | None = None,
 ) -> RedirectResponse:
-    method = auth_method or resolve_auth_method(request.headers.get("X-CID4-Auth-Method"), settings)
-    return_to = request.url.path if not request.url.query else f"{request.url.path}?{request.url.query}"
+    method = auth_method or resolve_auth_method(
+        request.headers.get("X-CID4-Auth-Method"), settings
+    )
+    return_to = (
+        request.url.path
+        if not request.url.query
+        else f"{request.url.path}?{request.url.query}"
+    )
     location = f"/auth/{method}?{urlencode({'returnTo': return_to})}"
     return RedirectResponse(url=location, status_code=307)
 
@@ -91,7 +99,9 @@ def issue_session_token(settings: SecuritySettings, principal: UserPrincipal) ->
     return _encode_signed_payload(payload, settings.session_secret)
 
 
-def validate_session_token(settings: SecuritySettings, token: str | None) -> UserPrincipal | None:
+def validate_session_token(
+    settings: SecuritySettings, token: str | None
+) -> UserPrincipal | None:
     payload = _decode_signed_payload(token, settings.session_secret)
     if payload is None:
         return None
@@ -100,7 +110,11 @@ def validate_session_token(settings: SecuritySettings, token: str | None) -> Use
         return None
     username = payload.get("username")
     auth_method = payload.get("auth_method")
-    if not isinstance(username, str) or auth_method not in {"basic", "digest", "oauth2"}:
+    if not isinstance(username, str) or auth_method not in {
+        "basic",
+        "digest",
+        "oauth2",
+    }:
         return None
     return UserPrincipal(username=username, auth_method=auth_method)
 
@@ -114,7 +128,9 @@ def issue_csrf_token(settings: SecuritySettings) -> str:
     return _encode_signed_payload(payload, settings.csrf_secret)
 
 
-def validate_csrf_token(settings: SecuritySettings, cookie_token: str | None, header_token: str | None) -> bool:
+def validate_csrf_token(
+    settings: SecuritySettings, cookie_token: str | None, header_token: str | None
+) -> bool:
     if not cookie_token or not header_token or cookie_token != header_token:
         return False
     payload = _decode_signed_payload(cookie_token, settings.csrf_secret)
@@ -123,14 +139,20 @@ def validate_csrf_token(settings: SecuritySettings, cookie_token: str | None, he
     return int(payload.get("expires_at", 0)) >= int(time.time())
 
 
-def authenticate_request(request: Request, settings: SecuritySettings) -> UserPrincipal | None:
-    principal = validate_session_token(settings, request.cookies.get(settings.session_cookie_name))
+def authenticate_request(
+    request: Request, settings: SecuritySettings
+) -> UserPrincipal | None:
+    principal = validate_session_token(
+        settings, request.cookies.get(settings.session_cookie_name)
+    )
     if principal is not None:
         return principal
     return None
 
 
-def authenticate_websocket(websocket: WebSocket, settings: SecuritySettings) -> UserPrincipal | None:
+def authenticate_websocket(
+    websocket: WebSocket, settings: SecuritySettings
+) -> UserPrincipal | None:
     cookie_header = websocket.headers.get("cookie")
     if not cookie_header:
         return None
@@ -173,14 +195,20 @@ def authenticate_login_request(
             status_code=401,
             content={
                 "status": "error",
-                "error": {"code": "basic_auth_required", "message": "HTTP Basic credentials are required."},
+                "error": {
+                    "code": "basic_auth_required",
+                    "message": "HTTP Basic credentials are required.",
+                },
             },
         )
         response.headers["WWW-Authenticate"] = f'Basic realm="{settings.digest_realm}"'
         return None, response
     if method == "digest":
         principal = _authenticate_digest(
-            request.method, request.url.path, request.headers.get("Authorization"), settings
+            request.method,
+            request.url.path,
+            request.headers.get("Authorization"),
+            settings,
         )
         if principal is not None:
             return principal, None
@@ -188,7 +216,10 @@ def authenticate_login_request(
             status_code=401,
             content={
                 "status": "error",
-                "error": {"code": "digest_auth_required", "message": "HTTP Digest credentials are required."},
+                "error": {
+                    "code": "digest_auth_required",
+                    "message": "HTTP Digest credentials are required.",
+                },
             },
         )
         response.headers["WWW-Authenticate"] = build_digest_challenge(settings)
@@ -222,7 +253,10 @@ def build_digest_challenge(settings: SecuritySettings) -> str:
 
 def issue_digest_nonce(settings: SecuritySettings) -> str:
     issued_at = str(int(time.time()))
-    signature = _hex_hmac(settings.digest_secret, f"{issued_at}:{settings.digest_realm}:{settings.digest_opaque}")
+    signature = _hex_hmac(
+        settings.digest_secret,
+        f"{issued_at}:{settings.digest_realm}:{settings.digest_opaque}",
+    )
     raw = f"{issued_at}:{signature}".encode()
     return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
 
@@ -230,13 +264,15 @@ def issue_digest_nonce(settings: SecuritySettings) -> str:
 def keycloak_config_payload(settings: SecuritySettings) -> dict[str, object]:
     auth_url = None
     if settings.keycloak_base_url and settings.keycloak_realm:
-        auth_url = (
-            f"{settings.keycloak_base_url.rstrip('/')}/realms/{settings.keycloak_realm}/protocol/openid-connect/auth"
-        )
+        auth_url = f"{settings.keycloak_base_url.rstrip('/')}/realms/{settings.keycloak_realm}/protocol/openid-connect/auth"
     return {
         "status": "ok",
         "provider": "keycloak",
-        "configured": bool(settings.keycloak_base_url and settings.keycloak_realm and settings.keycloak_client_id),
+        "configured": bool(
+            settings.keycloak_base_url
+            and settings.keycloak_realm
+            and settings.keycloak_client_id
+        ),
         "issuer": (
             f"{settings.keycloak_base_url.rstrip('/')}/realms/{settings.keycloak_realm}"
             if settings.keycloak_base_url and settings.keycloak_realm
@@ -249,11 +285,15 @@ def keycloak_config_payload(settings: SecuritySettings) -> dict[str, object]:
     }
 
 
-def _authenticate_basic(authorization_header: str | None, settings: SecuritySettings) -> UserPrincipal | None:
+def _authenticate_basic(
+    authorization_header: str | None, settings: SecuritySettings
+) -> UserPrincipal | None:
     if not authorization_header or not authorization_header.startswith("Basic "):
         return None
     try:
-        raw_credentials = base64.b64decode(authorization_header.split(" ", 1)[1]).decode("utf-8")
+        raw_credentials = base64.b64decode(
+            authorization_header.split(" ", 1)[1]
+        ).decode("utf-8")
     except ValueError:
         return None
     username, separator, password = raw_credentials.partition(":")
@@ -281,7 +321,8 @@ def _authenticate_digest(
     nc = values.get("nc")
     cnonce = values.get("cnonce")
     if not all(
-        isinstance(item, str) and item for item in (username, nonce, digest_uri, client_response, qop, nc, cnonce)
+        isinstance(item, str) and item
+        for item in (username, nonce, digest_uri, client_response, qop, nc, cnonce)
     ):
         return None
     if digest_uri != uri or qop != "auth" or not validate_digest_nonce(settings, nonce):
@@ -289,15 +330,23 @@ def _authenticate_digest(
     password = settings.digest_users.get(username)
     if password is None:
         return None
-    ha1 = hashlib.md5(f"{username}:{settings.digest_realm}:{password}".encode(), usedforsecurity=False).hexdigest()
-    ha2 = hashlib.md5(f"{method}:{digest_uri}".encode(), usedforsecurity=False).hexdigest()
-    expected = hashlib.md5(f"{ha1}:{nonce}:{nc}:{cnonce}:{qop}:{ha2}".encode(), usedforsecurity=False).hexdigest()
+    ha1 = hashlib.md5(
+        f"{username}:{settings.digest_realm}:{password}".encode(), usedforsecurity=False
+    ).hexdigest()
+    ha2 = hashlib.md5(
+        f"{method}:{digest_uri}".encode(), usedforsecurity=False
+    ).hexdigest()
+    expected = hashlib.md5(
+        f"{ha1}:{nonce}:{nc}:{cnonce}:{qop}:{ha2}".encode(), usedforsecurity=False
+    ).hexdigest()
     if not hmac.compare_digest(expected, client_response):
         return None
     return UserPrincipal(username=username, auth_method="digest")
 
 
-def _authenticate_oauth2(authorization_header: str | None, settings: SecuritySettings) -> UserPrincipal | None:
+def _authenticate_oauth2(
+    authorization_header: str | None, settings: SecuritySettings
+) -> UserPrincipal | None:
     if not authorization_header or not authorization_header.startswith("Bearer "):
         return None
     token = authorization_header.removeprefix("Bearer ").strip()
@@ -318,7 +367,10 @@ def validate_digest_nonce(settings: SecuritySettings, nonce: str) -> bool:
         return False
     if int(time.time()) - int(issued_at_raw) > settings.digest_nonce_ttl_seconds:
         return False
-    expected = _hex_hmac(settings.digest_secret, f"{issued_at_raw}:{settings.digest_realm}:{settings.digest_opaque}")
+    expected = _hex_hmac(
+        settings.digest_secret,
+        f"{issued_at_raw}:{settings.digest_realm}:{settings.digest_opaque}",
+    )
     return hmac.compare_digest(expected, signature)
 
 
@@ -346,7 +398,9 @@ def _decode_signed_payload(token: str | None, secret: str) -> dict[str, object] 
 
 
 def _hex_hmac(secret: str, value: str) -> str:
-    return hmac.new(secret.encode("utf-8"), value.encode("utf-8"), hashlib.sha256).hexdigest()
+    return hmac.new(
+        secret.encode("utf-8"), value.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
 
 
 def _parse_digest_authorization(value: str) -> dict[str, str]:

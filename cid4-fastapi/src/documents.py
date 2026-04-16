@@ -102,8 +102,10 @@ def build_literature_documents(
                     ],
                 ),
                 cid=safe_int(row.get("PubChem_CID")),
-                pmid=clean_text(first_non_empty(row.get("PMID"), row.get("PMID_(All)"))) or None,
-                doi=clean_text(first_non_empty(row.get("DOI"), row.get("DOI_(All)"))) or None,
+                pmid=clean_text(first_non_empty(row.get("PMID"), row.get("PMID_(All)")))
+                or None,
+                doi=clean_text(first_non_empty(row.get("DOI"), row.get("DOI_(All)")))
+                or None,
                 metadata={
                     "publication_type": clean_text(row.get("Publication_Type")),
                     "publication_name": clean_text(row.get("Publication_Name")),
@@ -120,7 +122,9 @@ def build_patent_documents(frame: pd.DataFrame | None = None) -> list[VectorDocu
     patent_frame = load_patent_frame() if frame is None else frame
     documents: list[VectorDocument] = []
     for row_index, row in patent_frame.iterrows():
-        row_id = first_non_empty(row.get("gpid"), row.get("publicationnumber"), row_index)
+        row_id = first_non_empty(
+            row.get("gpid"), row.get("publicationnumber"), row_index
+        )
         documents.append(
             VectorDocument(
                 doc_id=build_doc_id("patent", PATENT_FILENAME, row_id),
@@ -128,7 +132,9 @@ def build_patent_documents(frame: pd.DataFrame | None = None) -> list[VectorDocu
                 source_file=PATENT_FILENAME,
                 source_row_id=str(row_id),
                 title=clean_text(row.get("title")),
-                text_payload=compose_text_payload(row, ["title", "abstract", "inventors", "assignees"]),
+                text_payload=compose_text_payload(
+                    row, ["title", "abstract", "inventors", "assignees"]
+                ),
                 cid=first_int_from_pipe_list(row.get("cids")),
                 metadata={
                     "publicationnumber": clean_text(row.get("publicationnumber")),
@@ -147,7 +153,9 @@ def build_bioactivity_documents(
     bioactivity_frame = load_bioactivity_frame() if frame is None else frame
     documents: list[VectorDocument] = []
     for row_index, row in bioactivity_frame.iterrows():
-        row_id = first_non_empty(row.get("Bioactivity_ID"), row.get("BioAssay_AID"), row_index)
+        row_id = first_non_empty(
+            row.get("Bioactivity_ID"), row.get("BioAssay_AID"), row_index
+        )
         documents.append(
             VectorDocument(
                 doc_id=build_doc_id("bioactivity", BIOACTIVITY_FILENAME, row_id),
@@ -189,7 +197,9 @@ def build_pathway_documents(frame: pd.DataFrame | None = None) -> list[VectorDoc
     pathway_frame = load_pathway_frame() if frame is None else frame
     documents: list[VectorDocument] = []
     for row_index, row in pathway_frame.iterrows():
-        row_id = first_non_empty(row.get("Pathway_Accession"), row.get("pathwayid"), row_index)
+        row_id = first_non_empty(
+            row.get("Pathway_Accession"), row.get("pathwayid"), row_index
+        )
         documents.append(
             VectorDocument(
                 doc_id=build_doc_id("pathway", PATHWAY_FILENAME, row_id),
@@ -230,12 +240,18 @@ def build_pathway_reaction_documents(
         row_id = first_non_empty(row.get("id"), row.get("Source_Pathway"), row_index)
         documents.append(
             VectorDocument(
-                doc_id=build_doc_id("pathway_reaction", PATHWAY_REACTION_FILENAME, row_id),
+                doc_id=build_doc_id(
+                    "pathway_reaction", PATHWAY_REACTION_FILENAME, row_id
+                ),
                 doc_type="pathway_reaction",
                 source_file=PATHWAY_REACTION_FILENAME,
                 source_row_id=str(row_id),
-                title=clean_text(first_non_empty(row.get("Reaction"), row.get("Equation"))),
-                text_payload=compose_text_payload(row, ["Reaction", "Equation", "Control", "Taxonomy"]),
+                title=clean_text(
+                    first_non_empty(row.get("Reaction"), row.get("Equation"))
+                ),
+                text_payload=compose_text_payload(
+                    row, ["Reaction", "Equation", "Control", "Taxonomy"]
+                ),
                 cid=safe_int(row.get("Compound_CID")),
                 taxonomy_id=safe_int(row.get("Taxonomy_ID")),
                 pathway_accession=clean_text(row.get("PubChem_Pathway")) or None,
@@ -255,7 +271,9 @@ def build_taxonomy_documents(frame: pd.DataFrame | None = None) -> list[VectorDo
     taxonomy_frame = load_taxonomy_frame() if frame is None else frame
     documents: list[VectorDocument] = []
     for row_index, row in taxonomy_frame.iterrows():
-        row_id = first_non_empty(row.get("Source_Organism_ID"), row.get("Taxonomy_ID"), row_index)
+        row_id = first_non_empty(
+            row.get("Source_Organism_ID"), row.get("Taxonomy_ID"), row_index
+        )
         documents.append(
             VectorDocument(
                 doc_id=build_doc_id("taxonomy", TAXONOMY_FILENAME, row_id),
@@ -293,7 +311,9 @@ def build_cpdat_documents(frame: pd.DataFrame | None = None) -> list[VectorDocum
                 source_file=CPDAT_FILENAME,
                 source_row_id=str(row_id),
                 title=clean_text(row.get("Category")),
-                text_payload=compose_text_payload(row, ["Category", "Category_Description", "cmpdname"]),
+                text_payload=compose_text_payload(
+                    row, ["Category", "Category_Description", "cmpdname"]
+                ),
                 cid=safe_int(row.get("CID")),
                 metadata={
                     "categorization_type": clean_text(row.get("Categorization_Type")),

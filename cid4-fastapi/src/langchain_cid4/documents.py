@@ -94,7 +94,9 @@ def chunk_documents(
                 "pathway_accession": document.pathway_accession,
                 **({} if document.metadata is None else dict(document.metadata)),
             }
-            for index, content in enumerate(splitter.split_text(document.text_payload), start=1):
+            for index, content in enumerate(
+                splitter.split_text(document.text_payload), start=1
+            ):
                 chunks.append(
                     ChunkRecord(
                         chunk_id=f"{document.doc_id}:chunk:{index}",
@@ -112,7 +114,8 @@ def chunk_documents(
     chunks = []
     for document in documents:
         for index, content in enumerate(
-            _fallback_split_text(document.text_payload, chunk_size, chunk_overlap), start=1
+            _fallback_split_text(document.text_payload, chunk_size, chunk_overlap),
+            start=1,
         ):
             chunks.append(
                 ChunkRecord(
@@ -137,7 +140,9 @@ def chunk_documents(
                         "taxonomy_id": document.taxonomy_id,
                         "pathway_accession": document.pathway_accession,
                         "chunk_index": index,
-                        **({} if document.metadata is None else dict(document.metadata)),
+                        **(
+                            {} if document.metadata is None else dict(document.metadata)
+                        ),
                     },
                 )
             )

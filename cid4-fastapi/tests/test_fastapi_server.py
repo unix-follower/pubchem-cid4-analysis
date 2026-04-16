@@ -24,7 +24,7 @@ from cid4_observability import (  # noqa: E402
     resolve_observability_config,
     shutdown,
 )
-from cid4_fastapi import create_app
+from cid4_fastapi import create_app  # noqa: E402
 
 FASTAPI_AVAILABLE = importlib.util.find_spec("fastapi") is not None
 HTTPX_AVAILABLE = importlib.util.find_spec("httpx") is not None
@@ -32,7 +32,9 @@ MCP_AVAILABLE = importlib.util.find_spec("mcp") is not None
 
 
 class FastApiObservabilityConfigTests(unittest.TestCase):
-    def test_resolve_observability_config_uses_fastapi_specific_values_first(self) -> None:
+    def test_resolve_observability_config_uses_fastapi_specific_values_first(
+        self,
+    ) -> None:
         config = resolve_observability_config(
             "FASTAPI",
             "pubchem-cid4-fastapi",
@@ -83,12 +85,17 @@ class FastApiObservabilityConfigTests(unittest.TestCase):
         )
 
         self.assertEqual(scope.response_headers["X-Request-Id"], "request-123")
-        self.assertEqual(scope.response_headers["traceparent"], f"00-{scope.trace_id}-{scope.span_id}-01")
+        self.assertEqual(
+            scope.response_headers["traceparent"],
+            f"00-{scope.trace_id}-{scope.span_id}-01",
+        )
         scope.finish(200)
         shutdown(runtime)
 
 
-@unittest.skipUnless(FASTAPI_AVAILABLE and HTTPX_AVAILABLE, "fastapi extra not installed")
+@unittest.skipUnless(
+    FASTAPI_AVAILABLE and HTTPX_AVAILABLE, "fastapi extra not installed"
+)
 class FastApiServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -113,7 +120,9 @@ class FastApiServerTests(unittest.TestCase):
     def setUp(self) -> None:
         self.client.cookies.clear()
 
-    def _login_basic(self, username: str = "analyst", password: str = "cid4-basic-password") -> dict[str, str]:
+    def _login_basic(
+        self, username: str = "analyst", password: str = "cid4-basic-password"
+    ) -> dict[str, str]:
         encoded = base64.b64encode(f"{username}:{password}".encode()).decode("ascii")
         response = self.client.get(
             "/api/auth/session",
@@ -125,8 +134,12 @@ class FastApiServerTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         return {"X-CSRF-Token": response.json()["csrf_token"]}
 
-    def _login_digest(self, username: str = "digestor", password: str = "cid4-digest-password") -> dict[str, str]:
-        challenge = self.client.get("/api/auth/session", headers={"X-CID4-Auth-Method": "digest"})
+    def _login_digest(
+        self, username: str = "digestor", password: str = "cid4-digest-password"
+    ) -> dict[str, str]:
+        challenge = self.client.get(
+            "/api/auth/session", headers={"X-CID4-Auth-Method": "digest"}
+        )
         self.assertEqual(challenge.status_code, 401)
         digest_header = self._build_digest_header(
             challenge.headers["WWW-Authenticate"],
@@ -163,7 +176,9 @@ class FastApiServerTests(unittest.TestCase):
         qop = fields["qop"]
         nc = "00000001"
         cnonce = "cid4-test-cnonce"
-        ha1 = hashlib.md5(f"{username}:{realm}:{password}".encode(), usedforsecurity=False).hexdigest()
+        ha1 = hashlib.md5(
+            f"{username}:{realm}:{password}".encode(), usedforsecurity=False
+        ).hexdigest()
         ha2 = hashlib.md5(f"{method}:{uri}".encode(), usedforsecurity=False).hexdigest()
         response_hash = hashlib.md5(
             f"{ha1}:{nonce}:{nc}:{cnonce}:{qop}:{ha2}".encode(),
@@ -204,7 +219,9 @@ class FastApiServerTests(unittest.TestCase):
         self.assertIn("X-Request-Id", response.headers)
 
     def test_preserves_incoming_request_id(self) -> None:
-        response = self.client.get("/api/health", headers={"X-Request-Id": "request-456"})
+        response = self.client.get(
+            "/api/health", headers={"X-Request-Id": "request-456"}
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["X-Request-Id"], "request-456")
@@ -284,7 +301,9 @@ class FastApiServerTests(unittest.TestCase):
             "_torch_availability",
             return_value={"available": False, "reason": "PyTorch missing for test"},
         ):
-            response = self.client.get("/api/llm/status", headers={"X-Request-Id": "request-llm-status"})
+            response = self.client.get(
+                "/api/llm/status", headers={"X-Request-Id": "request-llm-status"}
+            )
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -335,7 +354,9 @@ class FastApiServerTests(unittest.TestCase):
         self.assertIn("X-Request-Id", response.headers)
         self.assertIn("traceparent", response.headers)
 
-    def test_llm_train_returns_dependency_error_when_tensorflow_is_unavailable(self) -> None:
+    def test_llm_train_returns_dependency_error_when_tensorflow_is_unavailable(
+        self,
+    ) -> None:
         from ml.tensorflow_language_model import TensorFlowLanguageModelService
 
         csrf_headers = self._login_basic()
@@ -347,7 +368,12 @@ class FastApiServerTests(unittest.TestCase):
         ):
             response = self.client.post(
                 "/api/llm/train",
-                json={"framework": "tensorflow", "domains": ["taxonomy"], "epochs": 1, "max_chars": 4096},
+                json={
+                    "framework": "tensorflow",
+                    "domains": ["taxonomy"],
+                    "epochs": 1,
+                    "max_chars": 4096,
+                },
                 headers=csrf_headers,
             )
 
@@ -356,7 +382,9 @@ class FastApiServerTests(unittest.TestCase):
         self.assertEqual(payload["status"], "error")
         self.assertEqual(payload["error"]["code"], "tensorflow_unavailable")
 
-    def test_llm_generate_returns_dependency_error_when_torch_is_unavailable(self) -> None:
+    def test_llm_generate_returns_dependency_error_when_torch_is_unavailable(
+        self,
+    ) -> None:
         from ml.torch_language_model import PyTorchLanguageModelService
 
         csrf_headers = self._login_basic()
@@ -366,7 +394,9 @@ class FastApiServerTests(unittest.TestCase):
             "_torch_availability",
             return_value={"available": False, "reason": "PyTorch missing for test"},
         ):
-            response = self.client.post("/api/llm/generate", json={"prompt": "CID 4"}, headers=csrf_headers)
+            response = self.client.post(
+                "/api/llm/generate", json={"prompt": "CID 4"}, headers=csrf_headers
+            )
 
         self.assertEqual(response.status_code, 503)
         payload = response.json()
@@ -374,7 +404,9 @@ class FastApiServerTests(unittest.TestCase):
         self.assertEqual(payload["error"]["code"], "torch_unavailable")
         self.assertIn("X-Request-Id", response.headers)
 
-    def test_llm_generate_returns_dependency_error_when_tensorflow_is_unavailable(self) -> None:
+    def test_llm_generate_returns_dependency_error_when_tensorflow_is_unavailable(
+        self,
+    ) -> None:
         from ml.tensorflow_language_model import TensorFlowLanguageModelService
 
         csrf_headers = self._login_basic()
@@ -436,7 +468,10 @@ class FastApiServerTests(unittest.TestCase):
                     "min_loss": 1.0,
                     "perplexity_estimate": 2.7,
                 },
-                "artifacts": {"checkpoint": "checkpoint.pt", "metadata": "metadata.json"},
+                "artifacts": {
+                    "checkpoint": "checkpoint.pt",
+                    "metadata": "metadata.json",
+                },
             },
         ):
             response = self.client.post(
@@ -475,12 +510,20 @@ class FastApiServerTests(unittest.TestCase):
                     "min_loss": 1.0,
                     "perplexity_estimate": 2.7,
                 },
-                "artifacts": {"checkpoint": "checkpoint.keras", "metadata": "metadata.json"},
+                "artifacts": {
+                    "checkpoint": "checkpoint.keras",
+                    "metadata": "metadata.json",
+                },
             },
         ):
             response = self.client.post(
                 "/api/llm/train",
-                json={"framework": "tensorflow", "domains": ["literature"], "epochs": 1, "max_chars": 4096},
+                json={
+                    "framework": "tensorflow",
+                    "domains": ["literature"],
+                    "epochs": 1,
+                    "max_chars": 4096,
+                },
                 headers=csrf_headers,
             )
 
@@ -516,7 +559,9 @@ class FastApiServerTests(unittest.TestCase):
         self.assertEqual(payload["error"]["code"], "mcp_auth_required")
 
     @unittest.skipUnless(MCP_AVAILABLE, "mcp extra not installed")
-    def test_mcp_lists_tools_and_reads_resources_with_authenticated_session(self) -> None:
+    def test_mcp_lists_tools_and_reads_resources_with_authenticated_session(
+        self,
+    ) -> None:
         async def exercise_mcp() -> None:
             from httpx import ASGITransport, AsyncClient
             from mcp import ClientSession
@@ -527,8 +572,12 @@ class FastApiServerTests(unittest.TestCase):
             await session_manager.__aenter__()
             transport = ASGITransport(app=app)
             try:
-                async with AsyncClient(transport=transport, base_url="http://testserver") as http_client:
-                    encoded = base64.b64encode(b"analyst:cid4-basic-password").decode("ascii")
+                async with AsyncClient(
+                    transport=transport, base_url="http://testserver"
+                ) as http_client:
+                    encoded = base64.b64encode(b"analyst:cid4-basic-password").decode(
+                        "ascii"
+                    )
                     login = await http_client.get(
                         "/api/auth/session",
                         headers={
@@ -539,7 +588,9 @@ class FastApiServerTests(unittest.TestCase):
                     self.assertEqual(login.status_code, 200)
 
                     async with (
-                        streamable_http_client("http://testserver/mcp/", http_client=http_client) as (
+                        streamable_http_client(
+                            "http://testserver/mcp/", http_client=http_client
+                        ) as (
                             read_stream,
                             write_stream,
                             _,
@@ -553,15 +604,23 @@ class FastApiServerTests(unittest.TestCase):
                         self.assertIn("get_compound_metadata", tool_names)
                         self.assertIn("retrieve_documents", tool_names)
 
-                        tool_result = await session.call_tool("get_compound_metadata", {})
+                        tool_result = await session.call_tool(
+                            "get_compound_metadata", {}
+                        )
                         self.assertFalse(tool_result.isError)
-                        self.assertEqual(tool_result.structuredContent["compound"]["cid"], 4)
+                        self.assertEqual(
+                            tool_result.structuredContent["compound"]["cid"], 4
+                        )
 
                         resources = await session.list_resources()
-                        resource_uris = {str(resource.uri) for resource in resources.resources}
+                        resource_uris = {
+                            str(resource.uri) for resource in resources.resources
+                        }
                         self.assertIn("cid4://compound/4", resource_uris)
 
-                        resource_result = await session.read_resource("cid4://compound/4")
+                        resource_result = await session.read_resource(
+                            "cid4://compound/4"
+                        )
                         self.assertTrue(resource_result.contents)
             finally:
                 await session_manager.__aexit__(None, None, None)
@@ -580,9 +639,18 @@ class FastApiServerTests(unittest.TestCase):
                 "stream_generate",
                 return_value=iter(
                     [
-                        build_stream_event("start", framework="pytorch", model_name="demo", prompt="CID 4"),
                         build_stream_event(
-                            "token", framework="pytorch", model_name="demo", text="A", generated_text="CID 4A"
+                            "start",
+                            framework="pytorch",
+                            model_name="demo",
+                            prompt="CID 4",
+                        ),
+                        build_stream_event(
+                            "token",
+                            framework="pytorch",
+                            model_name="demo",
+                            text="A",
+                            generated_text="CID 4A",
                         ),
                         build_stream_event(
                             "complete",
@@ -609,7 +677,9 @@ class FastApiServerTests(unittest.TestCase):
         self.assertIn('"text": "A"', decoded)
         self.assertIn("event: complete", decoded)
 
-    def test_llm_generate_stream_returns_error_event_for_unavailable_framework(self) -> None:
+    def test_llm_generate_stream_returns_error_event_for_unavailable_framework(
+        self,
+    ) -> None:
         from ml.tensorflow_language_model import TensorFlowLanguageModelService
 
         csrf_headers = self._login_basic()
@@ -618,12 +688,19 @@ class FastApiServerTests(unittest.TestCase):
             mock.patch.object(
                 TensorFlowLanguageModelService,
                 "_tensorflow_availability",
-                return_value={"available": False, "reason": "TensorFlow missing for stream test"},
+                return_value={
+                    "available": False,
+                    "reason": "TensorFlow missing for stream test",
+                },
             ),
             self.client.stream(
                 "POST",
                 "/api/llm/generate/stream",
-                json={"framework": "tensorflow", "prompt": "CID 4", "model_name": "demo"},
+                json={
+                    "framework": "tensorflow",
+                    "prompt": "CID 4",
+                    "model_name": "demo",
+                },
                 headers=csrf_headers,
             ) as response,
         ):
@@ -646,9 +723,18 @@ class FastApiServerTests(unittest.TestCase):
                 "stream_generate",
                 return_value=iter(
                     [
-                        build_stream_event("start", framework="pytorch", model_name="demo", prompt="CID 4"),
                         build_stream_event(
-                            "token", framework="pytorch", model_name="demo", text="A", generated_text="CID 4A"
+                            "start",
+                            framework="pytorch",
+                            model_name="demo",
+                            prompt="CID 4",
+                        ),
+                        build_stream_event(
+                            "token",
+                            framework="pytorch",
+                            model_name="demo",
+                            text="A",
+                            generated_text="CID 4A",
                         ),
                         build_stream_event(
                             "complete",
@@ -662,7 +748,9 @@ class FastApiServerTests(unittest.TestCase):
             ),
             self.client.websocket_connect("/ws/llm/generate") as websocket,
         ):
-            websocket.send_json({"framework": "pytorch", "prompt": "CID 4", "model_name": "demo"})
+            websocket.send_json(
+                {"framework": "pytorch", "prompt": "CID 4", "model_name": "demo"}
+            )
             start_event = websocket.receive_json()
             token_event = websocket.receive_json()
             complete_event = websocket.receive_json()
@@ -682,11 +770,15 @@ class FastApiServerTests(unittest.TestCase):
             mock.patch.object(
                 PyTorchLanguageModelService,
                 "stream_generate",
-                side_effect=LlmServiceError(503, "torch_unavailable", "PyTorch missing for websocket test"),
+                side_effect=LlmServiceError(
+                    503, "torch_unavailable", "PyTorch missing for websocket test"
+                ),
             ),
             self.client.websocket_connect("/ws/llm/generate") as websocket,
         ):
-            websocket.send_json({"framework": "pytorch", "prompt": "CID 4", "model_name": "demo"})
+            websocket.send_json(
+                {"framework": "pytorch", "prompt": "CID 4", "model_name": "demo"}
+            )
             error_event = websocket.receive_json()
 
         self.assertEqual(error_event["event"], "error")
@@ -700,7 +792,9 @@ class FastApiServerTests(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 307)
-        self.assertIn("/auth/basic?returnTo=%2Fapi%2Fllm%2Fgenerate", response.headers["location"])
+        self.assertIn(
+            "/auth/basic?returnTo=%2Fapi%2Fllm%2Fgenerate", response.headers["location"]
+        )
 
     def test_basic_auth_session_login_sets_session_cookie(self) -> None:
         csrf_headers = self._login_basic()

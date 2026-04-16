@@ -74,7 +74,9 @@ def run_router_question(question: str) -> dict[str, Any]:
 def run_assay_literature_workflow() -> dict[str, Any]:
     question = "Find assays related to Plasmodium falciparum and summarize supporting literature"
     state = execute_graph(
-        build_initial_state(question, "assay-plus-literature", question_type="assay_plus_literature"),
+        build_initial_state(
+            question, "assay-plus-literature", question_type="assay_plus_literature"
+        ),
         [
             ("compound_context", compound_context_node),
             ("router", router_node),
@@ -90,7 +92,9 @@ def run_assay_literature_workflow() -> dict[str, Any]:
 def run_pathway_taxonomy_workflow() -> dict[str, Any]:
     question = "What pathway evidence links CID 4 to Trypanosoma brucei?"
     state = execute_graph(
-        build_initial_state(question, "pathway-plus-taxonomy", question_type="pathway_plus_taxonomy"),
+        build_initial_state(
+            question, "pathway-plus-taxonomy", question_type="pathway_plus_taxonomy"
+        ),
         [
             ("compound_context", compound_context_node),
             ("router", router_node),
@@ -106,7 +110,9 @@ def run_pathway_taxonomy_workflow() -> dict[str, Any]:
 def run_compound_context_workflow() -> dict[str, Any]:
     question = "List likely product-use categories for CID 4 while keeping the answer grounded in the compound record"
     state = execute_graph(
-        build_initial_state(question, "compound-context-assistant", question_type="compound_context"),
+        build_initial_state(
+            question, "compound-context-assistant", question_type="compound_context"
+        ),
         [
             ("compound_context", compound_context_node),
             ("router", router_node),
@@ -173,7 +179,9 @@ def router_node(state: GraphState) -> dict[str, Any]:
         "route": route,
         "domains": list(route["domains"]),
         "question_type": state.get("question_type") or str(route["primary_domain"]),
-        "trace": append_trace(state, f"router selected domains: {', '.join(route['domains'])}"),
+        "trace": append_trace(
+            state, f"router selected domains: {', '.join(route['domains'])}"
+        ),
     }
 
 
@@ -188,8 +196,12 @@ def routed_retrieval_node(state: GraphState) -> dict[str, Any]:
         hits = list(result["hits"])
         updates[get_hits_key(domain)] = hits
         updates["retrieved_rows"].extend(flatten_hits(domain, hits))
-        updates["supporting_ids"] = merge_supporting_ids(updates["supporting_ids"], collect_supporting_ids(hits))
-        updates["trace"].append(f"retrieved {len(hits)} {domain} hits via {result['backend']}")
+        updates["supporting_ids"] = merge_supporting_ids(
+            updates["supporting_ids"], collect_supporting_ids(hits)
+        )
+        updates["trace"].append(
+            f"retrieved {len(hits)} {domain} hits via {result['backend']}"
+        )
     return updates
 
 
@@ -199,28 +211,41 @@ def assay_retrieval_node(state: GraphState) -> dict[str, Any]:
     return {
         "domains": ["assay", "literature"],
         "assay_hits": hits,
-        "retrieved_rows": [*state.get("retrieved_rows", []), *flatten_hits("assay", hits)],
+        "retrieved_rows": [
+            *state.get("retrieved_rows", []),
+            *flatten_hits("assay", hits),
+        ],
         "supporting_ids": merge_supporting_ids(
-            state.get("supporting_ids", empty_supporting_ids()), collect_supporting_ids(hits)
+            state.get("supporting_ids", empty_supporting_ids()),
+            collect_supporting_ids(hits),
         ),
-        "trace": append_trace(state, f"retrieved {len(hits)} assay hits via {result['backend']}"),
+        "trace": append_trace(
+            state, f"retrieved {len(hits)} assay hits via {result['backend']}"
+        ),
     }
 
 
 def literature_followup_node(state: GraphState) -> dict[str, Any]:
     query = build_followup_query(
-        state["question"], state.get("assay_hits", []), keys=["target_name", "taxonomy_id", "aid"]
+        state["question"],
+        state.get("assay_hits", []),
+        keys=["target_name", "taxonomy_id", "aid"],
     )
     result = retrieve_domain_hits(query, "literature", top_k=4)
     hits = list(result["hits"])
     return {
         "literature_hits": hits,
-        "retrieved_rows": [*state.get("retrieved_rows", []), *flatten_hits("literature", hits)],
+        "retrieved_rows": [
+            *state.get("retrieved_rows", []),
+            *flatten_hits("literature", hits),
+        ],
         "supporting_ids": merge_supporting_ids(
-            state.get("supporting_ids", empty_supporting_ids()), collect_supporting_ids(hits)
+            state.get("supporting_ids", empty_supporting_ids()),
+            collect_supporting_ids(hits),
         ),
         "trace": append_trace(
-            state, f"retrieved {len(hits)} literature hits via {result['backend']} for follow-up query"
+            state,
+            f"retrieved {len(hits)} literature hits via {result['backend']} for follow-up query",
         ),
     }
 
@@ -231,11 +256,17 @@ def pathway_retrieval_node(state: GraphState) -> dict[str, Any]:
     return {
         "domains": ["pathway", "taxonomy"],
         "pathway_hits": hits,
-        "retrieved_rows": [*state.get("retrieved_rows", []), *flatten_hits("pathway", hits)],
+        "retrieved_rows": [
+            *state.get("retrieved_rows", []),
+            *flatten_hits("pathway", hits),
+        ],
         "supporting_ids": merge_supporting_ids(
-            state.get("supporting_ids", empty_supporting_ids()), collect_supporting_ids(hits)
+            state.get("supporting_ids", empty_supporting_ids()),
+            collect_supporting_ids(hits),
         ),
-        "trace": append_trace(state, f"retrieved {len(hits)} pathway hits via {result['backend']}"),
+        "trace": append_trace(
+            state, f"retrieved {len(hits)} pathway hits via {result['backend']}"
+        ),
     }
 
 
@@ -249,12 +280,17 @@ def taxonomy_followup_node(state: GraphState) -> dict[str, Any]:
     hits = list(result["hits"])
     return {
         "taxonomy_hits": hits,
-        "retrieved_rows": [*state.get("retrieved_rows", []), *flatten_hits("taxonomy", hits)],
+        "retrieved_rows": [
+            *state.get("retrieved_rows", []),
+            *flatten_hits("taxonomy", hits),
+        ],
         "supporting_ids": merge_supporting_ids(
-            state.get("supporting_ids", empty_supporting_ids()), collect_supporting_ids(hits)
+            state.get("supporting_ids", empty_supporting_ids()),
+            collect_supporting_ids(hits),
         ),
         "trace": append_trace(
-            state, f"retrieved {len(hits)} taxonomy hits via {result['backend']} for follow-up query"
+            state,
+            f"retrieved {len(hits)} taxonomy hits via {result['backend']} for follow-up query",
         ),
     }
 
@@ -346,7 +382,10 @@ def assay_literature_validation_node(state: GraphState) -> dict[str, Any]:
         issues.append("Missing literature evidence.")
     if not state.get("supporting_ids", {}).get("aid"):
         issues.append("No assay identifiers were captured.")
-    if not (state.get("supporting_ids", {}).get("pmid") or state.get("supporting_ids", {}).get("doi")):
+    if not (
+        state.get("supporting_ids", {}).get("pmid")
+        or state.get("supporting_ids", {}).get("doi")
+    ):
         issues.append("No literature citation identifiers were captured.")
     return validation_update(state, issues)
 
@@ -372,7 +411,9 @@ def validation_update(state: GraphState, issues: list[str]) -> dict[str, Any]:
         "issues": issues,
         "evidence_families": collect_evidence_families(state),
     }
-    trace_message = "validation passed" if passed else f"validation flagged: {'; '.join(issues)}"
+    trace_message = (
+        "validation passed" if passed else f"validation flagged: {'; '.join(issues)}"
+    )
     return {
         "validated_answer": validated_answer,
         "validation": validation,
@@ -405,7 +446,9 @@ def finalize_state(state: GraphState) -> dict[str, Any]:
 
 @lru_cache(maxsize=1)
 def load_compound_context() -> dict[str, Any]:
-    with cid4_analysis.resolve_data_path("COMPOUND_CID_4.json").open(encoding="utf-8") as file:
+    with cid4_analysis.resolve_data_path("COMPOUND_CID_4.json").open(
+        encoding="utf-8"
+    ) as file:
         payload = json.load(file)
 
     record = payload["Record"]
@@ -444,9 +487,14 @@ def collect_supporting_ids(hits: list[dict[str, Any]]) -> dict[str, list[str]]:
         maybe_add(collected["doi"], metadata.get("doi") or metadata.get("DOI"))
         maybe_add(
             collected["pathway_accession"],
-            metadata.get("pathway_accession") or metadata.get("Pathway_Accession") or metadata.get("source_pathway"),
+            metadata.get("pathway_accession")
+            or metadata.get("Pathway_Accession")
+            or metadata.get("source_pathway"),
         )
-        maybe_add(collected["taxonomy_id"], metadata.get("taxonomy_id") or metadata.get("Taxonomy_ID"))
+        maybe_add(
+            collected["taxonomy_id"],
+            metadata.get("taxonomy_id") or metadata.get("Taxonomy_ID"),
+        )
         maybe_add(collected["source_file"], metadata.get("source_file"))
     return collected
 
@@ -474,7 +522,9 @@ def flatten_hits(domain: str, hits: list[dict[str, Any]]) -> list[dict[str, Any]
     return flattened
 
 
-def build_followup_query(question: str, hits: list[dict[str, Any]], *, keys: list[str]) -> str:
+def build_followup_query(
+    question: str, hits: list[dict[str, Any]], *, keys: list[str]
+) -> str:
     terms: list[str] = []
     for hit in hits[:3]:
         metadata = dict(hit.get("metadata", {}))
@@ -490,13 +540,21 @@ def build_followup_query(question: str, hits: list[dict[str, Any]], *, keys: lis
 
 
 def join_titles(hits: list[dict[str, Any]]) -> str:
-    titles = [str(hit.get("title", "")).strip() for hit in hits[:3] if str(hit.get("title", "")).strip()]
+    titles = [
+        str(hit.get("title", "")).strip()
+        for hit in hits[:3]
+        if str(hit.get("title", "")).strip()
+    ]
     return "; ".join(titles)
 
 
 def collect_top_titles(state: GraphState) -> str:
     top_hits = list(state.get("retrieved_rows", []))[:4]
-    titles = [str(hit.get("title", "")).strip() for hit in top_hits if str(hit.get("title", "")).strip()]
+    titles = [
+        str(hit.get("title", "")).strip()
+        for hit in top_hits
+        if str(hit.get("title", "")).strip()
+    ]
     return "; ".join(titles)
 
 

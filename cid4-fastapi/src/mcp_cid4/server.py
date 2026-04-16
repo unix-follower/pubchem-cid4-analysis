@@ -38,10 +38,19 @@ from langgraph_cid4.workflows import (
     load_compound_context,
 )
 
-SUPPORTED_MCP_DOMAINS = ("literature", "patent", "assay", "pathway", "taxonomy", "product_use")
-CURRENT_PRINCIPAL: contextvars.ContextVar[UserPrincipal | None] = contextvars.ContextVar(
-    "cid4_mcp_current_principal",
-    default=None,
+SUPPORTED_MCP_DOMAINS = (
+    "literature",
+    "patent",
+    "assay",
+    "pathway",
+    "taxonomy",
+    "product_use",
+)
+CURRENT_PRINCIPAL: contextvars.ContextVar[UserPrincipal | None] = (
+    contextvars.ContextVar(
+        "cid4_mcp_current_principal",
+        default=None,
+    )
 )
 
 
@@ -103,7 +112,9 @@ def create_cid4_mcp_server(data_dir: Path) -> FastMCP:
         stateless_http=True,
         json_response=True,
         streamable_http_path="/",
-        transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+        transport_security=TransportSecuritySettings(
+            enable_dns_rebinding_protection=False
+        ),
     )
 
     @mcp.resource("cid4://compound/4")
@@ -134,7 +145,9 @@ def create_cid4_mcp_server(data_dir: Path) -> FastMCP:
             compound = CompoundMetadata.model_validate(load_compound_context())
         principal = _principal_payload()
         payload = {"compound": compound.model_dump(), "principal": principal}
-        summary = f"Loaded {compound.title} (CID {compound.cid}) for {principal['username']}."
+        summary = (
+            f"Loaded {compound.title} (CID {compound.cid}) for {principal['username']}."
+        )
         return _tool_result(summary, payload)
 
     @mcp.tool()
@@ -145,7 +158,9 @@ def create_cid4_mcp_server(data_dir: Path) -> FastMCP:
         return _tool_result(summary, payload)
 
     @mcp.tool()
-    def retrieve_documents(question: str, domain: str, top_k: int = 4) -> CallToolResult:
+    def retrieve_documents(
+        question: str, domain: str, top_k: int = 4
+    ) -> CallToolResult:
         normalized_domain = _validate_domain(domain)
         with _bound_data_dir(data_dir):
             payload = retrieve_domain_hits(question, normalized_domain, top_k=top_k)
@@ -156,7 +171,9 @@ def create_cid4_mcp_server(data_dir: Path) -> FastMCP:
         return _tool_result(summary, public_payload.model_dump())
 
     @mcp.tool()
-    def answer_question(question: str, domains: list[str] | None = None, top_k: int = 4) -> CallToolResult:
+    def answer_question(
+        question: str, domains: list[str] | None = None, top_k: int = 4
+    ) -> CallToolResult:
         normalized_domains = _normalize_domains(domains)
         with _bound_data_dir(data_dir):
             workflow = run_question_workflow(
@@ -185,7 +202,9 @@ def create_cid4_mcp_server(data_dir: Path) -> FastMCP:
         top_k: int = 4,
     ) -> CallToolResult:
         normalized_domains = _normalize_domains(domains)
-        effective_domains = normalized_domains or route_question_impl(question)["domains"]
+        effective_domains = (
+            normalized_domains or route_question_impl(question)["domains"]
+        )
         with _bound_data_dir(data_dir):
             state = {
                 "question": question,
@@ -198,7 +217,9 @@ def create_cid4_mcp_server(data_dir: Path) -> FastMCP:
 
             for domain_name in effective_domains:
                 result = retrieve_domain_hits(question, domain_name, top_k=top_k)
-                state["retrieved_rows"].extend(flatten_hits(domain_name, list(result["hits"])))
+                state["retrieved_rows"].extend(
+                    flatten_hits(domain_name, list(result["hits"]))
+                )
                 state["supporting_ids"] = merge_supporting_ids(
                     state["supporting_ids"],
                     collect_supporting_ids(list(result["hits"])),
@@ -215,14 +236,18 @@ def create_cid4_mcp_server(data_dir: Path) -> FastMCP:
         )
         passed = bool(payload.validation.get("passed"))
         summary = (
-            "Validation passed." if passed else f"Validation flagged: {'; '.join(payload.validation.get('issues', []))}"
+            "Validation passed."
+            if passed
+            else f"Validation flagged: {'; '.join(payload.validation.get('issues', []))}"
         )
         return _tool_result(summary, payload.model_dump(), is_error=not passed)
 
     return mcp
 
 
-def create_authenticated_mcp_http_app(mcp: FastMCP, security_settings: SecuritySettings) -> ASGIApp:
+def create_authenticated_mcp_http_app(
+    mcp: FastMCP, security_settings: SecuritySettings
+) -> ASGIApp:
     return AuthenticatedMcpHttpApp(mcp.streamable_http_app(), security_settings)
 
 
@@ -254,9 +279,12 @@ class AuthenticatedMcpHttpApp:
 
         principal = authenticate_request(request, self.security_settings)
         if principal is None and (
-            request.headers.get("authorization") is not None or request.headers.get("x-cid4-auth-method") is not None
+            request.headers.get("authorization") is not None
+            or request.headers.get("x-cid4-auth-method") is not None
         ):
-            principal, challenge_response = authenticate_login_request(request, self.security_settings)
+            principal, challenge_response = authenticate_login_request(
+                request, self.security_settings
+            )
             if principal is None:
                 assert challenge_response is not None
                 await challenge_response(scope, receive, send)
@@ -302,7 +330,9 @@ def _normalize_domains(domains: Iterable[str] | None) -> list[str]:
 def _validate_domain(domain: str) -> str:
     normalized = domain.strip().lower().replace("-", "_")
     if normalized not in SUPPORTED_MCP_DOMAINS:
-        raise ValueError(f"Unsupported domain '{domain}'. Expected one of: {', '.join(SUPPORTED_MCP_DOMAINS)}.")
+        raise ValueError(
+            f"Unsupported domain '{domain}'. Expected one of: {', '.join(SUPPORTED_MCP_DOMAINS)}."
+        )
     return normalized
 
 
@@ -313,7 +343,9 @@ def _principal_payload() -> dict[str, str]:
     return {"username": principal.username, "auth_method": principal.auth_method}
 
 
-def _tool_result(summary: str, payload: dict[str, Any], *, is_error: bool = False) -> CallToolResult:
+def _tool_result(
+    summary: str, payload: dict[str, Any], *, is_error: bool = False
+) -> CallToolResult:
     return CallToolResult(
         content=[TextContent(type="text", text=summary)],
         structuredContent=payload,

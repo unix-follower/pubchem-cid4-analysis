@@ -21,31 +21,41 @@ class Cid4ApiTests(unittest.TestCase):
         cls.data_dir = PROJECT_ROOT.parent / "data"
 
     def test_route_api_request_returns_health_payload(self) -> None:
-        response = route_api_request("GET", "/api/health", self.data_dir, "asyncio", "AsyncIO")
+        response = route_api_request(
+            "GET", "/api/health", self.data_dir, "asyncio", "AsyncIO"
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('"source": "asyncio"', response.body)
 
     def test_route_api_request_returns_error_mode_payload(self) -> None:
-        response = route_api_request("GET", "/api/health?mode=error", self.data_dir, "asyncio", "AsyncIO")
+        response = route_api_request(
+            "GET", "/api/health?mode=error", self.data_dir, "asyncio", "AsyncIO"
+        )
 
         self.assertEqual(response.status_code, 503)
         self.assertIn('"source": "asyncio"', response.body)
 
     def test_route_api_request_validates_conformer_index(self) -> None:
-        response = route_api_request("GET", "/api/cid4/conformer/99", self.data_dir, "asyncio", "AsyncIO")
+        response = route_api_request(
+            "GET", "/api/cid4/conformer/99", self.data_dir, "asyncio", "AsyncIO"
+        )
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.body, '{"message": "Unknown conformer 99"}')
 
     def test_route_api_request_supports_options(self) -> None:
-        response = route_api_request("OPTIONS", "/api/health", self.data_dir, "asyncio", "AsyncIO")
+        response = route_api_request(
+            "OPTIONS", "/api/health", self.data_dir, "asyncio", "AsyncIO"
+        )
 
         self.assertEqual(response.status_code, 204)
         self.assertEqual(response.body, "")
 
     def test_route_api_request_rejects_unsupported_methods(self) -> None:
-        response = route_api_request("POST", "/api/health", self.data_dir, "asyncio", "AsyncIO")
+        response = route_api_request(
+            "POST", "/api/health", self.data_dir, "asyncio", "AsyncIO"
+        )
 
         self.assertEqual(response.status_code, 405)
         self.assertIn("not allowed", response.body)

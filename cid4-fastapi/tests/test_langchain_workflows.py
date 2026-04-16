@@ -12,12 +12,18 @@ if str(SRC_ROOT) not in sys.path:
 from documents import VectorDocument  # noqa: E402
 from langchain_cid4.documents import ChunkRecord, chunk_documents  # noqa: E402
 from langchain_cid4.retrieval import InMemoryRetriever  # noqa: E402
-from langchain_cid4.workflows import build_grounded_answer, route_question, summarize_hits  # noqa: E402
+from langchain_cid4.workflows import (  # noqa: E402
+    build_grounded_answer,
+    route_question,
+    summarize_hits,
+)
 
 
 class LangchainWorkflowTests(unittest.TestCase):
     def test_route_question_detects_multi_source_queries(self) -> None:
-        route = route_question("Find literature and assays related to Plasmodium falciparum")
+        route = route_question(
+            "Find literature and assays related to Plasmodium falciparum"
+        )
 
         self.assertIn("literature", route["domains"])
         self.assertIn("assay", route["domains"])
@@ -88,7 +94,9 @@ class LangchainWorkflowTests(unittest.TestCase):
         summary = summarize_hits(["assay"], hits)
         answer = build_grounded_answer(["assay"], hits)
 
-        self.assertEqual(summary["supporting_records"][0]["title"], "Estrogen receptor assay")
+        self.assertEqual(
+            summary["supporting_records"][0]["title"], "Estrogen receptor assay"
+        )
         self.assertIn("Estrogen receptor assay", answer)
 
 

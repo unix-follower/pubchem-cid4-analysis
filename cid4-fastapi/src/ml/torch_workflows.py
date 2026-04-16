@@ -4,10 +4,17 @@ from typing import Any
 
 import numpy as np
 
-from ml.common import PreparedDataset, build_supervised_split, classification_metrics, regression_metrics
+from ml.common import (
+    PreparedDataset,
+    build_supervised_split,
+    classification_metrics,
+    regression_metrics,
+)
 
 
-def run_torch_classification(dataset: PreparedDataset, epochs: int = 200) -> dict[str, Any]:
+def run_torch_classification(
+    dataset: PreparedDataset, epochs: int = 200
+) -> dict[str, Any]:
     try:
         import torch
         from torch import nn
@@ -53,7 +60,9 @@ def run_torch_classification(dataset: PreparedDataset, epochs: int = 200) -> dic
         "dataset": dataset.summary(),
         "evaluation_note": split.evaluation_note,
         "epochs": int(epochs),
-        "metrics": classification_metrics(split.y_test, predictions, dataset.class_names),
+        "metrics": classification_metrics(
+            split.y_test, predictions, dataset.class_names
+        ),
     }
 
 
@@ -66,7 +75,9 @@ def run_torch_regression(dataset: PreparedDataset, epochs: int = 300) -> dict[st
 
     split = build_supervised_split(dataset)
     x_train = torch.tensor(split.x_train, dtype=torch.float32)
-    y_train = torch.tensor(split.y_train.astype(np.float32).reshape(-1, 1), dtype=torch.float32)
+    y_train = torch.tensor(
+        split.y_train.astype(np.float32).reshape(-1, 1), dtype=torch.float32
+    )
     x_eval = torch.tensor(split.x_test, dtype=torch.float32)
     model = nn.Sequential(
         nn.Linear(x_train.shape[1], 16),
@@ -94,7 +105,9 @@ def run_torch_regression(dataset: PreparedDataset, epochs: int = 300) -> dict[st
         "dataset": dataset.summary(),
         "evaluation_note": split.evaluation_note,
         "epochs": int(epochs),
-        "metrics": regression_metrics(split.y_test.astype(np.float64), predictions.astype(np.float64)),
+        "metrics": regression_metrics(
+            split.y_test.astype(np.float64), predictions.astype(np.float64)
+        ),
     }
 
 

@@ -85,7 +85,9 @@ class TensorFlowLanguageModelService:
                 "The assembled corpus is too small for the requested sequence length.",
             )
 
-        model = _build_model(tf, len(vocabulary), config.embedding_dim, config.hidden_size)
+        model = _build_model(
+            tf, len(vocabulary), config.embedding_dim, config.hidden_size
+        )
         loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
 
@@ -97,7 +99,10 @@ class TensorFlowLanguageModelService:
                 dtype=tf.int32,
             )
             targets = tf.convert_to_tensor(
-                [encoded[start + 1 : start + config.sequence_length + 1] for start in starts],
+                [
+                    encoded[start + 1 : start + config.sequence_length + 1]
+                    for start in starts
+                ],
                 dtype=tf.int32,
             )
 
@@ -105,7 +110,9 @@ class TensorFlowLanguageModelService:
                 logits, _ = model(inputs, training=True)
                 loss = loss_fn(targets, logits)
             gradients = tape.gradient(loss, model.trainable_variables)
-            optimizer.apply_gradients(zip(gradients, model.trainable_variables, strict=False))
+            optimizer.apply_gradients(
+                zip(gradients, model.trainable_variables, strict=False)
+            )
             losses.append(float(loss.numpy()))
 
         metadata = {
@@ -135,7 +142,9 @@ class TensorFlowLanguageModelService:
 
         create_dir_if_doesnt_exist(str(self._output_dir))
         model.save(self._checkpoint_path(config.output_name))
-        self._metadata_path(config.output_name).write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+        self._metadata_path(config.output_name).write_text(
+            json.dumps(metadata, indent=2), encoding="utf-8"
+        )
         self._loaded_model_name = None
         self._loaded_bundle = None
 
@@ -159,7 +168,9 @@ class TensorFlowLanguageModelService:
 
     def generate(self, config: GenerationConfig) -> dict[str, Any]:
         generated_text = "".join(
-            event.payload["text"] for event in self.stream_generate(config) if event.event == "token"
+            event.payload["text"]
+            for event in self.stream_generate(config)
+            if event.event == "token"
         )
         bundle = self._load_model_bundle(config.model_name)
         metadata = bundle["metadata"]
@@ -218,14 +229,22 @@ class TensorFlowLanguageModelService:
 
         for token in prompt_indices[:-1]:
             embedded = embedding_layer(tf.convert_to_tensor([[token]], dtype=tf.int32))
-            _, hidden_state = gru_layer(embedded, initial_state=hidden_state, training=False)
+            _, hidden_state = gru_layer(
+                embedded, initial_state=hidden_state, training=False
+            )
 
         current_token = prompt_indices[-1]
         for _ in range(config.max_new_tokens):
-            embedded = embedding_layer(tf.convert_to_tensor([[current_token]], dtype=tf.int32))
-            sequence, hidden_state = gru_layer(embedded, initial_state=hidden_state, training=False)
+            embedded = embedding_layer(
+                tf.convert_to_tensor([[current_token]], dtype=tf.int32)
+            )
+            sequence, hidden_state = gru_layer(
+                embedded, initial_state=hidden_state, training=False
+            )
             logits = output_layer(sequence)[0, -1]
-            next_token = _sample_next_token(tf, logits, config.temperature, config.top_k)
+            next_token = _sample_next_token(
+                tf, logits, config.temperature, config.top_k
+            )
             chunk = vocabulary[next_token]
             generated_suffix += chunk
             yield build_stream_event(
@@ -261,14 +280,20 @@ class TensorFlowLanguageModelService:
     def _require_tensorflow(self) -> dict[str, Any]:
         availability = self._tensorflow_availability()
         if not availability["available"]:
-            raise LlmServiceError(503, "tensorflow_unavailable", str(availability["reason"]))
+            raise LlmServiceError(
+                503, "tensorflow_unavailable", str(availability["reason"])
+            )
         return availability
 
     def _checkpoint_path(self, model_name: str) -> Path:
-        return artifact_paths(self._output_dir, MODEL_FRAMEWORK, model_name, ".keras")["checkpoint"]
+        return artifact_paths(self._output_dir, MODEL_FRAMEWORK, model_name, ".keras")[
+            "checkpoint"
+        ]
 
     def _metadata_path(self, model_name: str) -> Path:
-        return artifact_paths(self._output_dir, MODEL_FRAMEWORK, model_name, ".keras")["metadata"]
+        return artifact_paths(self._output_dir, MODEL_FRAMEWORK, model_name, ".keras")[
+            "metadata"
+        ]
 
     def _load_metadata_if_available(self, model_name: str) -> dict[str, Any] | None:
         return load_metadata_if_available(self._metadata_path(model_name))
@@ -305,8 +330,12 @@ class TensorFlowLanguageModelService:
 
 def _build_model(tf: Any, vocab_size: int, embedding_dim: int, hidden_size: int) -> Any:
     inputs = tf.keras.Input(shape=(None,), dtype="int32")
-    embedded = tf.keras.layers.Embedding(vocab_size, embedding_dim, name="embedding")(inputs)
-    sequence, state = tf.keras.layers.GRU(hidden_size, return_sequences=True, return_state=True, name="gru")(embedded)
+    embedded = tf.keras.layers.Embedding(vocab_size, embedding_dim, name="embedding")(
+        inputs
+    )
+    sequence, state = tf.keras.layers.GRU(
+        hidden_size, return_sequences=True, return_state=True, name="gru"
+    )(embedded)
     logits = tf.keras.layers.Dense(vocab_size, name="output")(sequence)
     return tf.keras.Model(inputs=inputs, outputs=[logits, state])
 
@@ -319,8 +348,12 @@ def _sample_next_token(tf: Any, logits: Any, temperature: float, top_k: int) -> 
     if top_k > 0:
         k = min(top_k, int(adjusted_logits.shape[-1]))
         top_values, top_indices = tf.math.top_k(adjusted_logits, k=k)
-        sampled_index = tf.random.categorical(tf.expand_dims(top_values, axis=0), num_samples=1)
+        sampled_index = tf.random.categorical(
+            tf.expand_dims(top_values, axis=0), num_samples=1
+        )
         return int(top_indices[int(sampled_index[0, 0])].numpy())
 
-    sampled = tf.random.categorical(tf.expand_dims(adjusted_logits, axis=0), num_samples=1)
+    sampled = tf.random.categorical(
+        tf.expand_dims(adjusted_logits, axis=0), num_samples=1
+    )
     return int(sampled[0, 0].numpy())

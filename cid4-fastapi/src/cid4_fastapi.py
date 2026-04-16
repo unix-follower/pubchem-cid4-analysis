@@ -31,7 +31,9 @@ def main() -> None:
 
     data_dir = resolve_data_dir()
     server_config = resolve_server_config(data_dir)
-    observability_config = resolve_observability_config("FASTAPI", "pubchem-cid4-fastapi")
+    observability_config = resolve_observability_config(
+        "FASTAPI", "pubchem-cid4-fastapi"
+    )
 
     host = args.host or server_config.host
     port = args.port or server_config.port

@@ -95,7 +95,9 @@ def load_conformer_compound(filename: str) -> dict:
 
 def extract_3d_coordinates(molecule: Chem.Mol) -> np.ndarray:
     if molecule.GetNumConformers() == 0:
-        raise ValueError("SDF molecule does not contain a conformer with 3D coordinates")
+        raise ValueError(
+            "SDF molecule does not contain a conformer with 3D coordinates"
+        )
 
     conformer = molecule.GetConformer()
     coordinates = np.array(
@@ -111,7 +113,9 @@ def extract_3d_coordinates(molecule: Chem.Mol) -> np.ndarray:
     )
 
     if coordinates.shape != (CONFORMER_ATOM_COUNT, 3):
-        raise ValueError(f"Expected 3D coordinates for {CONFORMER_ATOM_COUNT} atoms, found {coordinates.shape}")
+        raise ValueError(
+            f"Expected 3D coordinates for {CONFORMER_ATOM_COUNT} atoms, found {coordinates.shape}"
+        )
 
     return coordinates
 
@@ -123,7 +127,9 @@ def build_distance_matrix(coordinates: np.ndarray) -> np.ndarray:
     return distance_matrix
 
 
-def get_bonded_atom_pairs_from_adjacency(adjacency_matrix: pd.DataFrame) -> list[tuple[int, int]]:
+def get_bonded_atom_pairs_from_adjacency(
+    adjacency_matrix: pd.DataFrame,
+) -> list[tuple[int, int]]:
     atom_ids = adjacency_matrix.index.tolist()
     adjacency_values = adjacency_matrix.to_numpy(dtype=np.int64)
     bonded_pairs: list[tuple[int, int]] = []
@@ -131,10 +137,14 @@ def get_bonded_atom_pairs_from_adjacency(adjacency_matrix: pd.DataFrame) -> list
     for row_index in range(len(atom_ids)):
         for column_index in range(row_index + 1, len(atom_ids)):
             if adjacency_values[row_index, column_index] > 0:
-                bonded_pairs.append((int(atom_ids[row_index]), int(atom_ids[column_index])))
+                bonded_pairs.append(
+                    (int(atom_ids[row_index]), int(atom_ids[column_index]))
+                )
 
     if not bonded_pairs:
-        raise ValueError("Expected at least one bonded atom pair in the adjacency matrix")
+        raise ValueError(
+            "Expected at least one bonded atom pair in the adjacency matrix"
+        )
 
     return bonded_pairs
 
@@ -181,7 +191,10 @@ def partition_distances_by_bonding(
 
 
 def summarize_distance_partition(pair_records: list[dict[str, float | int]]) -> dict:
-    distances = np.array([float(pair_record["distance_angstrom"]) for pair_record in pair_records], dtype=np.float64)
+    distances = np.array(
+        [float(pair_record["distance_angstrom"]) for pair_record in pair_records],
+        dtype=np.float64,
+    )
     if distances.size == 0:
         raise ValueError("Distance partition must contain at least one pair")
 
@@ -209,16 +222,20 @@ def compute_bonded_nonbonded_distance_statistics(
         "nonbonded_distances": nonbonded_summary,
         "comparison": {
             "mean_distance_difference_angstrom": float(
-                nonbonded_summary["mean_distance_angstrom"] - bonded_summary["mean_distance_angstrom"]
+                nonbonded_summary["mean_distance_angstrom"]
+                - bonded_summary["mean_distance_angstrom"]
             ),
             "nonbonded_to_bonded_mean_ratio": float(
-                nonbonded_summary["mean_distance_angstrom"] / bonded_summary["mean_distance_angstrom"]
+                nonbonded_summary["mean_distance_angstrom"]
+                / bonded_summary["mean_distance_angstrom"]
             ),
         },
     }
 
 
-def enumerate_bonded_angle_triplets(adjacency_matrix: pd.DataFrame) -> list[tuple[int, int, int]]:
+def enumerate_bonded_angle_triplets(
+    adjacency_matrix: pd.DataFrame,
+) -> list[tuple[int, int, int]]:
     atom_ids = adjacency_matrix.index.tolist()
     adjacency_values = adjacency_matrix.to_numpy(dtype=np.int64)
     angle_triplets: list[tuple[int, int, int]] = []
@@ -230,23 +247,33 @@ def enumerate_bonded_angle_triplets(adjacency_matrix: pd.DataFrame) -> list[tupl
             if adjacency_values[central_index, neighbor_index] > 0
         ]
 
-        for neighbor_atom_id_1, neighbor_atom_id_2 in combinations(sorted(neighbor_atom_ids), 2):
-            angle_triplets.append((int(central_atom_id), int(neighbor_atom_id_1), int(neighbor_atom_id_2)))
+        for neighbor_atom_id_1, neighbor_atom_id_2 in combinations(
+            sorted(neighbor_atom_ids), 2
+        ):
+            angle_triplets.append(
+                (int(central_atom_id), int(neighbor_atom_id_1), int(neighbor_atom_id_2))
+            )
 
     if not angle_triplets:
-        raise ValueError("Expected at least one bonded angle triplet in the adjacency matrix")
+        raise ValueError(
+            "Expected at least one bonded angle triplet in the adjacency matrix"
+        )
 
     return angle_triplets
 
 
-def compute_bond_angle_degrees(first_bond_vector: np.ndarray, second_bond_vector: np.ndarray) -> float:
+def compute_bond_angle_degrees(
+    first_bond_vector: np.ndarray, second_bond_vector: np.ndarray
+) -> float:
     first_norm = float(np.linalg.norm(first_bond_vector))
     second_norm = float(np.linalg.norm(second_bond_vector))
 
     if first_norm <= ANGLE_VECTOR_TOLERANCE or second_norm <= ANGLE_VECTOR_TOLERANCE:
         raise ValueError("Bond angle computation requires non-zero bond vectors")
 
-    cosine = float(np.dot(first_bond_vector, second_bond_vector) / (first_norm * second_norm))
+    cosine = float(
+        np.dot(first_bond_vector, second_bond_vector) / (first_norm * second_norm)
+    )
     cosine = float(np.clip(cosine, -1.0, 1.0))
     return float(np.degrees(np.arccos(cosine)))
 
@@ -271,7 +298,9 @@ def compute_bonded_angle_records(
                 "central_atom_id": int(central_atom_id),
                 "neighbor_atom_id_1": int(neighbor_atom_id_1),
                 "neighbor_atom_id_2": int(neighbor_atom_id_2),
-                "angle_degrees": compute_bond_angle_degrees(first_bond_vector, second_bond_vector),
+                "angle_degrees": compute_bond_angle_degrees(
+                    first_bond_vector, second_bond_vector
+                ),
             }
         )
 
@@ -279,7 +308,10 @@ def compute_bonded_angle_records(
 
 
 def summarize_bond_angles(angle_records: list[dict[str, float | int]]) -> dict:
-    angle_values = np.array([float(angle_record["angle_degrees"]) for angle_record in angle_records], dtype=np.float64)
+    angle_values = np.array(
+        [float(angle_record["angle_degrees"]) for angle_record in angle_records],
+        dtype=np.float64,
+    )
     if angle_values.size == 0:
         raise ValueError("Bond angle analysis must contain at least one angle")
 
@@ -296,23 +328,36 @@ def summarize_bond_angles(angle_records: list[dict[str, float | int]]) -> dict:
     }
 
 
-def infer_reference_bond_length_angstrom(symbol_1: str, symbol_2: str, bond_order: int) -> tuple[float, str]:
+def infer_reference_bond_length_angstrom(
+    symbol_1: str, symbol_2: str, bond_order: int
+) -> tuple[float, str]:
     if bond_order <= 0:
-        raise ValueError("Bond order must be positive when inferring a spring reference distance")
+        raise ValueError(
+            "Bond order must be positive when inferring a spring reference distance"
+        )
 
     normalized_key = tuple(sorted((str(symbol_1), str(symbol_2)))) + (int(bond_order),)
     if normalized_key in DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM:
-        return float(DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM[normalized_key]), "lookup_table"
+        return float(
+            DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM[normalized_key]
+        ), "lookup_table"
 
     atomic_number_1 = PERIODIC_TABLE.GetAtomicNumber(str(symbol_1))
     atomic_number_2 = PERIODIC_TABLE.GetAtomicNumber(str(symbol_2))
     if atomic_number_1 <= 0 or atomic_number_2 <= 0:
-        raise ValueError(f"Could not infer atomic numbers for bond symbols {symbol_1!r} and {symbol_2!r}")
+        raise ValueError(
+            f"Could not infer atomic numbers for bond symbols {symbol_1!r} and {symbol_2!r}"
+        )
 
     covalent_radius_sum = float(
-        PERIODIC_TABLE.GetRcovalent(atomic_number_1) + PERIODIC_TABLE.GetRcovalent(atomic_number_2)
+        PERIODIC_TABLE.GetRcovalent(atomic_number_1)
+        + PERIODIC_TABLE.GetRcovalent(atomic_number_2)
     )
-    length_scale = float(DEFAULT_BOND_ORDER_LENGTH_SCALES.get(int(bond_order), 1.0 / np.sqrt(float(bond_order))))
+    length_scale = float(
+        DEFAULT_BOND_ORDER_LENGTH_SCALES.get(
+            int(bond_order), 1.0 / np.sqrt(float(bond_order))
+        )
+    )
     return covalent_radius_sum * length_scale, "covalent_radius_fallback"
 
 
@@ -321,7 +366,9 @@ def resolve_spring_constant_for_bond_order(bond_order: int) -> float:
         raise ValueError("Bond order must be positive when resolving a spring constant")
 
     return float(
-        DEFAULT_BOND_ORDER_SPRING_CONSTANTS.get(int(bond_order), DEFAULT_BOND_ORDER_SPRING_CONSTANTS[1] * bond_order)
+        DEFAULT_BOND_ORDER_SPRING_CONSTANTS.get(
+            int(bond_order), DEFAULT_BOND_ORDER_SPRING_CONSTANTS[1] * bond_order
+        )
     )
 
 
@@ -331,12 +378,18 @@ def compute_spring_bond_partial_derivative_records(
     adjacency_matrix: pd.DataFrame,
     molecule: Chem.Mol,
 ) -> tuple[list[dict[str, object]], list[dict[str, object]], dict[str, object]]:
-    if len(atom_ids) != coordinates.shape[0] or molecule.GetNumAtoms() != coordinates.shape[0]:
-        raise ValueError("Spring bond derivative analysis requires aligned atom ids, coordinates, and RDKit atoms")
+    if (
+        len(atom_ids) != coordinates.shape[0]
+        or molecule.GetNumAtoms() != coordinates.shape[0]
+    ):
+        raise ValueError(
+            "Spring bond derivative analysis requires aligned atom ids, coordinates, and RDKit atoms"
+        )
 
     atom_index_by_id = {atom_id: index for index, atom_id in enumerate(atom_ids)}
     atom_symbol_by_id = {
-        int(atom_id): molecule.GetAtomWithIdx(index).GetSymbol() for index, atom_id in enumerate(atom_ids)
+        int(atom_id): molecule.GetAtomWithIdx(index).GetSymbol()
+        for index, atom_id in enumerate(atom_ids)
     }
     bonded_pairs = get_bonded_atom_pairs_from_adjacency(adjacency_matrix)
 
@@ -367,10 +420,12 @@ def compute_spring_bond_partial_derivative_records(
                 f"found {distance} for pair {(atom_id_1, atom_id_2)}"
             )
 
-        reference_distance, reference_distance_source = infer_reference_bond_length_angstrom(
-            atom_symbol_1,
-            atom_symbol_2,
-            bond_order,
+        reference_distance, reference_distance_source = (
+            infer_reference_bond_length_angstrom(
+                atom_symbol_1,
+                atom_symbol_2,
+                bond_order,
+            )
         )
         reference_distance_source_counts[reference_distance_source] = (
             reference_distance_source_counts.get(reference_distance_source, 0) + 1
@@ -437,7 +492,8 @@ def compute_spring_bond_partial_derivative_records(
     metadata = {
         "bonded_pair_count": int(len(bond_records)),
         "reference_distance_source_counts": {
-            str(source): int(count) for source, count in sorted(reference_distance_source_counts.items())
+            str(source): int(count)
+            for source, count in sorted(reference_distance_source_counts.items())
         },
         "net_cartesian_gradient": {
             "dE_dx": float(net_gradient_vector[0]),
@@ -455,13 +511,17 @@ def summarize_spring_bond_partial_derivatives(
     pair_metadata: dict[str, object],
 ) -> dict:
     if not bond_records:
-        raise ValueError("Spring bond derivative analysis must contain at least one bonded pair")
+        raise ValueError(
+            "Spring bond derivative analysis must contain at least one bonded pair"
+        )
 
     distance_residuals = np.array(
         [float(record["distance_residual_angstrom"]) for record in bond_records],
         dtype=np.float64,
     )
-    spring_energies = np.array([float(record["spring_energy"]) for record in bond_records], dtype=np.float64)
+    spring_energies = np.array(
+        [float(record["spring_energy"]) for record in bond_records], dtype=np.float64
+    )
     atom_gradient_norms = np.array(
         [float(record["gradient_norm"]) for record in atom_gradient_records],
         dtype=np.float64,
@@ -470,7 +530,9 @@ def summarize_spring_bond_partial_derivatives(
     distance_residual_quantiles = np.quantile(distance_residuals, [0.25, 0.5, 0.75])
     spring_energy_quantiles = np.quantile(spring_energies, [0.25, 0.5, 0.75])
     atom_gradient_quantiles = np.quantile(atom_gradient_norms, [0.25, 0.5, 0.75])
-    zero_residual_bond_count = int(np.count_nonzero(np.isclose(distance_residuals, 0.0, atol=1e-12)))
+    zero_residual_bond_count = int(
+        np.count_nonzero(np.isclose(distance_residuals, 0.0, atol=1e-12))
+    )
 
     return {
         "distance_residual_angstrom": {
@@ -534,45 +596,67 @@ def extract_atom_feature_matrix(molecules: list[Chem.Mol]) -> pd.DataFrame:
 
     atom_feature_df = pd.DataFrame(atom_data)
     if atom_feature_df.empty:
-        raise ValueError("Expected at least one atom when building the atom feature matrix")
+        raise ValueError(
+            "Expected at least one atom when building the atom feature matrix"
+        )
 
     return atom_feature_df
 
 
-def build_atom_gradient_descent_dataset(atom_feature_df: pd.DataFrame) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
+def build_atom_gradient_descent_dataset(
+    atom_feature_df: pd.DataFrame,
+) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
     required_columns = {"index", "symbol", "mass", "atomicNumber"}
     missing_columns = required_columns.difference(atom_feature_df.columns)
     if missing_columns:
-        raise ValueError(f"Atom feature matrix is missing required columns: {sorted(missing_columns)}")
+        raise ValueError(
+            f"Atom feature matrix is missing required columns: {sorted(missing_columns)}"
+        )
 
-    dataset_df = atom_feature_df.loc[:, ["index", "symbol", "mass", "atomicNumber"]].copy()
+    dataset_df = atom_feature_df.loc[
+        :, ["index", "symbol", "mass", "atomicNumber"]
+    ].copy()
     dataset_df["mass"] = pd.to_numeric(dataset_df["mass"], errors="coerce")
-    dataset_df["atomicNumber"] = pd.to_numeric(dataset_df["atomicNumber"], errors="coerce")
-    dataset_df = dataset_df.dropna(subset=["mass", "atomicNumber"]).reset_index(drop=True)
+    dataset_df["atomicNumber"] = pd.to_numeric(
+        dataset_df["atomicNumber"], errors="coerce"
+    )
+    dataset_df = dataset_df.dropna(subset=["mass", "atomicNumber"]).reset_index(
+        drop=True
+    )
 
     if dataset_df.empty:
-        raise ValueError("Atom feature matrix did not contain any numeric mass/atomic-number rows")
+        raise ValueError(
+            "Atom feature matrix did not contain any numeric mass/atomic-number rows"
+        )
 
     x_values = dataset_df["mass"].to_numpy(dtype=np.float64)
     y_values = dataset_df["atomicNumber"].to_numpy(dtype=np.float64)
     return x_values, y_values, dataset_df
 
 
-def compute_gradient_descent_predictions(x_values: np.ndarray, weight: float) -> np.ndarray:
+def compute_gradient_descent_predictions(
+    x_values: np.ndarray, weight: float
+) -> np.ndarray:
     return weight * x_values
 
 
-def compute_sum_squared_error(x_values: np.ndarray, y_values: np.ndarray, weight: float) -> float:
+def compute_sum_squared_error(
+    x_values: np.ndarray, y_values: np.ndarray, weight: float
+) -> float:
     residuals = y_values - compute_gradient_descent_predictions(x_values, weight)
     return float(np.sum(residuals**2))
 
 
-def compute_mean_squared_error(x_values: np.ndarray, y_values: np.ndarray, weight: float) -> float:
+def compute_mean_squared_error(
+    x_values: np.ndarray, y_values: np.ndarray, weight: float
+) -> float:
     residuals = y_values - compute_gradient_descent_predictions(x_values, weight)
     return float(np.mean(residuals**2))
 
 
-def compute_sum_squared_error_gradient(x_values: np.ndarray, y_values: np.ndarray, weight: float) -> float:
+def compute_sum_squared_error_gradient(
+    x_values: np.ndarray, y_values: np.ndarray, weight: float
+) -> float:
     return float(2.0 * np.sum(x_values * ((weight * x_values) - y_values)))
 
 
@@ -643,8 +727,12 @@ def summarize_atom_gradient_descent_analysis(
     y_values = dataset_df["atomicNumber"].to_numpy(dtype=np.float64)
     initial_weight = float(training_summary["initial_weight"])
     final_weight = float(training_summary["final_weight"])
-    initial_gradient = compute_sum_squared_error_gradient(x_values, y_values, initial_weight)
-    final_gradient = compute_sum_squared_error_gradient(x_values, y_values, final_weight)
+    initial_gradient = compute_sum_squared_error_gradient(
+        x_values, y_values, initial_weight
+    )
+    final_gradient = compute_sum_squared_error_gradient(
+        x_values, y_values, final_weight
+    )
 
     return {
         "dataset": {
@@ -652,7 +740,10 @@ def summarize_atom_gradient_descent_analysis(
             "feature": "mass",
             "target": "atomicNumber",
             "feature_matrix_shape": [int(len(dataset_df)), 1],
-            "mass_range": [float(dataset_df["mass"].min()), float(dataset_df["mass"].max())],
+            "mass_range": [
+                float(dataset_df["mass"].min()),
+                float(dataset_df["mass"].max()),
+            ],
             "atomic_number_range": [
                 int(dataset_df["atomicNumber"].min()),
                 int(dataset_df["atomicNumber"].max()),
@@ -679,16 +770,21 @@ def summarize_atom_gradient_descent_analysis(
         "optimization": {
             **training_summary,
             "weight_error_vs_closed_form": float(
-                training_summary["final_weight"] - training_summary["closed_form_weight"]
+                training_summary["final_weight"]
+                - training_summary["closed_form_weight"]
             ),
             "gradient_checks": {
                 "initial_weight": {
                     "analytic": float(initial_gradient),
-                    "finite_difference": float(finite_difference_gradient(x_values, y_values, initial_weight)),
+                    "finite_difference": float(
+                        finite_difference_gradient(x_values, y_values, initial_weight)
+                    ),
                 },
                 "final_weight": {
                     "analytic": float(final_gradient),
-                    "finite_difference": float(finite_difference_gradient(x_values, y_values, final_weight)),
+                    "finite_difference": float(
+                        finite_difference_gradient(x_values, y_values, final_weight)
+                    ),
                 },
             },
             "loss_trace": {
@@ -712,14 +808,22 @@ def build_hill_reference_dataframe(
         raise ValueError("Hill coefficient must be positive")
 
     activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
-    has_curve_series = pd.to_numeric(bioactivity_df["Has_Dose_Response_Curve"], errors="coerce").fillna(0).astype(int)
+    has_curve_series = (
+        pd.to_numeric(bioactivity_df["Has_Dose_Response_Curve"], errors="coerce")
+        .fillna(0)
+        .astype(int)
+    )
     positive_numeric_mask = activity_value.notna() & (activity_value > 0)
 
     hill_df = bioactivity_df.loc[positive_numeric_mask].copy()
     hill_df["Activity_Value"] = activity_value.loc[positive_numeric_mask]
     hill_df["Has_Dose_Response_Curve"] = has_curve_series.loc[positive_numeric_mask]
-    hill_df["Activity_Type"] = hill_df["Activity_Type"].astype("string").str.strip().fillna("Unknown")
-    hill_df["Target_Name"] = hill_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
+    hill_df["Activity_Type"] = (
+        hill_df["Activity_Type"].astype("string").str.strip().fillna("Unknown")
+    )
+    hill_df["Target_Name"] = (
+        hill_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
+    )
     hill_df["hill_coefficient_n"] = float(hill_coefficient)
     hill_df["inferred_K_activity_value"] = hill_df["Activity_Value"].astype(np.float64)
     hill_df["midpoint_concentration"] = hill_df["inferred_K_activity_value"]
@@ -736,24 +840,30 @@ def build_hill_reference_dataframe(
         upper_bound_scale=auc_upper_bound_scale,
         grid_size=auc_grid_size,
     )
-    hill_df["log10_midpoint_concentration"] = np.log10(hill_df["midpoint_concentration"])
+    hill_df["log10_midpoint_concentration"] = np.log10(
+        hill_df["midpoint_concentration"]
+    )
     hill_df["linear_inflection_concentration"] = np.nan
     hill_df["linear_inflection_response"] = np.nan
     hill_df["fit_status"] = "reference_curve_inferred_from_activity_value"
     hill_df["analysis_mode"] = "reference_curve"
 
     if hill_coefficient > 1.0:
-        inflection_scale = ((hill_coefficient - 1.0) / (hill_coefficient + 1.0)) ** (1.0 / hill_coefficient)
-        hill_df["linear_inflection_concentration"] = hill_df["inferred_K_activity_value"] * inflection_scale
+        inflection_scale = ((hill_coefficient - 1.0) / (hill_coefficient + 1.0)) ** (
+            1.0 / hill_coefficient
+        )
+        hill_df["linear_inflection_concentration"] = (
+            hill_df["inferred_K_activity_value"] * inflection_scale
+        )
         hill_df["linear_inflection_response"] = hill_response(
             hill_df["linear_inflection_concentration"].to_numpy(dtype=np.float64),
             hill_df["inferred_K_activity_value"].to_numpy(dtype=np.float64),
             hill_coefficient,
         )
 
-    hill_df = hill_df.sort_values(by=["inferred_K_activity_value", "BioAssay_AID"], ascending=[True, True]).reset_index(
-        drop=True
-    )
+    hill_df = hill_df.sort_values(
+        by=["inferred_K_activity_value", "BioAssay_AID"], ascending=[True, True]
+    ).reset_index(drop=True)
 
     counts = {
         "total_rows": int(len(bioactivity_df)),
@@ -761,18 +871,24 @@ def build_hill_reference_dataframe(
         "rows_with_positive_activity_value": int(positive_numeric_mask.sum()),
         "rows_flagged_has_dose_response_curve": int((has_curve_series == 1).sum()),
         "retained_rows": int(len(hill_df)),
-        "retained_rows_flagged_has_dose_response_curve": int((hill_df["Has_Dose_Response_Curve"] == 1).sum()),
+        "retained_rows_flagged_has_dose_response_curve": int(
+            (hill_df["Has_Dose_Response_Curve"] == 1).sum()
+        ),
         "retained_unique_bioassays": int(hill_df["BioAssay_AID"].nunique()),
     }
 
     if hill_df.empty:
-        raise ValueError("No positive numeric Activity_Value rows were found in the bioactivity dataset")
+        raise ValueError(
+            "No positive numeric Activity_Value rows were found in the bioactivity dataset"
+        )
 
     return hill_df, counts
 
 
 def hill_response(
-    concentration: np.ndarray, half_maximal_concentration: np.ndarray | float, hill_coefficient: float
+    concentration: np.ndarray,
+    half_maximal_concentration: np.ndarray | float,
+    hill_coefficient: float,
 ) -> np.ndarray:
     concentration_array = np.asarray(concentration, dtype=np.float64)
     half_maximal_array = np.asarray(half_maximal_concentration, dtype=np.float64)
@@ -793,19 +909,33 @@ def compute_hill_reference_auc_trapezoid(
     if lower_bound_scale <= 0 or upper_bound_scale <= 0:
         raise ValueError("AUC concentration-bound scales must be positive")
     if lower_bound_scale >= upper_bound_scale:
-        raise ValueError("AUC lower-bound scale must be smaller than the upper-bound scale")
+        raise ValueError(
+            "AUC lower-bound scale must be smaller than the upper-bound scale"
+        )
     if grid_size < 2:
-        raise ValueError("AUC trapezoidal integration requires at least two grid points")
+        raise ValueError(
+            "AUC trapezoidal integration requires at least two grid points"
+        )
 
     k_values = np.asarray(inferred_k_values, dtype=np.float64)
     if k_values.size == 0:
-        raise ValueError("AUC trapezoidal integration requires at least one inferred K value")
+        raise ValueError(
+            "AUC trapezoidal integration requires at least one inferred K value"
+        )
     if np.any(k_values <= 0):
-        raise ValueError("AUC trapezoidal integration requires strictly positive inferred K values")
+        raise ValueError(
+            "AUC trapezoidal integration requires strictly positive inferred K values"
+        )
 
-    relative_concentration_grid = np.geomspace(lower_bound_scale, upper_bound_scale, grid_size, dtype=np.float64)
-    concentration_grid = k_values[:, np.newaxis] * relative_concentration_grid[np.newaxis, :]
-    response_grid = hill_response(concentration_grid, k_values[:, np.newaxis], hill_coefficient)
+    relative_concentration_grid = np.geomspace(
+        lower_bound_scale, upper_bound_scale, grid_size, dtype=np.float64
+    )
+    concentration_grid = (
+        k_values[:, np.newaxis] * relative_concentration_grid[np.newaxis, :]
+    )
+    response_grid = hill_response(
+        concentration_grid, k_values[:, np.newaxis], hill_coefficient
+    )
     return np.trapezoid(response_grid, concentration_grid, axis=1)
 
 
@@ -817,9 +947,13 @@ def hill_response_first_derivative(
     concentration_array = np.asarray(concentration, dtype=np.float64)
     half_maximal_array = np.asarray(half_maximal_concentration, dtype=np.float64)
     numerator = (
-        hill_coefficient * (half_maximal_array**hill_coefficient) * (concentration_array ** (hill_coefficient - 1.0))
+        hill_coefficient
+        * (half_maximal_array**hill_coefficient)
+        * (concentration_array ** (hill_coefficient - 1.0))
     )
-    denominator = ((half_maximal_array**hill_coefficient) + (concentration_array**hill_coefficient)) ** 2
+    denominator = (
+        (half_maximal_array**hill_coefficient) + (concentration_array**hill_coefficient)
+    ) ** 2
     return numerator / denominator
 
 
@@ -839,7 +973,9 @@ def hill_response_second_derivative(
             - ((hill_coefficient + 1.0) * (concentration_array**hill_coefficient))
         )
     )
-    denominator = ((half_maximal_array**hill_coefficient) + (concentration_array**hill_coefficient)) ** 3
+    denominator = (
+        (half_maximal_array**hill_coefficient) + (concentration_array**hill_coefficient)
+    ) ** 3
     return numerator / denominator
 
 
@@ -852,21 +988,29 @@ def summarize_hill_reference_analysis(
     auc_grid_size: int = DEFAULT_HILL_AUC_GRID_SIZE,
 ) -> dict:
     inferred_k_values = hill_df["inferred_K_activity_value"].to_numpy(dtype=np.float64)
-    midpoint_derivatives = hill_df["midpoint_first_derivative"].to_numpy(dtype=np.float64)
+    midpoint_derivatives = hill_df["midpoint_first_derivative"].to_numpy(
+        dtype=np.float64
+    )
     auc_values = hill_df["auc_trapezoid_reference_curve"].to_numpy(dtype=np.float64)
     representative_positions = sorted({0, len(hill_df) // 2, len(hill_df) - 1})
     representative_rows = hill_df.iloc[representative_positions]
     activity_type_counts = {
-        str(key): int(value) for key, value in hill_df["Activity_Type"].value_counts(dropna=False).items()
+        str(key): int(value)
+        for key, value in hill_df["Activity_Type"].value_counts(dropna=False).items()
     }
 
     linear_inflection = None
     if hill_coefficient > 1.0:
-        response_at_inflection = float((hill_coefficient - 1.0) / (2.0 * hill_coefficient))
+        response_at_inflection = float(
+            (hill_coefficient - 1.0) / (2.0 * hill_coefficient)
+        )
         linear_inflection = {
             "formula": "c* = K * ((n - 1)/(n + 1))^(1/n)",
             "response_formula": "f(c*) = (n - 1)/(2n)",
-            "relative_to_K": float(((hill_coefficient - 1.0) / (hill_coefficient + 1.0)) ** (1.0 / hill_coefficient)),
+            "relative_to_K": float(
+                ((hill_coefficient - 1.0) / (hill_coefficient + 1.0))
+                ** (1.0 / hill_coefficient)
+            ),
             "normalized_response": response_at_inflection,
         }
 
@@ -894,7 +1038,9 @@ def summarize_hill_reference_analysis(
             "model": "normalized Hill equation",
             "equation": "f(c) = c^n / (K^n + c^n)",
             "first_derivative": "f'(c) = n K^n c^(n-1) / (K^n + c^n)^2",
-            "second_derivative": ("f''(c) = n K^n c^(n-2) * ((n - 1)K^n - (n + 1)c^n) / (K^n + c^n)^3"),
+            "second_derivative": (
+                "f''(c) = n K^n c^(n-2) * ((n - 1)K^n - (n + 1)c^n) / (K^n + c^n)^3"
+            ),
             "reference_hill_coefficient_n": float(hill_coefficient),
             "parameter_interpretation": (
                 "Activity_Value is treated as an inferred K parameter because this dataset provides potency-style "
@@ -925,9 +1071,15 @@ def summarize_hill_reference_analysis(
                     "Activity_Type": str(row["Activity_Type"]),
                     "Target_Name": str(row["Target_Name"]),
                     "Activity_Value": float(row["Activity_Value"]),
-                    "inferred_K_activity_value": float(row["inferred_K_activity_value"]),
-                    "auc_trapezoid_reference_curve": float(row["auc_trapezoid_reference_curve"]),
-                    "log10_midpoint_concentration": float(row["log10_midpoint_concentration"]),
+                    "inferred_K_activity_value": float(
+                        row["inferred_K_activity_value"]
+                    ),
+                    "auc_trapezoid_reference_curve": float(
+                        row["auc_trapezoid_reference_curve"]
+                    ),
+                    "log10_midpoint_concentration": float(
+                        row["log10_midpoint_concentration"]
+                    ),
                 }
                 for _, row in representative_rows.iterrows()
             ],
@@ -943,10 +1095,14 @@ def summarize_hill_reference_analysis(
     }
 
 
-def select_hill_plot_representatives(hill_df: pd.DataFrame) -> tuple[np.ndarray, list[str]]:
+def select_hill_plot_representatives(
+    hill_df: pd.DataFrame,
+) -> tuple[np.ndarray, list[str]]:
     representative_positions = sorted({0, len(hill_df) // 2, len(hill_df) - 1})
     representative_rows = hill_df.iloc[representative_positions]
-    representative_k_values = representative_rows["inferred_K_activity_value"].to_numpy(dtype=np.float64)
+    representative_k_values = representative_rows["inferred_K_activity_value"].to_numpy(
+        dtype=np.float64
+    )
     representative_labels = [
         f"AID {int(row['BioAssay_AID'])} | {str(row['Activity_Type'])} | "
         f"K={float(row['inferred_K_activity_value']):.4g}"
@@ -959,8 +1115,16 @@ def load_bioactivity_dataframe(filename: str) -> pd.DataFrame:
     return pd.read_csv(resolve_data_path(filename))
 
 
-def build_activity_posterior_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
-    activity = bioactivity_df["Activity"].astype("string").str.strip().str.upper().fillna("UNSPECIFIED")
+def build_activity_posterior_dataframe(
+    bioactivity_df: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    activity = (
+        bioactivity_df["Activity"]
+        .astype("string")
+        .str.strip()
+        .str.upper()
+        .fillna("UNSPECIFIED")
+    )
     active_mask = activity.eq("ACTIVE")
     inactive_mask = activity.eq("INACTIVE")
     unspecified_mask = activity.eq("UNSPECIFIED")
@@ -968,24 +1132,36 @@ def build_activity_posterior_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd
 
     posterior_df = bioactivity_df.loc[binary_mask].copy()
     posterior_df["Activity"] = activity.loc[binary_mask].str.title()
-    posterior_df["Activity_Type"] = posterior_df["Activity_Type"].astype("string").str.strip().fillna("Unknown")
-    posterior_df["Target_Name"] = posterior_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
-    posterior_df["BioAssay_Name"] = posterior_df["BioAssay_Name"].astype("string").str.strip().fillna("Unknown")
-    posterior_df = posterior_df.sort_values(by=["Activity", "BioAssay_AID", "Bioactivity_ID"]).reset_index(drop=True)
+    posterior_df["Activity_Type"] = (
+        posterior_df["Activity_Type"].astype("string").str.strip().fillna("Unknown")
+    )
+    posterior_df["Target_Name"] = (
+        posterior_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
+    )
+    posterior_df["BioAssay_Name"] = (
+        posterior_df["BioAssay_Name"].astype("string").str.strip().fillna("Unknown")
+    )
+    posterior_df = posterior_df.sort_values(
+        by=["Activity", "BioAssay_AID", "Bioactivity_ID"]
+    ).reset_index(drop=True)
 
     counts = {
         "total_rows": int(len(bioactivity_df)),
         "active_rows": int(active_mask.sum()),
         "inactive_rows": int(inactive_mask.sum()),
         "unspecified_rows": int(unspecified_mask.sum()),
-        "other_activity_rows": int((~(active_mask | inactive_mask | unspecified_mask)).sum()),
+        "other_activity_rows": int(
+            (~(active_mask | inactive_mask | unspecified_mask)).sum()
+        ),
         "retained_binary_rows": int(len(posterior_df)),
         "dropped_non_binary_rows": int(len(bioactivity_df) - len(posterior_df)),
         "retained_unique_bioassays": int(posterior_df["BioAssay_AID"].nunique()),
     }
 
     if posterior_df.empty:
-        raise ValueError("No Active/Inactive rows were found in the bioactivity dataset")
+        raise ValueError(
+            "No Active/Inactive rows were found in the bioactivity dataset"
+        )
 
     return posterior_df, counts
 
@@ -1015,13 +1191,18 @@ def summarize_bioactivity_posterior_analysis(
     )
     posterior_mean = posterior_alpha / (posterior_alpha + posterior_beta)
     posterior_variance = (posterior_alpha * posterior_beta) / (
-        ((posterior_alpha + posterior_beta) ** 2) * (posterior_alpha + posterior_beta + 1.0)
+        ((posterior_alpha + posterior_beta) ** 2)
+        * (posterior_alpha + posterior_beta + 1.0)
     )
     posterior_mode = None
     if posterior_alpha > 1.0 and posterior_beta > 1.0:
-        posterior_mode = (posterior_alpha - 1.0) / (posterior_alpha + posterior_beta - 2.0)
+        posterior_mode = (posterior_alpha - 1.0) / (
+            posterior_alpha + posterior_beta - 2.0
+        )
 
-    representative_positions = sorted({0, len(posterior_df) // 2, len(posterior_df) - 1})
+    representative_positions = sorted(
+        {0, len(posterior_df) // 2, len(posterior_df) - 1}
+    )
     representative_rows = posterior_df.iloc[representative_positions]
 
     return {
@@ -1044,8 +1225,12 @@ def summarize_bioactivity_posterior_analysis(
             },
             "summary": {
                 "posterior_mean_probability_active": float(posterior_mean),
-                "posterior_median_probability_active": float(stats.beta.median(posterior_alpha, posterior_beta)),
-                "posterior_mode_probability_active": None if posterior_mode is None else float(posterior_mode),
+                "posterior_median_probability_active": float(
+                    stats.beta.median(posterior_alpha, posterior_beta)
+                ),
+                "posterior_mode_probability_active": None
+                if posterior_mode is None
+                else float(posterior_mode),
                 "posterior_variance": float(posterior_variance),
                 "credible_interval_probability_active": {
                     "mass": float(credible_interval),
@@ -1055,7 +1240,9 @@ def summarize_bioactivity_posterior_analysis(
                 "posterior_probability_active_gt_0_5": float(
                     1.0 - stats.beta.cdf(0.5, posterior_alpha, posterior_beta)
                 ),
-                "observed_active_fraction_in_retained_rows": float(active_count / retained_count),
+                "observed_active_fraction_in_retained_rows": float(
+                    active_count / retained_count
+                ),
             },
         },
         "analysis": {
@@ -1120,7 +1307,9 @@ def build_activity_aid_type_chi_square_dataframe(
     }
 
     if contingency_table.empty:
-        raise ValueError("No Activity/Aid_Type contingency rows were found in the bioactivity dataset")
+        raise ValueError(
+            "No Activity/Aid_Type contingency rows were found in the bioactivity dataset"
+        )
 
     return contingency_table, contingency_df, chi_square_counts
 
@@ -1134,7 +1323,11 @@ def compute_activity_aid_type_chi_square(
 
     observed = contingency_table.to_numpy(dtype=np.float64)
     has_minimum_shape = observed.shape[0] >= 2 and observed.shape[1] >= 2
-    expected_df = pd.DataFrame(index=contingency_table.index, columns=contingency_table.columns, dtype=np.float64)
+    expected_df = pd.DataFrame(
+        index=contingency_table.index,
+        columns=contingency_table.columns,
+        dtype=np.float64,
+    )
 
     if not has_minimum_shape:
         expected_df.loc[:, :] = np.nan
@@ -1150,10 +1343,16 @@ def compute_activity_aid_type_chi_square(
             "sparse_expected_cell_fraction": None,
         }
 
-    chi2_statistic, p_value, degrees_of_freedom, expected = stats.chi2_contingency(observed)
-    expected_df = pd.DataFrame(expected, index=contingency_table.index, columns=contingency_table.columns)
+    chi2_statistic, p_value, degrees_of_freedom, expected = stats.chi2_contingency(
+        observed
+    )
+    expected_df = pd.DataFrame(
+        expected, index=contingency_table.index, columns=contingency_table.columns
+    )
     sparse_expected_mask = expected_df.lt(min_expected_count_threshold)
-    sparse_expected_cell_count = int(sparse_expected_mask.to_numpy(dtype=np.int64).sum())
+    sparse_expected_cell_count = int(
+        sparse_expected_mask.to_numpy(dtype=np.int64).sum()
+    )
     sparse_expected_cell_fraction = sparse_expected_cell_count / float(expected_df.size)
 
     return expected_df, {
@@ -1185,15 +1384,22 @@ def summarize_activity_aid_type_chi_square_analysis(
         for activity, row in contingency_table.to_dict(orient="index").items()
     }
     expected_counts = {
-        str(activity): {str(aid_type): None if pd.isna(value) else float(value) for aid_type, value in row.items()}
+        str(activity): {
+            str(aid_type): None if pd.isna(value) else float(value)
+            for aid_type, value in row.items()
+        }
         for activity, row in expected_df.to_dict(orient="index").items()
     }
 
     return {
         "row_counts": counts,
         "contingency_table": {
-            "activity_levels": [str(value) for value in contingency_table.index.tolist()],
-            "aid_type_levels": [str(value) for value in contingency_table.columns.tolist()],
+            "activity_levels": [
+                str(value) for value in contingency_table.index.tolist()
+            ],
+            "aid_type_levels": [
+                str(value) for value in contingency_table.columns.tolist()
+            ],
             "observed_counts": observed_counts,
             "expected_counts": expected_counts,
         },
@@ -1211,9 +1417,15 @@ def summarize_activity_aid_type_chi_square_analysis(
             "chi2_statistic": chi_square_metrics["chi2_statistic"],
             "p_value": chi_square_metrics["p_value"],
             "degrees_of_freedom": chi_square_metrics["degrees_of_freedom"],
-            "minimum_expected_count_threshold": float(chi_square_metrics["minimum_expected_count_threshold"]),
-            "sparse_expected_cell_count": chi_square_metrics["sparse_expected_cell_count"],
-            "sparse_expected_cell_fraction": chi_square_metrics["sparse_expected_cell_fraction"],
+            "minimum_expected_count_threshold": float(
+                chi_square_metrics["minimum_expected_count_threshold"]
+            ),
+            "sparse_expected_cell_count": chi_square_metrics[
+                "sparse_expected_cell_count"
+            ],
+            "sparse_expected_cell_fraction": chi_square_metrics[
+                "sparse_expected_cell_fraction"
+            ],
         },
         "analysis": {
             "target_quantity": "Activity ⟂ Aid_Type",
@@ -1263,9 +1475,15 @@ def build_assay_activity_binomial_dataframe(
         )
         .reset_index()
     )
-    assay_df["mixed_evidence"] = assay_df["active_rows"].gt(0) & assay_df["inactive_rows"].gt(0)
-    assay_df["assay_activity"] = np.where(assay_df["active_rows"].gt(0), "Active", "Inactive")
-    assay_df = assay_df.sort_values(by=["assay_activity", "BioAssay_AID"]).reset_index(drop=True)
+    assay_df["mixed_evidence"] = assay_df["active_rows"].gt(0) & assay_df[
+        "inactive_rows"
+    ].gt(0)
+    assay_df["assay_activity"] = np.where(
+        assay_df["active_rows"].gt(0), "Active", "Inactive"
+    )
+    assay_df = assay_df.sort_values(by=["assay_activity", "BioAssay_AID"]).reset_index(
+        drop=True
+    )
 
     assay_counts = {
         **counts,
@@ -1273,19 +1491,25 @@ def build_assay_activity_binomial_dataframe(
         "active_assay_trials": int(assay_df["assay_activity"].eq("Active").sum()),
         "inactive_assay_trials": int(assay_df["assay_activity"].eq("Inactive").sum()),
         "mixed_evidence_assay_trials": int(assay_df["mixed_evidence"].sum()),
-        "unanimous_active_assay_trials": int((assay_df["active_rows"] > 0).sum() - assay_df["mixed_evidence"].sum()),
+        "unanimous_active_assay_trials": int(
+            (assay_df["active_rows"] > 0).sum() - assay_df["mixed_evidence"].sum()
+        ),
         "unanimous_inactive_assay_trials": int(
             (assay_df["inactive_rows"] > 0).sum() - assay_df["mixed_evidence"].sum()
         ),
     }
 
     if assay_df.empty:
-        raise ValueError("No assay-level Active/Inactive trials were found in the bioactivity dataset")
+        raise ValueError(
+            "No assay-level Active/Inactive trials were found in the bioactivity dataset"
+        )
 
     return assay_df, assay_counts
 
 
-def build_bioactivity_binomial_pmf_dataframe(assay_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, float | int]]:
+def build_bioactivity_binomial_pmf_dataframe(
+    assay_df: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict[str, float | int]]:
     assay_trials = int(len(assay_df))
     active_assay_trials = int(assay_df["assay_activity"].eq("Active").sum())
     success_probability = active_assay_trials / assay_trials
@@ -1293,7 +1517,9 @@ def build_bioactivity_binomial_pmf_dataframe(assay_df: pd.DataFrame) -> tuple[pd
     pmf_values = stats.binom.pmf(k_values, assay_trials, success_probability)
     cumulative_leq_values = stats.binom.cdf(k_values, assay_trials, success_probability)
     cumulative_geq_values = stats.binom.sf(
-        np.maximum(k_values - 1, DEFAULT_BINOMIAL_TAIL_THRESHOLD), assay_trials, success_probability
+        np.maximum(k_values - 1, DEFAULT_BINOMIAL_TAIL_THRESHOLD),
+        assay_trials,
+        success_probability,
     )
     pmf_df = pd.DataFrame(
         {
@@ -1309,8 +1535,12 @@ def build_bioactivity_binomial_pmf_dataframe(assay_df: pd.DataFrame) -> tuple[pd
         "active_assay_trials": active_assay_trials,
         "success_probability_active_assay": float(success_probability),
         "observed_pmf_at_active_assay_count": float(pmf_values[active_assay_trials]),
-        "observed_cumulative_probability_leq_active_assay_count": float(cumulative_leq_values[active_assay_trials]),
-        "observed_cumulative_probability_geq_active_assay_count": float(cumulative_geq_values[active_assay_trials]),
+        "observed_cumulative_probability_leq_active_assay_count": float(
+            cumulative_leq_values[active_assay_trials]
+        ),
+        "observed_cumulative_probability_geq_active_assay_count": float(
+            cumulative_geq_values[active_assay_trials]
+        ),
     }
 
 
@@ -1342,14 +1572,22 @@ def summarize_bioactivity_binomial_analysis(
                 "success_probability_active_assay": success_probability,
             },
             "summary": {
-                "pmf_at_observed_active_assay_count": float(binomial_metrics["observed_pmf_at_active_assay_count"]),
+                "pmf_at_observed_active_assay_count": float(
+                    binomial_metrics["observed_pmf_at_active_assay_count"]
+                ),
                 "cumulative_probability_leq_observed_active_assay_count": float(
-                    binomial_metrics["observed_cumulative_probability_leq_active_assay_count"]
+                    binomial_metrics[
+                        "observed_cumulative_probability_leq_active_assay_count"
+                    ]
                 ),
                 "cumulative_probability_geq_observed_active_assay_count": float(
-                    binomial_metrics["observed_cumulative_probability_geq_active_assay_count"]
+                    binomial_metrics[
+                        "observed_cumulative_probability_geq_active_assay_count"
+                    ]
                 ),
-                "binomial_mean_active_assays": float(assay_trials * success_probability),
+                "binomial_mean_active_assays": float(
+                    assay_trials * success_probability
+                ),
                 "binomial_variance_active_assays": float(
                     assay_trials * success_probability * (1.0 - success_probability)
                 ),
@@ -1385,8 +1623,12 @@ def summarize_bioactivity_binomial_analysis(
     }
 
 
-def build_pic50_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
-    activity_type = bioactivity_df["Activity_Type"].astype("string").str.strip().str.upper()
+def build_pic50_dataframe(
+    bioactivity_df: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    activity_type = (
+        bioactivity_df["Activity_Type"].astype("string").str.strip().str.upper()
+    )
     activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
     positive_numeric_mask = activity_value.notna() & (activity_value > 0)
     retained_mask = activity_type.eq("IC50") & positive_numeric_mask
@@ -1406,12 +1648,16 @@ def build_pic50_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, d
     }
 
     if pic50_df.empty:
-        raise ValueError("No positive numeric IC50 rows were found in the bioactivity dataset")
+        raise ValueError(
+            "No positive numeric IC50 rows were found in the bioactivity dataset"
+        )
 
     return pic50_df, counts
 
 
-def build_activity_value_statistics_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
+def build_activity_value_statistics_dataframe(
+    bioactivity_df: pd.DataFrame,
+) -> tuple[pd.DataFrame, dict[str, int]]:
     activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
     numeric_mask = activity_value.notna()
     positive_numeric_mask = numeric_mask & activity_value.gt(0)
@@ -1428,17 +1674,33 @@ def build_activity_value_statistics_dataframe(bioactivity_df: pd.DataFrame) -> t
         "BioAssay_Name",
         "Activity_Value",
     ]
-    activity_value_df = bioactivity_df.loc[positive_numeric_mask, selected_columns].copy()
+    activity_value_df = bioactivity_df.loc[
+        positive_numeric_mask, selected_columns
+    ].copy()
     activity_value_df["Activity_Value"] = activity_value.loc[positive_numeric_mask]
-    activity_value_df["Activity"] = activity_value_df["Activity"].astype("string").str.strip().fillna("Unknown")
-    activity_value_df["Aid_Type"] = activity_value_df["Aid_Type"].astype("string").str.strip().fillna("Unknown")
-    activity_value_df["Aid_Type"] = activity_value_df["Aid_Type"].mask(activity_value_df["Aid_Type"].eq(""), "Unknown")
-    activity_value_df["Activity_Type"] = (
-        activity_value_df["Activity_Type"].astype("string").str.strip().fillna("Unknown")
+    activity_value_df["Activity"] = (
+        activity_value_df["Activity"].astype("string").str.strip().fillna("Unknown")
     )
-    activity_value_df["Target_Name"] = activity_value_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
+    activity_value_df["Aid_Type"] = (
+        activity_value_df["Aid_Type"].astype("string").str.strip().fillna("Unknown")
+    )
+    activity_value_df["Aid_Type"] = activity_value_df["Aid_Type"].mask(
+        activity_value_df["Aid_Type"].eq(""), "Unknown"
+    )
+    activity_value_df["Activity_Type"] = (
+        activity_value_df["Activity_Type"]
+        .astype("string")
+        .str.strip()
+        .fillna("Unknown")
+    )
+    activity_value_df["Target_Name"] = (
+        activity_value_df["Target_Name"].astype("string").str.strip().fillna("Unknown")
+    )
     activity_value_df["BioAssay_Name"] = (
-        activity_value_df["BioAssay_Name"].astype("string").str.strip().fillna("Unknown")
+        activity_value_df["BioAssay_Name"]
+        .astype("string")
+        .str.strip()
+        .fillna("Unknown")
     )
     activity_value_df = activity_value_df.sort_values(
         by=["Activity_Value", "BioAssay_AID", "Bioactivity_ID"],
@@ -1458,7 +1720,9 @@ def build_activity_value_statistics_dataframe(bioactivity_df: pd.DataFrame) -> t
     }
 
     if activity_value_df.empty:
-        raise ValueError("No positive numeric Activity_Value rows were found in the bioactivity dataset")
+        raise ValueError(
+            "No positive numeric Activity_Value rows were found in the bioactivity dataset"
+        )
 
     return activity_value_df, counts
 
@@ -1486,7 +1750,10 @@ def summarize_pic50_analysis(pic50_df: pd.DataFrame, counts: dict[str, int]) -> 
         "analysis": {
             "transform": "pIC50 = -log10(IC50_uM)",
             "interpretation": "Lower IC50 values map to higher pIC50 values, so potency increases as the curve rises.",
-            "observed_ic50_domain_uM": [float(ic50_values.min()), float(ic50_values.max())],
+            "observed_ic50_domain_uM": [
+                float(ic50_values.min()),
+                float(ic50_values.max()),
+            ],
             "strongest_retained_measurement": {
                 "Bioactivity_ID": int(strongest_row["Bioactivity_ID"]),
                 "BioAssay_AID": int(strongest_row["BioAssay_AID"]),
@@ -1532,7 +1799,9 @@ def summarize_activity_value_statistics_analysis(
         "interpretation": None,
     }
     if sample_size < 3:
-        shapiro_summary["reason_not_computed"] = "Shapiro-Wilk requires at least 3 retained observations."
+        shapiro_summary["reason_not_computed"] = (
+            "Shapiro-Wilk requires at least 3 retained observations."
+        )
         shapiro_summary["interpretation"] = (
             "Normality was not tested because too few positive numeric rows were retained."
         )
@@ -1561,7 +1830,9 @@ def summarize_activity_value_statistics_analysis(
             }
         )
 
-    representative_positions = sorted({0, len(activity_value_df) // 2, len(activity_value_df) - 1})
+    representative_positions = sorted(
+        {0, len(activity_value_df) // 2, len(activity_value_df) - 1}
+    )
     representative_rows = activity_value_df.iloc[representative_positions]
 
     return {
@@ -1625,7 +1896,9 @@ def build_atom_element_entropy_dataframe(
 
     symbols = atom_feature_df["symbol"].astype("string").str.strip().str.upper()
     symbol_counts = symbols.value_counts(dropna=False).to_dict()
-    required_counts = {element: int(symbol_counts.get(element, 0)) for element in required_elements}
+    required_counts = {
+        element: int(symbol_counts.get(element, 0)) for element in required_elements
+    }
     unexpected_counts = {
         str(element): int(count)
         for element, count in symbol_counts.items()
@@ -1634,7 +1907,9 @@ def build_atom_element_entropy_dataframe(
 
     retained_total = int(sum(required_counts.values()))
     if retained_total <= 0:
-        raise ValueError("No required O/N/C/H atom symbols were found in the atom feature matrix")
+        raise ValueError(
+            "No required O/N/C/H atom symbols were found in the atom feature matrix"
+        )
 
     entropy_df = pd.DataFrame(
         {
@@ -1669,9 +1944,15 @@ def summarize_atom_element_entropy_analysis(
 ) -> dict:
     entropy_value = float(entropy_df["shannon_contribution"].sum())
     unique_retained_elements = int((entropy_df["count"] > 0).sum())
-    maximum_entropy = float(np.log(unique_retained_elements)) if unique_retained_elements > 1 else 0.0
-    normalized_entropy = float(entropy_value / maximum_entropy) if maximum_entropy > 0 else 0.0
-    dominant_row = entropy_df.sort_values(by=["count", "element"], ascending=[False, True]).iloc[0]
+    maximum_entropy = (
+        float(np.log(unique_retained_elements)) if unique_retained_elements > 1 else 0.0
+    )
+    normalized_entropy = (
+        float(entropy_value / maximum_entropy) if maximum_entropy > 0 else 0.0
+    )
+    dominant_row = entropy_df.sort_values(
+        by=["count", "element"], ascending=[False, True]
+    ).iloc[0]
 
     return {
         "row_counts": counts,
@@ -1686,7 +1967,9 @@ def summarize_atom_element_entropy_analysis(
             row["element"]: {
                 "count": int(row["count"]),
                 "proportion": float(row["proportion"]),
-                "log_proportion": None if pd.isna(row["log_proportion"]) else float(row["log_proportion"]),
+                "log_proportion": None
+                if pd.isna(row["log_proportion"])
+                else float(row["log_proportion"]),
                 "shannon_contribution": float(row["shannon_contribution"]),
             }
             for _, row in entropy_df.iterrows()
@@ -1717,7 +2000,9 @@ def build_adjacency_matrix(filename: str) -> pd.DataFrame:
     bonds = compound["bonds"]
 
     if len(atom_ids) != CONFORMER_ATOM_COUNT:
-        raise ValueError(f"Expected {CONFORMER_ATOM_COUNT} atoms in {filename}, found {len(atom_ids)}")
+        raise ValueError(
+            f"Expected {CONFORMER_ATOM_COUNT} atoms in {filename}, found {len(atom_ids)}"
+        )
 
     if not (len(bonds["aid1"]) == len(bonds["aid2"]) == len(bonds["order"])):
         raise ValueError(f"Bond arrays in {filename} must be aligned")
@@ -1727,20 +2012,26 @@ def build_adjacency_matrix(filename: str) -> pd.DataFrame:
     atom_index_by_id = {atom_id: index for index, atom_id in enumerate(atom_ids)}
     graph.add_nodes_from(zero_based_nodes)
 
-    for first_atom_id, second_atom_id, bond_order in zip(bonds["aid1"], bonds["aid2"], bonds["order"], strict=True):
+    for first_atom_id, second_atom_id, bond_order in zip(
+        bonds["aid1"], bonds["aid2"], bonds["order"], strict=True
+    ):
         graph.add_edge(
             atom_index_by_id[first_atom_id],
             atom_index_by_id[second_atom_id],
             weight=bond_order,
         )
 
-    adjacency_matrix = nx.to_pandas_adjacency(graph, nodelist=zero_based_nodes, dtype=int, weight="weight")
+    adjacency_matrix = nx.to_pandas_adjacency(
+        graph, nodelist=zero_based_nodes, dtype=int, weight="weight"
+    )
     adjacency_matrix.index = atom_ids
     adjacency_matrix.columns = atom_ids
     return adjacency_matrix
 
 
-def compute_adjacency_spectrum(adjacency_matrix: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+def compute_adjacency_spectrum(
+    adjacency_matrix: pd.DataFrame,
+) -> tuple[np.ndarray, np.ndarray]:
     adjacency_array = adjacency_matrix.to_numpy(dtype=np.float64)
     return np.linalg.eigh(adjacency_array)
 
@@ -1759,7 +2050,9 @@ def build_laplacian_matrix(adjacency_matrix: pd.DataFrame) -> pd.DataFrame:
     return degree_matrix - adjacency_matrix.astype(np.float64)
 
 
-def compute_laplacian_spectrum(laplacian_matrix: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+def compute_laplacian_spectrum(
+    laplacian_matrix: pd.DataFrame,
+) -> tuple[np.ndarray, np.ndarray]:
     laplacian_array = laplacian_matrix.to_numpy(dtype=np.float64)
     return np.linalg.eigh(laplacian_array)
 
@@ -1784,13 +2077,17 @@ def extract_connected_components(
     atom_ids = adjacency_matrix.index.tolist()
     components = [sorted(component) for component in nx.connected_components(graph)]
     component_by_atom_id = {
-        atom_id: component_index for component_index, component in enumerate(components) for atom_id in component
+        atom_id: component_index
+        for component_index, component in enumerate(components)
+        for atom_id in component
     }
     assignment = [component_by_atom_id[atom_id] for atom_id in atom_ids]
     null_space_dimension = int(null_space_vectors.shape[1])
 
     if null_space_dimension != len(components):
-        raise ValueError("Null-space dimension does not match NetworkX connected-components count")
+        raise ValueError(
+            "Null-space dimension does not match NetworkX connected-components count"
+        )
 
     return {
         "count": len(components),
@@ -1810,15 +2107,25 @@ def write_laplacian_analysis(
     atom_ids = adjacency_matrix.index.tolist()
     degree_matrix = build_degree_matrix(adjacency_matrix)
     laplacian_matrix = build_laplacian_matrix(adjacency_matrix)
-    laplacian_eigenvalues, laplacian_eigenvectors = compute_laplacian_spectrum(laplacian_matrix)
-    null_space_vectors = compute_laplacian_null_space(laplacian_matrix, tolerance=tolerance)
-    connected_components = extract_connected_components(adjacency_matrix, null_space_vectors)
+    laplacian_eigenvalues, laplacian_eigenvectors = compute_laplacian_spectrum(
+        laplacian_matrix
+    )
+    null_space_vectors = compute_laplacian_null_space(
+        laplacian_matrix, tolerance=tolerance
+    )
+    connected_components = extract_connected_components(
+        adjacency_matrix, null_space_vectors
+    )
     output_path = Path(out_dir) / f"{Path(filename).stem}.laplacian_analysis.json"
 
     laplacian_array = laplacian_matrix.to_numpy(dtype=np.float64)
     positive_eigenvalues = laplacian_eigenvalues[laplacian_eigenvalues > tolerance]
-    smallest_nonzero_eigenvalue = float(positive_eigenvalues[0]) if positive_eigenvalues.size > 0 else 0.0
-    bond_count = int(np.count_nonzero(np.triu(adjacency_matrix.to_numpy(dtype=np.float64), k=1)))
+    smallest_nonzero_eigenvalue = (
+        float(positive_eigenvalues[0]) if positive_eigenvalues.size > 0 else 0.0
+    )
+    bond_count = int(
+        np.count_nonzero(np.triu(adjacency_matrix.to_numpy(dtype=np.float64), k=1))
+    )
 
     with output_path.open("w", encoding=UTF_8) as file:
         json.dump(
@@ -1838,7 +2145,9 @@ def write_laplacian_analysis(
                 "metadata": {
                     "atom_count": len(atom_ids),
                     "bond_count": bond_count,
-                    "laplacian_rank": int(np.linalg.matrix_rank(laplacian_array, tol=tolerance)),
+                    "laplacian_rank": int(
+                        np.linalg.matrix_rank(laplacian_array, tol=tolerance)
+                    ),
                     "graph_is_connected": connected_components["count"] == 1,
                 },
             },
@@ -1893,13 +2202,18 @@ def write_bonded_distance_analysis(sdf_filename: str, json_filename: str):
     bonded_pairs = get_bonded_atom_pairs_from_adjacency(adjacency_matrix)
     partitions = partition_distances_by_bonding(atom_ids, distance_matrix, bonded_pairs)
     statistics = compute_bonded_nonbonded_distance_statistics(partitions)
-    output_path = Path(out_dir) / f"{Path(sdf_filename).stem}.bonded_distance_analysis.json"
+    output_path = (
+        Path(out_dir) / f"{Path(sdf_filename).stem}.bonded_distance_analysis.json"
+    )
 
     with output_path.open("w", encoding=UTF_8) as file:
         json.dump(
             {
                 "atom_ids": atom_ids,
-                "bonded_atom_pairs": [{"atom_id_1": pair[0], "atom_id_2": pair[1]} for pair in bonded_pairs],
+                "bonded_atom_pairs": [
+                    {"atom_id_1": pair[0], "atom_id_2": pair[1]}
+                    for pair in bonded_pairs
+                ],
                 "bonded_pair_distances": partitions["bonded"],
                 "nonbonded_pair_distances": partitions["nonbonded"],
                 "statistics": statistics,
@@ -1907,7 +2221,8 @@ def write_bonded_distance_analysis(sdf_filename: str, json_filename: str):
                     "atom_count": len(atom_ids),
                     "bonded_pair_count": len(partitions["bonded"]),
                     "nonbonded_pair_count": len(partitions["nonbonded"]),
-                    "total_unique_pair_count": len(partitions["bonded"]) + len(partitions["nonbonded"]),
+                    "total_unique_pair_count": len(partitions["bonded"])
+                    + len(partitions["nonbonded"]),
                     "source_sdf": sdf_filename,
                     "source_bond_json": json_filename,
                     "units": "angstrom",
@@ -1940,7 +2255,9 @@ def write_bonded_angle_analysis(sdf_filename: str, json_filename: str):
     angle_triplets = enumerate_bonded_angle_triplets(adjacency_matrix)
     angle_records = compute_bonded_angle_records(atom_ids, coordinates, angle_triplets)
     statistics = summarize_bond_angles(angle_records)
-    output_path = Path(out_dir) / f"{Path(sdf_filename).stem}.bonded_angle_analysis.json"
+    output_path = (
+        Path(out_dir) / f"{Path(sdf_filename).stem}.bonded_angle_analysis.json"
+    )
 
     with output_path.open("w", encoding=UTF_8) as file:
         json.dump(
@@ -1990,14 +2307,20 @@ def write_spring_bond_potential_analysis(sdf_filename: str, json_filename: str):
             f"Expected {len(atom_ids)} atom ids from {json_filename}, found {coordinates.shape[0]} coordinates"
         )
 
-    bond_records, atom_gradient_records, pair_metadata = compute_spring_bond_partial_derivative_records(
-        atom_ids,
-        coordinates,
-        adjacency_matrix,
-        molecule,
+    bond_records, atom_gradient_records, pair_metadata = (
+        compute_spring_bond_partial_derivative_records(
+            atom_ids,
+            coordinates,
+            adjacency_matrix,
+            molecule,
+        )
     )
-    statistics = summarize_spring_bond_partial_derivatives(bond_records, atom_gradient_records, pair_metadata)
-    output_path = Path(out_dir) / f"{Path(sdf_filename).stem}.spring_bond_potential_analysis.json"
+    statistics = summarize_spring_bond_partial_derivatives(
+        bond_records, atom_gradient_records, pair_metadata
+    )
+    output_path = (
+        Path(out_dir) / f"{Path(sdf_filename).stem}.spring_bond_potential_analysis.json"
+    )
 
     with output_path.open("w", encoding=UTF_8) as file:
         json.dump(
@@ -2018,7 +2341,9 @@ def write_spring_bond_potential_analysis(sdf_filename: str, json_filename: str):
                     "spring_constant_policy": "Bond-order-specific constants for an educational harmonic bond model",
                     "bond_order_spring_constants": {
                         str(bond_order): float(value)
-                        for bond_order, value in sorted(DEFAULT_BOND_ORDER_SPRING_CONSTANTS.items())
+                        for bond_order, value in sorted(
+                            DEFAULT_BOND_ORDER_SPRING_CONSTANTS.items()
+                        )
                     },
                     "reference_distance_lookup_examples_angstrom": {
                         f"{symbol_1}-{symbol_2}-order-{bond_order}": float(distance)
@@ -2042,7 +2367,9 @@ def write_spring_bond_potential_analysis(sdf_filename: str, json_filename: str):
                     "spring_constant_units": "relative spring units / angstrom^2",
                     "spring_energy_units": "relative spring units",
                     "coordinate_partial_derivative_units": "relative spring units / angstrom",
-                    "reference_distance_source_counts": pair_metadata["reference_distance_source_counts"],
+                    "reference_distance_source_counts": pair_metadata[
+                        "reference_distance_source_counts"
+                    ],
                 },
             },
             file,
@@ -2073,15 +2400,21 @@ def write_bioactivity_analysis(filename: str):
     log.info("Bioactivity pIC50 plot written to %s", plot_output_path)
 
 
-def write_hill_dose_response_analysis(filename: str, hill_coefficient: float = DEFAULT_HILL_COEFFICIENT):
+def write_hill_dose_response_analysis(
+    filename: str, hill_coefficient: float = DEFAULT_HILL_COEFFICIENT
+):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
     bioactivity_df = load_bioactivity_dataframe(filename)
-    hill_df, counts = build_hill_reference_dataframe(bioactivity_df, hill_coefficient=hill_coefficient)
+    hill_df, counts = build_hill_reference_dataframe(
+        bioactivity_df, hill_coefficient=hill_coefficient
+    )
     summary = summarize_hill_reference_analysis(hill_df, counts, hill_coefficient)
     output_stem = Path(filename).stem
     records_output_path = Path(out_dir) / f"{output_stem}.hill_dose_response.csv"
-    summary_output_path = Path(out_dir) / f"{output_stem}.hill_dose_response.summary.json"
+    summary_output_path = (
+        Path(out_dir) / f"{output_stem}.hill_dose_response.summary.json"
+    )
     plot_output_path = Path(out_dir) / f"{output_stem}.hill_dose_response.png"
 
     hill_df.to_csv(records_output_path, index=False)
@@ -2089,7 +2422,9 @@ def write_hill_dose_response_analysis(filename: str, hill_coefficient: float = D
     with summary_output_path.open("w", encoding=UTF_8) as file:
         json.dump(summary, file, indent=2)
 
-    representative_k_values, representative_labels = select_hill_plot_representatives(hill_df)
+    representative_k_values, representative_labels = select_hill_plot_representatives(
+        hill_df
+    )
 
     log.info("Hill dose-response rows written to %s", records_output_path)
     log.info("Hill dose-response summary written to %s", summary_output_path)
@@ -2100,11 +2435,15 @@ def write_activity_value_statistics_analysis(filename: str):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
     bioactivity_df = load_bioactivity_dataframe(filename)
-    activity_value_df, counts = build_activity_value_statistics_dataframe(bioactivity_df)
+    activity_value_df, counts = build_activity_value_statistics_dataframe(
+        bioactivity_df
+    )
     summary = summarize_activity_value_statistics_analysis(activity_value_df, counts)
     output_stem = Path(filename).stem
     records_output_path = Path(out_dir) / f"{output_stem}.activity_value_statistics.csv"
-    summary_output_path = Path(out_dir) / f"{output_stem}.activity_value_statistics.summary.json"
+    summary_output_path = (
+        Path(out_dir) / f"{output_stem}.activity_value_statistics.summary.json"
+    )
     plot_output_path = Path(out_dir) / f"{output_stem}.activity_value_statistics.png"
 
     activity_value_df.to_csv(records_output_path, index=False)
@@ -2135,8 +2474,12 @@ def write_bioactivity_posterior_analysis(
         credible_interval=credible_interval,
     )
     output_stem = Path(filename).stem
-    records_output_path = Path(out_dir) / f"{output_stem}.activity_posterior_binary_evidence.csv"
-    summary_output_path = Path(out_dir) / f"{output_stem}.activity_posterior.summary.json"
+    records_output_path = (
+        Path(out_dir) / f"{output_stem}.activity_posterior_binary_evidence.csv"
+    )
+    summary_output_path = (
+        Path(out_dir) / f"{output_stem}.activity_posterior.summary.json"
+    )
 
     posterior_df.to_csv(records_output_path, index=False)
 
@@ -2152,11 +2495,15 @@ def write_activity_aid_type_chi_square_analysis(filename: str):
     out_dir = get_output_directory(work_directory)
     bioactivity_df = load_bioactivity_dataframe(filename)
     posterior_df, posterior_counts = build_activity_posterior_dataframe(bioactivity_df)
-    contingency_table, contingency_df, chi_square_counts = build_activity_aid_type_chi_square_dataframe(
-        posterior_df,
-        posterior_counts,
+    contingency_table, contingency_df, chi_square_counts = (
+        build_activity_aid_type_chi_square_dataframe(
+            posterior_df,
+            posterior_counts,
+        )
     )
-    expected_df, chi_square_metrics = compute_activity_aid_type_chi_square(contingency_table)
+    expected_df, chi_square_metrics = compute_activity_aid_type_chi_square(
+        contingency_table
+    )
     contingency_output_df = contingency_df.copy()
     contingency_output_df["expected_count"] = contingency_output_df.apply(
         lambda row: expected_df.loc[row["Activity"], row["Aid_Type"]],
@@ -2170,16 +2517,25 @@ def write_activity_aid_type_chi_square_analysis(filename: str):
         chi_square_metrics,
     )
     output_stem = Path(filename).stem
-    records_output_path = Path(out_dir) / f"{output_stem}.activity_aid_type_chi_square_contingency.csv"
-    summary_output_path = Path(out_dir) / f"{output_stem}.activity_aid_type_chi_square.summary.json"
+    records_output_path = (
+        Path(out_dir) / f"{output_stem}.activity_aid_type_chi_square_contingency.csv"
+    )
+    summary_output_path = (
+        Path(out_dir) / f"{output_stem}.activity_aid_type_chi_square.summary.json"
+    )
 
     contingency_output_df.to_csv(records_output_path, index=False)
 
     with summary_output_path.open("w", encoding=UTF_8) as file:
         json.dump(summary, file, indent=2)
 
-    log.info("Activity vs Aid_Type chi-square contingency rows written to %s", records_output_path)
-    log.info("Activity vs Aid_Type chi-square summary written to %s", summary_output_path)
+    log.info(
+        "Activity vs Aid_Type chi-square contingency rows written to %s",
+        records_output_path,
+    )
+    log.info(
+        "Activity vs Aid_Type chi-square summary written to %s", summary_output_path
+    )
 
 
 def write_bioactivity_binomial_analysis(filename: str):
@@ -2187,12 +2543,18 @@ def write_bioactivity_binomial_analysis(filename: str):
     out_dir = get_output_directory(work_directory)
     bioactivity_df = load_bioactivity_dataframe(filename)
     posterior_df, posterior_counts = build_activity_posterior_dataframe(bioactivity_df)
-    assay_df, assay_counts = build_assay_activity_binomial_dataframe(posterior_df, posterior_counts)
+    assay_df, assay_counts = build_assay_activity_binomial_dataframe(
+        posterior_df, posterior_counts
+    )
     pmf_df, binomial_metrics = build_bioactivity_binomial_pmf_dataframe(assay_df)
-    summary = summarize_bioactivity_binomial_analysis(assay_df, pmf_df, assay_counts, binomial_metrics)
+    summary = summarize_bioactivity_binomial_analysis(
+        assay_df, pmf_df, assay_counts, binomial_metrics
+    )
     output_stem = Path(filename).stem
     records_output_path = Path(out_dir) / f"{output_stem}.activity_binomial_pmf.csv"
-    summary_output_path = Path(out_dir) / f"{output_stem}.activity_binomial.summary.json"
+    summary_output_path = (
+        Path(out_dir) / f"{output_stem}.activity_binomial.summary.json"
+    )
 
     pmf_df.to_csv(records_output_path, index=False)
 
@@ -2280,7 +2642,11 @@ def write_atom_gradient_descent_analysis(
 ):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
-    feature_df = atom_feature_df if atom_feature_df is not None else process_sdf_file(sdf_filename)
+    feature_df = (
+        atom_feature_df
+        if atom_feature_df is not None
+        else process_sdf_file(sdf_filename)
+    )
     x_values, y_values, dataset_df = build_atom_gradient_descent_dataset(feature_df)
     trace_df, training_summary = run_manual_gradient_descent(
         x_values,
@@ -2288,12 +2654,23 @@ def write_atom_gradient_descent_analysis(
         learning_rate=learning_rate,
         epochs=epochs,
     )
-    summary = summarize_atom_gradient_descent_analysis(dataset_df, trace_df, training_summary)
+    summary = summarize_atom_gradient_descent_analysis(
+        dataset_df, trace_df, training_summary
+    )
     output_stem = Path(sdf_filename).stem
-    trace_output_path = Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.csv"
-    summary_output_path = Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.summary.json"
-    loss_plot_output_path = Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.loss.png"
-    fit_plot_output_path = Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.fit.png"
+    trace_output_path = (
+        Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.csv"
+    )
+    summary_output_path = (
+        Path(out_dir)
+        / f"{output_stem}.mass_to_atomic_number_gradient_descent.summary.json"
+    )
+    loss_plot_output_path = (
+        Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.loss.png"
+    )
+    fit_plot_output_path = (
+        Path(out_dir) / f"{output_stem}.mass_to_atomic_number_gradient_descent.fit.png"
+    )
 
     trace_df.to_csv(trace_output_path, index=False)
 
@@ -2312,12 +2689,24 @@ def write_atom_element_entropy_analysis(
 ):
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
-    feature_df = atom_feature_df if atom_feature_df is not None else process_sdf_file(sdf_filename)
-    entropy_df, counts, unexpected_counts = build_atom_element_entropy_dataframe(feature_df)
-    summary = summarize_atom_element_entropy_analysis(entropy_df, counts, unexpected_counts)
+    feature_df = (
+        atom_feature_df
+        if atom_feature_df is not None
+        else process_sdf_file(sdf_filename)
+    )
+    entropy_df, counts, unexpected_counts = build_atom_element_entropy_dataframe(
+        feature_df
+    )
+    summary = summarize_atom_element_entropy_analysis(
+        entropy_df, counts, unexpected_counts
+    )
     output_stem = Path(sdf_filename).stem
-    records_output_path = Path(out_dir) / f"{output_stem}.atom_element_entropy_proportions.csv"
-    summary_output_path = Path(out_dir) / f"{output_stem}.atom_element_entropy.summary.json"
+    records_output_path = (
+        Path(out_dir) / f"{output_stem}.atom_element_entropy_proportions.csv"
+    )
+    summary_output_path = (
+        Path(out_dir) / f"{output_stem}.atom_element_entropy.summary.json"
+    )
     plot_output_path = Path(out_dir) / f"{output_stem}.atom_element_entropy.png"
 
     entropy_df.to_csv(records_output_path, index=False)

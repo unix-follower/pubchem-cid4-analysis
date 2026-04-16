@@ -88,9 +88,7 @@ def build_supervised_split(
         x_test = x_values
         y_train = y_values
         y_test = y_values
-        evaluation_note = (
-            "Dataset is too small for a stable holdout split, so evaluation is reported on the training rows."
-        )
+        evaluation_note = "Dataset is too small for a stable holdout split, so evaluation is reported on the training rows."
 
     scaler = None
     if scale_features:
@@ -109,7 +107,9 @@ def build_supervised_split(
     )
 
 
-def classification_metrics(y_true: np.ndarray, y_pred: np.ndarray, class_names: list[str] | None) -> dict[str, Any]:
+def classification_metrics(
+    y_true: np.ndarray, y_pred: np.ndarray, class_names: list[str] | None
+) -> dict[str, Any]:
     labels = None if class_names is None else list(range(len(class_names)))
     confusion = confusion_matrix(y_true, y_pred, labels=labels)
 

@@ -4,7 +4,12 @@ from typing import Any
 
 import numpy as np
 
-from ml.common import PreparedDataset, build_supervised_split, classification_metrics, regression_metrics
+from ml.common import (
+    PreparedDataset,
+    build_supervised_split,
+    classification_metrics,
+    regression_metrics,
+)
 
 
 def run_xgboost_classification(dataset: PreparedDataset) -> dict[str, Any]:
@@ -51,8 +56,12 @@ def run_xgboost_classification(dataset: PreparedDataset) -> dict[str, Any]:
         "library": "xgboost",
         "dataset": dataset.summary(),
         "evaluation_note": split.evaluation_note,
-        "metrics": classification_metrics(split.y_test, predictions, dataset.class_names),
-        "feature_importances": ranked_feature_importances(dataset, model.feature_importances_),
+        "metrics": classification_metrics(
+            split.y_test, predictions, dataset.class_names
+        ),
+        "feature_importances": ranked_feature_importances(
+            dataset, model.feature_importances_
+        ),
         "model_parameters": {
             "n_estimators": model_kwargs["n_estimators"],
             "max_depth": model_kwargs["max_depth"],
@@ -89,8 +98,12 @@ def run_xgboost_regression(dataset: PreparedDataset) -> dict[str, Any]:
         "library": "xgboost",
         "dataset": dataset.summary(),
         "evaluation_note": split.evaluation_note,
-        "metrics": regression_metrics(split.y_test.astype(np.float64), predictions.astype(np.float64)),
-        "feature_importances": ranked_feature_importances(dataset, model.feature_importances_),
+        "metrics": regression_metrics(
+            split.y_test.astype(np.float64), predictions.astype(np.float64)
+        ),
+        "feature_importances": ranked_feature_importances(
+            dataset, model.feature_importances_
+        ),
         "model_parameters": {
             "n_estimators": model_kwargs["n_estimators"],
             "max_depth": model_kwargs["max_depth"],
@@ -100,11 +113,15 @@ def run_xgboost_regression(dataset: PreparedDataset) -> dict[str, Any]:
     }
 
 
-def ranked_feature_importances(dataset: PreparedDataset, importances: np.ndarray) -> list[dict[str, float | str]]:
+def ranked_feature_importances(
+    dataset: PreparedDataset, importances: np.ndarray
+) -> list[dict[str, float | str]]:
     return sorted(
         (
             {"feature": feature, "importance": float(importance)}
-            for feature, importance in zip(dataset.feature_columns, importances, strict=True)
+            for feature, importance in zip(
+                dataset.feature_columns, importances, strict=True
+            )
         ),
         key=lambda item: float(item["importance"]),
         reverse=True,

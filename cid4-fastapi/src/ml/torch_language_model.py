@@ -86,7 +86,13 @@ class PyTorchLanguageModelService:
                 "The assembled corpus is too small for the requested sequence length.",
             )
 
-        model = _build_model(nn, len(vocabulary), config.embedding_dim, config.hidden_size, config.num_layers)
+        model = _build_model(
+            nn,
+            len(vocabulary),
+            config.embedding_dim,
+            config.hidden_size,
+            config.num_layers,
+        )
         optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
         loss_fn = nn.CrossEntropyLoss()
 
@@ -99,7 +105,10 @@ class PyTorchLanguageModelService:
                 dtype=torch.long,
             )
             targets = torch.tensor(
-                [encoded[start + 1 : start + config.sequence_length + 1] for start in starts],
+                [
+                    encoded[start + 1 : start + config.sequence_length + 1]
+                    for start in starts
+                ],
                 dtype=torch.long,
             )
 
@@ -147,7 +156,9 @@ class PyTorchLanguageModelService:
 
         create_dir_if_doesnt_exist(str(self._output_dir))
         torch.save(checkpoint, self._checkpoint_path(config.output_name))
-        self._metadata_path(config.output_name).write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+        self._metadata_path(config.output_name).write_text(
+            json.dumps(metadata, indent=2), encoding="utf-8"
+        )
         self._loaded_model_name = None
         self._loaded_bundle = None
 
@@ -171,7 +182,9 @@ class PyTorchLanguageModelService:
 
     def generate(self, config: GenerationConfig) -> dict[str, Any]:
         generated_text = "".join(
-            event.payload["text"] for event in self.stream_generate(config) if event.event == "token"
+            event.payload["text"]
+            for event in self.stream_generate(config)
+            if event.event == "token"
         )
         bundle = self._load_model_bundle(config.model_name)
         metadata = bundle["metadata"]
@@ -231,9 +244,13 @@ class PyTorchLanguageModelService:
 
             current_token = prompt_indices[-1]
             for _ in range(config.max_new_tokens):
-                logits, hidden = model(torch.tensor([[current_token]], dtype=torch.long), hidden)
+                logits, hidden = model(
+                    torch.tensor([[current_token]], dtype=torch.long), hidden
+                )
                 next_logits = logits[0, -1]
-                next_token = _sample_next_token(torch, next_logits, config.temperature, config.top_k)
+                next_token = _sample_next_token(
+                    torch, next_logits, config.temperature, config.top_k
+                )
                 chunk = index_to_char[next_token]
                 generated_suffix += chunk
                 yield build_stream_event(
@@ -274,10 +291,14 @@ class PyTorchLanguageModelService:
         return availability
 
     def _checkpoint_path(self, model_name: str) -> Path:
-        return artifact_paths(self._output_dir, MODEL_FRAMEWORK, model_name, ".pt")["checkpoint"]
+        return artifact_paths(self._output_dir, MODEL_FRAMEWORK, model_name, ".pt")[
+            "checkpoint"
+        ]
 
     def _metadata_path(self, model_name: str) -> Path:
-        return artifact_paths(self._output_dir, MODEL_FRAMEWORK, model_name, ".pt")["metadata"]
+        return artifact_paths(self._output_dir, MODEL_FRAMEWORK, model_name, ".pt")[
+            "metadata"
+        ]
 
     def _load_metadata_if_available(self, model_name: str) -> dict[str, Any] | None:
         return load_metadata_if_available(self._metadata_path(model_name))
@@ -303,7 +324,9 @@ class PyTorchLanguageModelService:
         checkpoint = torch.load(checkpoint_path, map_location="cpu")
         model_config = checkpoint["model_config"]
         index_to_char = list(checkpoint["vocabulary"])
-        char_to_index = {character: index for index, character in enumerate(index_to_char)}
+        char_to_index = {
+            character: index for index, character in enumerate(index_to_char)
+        }
         model = _build_model(
             nn,
             model_config["vocab_size"],
@@ -326,12 +349,16 @@ class PyTorchLanguageModelService:
         return bundle
 
 
-def _build_model(nn: Any, vocab_size: int, embedding_dim: int, hidden_size: int, num_layers: int) -> Any:
+def _build_model(
+    nn: Any, vocab_size: int, embedding_dim: int, hidden_size: int, num_layers: int
+) -> Any:
     class CharGruLanguageModel(nn.Module):
         def __init__(self) -> None:
             super().__init__()
             self.embedding = nn.Embedding(vocab_size, embedding_dim)
-            self.gru = nn.GRU(embedding_dim, hidden_size, num_layers=num_layers, batch_first=True)
+            self.gru = nn.GRU(
+                embedding_dim, hidden_size, num_layers=num_layers, batch_first=True
+            )
             self.output = nn.Linear(hidden_size, vocab_size)
 
         def forward(self, inputs: Any, hidden: Any = None) -> tuple[Any, Any]:
@@ -348,7 +375,9 @@ def _sample_next_token(torch: Any, logits: Any, temperature: float, top_k: int) 
 
     adjusted_logits = logits / temperature
     if top_k > 0:
-        top_values, top_indices = torch.topk(adjusted_logits, k=min(top_k, adjusted_logits.shape[-1]))
+        top_values, top_indices = torch.topk(
+            adjusted_logits, k=min(top_k, adjusted_logits.shape[-1])
+        )
         probabilities = torch.softmax(top_values, dim=-1)
         sampled_index = torch.multinomial(probabilities, num_samples=1)
         return int(top_indices[sampled_index].item())

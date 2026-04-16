@@ -41,7 +41,12 @@ from ml.torch_language_model import PyTorchLanguageModelService
 class TrainLanguageModelRequest(BaseModel):
     framework: Literal["pytorch", "tensorflow"] = Field(default="pytorch")
     domains: list[str] = Field(default_factory=lambda: list(SUPPORTED_LLM_DOMAINS))
-    output_name: str = Field(default=DEFAULT_MODEL_NAME, min_length=1, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")
+    output_name: str = Field(
+        default=DEFAULT_MODEL_NAME,
+        min_length=1,
+        max_length=80,
+        pattern=r"^[A-Za-z0-9_-]+$",
+    )
     epochs: int = Field(default=12, ge=1, le=200)
     sequence_length: int = Field(default=64, ge=8, le=256)
     batch_size: int = Field(default=32, ge=1, le=256)
@@ -56,7 +61,12 @@ class TrainLanguageModelRequest(BaseModel):
 class GenerateLanguageModelRequest(BaseModel):
     framework: Literal["pytorch", "tensorflow"] = Field(default="pytorch")
     prompt: str = Field(min_length=1, max_length=4000)
-    model_name: str = Field(default=DEFAULT_MODEL_NAME, min_length=1, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")
+    model_name: str = Field(
+        default=DEFAULT_MODEL_NAME,
+        min_length=1,
+        max_length=80,
+        pattern=r"^[A-Za-z0-9_-]+$",
+    )
     max_new_tokens: int = Field(default=160, ge=1, le=1000)
     temperature: float = Field(default=0.8, ge=0.0, le=5.0)
     top_k: int = Field(default=8, ge=0, le=128)
@@ -68,7 +78,9 @@ def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
     security_settings = resolve_security_settings()
     pytorch_language_model_service = PyTorchLanguageModelService(data_dir)
     tensorflow_language_model_service = TensorFlowLanguageModelService(data_dir)
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(security_settings.trusted_hosts))
+    app.add_middleware(
+        TrustedHostMiddleware, allowed_hosts=list(security_settings.trusted_hosts)
+    )
     app.add_middleware(
         CORSMiddleware,
         allow_origins=list(security_settings.allowed_origins),
@@ -92,7 +104,12 @@ def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
     _register_mcp_routes(app, data_dir, security_settings)
     _register_static_routes(app, data_dir)
     _register_auth_routes(app, security_settings)
-    _register_llm_routes(app, security_settings, pytorch_language_model_service, tensorflow_language_model_service)
+    _register_llm_routes(
+        app,
+        security_settings,
+        pytorch_language_model_service,
+        tensorflow_language_model_service,
+    )
 
     return app
 
@@ -113,7 +130,9 @@ def _register_security(app: FastAPI, security_settings: SecuritySettings) -> Non
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
-        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        response.headers["Permissions-Policy"] = (
+            "camera=(), microphone=(), geolocation=()"
+        )
         return response
 
 
@@ -192,9 +211,13 @@ def _register_auth_routes(app: FastAPI, security_settings: SecuritySettings) -> 
     def auth_me(request: Request) -> JSONResponse:
         principal = authenticate_request(request, security_settings)
         if principal is None:
-            return _json_response({"status": "ok", "authenticated": False}, status_code=401)
+            return _json_response(
+                {"status": "ok", "authenticated": False}, status_code=401
+            )
         return _session_payload_response(
-            principal.username, principal.auth_method, request.cookies.get(security_settings.csrf_cookie_name)
+            principal.username,
+            principal.auth_method,
+            request.cookies.get(security_settings.csrf_cookie_name),
         )
 
     @app.get("/api/auth/basic/login")
@@ -236,12 +259,16 @@ def _register_auth_routes(app: FastAPI, security_settings: SecuritySettings) -> 
                 request.cookies.get(security_settings.csrf_cookie_name),
             )
 
-        principal, challenge_response = authenticate_login_request(request, security_settings)
+        principal, challenge_response = authenticate_login_request(
+            request, security_settings
+        )
         if principal is None:
             assert challenge_response is not None
             return challenge_response
 
-        return _session_response(principal.username, principal.auth_method, security_settings)
+        return _session_response(
+            principal.username, principal.auth_method, security_settings
+        )
 
     @app.post("/api/auth/logout")
     def auth_logout() -> JSONResponse:
@@ -250,8 +277,13 @@ def _register_auth_routes(app: FastAPI, security_settings: SecuritySettings) -> 
         return response
 
 
-def _register_mcp_routes(app: FastAPI, data_dir: Path, security_settings: SecuritySettings) -> None:
-    from mcp_cid4.server import create_authenticated_mcp_http_app, create_cid4_mcp_server
+def _register_mcp_routes(
+    app: FastAPI, data_dir: Path, security_settings: SecuritySettings
+) -> None:
+    from mcp_cid4.server import (
+        create_authenticated_mcp_http_app,
+        create_cid4_mcp_server,
+    )
 
     mcp_server = create_cid4_mcp_server(data_dir)
     app.state.cid4_mcp_server = mcp_server
@@ -277,17 +309,34 @@ def _register_llm_routes(
     tensorflow_language_model_service: TensorFlowLanguageModelService,
 ) -> None:
     _register_llm_status_route(
-        app, security_settings, pytorch_language_model_service, tensorflow_language_model_service
+        app,
+        security_settings,
+        pytorch_language_model_service,
+        tensorflow_language_model_service,
     )
-    _register_llm_train_route(app, security_settings, pytorch_language_model_service, tensorflow_language_model_service)
+    _register_llm_train_route(
+        app,
+        security_settings,
+        pytorch_language_model_service,
+        tensorflow_language_model_service,
+    )
     _register_llm_generate_route(
-        app, security_settings, pytorch_language_model_service, tensorflow_language_model_service
+        app,
+        security_settings,
+        pytorch_language_model_service,
+        tensorflow_language_model_service,
     )
     _register_llm_stream_route(
-        app, security_settings, pytorch_language_model_service, tensorflow_language_model_service
+        app,
+        security_settings,
+        pytorch_language_model_service,
+        tensorflow_language_model_service,
     )
     _register_llm_websocket_route(
-        app, security_settings, pytorch_language_model_service, tensorflow_language_model_service
+        app,
+        security_settings,
+        pytorch_language_model_service,
+        tensorflow_language_model_service,
     )
 
 
@@ -300,7 +349,9 @@ def _register_llm_status_route(
     @app.get("/api/llm/status")
     def llm_status(
         request: Request,
-        model_name: Annotated[str, Query(min_length=1, max_length=80)] = DEFAULT_MODEL_NAME,
+        model_name: Annotated[
+            str, Query(min_length=1, max_length=80)
+        ] = DEFAULT_MODEL_NAME,
         framework: Annotated[Literal["pytorch", "tensorflow"], Query()] = "pytorch",
     ) -> Response:
         redirect_response = _require_authenticated_request(request, security_settings)
@@ -321,7 +372,9 @@ def _register_llm_train_route(
     tensorflow_language_model_service: TensorFlowLanguageModelService,
 ) -> None:
     @app.post("/api/llm/train")
-    def llm_train(request: Request, request_payload: TrainLanguageModelRequest) -> Response:
+    def llm_train(
+        request: Request, request_payload: TrainLanguageModelRequest
+    ) -> Response:
         redirect_response = _require_authenticated_request(request, security_settings)
         if redirect_response is not None:
             return redirect_response
@@ -331,7 +384,10 @@ def _register_llm_train_route(
             tensorflow_language_model_service,
         )
         return _execute_llm_action(
-            lambda: language_model_service.train(_training_config_from_request(request_payload)), status_code=201
+            lambda: language_model_service.train(
+                _training_config_from_request(request_payload)
+            ),
+            status_code=201,
         )
 
 
@@ -342,7 +398,9 @@ def _register_llm_generate_route(
     tensorflow_language_model_service: TensorFlowLanguageModelService,
 ) -> None:
     @app.post("/api/llm/generate")
-    def llm_generate(request: Request, request_payload: GenerateLanguageModelRequest) -> Response:
+    def llm_generate(
+        request: Request, request_payload: GenerateLanguageModelRequest
+    ) -> Response:
         redirect_response = _require_authenticated_request(request, security_settings)
         if redirect_response is not None:
             return redirect_response
@@ -352,7 +410,9 @@ def _register_llm_generate_route(
             tensorflow_language_model_service,
         )
         return _execute_llm_action(
-            lambda: language_model_service.generate(_generation_config_from_request(request_payload))
+            lambda: language_model_service.generate(
+                _generation_config_from_request(request_payload)
+            )
         )
 
 
@@ -397,7 +457,9 @@ def _register_llm_websocket_route(
             return
         await websocket.accept()
         try:
-            payload = GenerateLanguageModelRequest.model_validate(await websocket.receive_json())
+            payload = GenerateLanguageModelRequest.model_validate(
+                await websocket.receive_json()
+            )
             language_model_service = _language_model_service(
                 payload.framework,
                 pytorch_language_model_service,
@@ -425,7 +487,10 @@ def _register_llm_websocket_route(
                     "event": "error",
                     "framework": "unknown",
                     "user": principal.username,
-                    "error": {"code": "websocket_error", "message": "Unexpected WebSocket generation failure."},
+                    "error": {
+                        "code": "websocket_error",
+                        "message": "Unexpected WebSocket generation failure.",
+                    },
                 }
             )
             await websocket.close(code=1011)
@@ -444,7 +509,9 @@ def _response_for(request: Request, data_dir: Path) -> Response:
 
 def _target_from_request(request: Request) -> str:
     query_string = request.url.query
-    return request.url.path if not query_string else f"{request.url.path}?{query_string}"
+    return (
+        request.url.path if not query_string else f"{request.url.path}?{query_string}"
+    )
 
 
 def _to_fastapi_response(api_response: ApiResponse) -> Response:
@@ -459,7 +526,9 @@ def _json_response(payload: dict[str, object], status_code: int = 200) -> JSONRe
     return JSONResponse(content=payload, status_code=status_code)
 
 
-def _session_response(username: str, auth_method: str, security_settings: SecuritySettings) -> JSONResponse:
+def _session_response(
+    username: str, auth_method: str, security_settings: SecuritySettings
+) -> JSONResponse:
     principal = UserPrincipal(username=username, auth_method=auth_method)
     response = _session_payload_response(username, auth_method, "pending")
     csrf_token = attach_session_cookies(response, security_settings, principal)
@@ -477,7 +546,9 @@ def _session_response(username: str, auth_method: str, security_settings: Securi
     return response
 
 
-def _session_payload_response(username: str, auth_method: str, csrf_token: str | None) -> JSONResponse:
+def _session_payload_response(
+    username: str, auth_method: str, csrf_token: str | None
+) -> JSONResponse:
     return _json_response(
         {
             "status": "ok",
@@ -497,7 +568,9 @@ def _complete_browser_login(
     auth_method: Literal["basic", "digest"],
     return_to: str,
 ) -> Response:
-    principal, challenge_response = authenticate_login_request(request, security_settings)
+    principal, challenge_response = authenticate_login_request(
+        request, security_settings
+    )
     if principal is None:
         assert challenge_response is not None
         return challenge_response
@@ -516,7 +589,9 @@ def _require_authenticated_request(
     return None
 
 
-def _training_config_from_request(request_payload: TrainLanguageModelRequest) -> TrainingConfig:
+def _training_config_from_request(
+    request_payload: TrainLanguageModelRequest,
+) -> TrainingConfig:
     return TrainingConfig(
         framework=request_payload.framework,
         domains=tuple(request_payload.domains),
@@ -533,7 +608,9 @@ def _training_config_from_request(request_payload: TrainLanguageModelRequest) ->
     )
 
 
-def _generation_config_from_request(request_payload: GenerateLanguageModelRequest) -> GenerationConfig:
+def _generation_config_from_request(
+    request_payload: GenerateLanguageModelRequest,
+) -> GenerationConfig:
     return GenerationConfig(
         framework=request_payload.framework,
         prompt=request_payload.prompt,
@@ -570,7 +647,8 @@ def _language_model_service(
 
 
 async def _sse_event_stream(
-    language_model_service: PyTorchLanguageModelService | TensorFlowLanguageModelService,
+    language_model_service: PyTorchLanguageModelService
+    | TensorFlowLanguageModelService,
     config: GenerationConfig,
 ):
     try:

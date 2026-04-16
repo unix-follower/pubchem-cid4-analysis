@@ -2,8 +2,16 @@ from __future__ import annotations
 
 from typing import Any
 
-from langchain_cid4.documents import chunk_documents, import_langchain_stack, load_domain_documents
-from langchain_cid4.retrieval import InMemoryRetriever, RetrievedPassage, retrieve_with_pgvector
+from langchain_cid4.documents import (
+    chunk_documents,
+    import_langchain_stack,
+    load_domain_documents,
+)
+from langchain_cid4.retrieval import (
+    InMemoryRetriever,
+    RetrievedPassage,
+    retrieve_with_pgvector,
+)
 
 
 def route_question(question: str) -> dict[str, Any]:
@@ -14,8 +22,24 @@ def route_question(question: str) -> dict[str, Any]:
     keyword_map = {
         "literature": ["literature", "paper", "abstract", "doi", "pmid", "citation"],
         "patent": ["patent", "inventor", "assignee", "publication number"],
-        "assay": ["assay", "target", "activity", "aid", "tox21", "estrogen", "androgen"],
-        "pathway": ["pathway", "reaction", "enzyme", "gene", "nadh", "glutathione", "trypanosoma"],
+        "assay": [
+            "assay",
+            "target",
+            "activity",
+            "aid",
+            "tox21",
+            "estrogen",
+            "androgen",
+        ],
+        "pathway": [
+            "pathway",
+            "reaction",
+            "enzyme",
+            "gene",
+            "nadh",
+            "glutathione",
+            "trypanosoma",
+        ],
         "taxonomy": ["taxonomy", "organism", "species", "bird", "mammal", "fooddb"],
         "product_use": ["product", "use", "cpdat", "category", "consumer"],
     }
@@ -44,7 +68,9 @@ def route_question(question: str) -> dict[str, Any]:
 
 def run_literature_workflow() -> dict[str, Any]:
     question = "What does the literature say about isopropanolamine fungicide activity?"
-    return run_question_workflow(question, domains=["literature"], workflow="literature-rag")
+    return run_question_workflow(
+        question, domains=["literature"], workflow="literature-rag"
+    )
 
 
 def run_assay_workflow() -> dict[str, Any]:
@@ -54,12 +80,16 @@ def run_assay_workflow() -> dict[str, Any]:
 
 def run_pathway_workflow() -> dict[str, Any]:
     question = "Which pathways involving CID 4 are linked to Trypanosoma brucei?"
-    return run_question_workflow(question, domains=["pathway"], workflow="pathway-explainer")
+    return run_question_workflow(
+        question, domains=["pathway"], workflow="pathway-explainer"
+    )
 
 
 def run_taxonomy_workflow() -> dict[str, Any]:
     question = "Which organisms in the dataset are birds?"
-    return run_question_workflow(question, domains=["taxonomy"], workflow="taxonomy-assistant")
+    return run_question_workflow(
+        question, domains=["taxonomy"], workflow="taxonomy-assistant"
+    )
 
 
 def run_agent_workflow() -> dict[str, Any]:
@@ -103,11 +133,17 @@ def run_question_workflow(
     effective_domains = effective_route["domains"] if domains is None else domains
     stack = import_langchain_stack()
 
-    domain_results = [retrieve_domain_hits(question, domain, top_k=top_k) for domain in effective_domains]
+    domain_results = [
+        retrieve_domain_hits(question, domain, top_k=top_k)
+        for domain in effective_domains
+    ]
     flattened_hits = [hit for result in domain_results for hit in result["_hits"]]
-    flattened_hits = sorted(flattened_hits, key=lambda item: (-item.score, item.title, item.source_id))[:top_k]
+    flattened_hits = sorted(
+        flattened_hits, key=lambda item: (-item.score, item.title, item.source_id)
+    )[:top_k]
     public_domain_results = [
-        {key: value for key, value in result.items() if key != "_hits"} for result in domain_results
+        {key: value for key, value in result.items() if key != "_hits"}
+        for result in domain_results
     ]
 
     response = build_chain_response(question, effective_domains, flattened_hits, stack)
@@ -125,11 +161,15 @@ def run_question_workflow(
     }
 
 
-def retrieve_domain_hits(question: str, domain: str, *, top_k: int = 4) -> dict[str, Any]:
+def retrieve_domain_hits(
+    question: str, domain: str, *, top_k: int = 4
+) -> dict[str, Any]:
     documents = load_domain_documents(domain)
     chunks = chunk_documents(documents)
 
-    pgvector_result = retrieve_with_pgvector(question, doc_type=map_domain_to_doc_type(domain), top_k=top_k)
+    pgvector_result = retrieve_with_pgvector(
+        question, doc_type=map_domain_to_doc_type(domain), top_k=top_k
+    )
     if pgvector_result.get("status") == "ok":
         hits = pgvector_result["hits"]
         backend = "pgvector"
@@ -209,8 +249,10 @@ def summarize_hits(domains: list[str], hits: list[RetrievedPassage]) -> dict[str
                 "pmid": hit.metadata.get("pmid") or hit.metadata.get("PMID"),
                 "doi": hit.metadata.get("doi") or hit.metadata.get("DOI"),
                 "aid": hit.metadata.get("aid") or hit.metadata.get("BioAssay_AID"),
-                "taxonomy_id": hit.metadata.get("taxonomy_id") or hit.metadata.get("Taxonomy_ID"),
-                "pathway_accession": hit.metadata.get("pathway_accession") or hit.metadata.get("Pathway_Accession"),
+                "taxonomy_id": hit.metadata.get("taxonomy_id")
+                or hit.metadata.get("Taxonomy_ID"),
+                "pathway_accession": hit.metadata.get("pathway_accession")
+                or hit.metadata.get("Pathway_Accession"),
             }
         )
 
@@ -229,7 +271,9 @@ def build_grounded_answer(domains: list[str], hits: list[RetrievedPassage]) -> s
     domain_phrase = ", ".join(domains)
     if "assay" in domains:
         aid_values = [
-            str(hit.metadata.get("aid") or hit.metadata.get("BioAssay_AID")) for hit in hits[:3] if hit.metadata
+            str(hit.metadata.get("aid") or hit.metadata.get("BioAssay_AID"))
+            for hit in hits[:3]
+            if hit.metadata
         ]
         return (
             f"The strongest {domain_phrase} evidence centers on {top_titles}. Relevant assay identifiers include "
@@ -240,7 +284,10 @@ def build_grounded_answer(domains: list[str], hits: list[RetrievedPassage]) -> s
         )
     if "pathway" in domains:
         accessions = [
-            str(hit.metadata.get("pathway_accession") or hit.metadata.get("Source_Pathway"))
+            str(
+                hit.metadata.get("pathway_accession")
+                or hit.metadata.get("Source_Pathway")
+            )
             for hit in hits[:3]
             if hit.metadata
         ]
@@ -253,12 +300,15 @@ def build_grounded_answer(domains: list[str], hits: list[RetrievedPassage]) -> s
         )
     if "taxonomy" in domains:
         tax_ids = [
-            str(hit.metadata.get("taxonomy_id") or hit.metadata.get("Taxonomy_ID")) for hit in hits[:3] if hit.metadata
+            str(hit.metadata.get("taxonomy_id") or hit.metadata.get("Taxonomy_ID"))
+            for hit in hits[:3]
+            if hit.metadata
         ]
         return (
             f"The grounded {domain_phrase} evidence highlights {top_titles}. The leading supporting taxonomy "
             f"identifiers are {
-                ', '.join(value for value in tax_ids if value and value != 'None') or 'not present in the top hits'
+                ', '.join(value for value in tax_ids if value and value != 'None')
+                or 'not present in the top hits'
             }."
         )
     return (

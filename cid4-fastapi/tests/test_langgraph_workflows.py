@@ -61,7 +61,9 @@ class LangGraphWorkflowTests(unittest.TestCase):
         self.assertTrue(output["assay_hits"])
         self.assertTrue(output["literature_hits"])
         self.assertTrue(output["supporting_ids"]["aid"])
-        self.assertTrue(output["supporting_ids"]["pmid"] or output["supporting_ids"]["doi"])
+        self.assertTrue(
+            output["supporting_ids"]["pmid"] or output["supporting_ids"]["doi"]
+        )
 
     def test_pathway_taxonomy_workflow_collects_accessions_and_taxonomy(self) -> None:
         output = run_pathway_taxonomy_workflow()

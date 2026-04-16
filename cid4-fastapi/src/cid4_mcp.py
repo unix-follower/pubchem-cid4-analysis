@@ -8,7 +8,9 @@ from mcp_cid4.server import create_cid4_mcp_server
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run the CID4 MCP server in local stdio mode.")
+    parser = argparse.ArgumentParser(
+        description="Run the CID4 MCP server in local stdio mode."
+    )
     return parser
 
 

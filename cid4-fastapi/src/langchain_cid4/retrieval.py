@@ -21,18 +21,26 @@ class RetrievedPassage:
 
 class InMemoryRetriever:
     def __init__(
-        self, chunks: list[ChunkRecord], embedding_provider: HashedTokenEmbeddingProvider | None = None
+        self,
+        chunks: list[ChunkRecord],
+        embedding_provider: HashedTokenEmbeddingProvider | None = None,
     ) -> None:
         self.chunks = chunks
         self.embedding_provider = embedding_provider or HashedTokenEmbeddingProvider()
-        self.chunk_embeddings = {chunk.chunk_id: self.embedding_provider.embed(chunk.content) for chunk in self.chunks}
+        self.chunk_embeddings = {
+            chunk.chunk_id: self.embedding_provider.embed(chunk.content)
+            for chunk in self.chunks
+        }
 
     def retrieve(self, query: str, *, top_k: int = 4) -> list[RetrievedPassage]:
         query_embedding = self.embedding_provider.embed(query)
         scored: list[RetrievedPassage] = []
         for chunk in self.chunks:
             chunk_embedding = self.chunk_embeddings[chunk.chunk_id]
-            score = sum(left * right for left, right in zip(query_embedding, chunk_embedding, strict=False))
+            score = sum(
+                left * right
+                for left, right in zip(query_embedding, chunk_embedding, strict=False)
+            )
             scored.append(
                 RetrievedPassage(
                     source_id=chunk.chunk_id,
@@ -45,7 +53,9 @@ class InMemoryRetriever:
                 )
             )
 
-        return sorted(scored, key=lambda item: (-item.score, item.title, item.source_id))[:top_k]
+        return sorted(
+            scored, key=lambda item: (-item.score, item.title, item.source_id)
+        )[:top_k]
 
 
 def retrieve_with_pgvector(
@@ -87,7 +97,9 @@ LIMIT %s
 """.strip()
 
     try:
-        with stack["psycopg"].connect(effective_config.dsn, autocommit=True) as connection:
+        with stack["psycopg"].connect(
+            effective_config.dsn, autocommit=True
+        ) as connection:
             stack["register_vector"](connection)
             with connection.cursor() as cursor:
                 cursor.execute(sql, (vector, doc_type, vector, top_k))

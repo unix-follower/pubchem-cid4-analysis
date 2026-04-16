@@ -36,9 +36,17 @@ BIOACTIVITY_FIXTURE: dict[str, object] = {
         {"aid": 743069, "assay": "Tox21 ER-alpha agonist", "activityValue": 355.1},
         {"aid": 743070, "assay": "Tox21 ER-alpha antagonist", "activityValue": 18.2},
         {"aid": 651820, "assay": "NCI growth inhibition", "activityValue": 92.4},
-        {"aid": 540317, "assay": "Cell viability counter-screen", "activityValue": 112.7},
+        {
+            "aid": 540317,
+            "assay": "Cell viability counter-screen",
+            "activityValue": 112.7,
+        },
         {"aid": 504332, "assay": "ChEMBL potency panel", "activityValue": 8.6},
-        {"aid": 720699, "assay": "Nuclear receptor confirmation", "activityValue": 61.9},
+        {
+            "aid": 720699,
+            "assay": "Nuclear receptor confirmation",
+            "activityValue": 61.9,
+        },
         {"aid": 743053, "assay": "Tox21 luciferase artifact", "activityValue": 140.4},
         {"aid": 743122, "assay": "Dose-response validation", "activityValue": 28.8},
         {"aid": 1259368, "assay": "Secondary pharmacology", "activityValue": 4.2},
@@ -99,11 +107,15 @@ def resolve_data_dir() -> Path:
     )
 
     for candidate in candidates:
-        if candidate.is_dir() and all((candidate / filename).is_file() for filename in REQUIRED_DATA_FILES):
+        if candidate.is_dir() and all(
+            (candidate / filename).is_file() for filename in REQUIRED_DATA_FILES
+        ):
             return candidate
 
     checked = ", ".join(str(path) for path in candidates)
-    raise RuntimeError(f"Unable to resolve the CID 4 data directory. Checked: {checked}")
+    raise RuntimeError(
+        f"Unable to resolve the CID 4 data directory. Checked: {checked}"
+    )
 
 
 def resolve_server_config(
@@ -112,7 +124,9 @@ def resolve_server_config(
     preferred_port_env_names: tuple[str, ...] = (),
 ) -> ServerConfig:
     host = _first_env_value(*preferred_host_env_names, "SERVER_HOST") or "0.0.0.0"
-    port = _first_int_env_value(*preferred_port_env_names, "SERVER_PORT", "PORT") or 8443
+    port = (
+        _first_int_env_value(*preferred_port_env_names, "SERVER_PORT", "PORT") or 8443
+    )
 
     cert_file = _first_env_value("TLS_CERT_FILE")
     key_file = _first_env_value("TLS_KEY_FILE")
@@ -152,7 +166,9 @@ def route_api_request(
     if normalized_method == "OPTIONS":
         return ApiResponse(status_code=204, body="")
     if normalized_method != "GET":
-        return _json_response(405, {"message": f"Method {normalized_method} not allowed"})
+        return _json_response(
+            405, {"message": f"Method {normalized_method} not allowed"}
+        )
 
     parsed = urlsplit(target)
     path = parsed.path or "/"
@@ -250,7 +266,9 @@ def _json_response(status_code: int, payload: dict[str, object]) -> ApiResponse:
     return ApiResponse(status_code=status_code, body=json.dumps(payload))
 
 
-def _resolve_server_config_from_crypto_summary(data_dir: Path, host: str, port: int) -> ServerConfig:
+def _resolve_server_config_from_crypto_summary(
+    data_dir: Path, host: str, port: int
+) -> ServerConfig:
     summary_path = data_dir / "out" / "crypto" / "cid4_crypto.summary.json"
     if not summary_path.is_file():
         raise RuntimeError(

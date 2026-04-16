@@ -34,7 +34,9 @@ class SecuritySettings:
     keycloak_redirect_uri: str | None
 
 
-def resolve_security_settings(environ: dict[str, str] | None = None) -> SecuritySettings:
+def resolve_security_settings(
+    environ: dict[str, str] | None = None,
+) -> SecuritySettings:
     env = os.environ if environ is None else environ
     return SecuritySettings(
         allowed_origins=_split_csv(
@@ -43,7 +45,9 @@ def resolve_security_settings(environ: dict[str, str] | None = None) -> Security
                 "http://localhost:4200,http://127.0.0.1:4200,http://testserver",
             )
         ),
-        trusted_hosts=_split_csv(env.get("FASTAPI_TRUSTED_HOSTS", "localhost,127.0.0.1,testserver")),
+        trusted_hosts=_split_csv(
+            env.get("FASTAPI_TRUSTED_HOSTS", "localhost,127.0.0.1,testserver")
+        ),
         default_auth_method=env.get("FASTAPI_DEFAULT_AUTH_METHOD", "basic"),
         basic_users=_load_user_map(
             env,
@@ -68,7 +72,9 @@ def resolve_security_settings(environ: dict[str, str] | None = None) -> Security
         digest_secret=env.get("FASTAPI_DIGEST_SECRET", "cid4-fastapi-digest-secret"),
         digest_realm=env.get("FASTAPI_DIGEST_REALM", "CID4 Chat"),
         digest_opaque=env.get("FASTAPI_DIGEST_OPAQUE", "cid4-chat-opaque"),
-        digest_nonce_ttl_seconds=int(env.get("FASTAPI_DIGEST_NONCE_TTL_SECONDS", "300")),
+        digest_nonce_ttl_seconds=int(
+            env.get("FASTAPI_DIGEST_NONCE_TTL_SECONDS", "300")
+        ),
         session_ttl_seconds=int(env.get("FASTAPI_SESSION_TTL_SECONDS", "28800")),
         keycloak_base_url=env.get("FASTAPI_KEYCLOAK_BASE_URL") or None,
         keycloak_realm=env.get("FASTAPI_KEYCLOAK_REALM") or None,

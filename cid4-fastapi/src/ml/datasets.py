@@ -58,7 +58,9 @@ SOURCE_KEYWORDS = {
 }
 
 
-def build_atom_feature_frame(filename: str = ATOM_SDF_FILENAME) -> tuple[pd.DataFrame, Chem.Mol]:
+def build_atom_feature_frame(
+    filename: str = ATOM_SDF_FILENAME,
+) -> tuple[pd.DataFrame, Chem.Mol]:
     molecules = cid4_analysis.load_sdf_molecules(filename)
 
     if not molecules:
@@ -67,17 +69,25 @@ def build_atom_feature_frame(filename: str = ATOM_SDF_FILENAME) -> tuple[pd.Data
     molecule = molecules[0]
     atom_feature_df = cid4_analysis.extract_atom_feature_matrix([molecule]).copy()
     atom_feature_df["atomId"] = atom_feature_df["index"].astype(int) + 1
-    atom_feature_df["hybridizationEncoded"] = encode_categories(atom_feature_df["hybridization"])
+    atom_feature_df["hybridizationEncoded"] = encode_categories(
+        atom_feature_df["hybridization"]
+    )
     atom_feature_df["isAromaticInt"] = atom_feature_df["isAromatic"].astype(int)
-    atom_feature_df["isHeavyAtom"] = atom_feature_df["atomicNumber"].astype(int).gt(1).astype(int)
+    atom_feature_df["isHeavyAtom"] = (
+        atom_feature_df["atomicNumber"].astype(int).gt(1).astype(int)
+    )
     atom_feature_df["elementLabel"] = atom_feature_df["symbol"].astype(str)
-    atom_feature_df["atomLabel"] = atom_feature_df["symbol"].astype(str) + atom_feature_df["atomId"].astype(str)
+    atom_feature_df["atomLabel"] = atom_feature_df["symbol"].astype(
+        str
+    ) + atom_feature_df["atomId"].astype(str)
     return atom_feature_df, molecule
 
 
 def build_atom_heavy_atom_dataset(filename: str = ATOM_SDF_FILENAME) -> PreparedDataset:
     atom_feature_df, _ = build_atom_feature_frame(filename)
-    frame = atom_feature_df.loc[:, ["atomLabel", *ATOM_FEATURE_COLUMNS, "isHeavyAtom"]].copy()
+    frame = atom_feature_df.loc[
+        :, ["atomLabel", *ATOM_FEATURE_COLUMNS, "isHeavyAtom"]
+    ].copy()
 
     return PreparedDataset(
         name="atom-heavy-vs-hydrogen",
@@ -95,7 +105,9 @@ def build_atom_element_dataset(filename: str = ATOM_SDF_FILENAME) -> PreparedDat
     class_names = sorted(atom_feature_df["elementLabel"].astype(str).unique().tolist())
     label_to_index = {label: index for index, label in enumerate(class_names)}
     frame = atom_feature_df.loc[:, ["atomLabel", *ATOM_FEATURE_COLUMNS]].copy()
-    frame["elementTarget"] = atom_feature_df["elementLabel"].map(label_to_index).astype(int)
+    frame["elementTarget"] = (
+        atom_feature_df["elementLabel"].map(label_to_index).astype(int)
+    )
 
     return PreparedDataset(
         name="atom-element-multiclass",
@@ -117,7 +129,9 @@ def build_bioactivity_binary_classification_dataset(
     atom_feature_df, molecule = build_atom_feature_frame(atom_filename)
     descriptor_map = build_molecular_descriptors(atom_feature_df, molecule)
     frame, feature_columns = build_bioactivity_model_frame(filtered_df, descriptor_map)
-    frame["activityBinary"] = frame["Activity"].astype(str).str.upper().eq("ACTIVE").astype(int)
+    frame["activityBinary"] = (
+        frame["Activity"].astype(str).str.upper().eq("ACTIVE").astype(int)
+    )
 
     return PreparedDataset(
         name="bioactivity-active-vs-inactive",
@@ -173,14 +187,24 @@ def build_heavy_atom_pca_dataset(filename: str = ATOM_SDF_FILENAME) -> PreparedD
 
 def build_taxonomy_clustering_frame(filename: str = TAXONOMY_FILENAME) -> pd.DataFrame:
     taxonomy_df = pd.read_csv(cid4_analysis.resolve_data_path(filename)).copy()
-    taxonomy_df["Taxonomy_ID"] = pd.to_numeric(taxonomy_df["Taxonomy_ID"], errors="coerce")
-    taxonomy_df = taxonomy_df.dropna(subset=["Taxonomy_ID", "Source_Organism"]).reset_index(drop=True)
+    taxonomy_df["Taxonomy_ID"] = pd.to_numeric(
+        taxonomy_df["Taxonomy_ID"], errors="coerce"
+    )
+    taxonomy_df = taxonomy_df.dropna(
+        subset=["Taxonomy_ID", "Source_Organism"]
+    ).reset_index(drop=True)
     taxonomy_df["Taxonomy_ID"] = taxonomy_df["Taxonomy_ID"].astype(int)
-    taxonomy_df["animalClass"] = taxonomy_df["Taxonomy"].astype(str).map(infer_taxonomy_class)
-    return taxonomy_df.loc[:, ["Source_Organism", "Taxonomy", "Taxonomy_ID", "animalClass"]]
+    taxonomy_df["animalClass"] = (
+        taxonomy_df["Taxonomy"].astype(str).map(infer_taxonomy_class)
+    )
+    return taxonomy_df.loc[
+        :, ["Source_Organism", "Taxonomy", "Taxonomy_ID", "animalClass"]
+    ]
 
 
-def build_molecular_descriptors(atom_feature_df: pd.DataFrame, molecule: Chem.Mol) -> dict[str, Any]:
+def build_molecular_descriptors(
+    atom_feature_df: pd.DataFrame, molecule: Chem.Mol
+) -> dict[str, Any]:
     element_counts = atom_feature_df["symbol"].astype(str).value_counts().to_dict()
     chiral_centers = Chem.FindMolChiralCenters(molecule, includeUnassigned=True)
 
@@ -201,11 +225,21 @@ def build_bioactivity_model_frame(
     frame = source_frame.copy()
     frame["Aid_Type_Encoded"] = encode_categories(frame["Aid_Type"])
     frame["Activity_Type_Encoded"] = encode_categories(frame["Activity_Type"])
-    frame["Bioassay_Data_Source_Encoded"] = encode_categories(frame["Bioassay_Data_Source"])
-    frame["Has_Dose_Response_Curve"] = pd.to_numeric(frame["Has_Dose_Response_Curve"], errors="coerce").fillna(0)
-    frame["RNAi_BioAssay"] = pd.to_numeric(frame["RNAi_BioAssay"], errors="coerce").fillna(0)
-    frame["Taxonomy_ID_Numeric"] = pd.to_numeric(frame["Taxonomy_ID"], errors="coerce").fillna(-1)
-    frame["Target_Taxonomy_ID_Numeric"] = pd.to_numeric(frame["Target_Taxonomy_ID"], errors="coerce").fillna(-1)
+    frame["Bioassay_Data_Source_Encoded"] = encode_categories(
+        frame["Bioassay_Data_Source"]
+    )
+    frame["Has_Dose_Response_Curve"] = pd.to_numeric(
+        frame["Has_Dose_Response_Curve"], errors="coerce"
+    ).fillna(0)
+    frame["RNAi_BioAssay"] = pd.to_numeric(
+        frame["RNAi_BioAssay"], errors="coerce"
+    ).fillna(0)
+    frame["Taxonomy_ID_Numeric"] = pd.to_numeric(
+        frame["Taxonomy_ID"], errors="coerce"
+    ).fillna(-1)
+    frame["Target_Taxonomy_ID_Numeric"] = pd.to_numeric(
+        frame["Target_Taxonomy_ID"], errors="coerce"
+    ).fillna(-1)
     frame["Has_Protein_Accession"] = has_non_empty_text(frame["Protein_Accession"])
     frame["Has_Gene_ID"] = has_non_empty_text(frame["Gene_ID"])
     frame["Has_PMID"] = has_non_empty_text(frame["PMID"])
@@ -244,7 +278,9 @@ def build_bioactivity_model_frame(
     return frame, feature_columns
 
 
-def add_keyword_flags(frame: pd.DataFrame, column_name: str, definitions: dict[str, tuple[str, ...]]) -> None:
+def add_keyword_flags(
+    frame: pd.DataFrame, column_name: str, definitions: dict[str, tuple[str, ...]]
+) -> None:
     normalized = frame[column_name].astype("string").fillna("").str.lower()
     for feature_name, keywords in definitions.items():
         pattern = "|".join(keywords)

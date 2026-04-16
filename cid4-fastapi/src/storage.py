@@ -95,7 +95,9 @@ ON CONFLICT (doc_id) DO UPDATE SET
 """.strip()
 
 
-def build_similarity_query_sql(table_name: str, metadata_filters: dict[str, str] | None = None) -> str:
+def build_similarity_query_sql(
+    table_name: str, metadata_filters: dict[str, str] | None = None
+) -> str:
     where_clauses = ["TRUE"]
     if metadata_filters:
         for _ in metadata_filters:
@@ -139,12 +141,8 @@ CREATE TABLE IF NOT EXISTS {config.table_name} (
     embedding vector({config.embedding_dimension}) NOT NULL
 )
 """.strip()
-    create_doc_type_index_sql = (
-        f"CREATE INDEX IF NOT EXISTS idx_{config.table_name}_doc_type ON {config.table_name} (doc_type)"
-    )
-    create_taxonomy_index_sql = (
-        f"CREATE INDEX IF NOT EXISTS idx_{config.table_name}_taxonomy_id ON {config.table_name} (taxonomy_id)"
-    )
+    create_doc_type_index_sql = f"CREATE INDEX IF NOT EXISTS idx_{config.table_name}_doc_type ON {config.table_name} (doc_type)"
+    create_taxonomy_index_sql = f"CREATE INDEX IF NOT EXISTS idx_{config.table_name}_taxonomy_id ON {config.table_name} (taxonomy_id)"
 
     with connection.cursor() as cursor:
         cursor.execute(create_extension_sql)
