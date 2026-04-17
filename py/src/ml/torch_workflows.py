@@ -7,14 +7,12 @@ from torch import nn
 from ml.common import (
     PreparedDataset,
     build_supervised_split,
-    regression_metrics,
     classification_metrics,
+    regression_metrics,
 )
 
 
-def run_torch_classification(
-    dataset: PreparedDataset, epochs: int = 200
-) -> dict[str, Any]:
+def run_torch_classification(dataset: PreparedDataset, epochs: int = 200) -> dict[str, Any]:
     if int(np.unique(dataset.target_vector()).size) < 2:
         return {
             "status": "insufficient_data",
@@ -53,9 +51,7 @@ def run_torch_classification(
         "dataset": dataset.summary(),
         "evaluation_note": split.evaluation_note,
         "epochs": int(epochs),
-        "metrics": classification_metrics(
-            split.y_test, predictions, dataset.class_names
-        ),
+        "metrics": classification_metrics(split.y_test, predictions, dataset.class_names),
     }
 
 

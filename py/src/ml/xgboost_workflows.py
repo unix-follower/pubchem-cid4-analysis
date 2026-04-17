@@ -1,14 +1,13 @@
 from typing import Any
 
 import numpy as np
-from xgboost import XGBRegressor
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier, XGBRegressor
 
 from ml.common import (
     PreparedDataset,
     build_supervised_split,
-    regression_metrics,
     classification_metrics,
+    regression_metrics,
 )
 
 
@@ -94,12 +93,8 @@ def run_xgboost_classification(dataset: PreparedDataset) -> dict[str, Any]:
         "library": "xgboost",
         "dataset": dataset.summary(),
         "evaluation_note": split.evaluation_note,
-        "metrics": classification_metrics(
-            split.y_test, predictions, dataset.class_names
-        ),
-        "feature_importances": ranked_feature_importances(
-            dataset, model.feature_importances_
-        ),
+        "metrics": classification_metrics(split.y_test, predictions, dataset.class_names),
+        "feature_importances": ranked_feature_importances(dataset, model.feature_importances_),
         "model_parameters": {
             "n_estimators": model_kwargs["n_estimators"],
             "max_depth": model_kwargs["max_depth"],
