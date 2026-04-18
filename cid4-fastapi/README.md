@@ -2,7 +2,7 @@
 ```sh
 ./setup.sh
 export DATA_DIR="$(pwd)/../data"
-uv run python src/cid4_fastapi.py
+uv run python -m debugpy --listen 5678 --wait-for-client src/cid4_fastapi.py
 ```
 
 TLS configuration:
@@ -120,6 +120,108 @@ The initial MCP surface is read-focused:
 - Tool `validate_grounded_answer`
 
 HTTP MCP access reuses the existing CID4 auth model. For browser or HTTP clients, authenticate first with the existing FastAPI auth flow, then connect to `/mcp/` with the issued session cookie. The mounted MCP endpoint rejects unauthenticated requests with `401` instead of redirecting.
+
+### Request example
+#### Step 1. Initialize
+```sh
+curl -kv https://localhost:8443/mcp/ \
+  -X POST \
+  -u 'analyst:cid4-basic-password' \
+  -H 'X-CID4-Auth-Method: basic' \
+  -H 'Accept: application/json, text/event-stream' \
+  -H 'Content-Type: application/json' \
+  -H 'MCP-Protocol-Version: 2025-06-18' \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "init-1",
+    "method": "initialize",
+    "params": {
+      "protocolVersion": "2025-06-18",
+      "capabilities": {},
+      "clientInfo": {
+        "name": "manual-curl",
+        "version": "1.0.0"
+      }
+    }
+  }'
+```
+
+#### Step 2. Send the initialized notification
+```sh
+# mcpSessionId=xxx
+curl -kv https://localhost:8443/mcp/ \
+  -X POST \
+  -u 'analyst:cid4-basic-password' \
+  -H 'X-CID4-Auth-Method: basic' \
+  -H 'Accept: application/json, text/event-stream' \
+  -H 'Content-Type: application/json' \
+  -H 'MCP-Protocol-Version: 2025-06-18' \
+  -H "Mcp-Session-Id: $mcpSessionId" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "notifications/initialized",
+    "params": {}
+  }'
+```
+
+#### List tools
+```sh
+curl -kv https://localhost:8443/mcp/ \
+  -X POST \
+  -u 'analyst:cid4-basic-password' \
+  -H 'X-CID4-Auth-Method: basic' \
+  -H 'Accept: application/json, text/event-stream' \
+  -H 'Content-Type: application/json' \
+  -H 'MCP-Protocol-Version: 2025-06-18' \
+  -H "Mcp-Session-Id: $mcpSessionId" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "tools-1",
+    "method": "tools/list",
+    "params": {}
+  }' | jq
+```
+
+#### Call get_compound_metadata
+```sh
+curl -kv https://localhost:8443/mcp/ \
+  -X POST \
+  -u 'analyst:cid4-basic-password' \
+  -H 'X-CID4-Auth-Method: basic' \
+  -H 'Accept: application/json, text/event-stream' \
+  -H 'Content-Type: application/json' \
+  -H 'MCP-Protocol-Version: 2025-06-18' \
+  -H "Mcp-Session-Id: $mcpSessionId" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "call-1",
+    "method": "tools/call",
+    "params": {
+      "name": "get_compound_metadata",
+      "arguments": {}
+    }
+  }' | jq
+```
+
+#### Read the cid4://compound/4 resource
+```sh
+curl -kv https://localhost:8443/mcp/ \
+  -X POST \
+  -u 'analyst:cid4-basic-password' \
+  -H 'X-CID4-Auth-Method: basic' \
+  -H 'Accept: application/json, text/event-stream' \
+  -H 'Content-Type: application/json' \
+  -H 'MCP-Protocol-Version: 2025-06-18' \
+  -H "Mcp-Session-Id: $mcpSessionId" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "resource-1",
+    "method": "resources/read",
+    "params": {
+      "uri": "cid4://compound/4"
+    }
+  }' | jq
+```
 
 ## Machine learning runner
 ```sh
