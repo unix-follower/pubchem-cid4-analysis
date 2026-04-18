@@ -27,3 +27,8 @@ descriptor-ml = [
 chem-tools = [
     "deepchem>=2.8.0",
 ]
+
+[dependency-groups]
+dev = [
+    "debugpy>=1.8.20",
+]
