@@ -58,7 +58,7 @@ jobs:
             | xargs -0 clang-tidy -p build
 
       - name: Setup Vulkan SDK
-        uses: humbletim/setup-vulkan-sdk@latest
+        uses: humbletim/setup-vulkan-sdk@v1.2.1
         with:
           vulkan-query-version: latest
           vulkan-components: Vulkan-Headers, Vulkan-Loader
