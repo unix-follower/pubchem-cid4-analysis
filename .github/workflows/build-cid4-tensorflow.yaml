@@ -1,0 +1,49 @@
+name: Build cid4-tensorflow
+on:
+  pull_request:
+    paths:
+      - .github/workflows/build-cid4-tensorflow.yaml
+      - cid4-tensorflow/**
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+    inputs:
+      python-version:
+        description: Desired python version
+        required: false
+        default: "3.13"
+
+env:
+  PYTHON_VERSION: ${{ inputs.python-version || '3.13' }}
+
+jobs:
+  build:
+    runs-on:
+      - ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+        
+      - name: Install uv
+        working-directory: cid4-tensorflow
+        shell: bash
+        run: pip install uv
+
+      - name: Check code formatting
+        working-directory: cid4-tensorflow
+        shell: bash
+        run: uv tool run ruff check
+
+      - name: Build cid4-tensorflow Docker image
+        working-directory: cid4-tensorflow
+        shell: bash
+        run: docker build -t cid4-tensorflow:latest .
