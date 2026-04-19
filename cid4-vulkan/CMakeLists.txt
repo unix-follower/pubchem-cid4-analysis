@@ -27,8 +27,8 @@ target_link_libraries(cid4_scene_loader PUBLIC nlohmann_json::nlohmann_json)
 
 find_package(Vulkan REQUIRED)
 
-add_executable(cid4_vulkan_app src/cid4_vulkan_app.cpp)
-set_target_properties(cid4_vulkan_app PROPERTIES OUTPUT_NAME cid4_vulkan_app)
-target_link_libraries(cid4_vulkan_app PRIVATE cid4_scene_loader)
+add_executable(cid4_vulkan src/cid4_vulkan.cpp)
+set_target_properties(cid4_vulkan PROPERTIES OUTPUT_NAME cid4_vulkan)
+target_link_libraries(cid4_vulkan PRIVATE cid4_scene_loader)
 
-target_link_libraries(cid4_vulkan_app PRIVATE Vulkan::Vulkan)
+target_link_libraries(cid4_vulkan PRIVATE Vulkan::Vulkan)

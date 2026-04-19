@@ -2,82 +2,31 @@
 
 #include <cstdlib>
 #include <filesystem>
+#include <format>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 
-#if PUBCHEM_OPENGL_RUNTIME_AVAILABLE
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#if defined(__APPLE__)
+#ifdef __APPLE__
 #define GL_SILENCE_DEPRECATION
 #include <OpenGL/gl3.h>
 #else
 #include <GL/gl.h>
 #endif
-#endif
 
 namespace {
-struct OpenGlAppOptions {
-    std::filesystem::path jsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
-    bool skipRuntimeProbe = false;
-};
-
-std::filesystem::path defaultDataDir()
-{
-    return std::filesystem::path(PUBCHEM_DEFAULT_DATA_DIR);
-}
-
 std::filesystem::path resolveDataDir()
 {
+    const auto* const dataDir = "DATA_DIR";
     if (const char* value = std::getenv("DATA_DIR"); value != nullptr && *value != '\0') {
-        return std::filesystem::path(value);
+        return {value};
     }
 
-    return defaultDataDir();
-}
-
-void printUsage(std::ostream& output)
-{
-    output << "Usage: opengl_app [--json <file>] [--skip-runtime-probe]\n";
-}
-
-OpenGlAppOptions parseArguments(int argc, char* argv[])
-{
-    OpenGlAppOptions options;
-
-    for (int index = 1; index < argc; ++index) {
-        const std::string argument = argv[index];
-        if (argument == "--help") {
-            printUsage(std::cout);
-            std::exit(0);
-        }
-
-        auto readValue = [&](const std::string_view flagName) -> std::string {
-            if (index + 1 >= argc) {
-                throw std::invalid_argument("Missing value for " + std::string(flagName));
-            }
-
-            ++index;
-            return argv[index];
-        };
-
-        if (argument == "--json") {
-            options.jsonFile = readValue("--json");
-            continue;
-        }
-
-        if (argument == "--skip-runtime-probe") {
-            options.skipRuntimeProbe = true;
-            continue;
-        }
-
-        throw std::invalid_argument("Unknown argument: " + argument);
-    }
-
-    return options;
+    throw std::runtime_error(std::format("The env variable {} is not set", dataDir));
 }
 
 void printSceneSummary(const pubchem::SceneData& scene)
@@ -91,7 +40,6 @@ void printSceneSummary(const pubchem::SceneData& scene)
               << ", " << scene.bounds.maximum[2] << ")\n";
 }
 
-#if PUBCHEM_OPENGL_RUNTIME_AVAILABLE
 class GlfwGuard {
   public:
     GlfwGuard()
@@ -116,7 +64,7 @@ void configureWindowHints()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#if defined(__APPLE__)
+#ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 #endif
 }
@@ -155,34 +103,18 @@ void probeOpenGlRuntime()
 
     glfwDestroyWindow(window);
 }
-#endif
 } // namespace
 
-int main(int argc, char* argv[])
+int main()
 {
     try {
-        const OpenGlAppOptions options = parseArguments(argc, argv);
-        const std::filesystem::path jsonPath = resolveDataDir() / options.jsonFile;
+        const std::filesystem::path jsonPath =
+            resolveDataDir() / "Conformer3D_COMPOUND_CID_4(1).json";
 
         const pubchem::SceneData scene = pubchem::loadSceneData(jsonPath);
         printSceneSummary(scene);
-
-#if PUBCHEM_OPENGL_RUNTIME_AVAILABLE
-        if (options.skipRuntimeProbe) {
-            std::cout << "Skipping OpenGL runtime probe by request. Geometry bootstrap compiled "
-                         "successfully.\n";
-            return 0;
-        }
-
         probeOpenGlRuntime();
         return 0;
-#else
-        std::cout << "OpenGL and GLFW were not both detected at configure time. "
-                     "This build provides the geometry-loading bootstrap only.\n";
-        std::cout
-            << "Install GLFW development files and reconfigure CMake to enable runtime probing.\n";
-        return 0;
-#endif
     }
     catch (const std::exception& error) {
         std::cerr << "opengl_app error: " << error.what() << "\n";
