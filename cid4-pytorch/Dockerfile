@@ -3,7 +3,6 @@ FROM pytorch/pytorch:2.11.0-cuda13.0-cudnn9-devel
 WORKDIR /opt/app/
 
 COPY pyproject.toml ./pyproject.toml
-COPY uv.lock ./uv.lock
 
 RUN uv sync
 
