@@ -1,14 +1,14 @@
 [project]
 name = "cid4-pytorch"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "PyTorch models"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "jupyter>=1.1.1",
-    "torch==2.2.2",
-    "rdkit<=2025.9",
-    "numpy<2",
+    "torch>=2.11.0", # https://pypi.org/project/torch/
+    "rdkit>=2025.9", # https://pypi.org/project/rdkit/
+    "numpy>=2.4.4", # https://pypi.org/project/numpy/
     "pandas>=2.3.3",
     "scipy>=1.17.1",
     "scikit-learn>=1.8.0",
