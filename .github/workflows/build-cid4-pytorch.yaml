@@ -33,19 +33,19 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
         
-      - name: Install dependencies
+      - name: Install uv and check if uv.lock is up-to-date
         working-directory: cid4-pytorch
         shell: bash
         run: |
           pip install uv
-          uv sync --locked
+          uv lock --check
 
       - name: Check code formatting
         working-directory: cid4-pytorch
         shell: bash
         run: uv tool run ruff check
 
-      - name: Build cid4-pytorch
+      - name: Build cid4-pytorch Docker image
         working-directory: cid4-pytorch
         shell: bash
-        run: uv build
+        run: docker build -t cid4-pytorch:latest .
