@@ -64,6 +64,11 @@ jobs:
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
 
+      - name: Verify Vulkan SDK
+        run: |
+          echo "Vulkan SDK Path: $VULKAN_SDK"
+          ls -l $VULKAN_SDK/include
+
       - name: Run CMake consuming CMakePreset.json and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
@@ -75,3 +80,4 @@ jobs:
           # This is the name of the CMakePresets.json's configuration to build the project.
           buildPreset: vcpkg
           testPreset: vcpkg
+          configurePresetAdditionalArgs: "-DVulkan_ROOT=${{ env.VULKAN_SDK }}"
