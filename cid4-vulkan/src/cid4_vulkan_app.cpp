@@ -2,75 +2,24 @@
 
 #include <cstdlib>
 #include <filesystem>
+#include <format>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <vector>
 
-#if PUBCHEM_VULKAN_RUNTIME_AVAILABLE
 #include <vulkan/vulkan.h>
-#endif
 
 namespace {
-struct VulkanAppOptions {
-    std::filesystem::path jsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
-    bool skipRuntimeProbe = false;
-};
-
-std::filesystem::path defaultDataDir()
-{
-    return std::filesystem::path(PUBCHEM_DEFAULT_DATA_DIR);
-}
-
 std::filesystem::path resolveDataDir()
 {
-    if (const char* value = std::getenv("DATA_DIR"); value != nullptr && *value != '\0') {
-        return std::filesystem::path(value);
+    const auto* const dataDir = "DATA_DIR";
+    if (const char* value = std::getenv(dataDir); value != nullptr && *value != '\0') {
+        return {value};
     }
 
-    return defaultDataDir();
-}
-
-void printUsage(std::ostream& output)
-{
-    output << "Usage: vulkan_app [--json <file>] [--skip-runtime-probe]\n";
-}
-
-VulkanAppOptions parseArguments(int argc, char* argv[])
-{
-    VulkanAppOptions options;
-
-    for (int index = 1; index < argc; ++index) {
-        const std::string argument = argv[index];
-        if (argument == "--help") {
-            printUsage(std::cout);
-            std::exit(0);
-        }
-
-        auto readValue = [&](const std::string_view flagName) -> std::string {
-            if (index + 1 >= argc) {
-                throw std::invalid_argument("Missing value for " + std::string(flagName));
-            }
-
-            ++index;
-            return argv[index];
-        };
-
-        if (argument == "--json") {
-            options.jsonFile = readValue("--json");
-            continue;
-        }
-
-        if (argument == "--skip-runtime-probe") {
-            options.skipRuntimeProbe = true;
-            continue;
-        }
-
-        throw std::invalid_argument("Unknown argument: " + argument);
-    }
-
-    return options;
+    throw std::runtime_error(std::format("The env variable {} is not set", dataDir));
 }
 
 void printSceneSummary(const pubchem::SceneData& scene)
@@ -84,7 +33,6 @@ void printSceneSummary(const pubchem::SceneData& scene)
               << ", " << scene.bounds.maximum[2] << ")\n";
 }
 
-#if PUBCHEM_VULKAN_RUNTIME_AVAILABLE
 std::vector<std::string> enumeratePhysicalDeviceNames(VkInstance instance)
 {
     uint32_t physicalDeviceCount = 0;
@@ -114,7 +62,7 @@ std::vector<std::string> enumeratePhysicalDeviceNames(VkInstance instance)
 
 void probeVulkanRuntime()
 {
-    const VkApplicationInfo applicationInfo{
+    constexpr VkApplicationInfo applicationInfo{
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .pNext = nullptr,
         .pApplicationName = "pubchem-cid4-vulkan-app",
@@ -124,15 +72,17 @@ void probeVulkanRuntime()
         .apiVersion = VK_API_VERSION_1_0,
     };
 
+    std::vector extensions = {VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME};
+
     const VkInstanceCreateInfo createInfo{
         .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
         .pNext = nullptr,
-        .flags = 0,
+        .flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
         .pApplicationInfo = &applicationInfo,
         .enabledLayerCount = 0,
         .ppEnabledLayerNames = nullptr,
-        .enabledExtensionCount = 0,
-        .ppEnabledExtensionNames = nullptr,
+        .enabledExtensionCount = static_cast<uint32_t>(extensions.size()),
+        .ppEnabledExtensionNames = extensions.data(),
     };
 
     VkInstance instance = VK_NULL_HANDLE;
@@ -149,36 +99,22 @@ void probeVulkanRuntime()
 
     vkDestroyInstance(instance, nullptr);
 }
-#endif
 } // namespace
 
-int main(int argc, char* argv[])
+int main()
 {
     try {
-        const VulkanAppOptions options = parseArguments(argc, argv);
-        const std::filesystem::path jsonPath = resolveDataDir() / options.jsonFile;
+        const std::filesystem::path jsonPath =
+            resolveDataDir() / "Conformer3D_COMPOUND_CID_4(1).json";
 
         const pubchem::SceneData scene = pubchem::loadSceneData(jsonPath);
         printSceneSummary(scene);
 
-#if PUBCHEM_VULKAN_RUNTIME_AVAILABLE
-        if (options.skipRuntimeProbe) {
-            std::cout << "Skipping Vulkan runtime probe by request. Geometry bootstrap compiled "
-                         "successfully.\n";
-            return 0;
-        }
-
         probeVulkanRuntime();
         return 0;
-#else
-        std::cout << "Vulkan SDK or loader was not detected at configure time. "
-                     "This build provides the geometry-loading bootstrap only.\n";
-        std::cout << "Install a Vulkan SDK and reconfigure CMake to enable runtime probing.\n";
-        return 0;
-#endif
     }
     catch (const std::exception& error) {
-        std::cerr << "vulkan_app error: " << error.what() << "\n";
+        std::cerr << "app error: " << error.what() << "\n";
         return 1;
     }
 }

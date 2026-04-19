@@ -57,6 +57,13 @@ jobs:
           find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
             | xargs -0 clang-tidy -p build
 
+      - name: Setup Vulkan SDK
+        uses: humbletim/setup-vulkan-sdk@latest
+        with:
+          vulkan-query-version: latest
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
+
       - name: Run CMake consuming CMakePreset.json and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
