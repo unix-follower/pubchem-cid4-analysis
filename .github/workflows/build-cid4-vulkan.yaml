@@ -45,18 +45,6 @@ jobs:
         with:
           vcpkgGitCommitId: fc349a7b35348173d4d24621ae04ad80e2375957
 
-      - name: Configure CMake
-        working-directory: cid4-vulkan
-        shell: bash
-        run: cmake --preset=vcpkg
-
-      - name: Check C++ static analysis
-        working-directory: cid4-vulkan
-        shell: bash
-        run: |
-          find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
-            | xargs -0 clang-tidy -p build
-
       - name: Setup Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.1
         with:
@@ -69,6 +57,18 @@ jobs:
           echo "Vulkan SDK Path: $VULKAN_SDK"
           ls -l $VULKAN_SDK/include
 
+      - name: Configure CMake
+        working-directory: cid4-vulkan
+        shell: bash
+        run: cmake --preset=vcpkg
+
+      - name: Check C++ static analysis
+        working-directory: cid4-vulkan
+        shell: bash
+        run: |
+          find src -type f \( -name '*.cpp' -o -name '*.hpp' -o -name '*.h' \) -print0 \
+            | xargs -0 clang-tidy -p build
+
       - name: Run CMake consuming CMakePreset.json and run vcpkg to build packages
         uses: lukka/run-cmake@v10
         with:
@@ -80,4 +80,4 @@ jobs:
           # This is the name of the CMakePresets.json's configuration to build the project.
           buildPreset: vcpkg
           testPreset: vcpkg
-          configurePresetAdditionalArgs: "-DVulkan_ROOT=${{ env.VULKAN_SDK }}"
+          # configurePresetAdditionalArgs: "-DVulkan_ROOT=${{ env.VULKAN_SDK }}"
