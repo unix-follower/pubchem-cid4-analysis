@@ -1,5 +1,6 @@
 import json
 import logging as log
+import os
 from functools import reduce
 from itertools import combinations
 from pathlib import Path
@@ -11,6 +12,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
 from scipy import linalg, stats
 
+import cid4_quantum
 import log_settings
 from constants import ARR_1ST_IDX as IDX1
 from constants import UTF_8
@@ -67,6 +69,7 @@ DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM = {
     ("O", "H", 1): 0.96,
 }
 PERIODIC_TABLE = Chem.GetPeriodicTable()
+CID4_ENABLE_QUANTUM_ENV = "CID4_ENABLE_QUANTUM"
 
 
 def reduce_mol_weights(mol_weights: list[float]) -> float:
@@ -2375,6 +2378,34 @@ def write_atom_element_entropy_analysis(
     log.info("Atom element entropy plot written to %s", plot_output_path)
 
 
+def write_quantum_conformer_ranking(
+    max_conformer_index: int = cid4_quantum.DEFAULT_MAX_CONFORMER_INDEX,
+    settings: cid4_quantum.QuantumCalculationSettings | None = None,
+):
+    work_directory = env_utils.get_data_dir()
+    out_dir = get_output_directory(work_directory)
+    summary_output_path = Path(out_dir) / "cid4.quantum_conformer_ranking.json"
+    records_output_path = Path(out_dir) / "cid4.quantum_conformer_ranking.csv"
+    ranking_payload = cid4_quantum.run_quantum_conformer_ranking(
+        work_directory,
+        settings=settings,
+        max_conformer_index=max_conformer_index,
+    )
+    ranking_df = pd.DataFrame(cid4_quantum.records_to_rows(ranking_payload["records"]))
+
+    ranking_df.to_csv(records_output_path, index=False)
+
+    with summary_output_path.open("w", encoding=UTF_8) as file:
+        json.dump(ranking_payload, file, indent=2)
+
+    log.info("Quantum conformer ranking rows written to %s", records_output_path)
+    log.info("Quantum conformer ranking summary written to %s", summary_output_path)
+
+
+def quantum_analysis_enabled() -> bool:
+    return os.environ.get(CID4_ENABLE_QUANTUM_ENV, "").strip() == "1"
+
+
 def main():
     log_settings.configure_logging()
     sdf_filename = "Conformer3D_COMPOUND_CID_4(1).sdf"
@@ -2396,6 +2427,14 @@ def main():
     write_bioactivity_posterior_analysis(bioactivity_filename)
     write_activity_aid_type_chi_square_analysis(bioactivity_filename)
     write_bioactivity_binomial_analysis(bioactivity_filename)
+
+    if quantum_analysis_enabled():
+        write_quantum_conformer_ranking()
+    else:
+        log.info(
+            "Skipping quantum conformer ranking because %s is not set to 1",
+            CID4_ENABLE_QUANTUM_ENV,
+        )
 
 
 if __name__ == "__main__":

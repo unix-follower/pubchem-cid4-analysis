@@ -1,4 +1,5 @@
 pubchem_cid4_analysis.egg-info
+*.dat
 
 ### ML ###
 *.pkl

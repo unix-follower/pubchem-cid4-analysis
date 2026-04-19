@@ -52,6 +52,20 @@ interface PathwayResponse {
   graph: AlgorithmGraph
 }
 
+interface ReactionNetworkSummary {
+  pathwayCount: number
+  reactionCount: number
+  compoundCount: number
+  taxonomyCount: number
+  edgeCount: number
+  cid4ParticipationEdgeCount: number
+}
+
+interface ReactionNetworkResponse {
+  graph: AlgorithmGraph
+  summary: ReactionNetworkSummary
+}
+
 interface BioactivityRecord {
   aid: number
   assay: string
@@ -350,6 +364,123 @@ interface TaxonomyResponse {
               </li>
             }
           </ol>
+        }
+      </article>
+    </section>
+
+    <section class="analysis-grid graph-theory-grid">
+      <article class="card graph-card">
+        <div class="card-header compact">
+          <div>
+            <p class="eyebrow">Reaction Networks</p>
+            <h2>Pathway, reaction, taxonomy, and compound flow</h2>
+          </div>
+        </div>
+
+        @if (reactionNetworkGraph(); as graph) {
+          <app-cytoscape-graph [graph]="graph" ariaLabel="Reaction network graph" />
+
+          @if (reactionNetworkSummary(); as summary) {
+            <dl class="metric-grid">
+              <div>
+                <dt>Pathways</dt>
+                <dd>{{ summary.pathwayCount }}</dd>
+              </div>
+              <div>
+                <dt>Reactions</dt>
+                <dd>{{ summary.reactionCount }}</dd>
+              </div>
+              <div>
+                <dt>Compounds</dt>
+                <dd>{{ summary.compoundCount }}</dd>
+              </div>
+              <div>
+                <dt>Taxa</dt>
+                <dd>{{ summary.taxonomyCount }}</dd>
+              </div>
+              <div>
+                <dt>Edges</dt>
+                <dd>{{ summary.edgeCount }}</dd>
+              </div>
+              <div>
+                <dt>CID 4 links</dt>
+                <dd>{{ summary.cid4ParticipationEdgeCount }}</dd>
+              </div>
+            </dl>
+          }
+
+          @if (reactionNetworkTopologicalTrace(); as trace) {
+            <p class="summary-copy">{{ trace.detail }}</p>
+
+            <p class="sequence-title">Topological order</p>
+            <ol class="sequence-list">
+              @for (item of reactionNetworkOrderLabels(); track item) {
+                <li>{{ item }}</li>
+              }
+            </ol>
+          }
+        } @else {
+          <p class="status-text">Loading reaction-network graph...</p>
+        }
+      </article>
+
+      <article class="card analysis-card">
+        <div class="card-header compact">
+          <div>
+            <p class="eyebrow">Reaction Spectral View</p>
+            <h2>Undirected projection for Laplacian connectivity</h2>
+          </div>
+        </div>
+
+        @if (reactionNetworkLaplacianAnalysis(); as analysis) {
+          <p class="summary-copy">
+            The directed reaction network is projected to an undirected graph so the Laplacian stays
+            symmetric. The smallest non-zero eigenvalue is
+            <strong>{{ analysis.fiedlerValue ?? 0 }}</strong
+            >.
+          </p>
+
+          @if (reactionNetworkMetrics(); as metrics) {
+            <div class="sort-stats metric-triptych">
+              <div>
+                <span>Connected components</span>
+                <strong>{{ metrics.connectedComponentCount }}</strong>
+              </div>
+              <div>
+                <span>Density</span>
+                <strong>{{ metrics.density }}</strong>
+              </div>
+              <div>
+                <span>Diameter / radius</span>
+                <strong>{{ metrics.diameter }} / {{ metrics.radius }}</strong>
+              </div>
+            </div>
+          }
+
+          <div class="table-frame matrix-frame">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Row</th>
+                  @for (column of reactionNetworkMatrixHeader(); track column) {
+                    <th scope="col">{{ column }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of reactionNetworkLaplacianRows(); track row.label) {
+                  <tr>
+                    <td>{{ row.label }}</td>
+                    @for (value of row.values; track $index) {
+                      <td>{{ value }}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="status-text">Loading reaction-network matrices...</p>
         }
       </article>
     </section>
@@ -910,6 +1041,11 @@ export class AlgorithmsPage {
     queryFn: fetchPathway,
   }))
 
+  protected readonly reactionNetworkQuery = injectQuery(() => ({
+    queryKey: ["algorithms", "reaction-network"],
+    queryFn: fetchReactionNetwork,
+  }))
+
   protected readonly bioactivityQuery = injectQuery(() => ({
     queryKey: ["algorithms", "bioactivity"],
     queryFn: fetchBioactivity,
@@ -1010,6 +1146,49 @@ export class AlgorithmsPage {
   protected readonly molecularMetrics = computed<MolecularGraphMetrics | null>(() => {
     const graph = this.moleculeGraph()
     return graph ? buildMolecularGraphMetrics(graph) : null
+  })
+  protected readonly reactionNetworkGraph = computed(
+    () => this.reactionNetworkQuery.data()?.graph ?? null,
+  )
+  protected readonly reactionNetworkSummary = computed(
+    () => this.reactionNetworkQuery.data()?.summary ?? null,
+  )
+  protected readonly reactionNetworkUndirectedGraph = computed<AlgorithmGraph | null>(() => {
+    const graph = this.reactionNetworkGraph()
+    return graph ? asUndirectedGraph(graph) : null
+  })
+  protected readonly reactionNetworkTopologicalTrace = computed<GraphTraceResult | null>(() => {
+    const graph = this.reactionNetworkGraph()
+    return graph ? buildTopologicalSortTrace(graph) : null
+  })
+  protected readonly reactionNetworkMetrics = computed<MolecularGraphMetrics | null>(() => {
+    const graph = this.reactionNetworkUndirectedGraph()
+    return graph ? buildMolecularGraphMetrics(graph) : null
+  })
+  protected readonly reactionNetworkLaplacianAnalysis = computed<MatrixAnalysis | null>(() => {
+    const graph = this.reactionNetworkUndirectedGraph()
+    return graph ? buildLaplacianAnalysis(graph) : null
+  })
+  protected readonly reactionNetworkMatrixHeader = computed(() => {
+    return this.reactionNetworkUndirectedGraph()?.nodes.map((node) => node.label) ?? []
+  })
+  protected readonly reactionNetworkLaplacianRows = computed(() => {
+    const header = this.reactionNetworkMatrixHeader()
+    const matrix = this.reactionNetworkLaplacianAnalysis()?.laplacianMatrix ?? []
+    return matrix.map((values, index) => ({
+      label: header[index] ?? String(index + 1),
+      values,
+    }))
+  })
+  protected readonly reactionNetworkOrderLabels = computed(() => {
+    const trace = this.reactionNetworkTopologicalTrace()
+    const graph = this.reactionNetworkGraph()
+    if (!trace || !graph) {
+      return []
+    }
+
+    const labelById = new Map(graph.nodes.map((node) => [node.id, node.label]))
+    return trace.order.map((nodeId) => labelById.get(nodeId) ?? nodeId)
   })
   protected readonly laplacianAnalysis = computed<MatrixAnalysis | null>(() => {
     const graph = this.moleculeGraph()
@@ -1165,6 +1344,10 @@ async function fetchPathway(): Promise<AlgorithmGraph> {
   return payload.graph
 }
 
+async function fetchReactionNetwork(): Promise<ReactionNetworkResponse> {
+  return (await fetchJson("/api/algorithms/reaction-network")) as ReactionNetworkResponse
+}
+
 async function fetchBioactivity(): Promise<BioactivityResponse> {
   return (await fetchJson("/api/algorithms/bioactivity")) as BioactivityResponse
 }
@@ -1250,6 +1433,13 @@ function buildWeightedBondGraph(molecule: MoleculeGraph): AlgorithmGraph {
         weight,
       }
     }),
+  }
+}
+
+function asUndirectedGraph(graph: AlgorithmGraph): AlgorithmGraph {
+  return {
+    ...graph,
+    directed: false,
   }
 }
 
