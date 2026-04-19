@@ -25,7 +25,7 @@ add_library(cid4_scene_loader src/cid4_scene.cpp)
 target_include_directories(cid4_scene_loader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(cid4_scene_loader PUBLIC nlohmann_json::nlohmann_json)
 
-find_package(Vulkan QUIET)
+find_package(Vulkan REQUIRED)
 
 add_executable(cid4_vulkan_app src/cid4_vulkan_app.cpp)
 set_target_properties(cid4_vulkan_app PROPERTIES OUTPUT_NAME cid4_vulkan_app)
