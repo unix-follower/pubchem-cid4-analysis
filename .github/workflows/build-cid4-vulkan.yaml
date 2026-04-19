@@ -55,7 +55,7 @@ jobs:
       - name: Verify Vulkan SDK
         run: |
           echo "Vulkan SDK Path: $VULKAN_SDK"
-          ls -l $VULKAN_SDK/include
+          tree $VULKAN_SDK
 
       - name: Configure CMake
         working-directory: cid4-vulkan
@@ -80,4 +80,3 @@ jobs:
           # This is the name of the CMakePresets.json's configuration to build the project.
           buildPreset: vcpkg
           testPreset: vcpkg
-          # configurePresetAdditionalArgs: "-DVulkan_ROOT=${{ env.VULKAN_SDK }}"
