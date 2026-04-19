@@ -3,7 +3,7 @@ from typing import Any
 import numpy as np
 import tensorflow as tf
 
-from ml.common import (
+from common import (
     PreparedDataset,
     build_supervised_split,
     classification_metrics,
@@ -11,7 +11,9 @@ from ml.common import (
 )
 
 
-def run_tensorflow_regression(dataset: PreparedDataset, epochs: int = 300) -> dict[str, Any]:
+def run_tensorflow_regression(
+    dataset: PreparedDataset, epochs: int = 300
+) -> dict[str, Any]:
     split = build_supervised_split(dataset)
     model = tf.keras.Sequential(
         [
@@ -29,11 +31,15 @@ def run_tensorflow_regression(dataset: PreparedDataset, epochs: int = 300) -> di
         "dataset": dataset.summary(),
         "evaluation_note": split.evaluation_note,
         "epochs": int(epochs),
-        "metrics": regression_metrics(split.y_test.astype(np.float64), predictions.astype(np.float64)),
+        "metrics": regression_metrics(
+            split.y_test.astype(np.float64), predictions.astype(np.float64)
+        ),
     }
 
 
-def run_tensorflow_classification(dataset: PreparedDataset, epochs: int = 200) -> dict[str, Any]:
+def run_tensorflow_classification(
+    dataset: PreparedDataset, epochs: int = 200
+) -> dict[str, Any]:
     if int(np.unique(dataset.target_vector()).size) < 2:
         return {
             "status": "insufficient_data",
@@ -51,7 +57,9 @@ def run_tensorflow_classification(dataset: PreparedDataset, epochs: int = 200) -
             tf.keras.layers.Dense(output_dim, activation="softmax"),
         ]
     )
-    model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+    model.compile(
+        optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"]
+    )
     model.fit(split.x_train, split.y_train, epochs=epochs, verbose=0)
     predictions = np.argmax(model.predict(split.x_test, verbose=0), axis=1)
 
@@ -61,5 +69,7 @@ def run_tensorflow_classification(dataset: PreparedDataset, epochs: int = 200) -
         "dataset": dataset.summary(),
         "evaluation_note": split.evaluation_note,
         "epochs": int(epochs),
-        "metrics": classification_metrics(split.y_test, predictions, dataset.class_names),
+        "metrics": classification_metrics(
+            split.y_test, predictions, dataset.class_names
+        ),
     }
