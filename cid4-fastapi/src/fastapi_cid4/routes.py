@@ -191,6 +191,10 @@ def _register_static_routes(app: FastAPI, data_dir: Path) -> None:
     def taxonomy(request: Request) -> Response:
         return _response_for(request, data_dir)
 
+    @app.api_route("/api/algorithms/reaction-network", methods=["GET", "OPTIONS"])
+    def reaction_network(request: Request) -> Response:
+        return _response_for(request, data_dir)
+
 
 def _register_auth_routes(app: FastAPI, security_settings: SecuritySettings) -> None:
     @app.get("/api/auth/methods")

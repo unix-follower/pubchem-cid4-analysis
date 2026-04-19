@@ -58,6 +58,221 @@ const pathwayFixture = {
   },
 }
 
+const reactionNetworkFixture = {
+  graph: {
+    id: "cid4-reaction-network",
+    title: "CID 4 reaction network",
+    directed: true,
+    nodes: [
+      { id: "pathway:SMP0002032", label: "Glutathione Metabolism III" },
+      { id: "pathway:SMP0122217", label: "PathBank:SMP0122217" },
+      { id: "pathway:TRYPANO_PWY-5448", label: "aminopropanol biosynthesis" },
+      {
+        id: "pathway:TRYPANO_THREOCAT-PWY",
+        label: "superpathway of threonine metabolism",
+      },
+      { id: "reaction:SMP0002032:1", label: "activated by Glutathione S-transferase" },
+      { id: "reaction:SMP0122217:2", label: "activated by Glutathione S-transferase" },
+      {
+        id: "reaction:TRYPANO_PWY-5448:3",
+        label: "1-amino-propan-2-ol + NAD+ -> H+ + NADH + aminoacetone",
+      },
+      {
+        id: "reaction:TRYPANO_THREOCAT-PWY:4",
+        label: "1-amino-propan-2-ol + NAD+ -> H+ + NADH + aminoacetone",
+      },
+      { id: "taxonomy:562", label: "Escherichia coli" },
+      { id: "taxonomy:287", label: "Pseudomonas aeruginosa" },
+      { id: "taxonomy:5691", label: "Trypanosoma brucei" },
+      { id: "compound:4", label: "CID 4 (1-Amino-2-propanol)" },
+      { id: "compound:215", label: "CID 215 (aminoacetone)" },
+      { id: "compound:5893", label: "CID 5893 (NAD+)" },
+      { id: "compound:124886", label: "CID 124886 (Glutathione)" },
+      { id: "compound:37786", label: "CID 37786 (Benzo[a]pyrene-4,5-oxide)" },
+      { id: "compound:439153", label: "CID 439153 (NADH)" },
+      { id: "compound:5460653", label: "CID 5460653 (H+)" },
+    ],
+    edges: [
+      {
+        id: "pathway:SMP0002032->reaction:SMP0002032:1",
+        source: "pathway:SMP0002032",
+        target: "reaction:SMP0002032:1",
+        label: "contains",
+        weight: 1,
+      },
+      {
+        id: "pathway:SMP0122217->reaction:SMP0122217:2",
+        source: "pathway:SMP0122217",
+        target: "reaction:SMP0122217:2",
+        label: "contains",
+        weight: 1,
+      },
+      {
+        id: "pathway:TRYPANO_PWY-5448->reaction:TRYPANO_PWY-5448:3",
+        source: "pathway:TRYPANO_PWY-5448",
+        target: "reaction:TRYPANO_PWY-5448:3",
+        label: "contains",
+        weight: 1,
+      },
+      {
+        id: "pathway:TRYPANO_THREOCAT-PWY->reaction:TRYPANO_THREOCAT-PWY:4",
+        source: "pathway:TRYPANO_THREOCAT-PWY",
+        target: "reaction:TRYPANO_THREOCAT-PWY:4",
+        label: "contains",
+        weight: 1,
+      },
+      {
+        id: "reaction:SMP0002032:1->taxonomy:562",
+        source: "reaction:SMP0002032:1",
+        target: "taxonomy:562",
+        label: "taxonomy",
+        weight: 1,
+      },
+      {
+        id: "reaction:SMP0122217:2->taxonomy:287",
+        source: "reaction:SMP0122217:2",
+        target: "taxonomy:287",
+        label: "taxonomy",
+        weight: 1,
+      },
+      {
+        id: "reaction:TRYPANO_PWY-5448:3->taxonomy:5691",
+        source: "reaction:TRYPANO_PWY-5448:3",
+        target: "taxonomy:5691",
+        label: "taxonomy",
+        weight: 1,
+      },
+      {
+        id: "reaction:TRYPANO_THREOCAT-PWY:4->taxonomy:5691",
+        source: "reaction:TRYPANO_THREOCAT-PWY:4",
+        target: "taxonomy:5691",
+        label: "taxonomy",
+        weight: 1,
+      },
+      {
+        id: "compound:124886->reaction:SMP0002032:1",
+        source: "compound:124886",
+        target: "reaction:SMP0002032:1",
+        label: "reactant",
+        weight: 1,
+      },
+      {
+        id: "compound:37786->reaction:SMP0002032:1",
+        source: "compound:37786",
+        target: "reaction:SMP0002032:1",
+        label: "reactant",
+        weight: 1,
+      },
+      {
+        id: "reaction:SMP0002032:1->compound:4",
+        source: "reaction:SMP0002032:1",
+        target: "compound:4",
+        label: "product",
+        weight: 1,
+      },
+      {
+        id: "compound:124886->reaction:SMP0122217:2",
+        source: "compound:124886",
+        target: "reaction:SMP0122217:2",
+        label: "reactant",
+        weight: 1,
+      },
+      {
+        id: "compound:37786->reaction:SMP0122217:2",
+        source: "compound:37786",
+        target: "reaction:SMP0122217:2",
+        label: "reactant",
+        weight: 1,
+      },
+      {
+        id: "reaction:SMP0122217:2->compound:4",
+        source: "reaction:SMP0122217:2",
+        target: "compound:4",
+        label: "product",
+        weight: 1,
+      },
+      {
+        id: "compound:4->reaction:TRYPANO_PWY-5448:3",
+        source: "compound:4",
+        target: "reaction:TRYPANO_PWY-5448:3",
+        label: "reactant",
+        weight: 1,
+      },
+      {
+        id: "compound:5893->reaction:TRYPANO_PWY-5448:3",
+        source: "compound:5893",
+        target: "reaction:TRYPANO_PWY-5448:3",
+        label: "reactant",
+        weight: 1,
+      },
+      {
+        id: "reaction:TRYPANO_PWY-5448:3->compound:215",
+        source: "reaction:TRYPANO_PWY-5448:3",
+        target: "compound:215",
+        label: "product",
+        weight: 1,
+      },
+      {
+        id: "reaction:TRYPANO_PWY-5448:3->compound:439153",
+        source: "reaction:TRYPANO_PWY-5448:3",
+        target: "compound:439153",
+        label: "product",
+        weight: 1,
+      },
+      {
+        id: "reaction:TRYPANO_PWY-5448:3->compound:5460653",
+        source: "reaction:TRYPANO_PWY-5448:3",
+        target: "compound:5460653",
+        label: "product",
+        weight: 1,
+      },
+      {
+        id: "compound:4->reaction:TRYPANO_THREOCAT-PWY:4",
+        source: "compound:4",
+        target: "reaction:TRYPANO_THREOCAT-PWY:4",
+        label: "reactant",
+        weight: 1,
+      },
+      {
+        id: "compound:5893->reaction:TRYPANO_THREOCAT-PWY:4",
+        source: "compound:5893",
+        target: "reaction:TRYPANO_THREOCAT-PWY:4",
+        label: "reactant",
+        weight: 1,
+      },
+      {
+        id: "reaction:TRYPANO_THREOCAT-PWY:4->compound:215",
+        source: "reaction:TRYPANO_THREOCAT-PWY:4",
+        target: "compound:215",
+        label: "product",
+        weight: 1,
+      },
+      {
+        id: "reaction:TRYPANO_THREOCAT-PWY:4->compound:439153",
+        source: "reaction:TRYPANO_THREOCAT-PWY:4",
+        target: "compound:439153",
+        label: "product",
+        weight: 1,
+      },
+      {
+        id: "reaction:TRYPANO_THREOCAT-PWY:4->compound:5460653",
+        source: "reaction:TRYPANO_THREOCAT-PWY:4",
+        target: "compound:5460653",
+        label: "product",
+        weight: 1,
+      },
+    ],
+  },
+  summary: {
+    pathwayCount: 4,
+    reactionCount: 4,
+    compoundCount: 7,
+    taxonomyCount: 3,
+    edgeCount: 24,
+    cid4ParticipationEdgeCount: 4,
+  },
+}
+
 const baseConformerCoordinates = {
   x: [
     1.5903, -1.9942, 0.4693, -0.7967, 0.7313, 0.4149, -0.709, -0.8967, 1.6841, 0.8156, -0.0587,
@@ -265,6 +480,10 @@ export const handlers = [
   http.get("/api/algorithms/pathway", async () => {
     await delay(100)
     return HttpResponse.json(pathwayFixture)
+  }),
+  http.get("/api/algorithms/reaction-network", async () => {
+    await delay(110)
+    return HttpResponse.json(reactionNetworkFixture)
   }),
   http.get("/api/algorithms/bioactivity", async () => {
     await delay(90)

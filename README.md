@@ -357,6 +357,18 @@ mₑ^mono is the monoisotopic mass of element e
 | Build **18×18 adjacency matrix** for the taxonomy graph: 1 compound node + 17 species nodes | cid_4.dot |
 | Compute the **distance matrix** between 3D atoms once you extract xyz coordinates from `Conformer3D_COMPOUND_CID_4.sdf` | `Conformer3D_COMPOUND_CID_4.sdf` |
 
+#### Eigenvalues
+Meaning:
+* one zero eigenvalue means one connected molecule;
+* more than one zero eigenvalue means the graph has split into pieces;
+* the smallest nonzero eigenvalue is a rough measure of how easily the graph could be separated.
+#### Laplacian
+* It verifies the molecule is one connected object, not accidental fragments. In this code, the null-space dimension should match the number of connected components. For a valid single CID 4 molecule, that should be 1.
+* It catches bad input or parsing mistakes. If a bond were missing in the JSON, the Laplacian analysis would show multiple components even if the file still “looked” structurally plausible.
+* It summarizes which atoms are central and which are terminal. The degree matrix is basically “how many bonds does each atom have?” That is a fast structural summary before doing anything more advanced.
+* It gives a topology fingerprint that is stable across conformers. The 3D coordinates can change from conformer to conformer, but if the bond graph is the same, the Laplacian should be the same. That makes it a good cross-check between structure files.
+* It supports downstream graph algorithms. Shortest paths, spectral clustering ideas, graph ML features, and graph sanity checks all build naturally on the adjacency/Laplacian representation.
+
 ### Pre-calculus
 | Exercise | Data used |
 |---|---|

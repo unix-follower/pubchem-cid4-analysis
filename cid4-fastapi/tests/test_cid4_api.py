@@ -60,6 +60,19 @@ class Cid4ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 405)
         self.assertIn("not allowed", response.body)
 
+    def test_route_api_request_returns_reaction_network_payload(self) -> None:
+        response = route_api_request(
+            "GET",
+            "/api/algorithms/reaction-network",
+            self.data_dir,
+            "asyncio",
+            "AsyncIO",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('"id": "cid4-reaction-network"', response.body)
+        self.assertIn('"pathwayCount": 4', response.body)
+
     def test_asyncio_server_config_honors_asyncio_env_overrides(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             data_dir = Path(temp_dir)
