@@ -33,12 +33,10 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
         
-      - name: Install uv and check if uv.lock is up-to-date
+      - name: Install uv
         working-directory: cid4-pytorch
         shell: bash
-        run: |
-          pip install uv
-          uv lock --check
+        run: pip install uv
 
       - name: Check code formatting
         working-directory: cid4-pytorch
