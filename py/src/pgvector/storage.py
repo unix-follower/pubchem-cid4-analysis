@@ -6,8 +6,8 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-from documents import VectorDocument
-from embedding import HashedTokenEmbeddingProvider
+from .documents import VectorDocument
+from .embedding import HashedTokenEmbeddingProvider
 
 DEFAULT_TABLE_NAME = "cid4_documents"
 

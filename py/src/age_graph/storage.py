@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import importlib
 import json
 import os
@@ -7,7 +5,7 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-from graphs import GraphEdge, GraphNode, PropertyGraph
+from .graphs import GraphEdge, GraphNode, PropertyGraph
 
 DEFAULT_GRAPH_NAME = "cid4_graph"
 

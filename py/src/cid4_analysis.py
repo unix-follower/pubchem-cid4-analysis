@@ -12,11 +12,10 @@ from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
 from scipy import linalg, stats
 
-import cid4_quantum
-import log_settings
-from constants import ARR_1ST_IDX as IDX1
-from constants import UTF_8
-from matplotlib_utils import (
+from src import cid4_quantum, log_settings
+from src.constants import ARR_1ST_IDX as IDX1
+from src.constants import UTF_8
+from src.matplotlib_utils import (
     plot_activity_value_statistics,
     plot_atom_element_entropy,
     plot_gradient_descent_fit,
@@ -24,8 +23,8 @@ from matplotlib_utils import (
     plot_hill_reference_curves,
     plot_pic50_transform,
 )
-from utils import env_utils
-from utils import fs_utils as fs
+from src.utils import env_utils
+from src.utils import fs_utils as fs
 
 CONFORMER_ATOM_COUNT = 14
 NULL_SPACE_TOLERANCE = 1e-10
@@ -76,10 +75,6 @@ def reduce_mol_weights(mol_weights: list[float]) -> float:
     return reduce(lambda prev, next: prev + next, mol_weights, 0.0)
 
 
-def resolve_data_path(filename: str) -> Path:
-    return Path(env_utils.get_data_dir()) / filename
-
-
 def get_output_directory(work_directory: str) -> str:
     out_dir = f"{work_directory}/out"
     fs.create_dir_if_doesnt_exist(out_dir)
@@ -92,11 +87,11 @@ def get_valid_molecules(sdf_file_path: str) -> list[Chem.Mol]:
 
 
 def load_sdf_molecules(filename: str) -> list[Chem.Mol]:
-    return get_valid_molecules(str(resolve_data_path(filename)))
+    return get_valid_molecules(str(fs.resolve_data_path(filename)))
 
 
 def load_conformer_compound(filename: str) -> dict:
-    json_file_path = resolve_data_path(filename)
+    json_file_path = fs.resolve_data_path(filename)
 
     with json_file_path.open(encoding=UTF_8) as file:
         conformer_data = json.load(file)
@@ -967,7 +962,7 @@ def select_hill_plot_representatives(hill_df: pd.DataFrame) -> tuple[np.ndarray,
 
 
 def load_bioactivity_dataframe(filename: str) -> pd.DataFrame:
-    return pd.read_csv(resolve_data_path(filename))
+    return pd.read_csv(fs.resolve_data_path(filename))
 
 
 def build_activity_posterior_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
@@ -2283,7 +2278,7 @@ def write_image(sdf_file_path: str, out_img_filepath: str):
 
 def process_sdf_file(filename: str) -> pd.DataFrame:
     work_directory = env_utils.get_data_dir()
-    sdf_file_path = resolve_data_path(filename)
+    sdf_file_path = fs.resolve_data_path(filename)
     molecules = load_sdf_molecules(filename)
 
     avg_mol_weights = [Descriptors.MolWt(mol) for mol in molecules]

@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from utils import env_utils
+from src.utils import env_utils
 
 
 def create_dir_if_doesnt_exist(directory: str):
@@ -14,3 +14,7 @@ def resolve_output_directory() -> Path:
     output_directory = data_dir / "out"
     create_dir_if_doesnt_exist(str(output_directory))
     return output_directory
+
+
+def resolve_data_path(filename: str) -> Path:
+    return Path(env_utils.get_data_dir()) / filename

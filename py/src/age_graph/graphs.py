@@ -7,41 +7,18 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+from rdkit import Chem
 
-import cid4_analysis
+from src import cid4_analysis, constants
+from src.utils import fs_utils as fs
+from src.utils.number_utils import safe_float, safe_int
+from src.utils.text_utils import clean_text
 
 COMPOUND_FILENAME = "COMPOUND_CID_4.json"
-CONFORMER_FILENAME = "Conformer3D_COMPOUND_CID_4(1).json"
-STRUCTURE_2D_FILENAME = "Structure2D_COMPOUND_CID_4.json"
-
-BIOACTIVITY_FILENAME = "pubchem_cid_4_bioactivity.csv"
-PATHWAY_FILENAME = "pubchem_cid_4_pathway.csv"
-PATHWAY_REACTION_FILENAME = "pubchem_cid_4_pathwayreaction.csv"
-TAXONOMY_FILENAME = "pubchem_cid_4_consolidatedcompoundtaxonomy.csv"
-
-DOT_FILENAME = "cid_4.dot"
-
-
-def load_bioactivity_frame(filename: str = BIOACTIVITY_FILENAME) -> pd.DataFrame:
-    return _read_csv(filename)
-
-
-def load_pathway_frame(filename: str = PATHWAY_FILENAME) -> pd.DataFrame:
-    return _read_csv(filename)
-
-
-def load_pathway_reaction_frame(
-    filename: str = PATHWAY_REACTION_FILENAME,
-) -> pd.DataFrame:
-    return _read_csv(filename)
-
-
-def load_taxonomy_frame(filename: str = TAXONOMY_FILENAME) -> pd.DataFrame:
-    return _read_csv(filename)
 
 
 def _read_csv(filename: str) -> pd.DataFrame:
-    path = Path(cid4_analysis.resolve_data_path(filename))
+    path = Path(fs.resolve_data_path(filename))
     return pd.read_csv(path, low_memory=False)
 
 
@@ -135,26 +112,14 @@ class PropertyGraph:
         }
 
 
-def build_unified_graph() -> PropertyGraph:
-    graph = PropertyGraph()
-    for partial_graph in (
-        build_molecular_graph(),
-        build_organism_graph(),
-        build_pathway_reaction_graph(),
-        build_assay_graph(),
-    ):
-        graph.extend(partial_graph)
-    return graph
-
-
 def build_compound_node(filename: str = COMPOUND_FILENAME) -> GraphNode:
-    path = Path(cid4_analysis.resolve_data_path(filename))
-    with path.open(encoding="utf-8") as file:
+    path = Path(fs.resolve_data_path(filename))
+    with path.open(encoding=constants.UTF_8) as file:
         record = json.load(file)["Record"]
 
     cid = int(record["RecordNumber"])
     return GraphNode(
-        graph_id=compound_graph_id(cid),
+        graph_id=f"compound:{cid}",
         label="Compound",
         properties={
             "cid": cid,
@@ -165,7 +130,7 @@ def build_compound_node(filename: str = COMPOUND_FILENAME) -> GraphNode:
     )
 
 
-def build_molecular_graph(filename: str = CONFORMER_FILENAME) -> PropertyGraph:
+def build_molecular_graph(filename: str) -> PropertyGraph:
     compound = cid4_analysis.load_conformer_compound(filename)
     graph = PropertyGraph()
     compound_node = build_compound_node()
@@ -183,7 +148,7 @@ def build_molecular_graph(filename: str = CONFORMER_FILENAME) -> PropertyGraph:
     z_coords = list(conformer.get("z", [None] * len(atom_ids)))
 
     for index, atom_id in enumerate(atom_ids):
-        symbol = cid4_analysis.PERIODIC_TABLE.GetElementSymbol(int(atomic_numbers[index]))
+        symbol = Chem.GetPeriodicTable().GetElementSymbol(int(atomic_numbers[index]))
         atom_node = GraphNode(
             graph_id=atom_graph_id(atom_id),
             label="Atom",
@@ -229,22 +194,16 @@ def build_molecular_graph(filename: str = CONFORMER_FILENAME) -> PropertyGraph:
     return graph
 
 
-def build_structure_2d_graph(filename: str = STRUCTURE_2D_FILENAME) -> PropertyGraph:
-    return build_molecular_graph(filename=filename)
-
-
 def build_organism_graph(
-    dot_filename: str = DOT_FILENAME,
-    taxonomy_filename: str = TAXONOMY_FILENAME,
+    dot_filename: str,
+    taxonomy_filename: str,
     frame: pd.DataFrame | None = None,
 ) -> PropertyGraph:
     graph = PropertyGraph()
     compound_node = build_compound_node()
     graph.add_node(compound_node)
 
-    dot_graph = parse_dot_organism_graph(
-        Path(cid4_analysis.resolve_data_path(dot_filename)).read_text(encoding="utf-8")
-    )
+    dot_graph = parse_dot_organism_graph(Path(fs.resolve_data_path(dot_filename)).read_text(encoding=constants.UTF_8))
     for organism_name, organism_group in sorted(dot_graph["organisms"].items()):
         organism_node = GraphNode(
             graph_id=organism_graph_id("dot", organism_name),
@@ -271,7 +230,7 @@ def build_organism_graph(
             )
         )
 
-    taxonomy_frame = load_taxonomy_frame(taxonomy_filename) if frame is None else frame
+    taxonomy_frame = _read_csv(taxonomy_filename) if frame is None else frame
     for row_index, row in taxonomy_frame.iterrows():
         organism_name = clean_text(row.get("Source_Organism")) or f"taxonomy-row-{row_index}"
         organism_node = GraphNode(
@@ -351,8 +310,8 @@ def build_organism_graph(
 
 
 def build_pathway_reaction_graph(
-    pathway_filename: str = PATHWAY_FILENAME,
-    pathway_reaction_filename: str = PATHWAY_REACTION_FILENAME,
+    pathway_filename: str,
+    pathway_reaction_filename: str,
     pathway_frame: pd.DataFrame | None = None,
     reaction_frame: pd.DataFrame | None = None,
 ) -> PropertyGraph:
@@ -360,7 +319,7 @@ def build_pathway_reaction_graph(
     compound_node = build_compound_node()
     graph.add_node(compound_node)
 
-    loaded_pathway_frame = load_pathway_frame(pathway_filename) if pathway_frame is None else pathway_frame
+    loaded_pathway_frame = _read_csv(pathway_filename) if pathway_frame is None else pathway_frame
     for row_index, row in loaded_pathway_frame.iterrows():
         accession = clean_text(first_non_empty(row.get("Pathway_Accession"), row.get("Source_ID"), row_index))
         pathway_node = GraphNode(
@@ -410,12 +369,11 @@ def build_pathway_reaction_graph(
                 )
             )
 
-    loaded_reaction_frame = (
-        load_pathway_reaction_frame(pathway_reaction_filename) if reaction_frame is None else reaction_frame
-    )
+    loaded_reaction_frame = _read_csv(pathway_reaction_filename) if reaction_frame is None else reaction_frame
     for row_index, row in loaded_reaction_frame.iterrows():
         pathway_id = clean_text(first_non_empty(row.get("PubChem_Pathway"), row.get("Source_Pathway"), "unknown"))
-        reaction_id = reaction_graph_id(f"{pathway_id}:{row_index}")
+        identifier = f"{pathway_id}:{row_index}"
+        reaction_id = f"reaction:{slugify(identifier)}"
         reaction_node = GraphNode(
             graph_id=reaction_id,
             label="Reaction",
@@ -466,7 +424,7 @@ def build_pathway_reaction_graph(
         protein_accession = clean_text(row.get("PubChem_Protein"))
         if protein_accession:
             protein_node = GraphNode(
-                graph_id=protein_graph_id(protein_accession),
+                graph_id=f"protein:{slugify(protein_accession)}",
                 label="Protein",
                 properties={
                     "protein_accession": protein_accession,
@@ -488,7 +446,7 @@ def build_pathway_reaction_graph(
         gene_id = clean_text(row.get("PubChem_Gene"))
         if gene_id:
             gene_node = GraphNode(
-                graph_id=gene_graph_id(gene_id),
+                graph_id=f"gene:{slugify(gene_id)}",
                 label="Gene",
                 properties={
                     "gene_id": gene_id,
@@ -510,7 +468,7 @@ def build_pathway_reaction_graph(
         enzyme_id = clean_text(row.get("PubChem_Enzyme"))
         if enzyme_id:
             enzyme_node = GraphNode(
-                graph_id=enzyme_graph_id(enzyme_id),
+                graph_id=f"enzyme:{slugify(enzyme_id)}",
                 label="Enzyme",
                 properties={
                     "enzyme_id": enzyme_id,
@@ -532,16 +490,16 @@ def build_pathway_reaction_graph(
     return graph
 
 
-def build_assay_graph(filename: str = BIOACTIVITY_FILENAME, frame: pd.DataFrame | None = None) -> PropertyGraph:
+def build_assay_graph(filename: str, frame: pd.DataFrame | None = None) -> PropertyGraph:
     graph = PropertyGraph()
     compound_node = build_compound_node()
     graph.add_node(compound_node)
 
-    bioactivity_frame = load_bioactivity_frame(filename) if frame is None else frame
+    bioactivity_frame = _read_csv(filename) if frame is None else frame
     for row_index, row in bioactivity_frame.iterrows():
         assay_key = clean_text(first_non_empty(row.get("Bioactivity_ID"), row.get("BioAssay_AID"), row_index))
         assay_node = GraphNode(
-            graph_id=assay_graph_id(assay_key),
+            graph_id=f"assay:{slugify(assay_key)}",
             label="Assay",
             properties={
                 "bioactivity_id": clean_text(row.get("Bioactivity_ID")),
@@ -590,7 +548,7 @@ def build_assay_graph(filename: str = BIOACTIVITY_FILENAME, frame: pd.DataFrame 
         )
         if target_key:
             target_node = GraphNode(
-                graph_id=target_graph_id(target_key),
+                graph_id=f"target:{slugify(target_key)}",
                 label="Target",
                 properties={
                     "name": clean_text(row.get("Target_Name")),
@@ -704,10 +662,6 @@ def register_dot_organisms(
         organisms[organism_name] = group_name
 
 
-def compound_graph_id(cid: int) -> str:
-    return f"compound:{cid}"
-
-
 def atom_graph_id(aid: int) -> str:
     return f"atom:{aid}"
 
@@ -724,60 +678,8 @@ def pathway_graph_id(accession: str) -> str:
     return f"pathway:{slugify(accession)}"
 
 
-def reaction_graph_id(identifier: str) -> str:
-    return f"reaction:{slugify(identifier)}"
-
-
 def source_graph_id(name: str) -> str:
     return f"source:{slugify(name)}"
-
-
-def target_graph_id(name: str) -> str:
-    return f"target:{slugify(name)}"
-
-
-def assay_graph_id(identifier: str) -> str:
-    return f"assay:{slugify(identifier)}"
-
-
-def protein_graph_id(identifier: str) -> str:
-    return f"protein:{slugify(identifier)}"
-
-
-def gene_graph_id(identifier: str) -> str:
-    return f"gene:{slugify(identifier)}"
-
-
-def enzyme_graph_id(identifier: str) -> str:
-    return f"enzyme:{slugify(identifier)}"
-
-
-def clean_text(value: Any) -> str:
-    if value is None:
-        return ""
-    if isinstance(value, float) and pd.isna(value):
-        return ""
-    return str(value).strip()
-
-
-def safe_int(value: Any) -> int | None:
-    text = clean_text(value)
-    if text == "":
-        return None
-    try:
-        return int(float(text))
-    except ValueError:
-        return None
-
-
-def safe_float(value: Any) -> float | None:
-    text = clean_text(value)
-    if text == "":
-        return None
-    try:
-        return float(text)
-    except ValueError:
-        return None
 
 
 def first_non_empty(*values: Any) -> Any:

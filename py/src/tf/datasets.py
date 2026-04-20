@@ -1,9 +1,10 @@
 from typing import Any
 
 import pandas as pd
-import py.src.tf.cid4_analysis as cid4_analysis
-from py.src.tf.common import PreparedDataset
 from rdkit import Chem
+
+from src import cid4_analysis
+from src.ml.common import PreparedDataset
 
 ATOM_SDF_FILENAME = "Conformer3D_COMPOUND_CID_4(1).sdf"
 BIOACTIVITY_FILENAME = "pubchem_cid_4_bioactivity.csv"

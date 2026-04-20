@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from math import log2
 from typing import Any
 
-from datasets import (
+from .datasets import (
     load_bioactivity_frame,
     load_literature_frame,
     load_patent_frame,
@@ -13,7 +13,7 @@ from datasets import (
     load_taxonomy_frame,
     load_toxicology_frame,
 )
-from text_processing import (
+from .text_processing import (
     BASE_STOPWORDS,
     CHEMISTRY_ALLOWLIST,
     build_document_text,

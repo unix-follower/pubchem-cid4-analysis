@@ -7,12 +7,13 @@ uv venv --python ./.micromamba/cid4_age/bin/python --system-site-packages .venv
 source ./.micromamba/cid4_age/bin/activate
 source .venv/bin/activate
 ```
-```sh
-source .venv/bin/activate
+```bash
 export DATA_DIR="$(pwd)/../data"
+source .venv/bin/activate
+uv sync
 uv run python src/cid4_analysis.py
 ```
-### Cheat sheet
+### Docker Cheat sheet
 ```bash
 uv run jupyter lab
 
@@ -27,6 +28,11 @@ docker image rm cid4-pytorch:latest
 http://192.168.64.23:8888/lab?token=<token>
 
 
+## Format code
+```sh
+uv tool run ruff format
+```
+
 ## Quantum conformer ranking
 The first quantum slice is optional and only runs when `CID4_ENABLE_QUANTUM=1` is set.
 It ranks the six CID 4 conformers by fixed-geometry single-point energy and writes:
@@ -37,23 +43,16 @@ It ranks the six CID 4 conformers by fixed-geometry single-point energy and writ
 Enable it with:
 
 ```sh
-source .venv/bin/activate
-export DATA_DIR="$(pwd)/../data"
 export CID4_ENABLE_QUANTUM=1
 uv run python src/cid4_analysis.py
 ```
 
-## Format code
-```sh
-uv tool run ruff format
-```
-
 ## Apache AGE runner
 ```bash
-uv sync
-
-export DATA_DIR="$(pwd)/../data"
-uv run python -m debugpy --listen 5678 --wait-for-client src/main.py
+# pwd -> ...<git repo root>/py
+uv run python -m debugpy --listen 5678 --wait-for-client src.age_graph.main
+# or
+uv run python -m src.age_graph.main
 ```
 
 If `AGE_DSN` is not set or Apache AGE is not available on the target PostgreSQL instance, the runner still completes. It falls back to a dry-run summary that reports node and edge counts, sample Cypher statements, and example multi-hop queries.
@@ -81,13 +80,6 @@ It writes JSON summaries into `data/out` for:
 - toxicology short-text phrase extraction
 - pathway and reaction wording analysis
 
-```sh
-uv sync
-source .venv/bin/activate
-export DATA_DIR="$(pwd)/../data"
-python src/main.py
-```
-
 The runner is chemistry-aware at the token-normalization level. It preserves tokens such as `1-amino-2-propanol`, `NADH`, `IC50`, `ER-alpha`, `PMID`, `DOI`, `AID`, `CID`, and `SID` instead of over-cleaning them as generic English text.
 
 Expected outputs under `data/out`:
@@ -98,15 +90,15 @@ Expected outputs under `data/out`:
 - `cid4_nltk.toxicology.summary.json`
 - `cid4_nltk.pathway.summary.json`
 
+```bash
+# pwd -> ...<git repo root>/py
+uv run python -m debugpy --listen 5678 --wait-for-client src.nltk.main
+# or
+uv run python -m src.nltk.main
+```
+
 ## pgvector runner
 It normalizes literature, patents, bioactivity rows, pathway records, taxonomy rows, and CPDat rows into a shared document shape, generates deterministic hashed-token embeddings, and writes a JSON summary into `data/out`.
-
-```sh
-uv sync
-source .venv/bin/activate
-export DATA_DIR="$(pwd)/../data"
-python src/main.py
-```
 
 Environment variables:
 - `PGVECTOR_DSN` - PostgreSQL connection string for a database with the `vector` extension available
@@ -115,3 +107,10 @@ Environment variables:
 
 Expected output under `data/out`:
 - `cid4_pgvector.summary.json`
+
+```bash
+# pwd -> ...<git repo root>/py
+uv run python -m debugpy --listen 5678 --wait-for-client src.pgvector.main
+# or
+uv run python -m src.pgvector.main
+```

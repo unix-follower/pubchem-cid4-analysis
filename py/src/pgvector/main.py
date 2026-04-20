@@ -6,22 +6,15 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-import env_utils
-import fs_utils
 import numpy as np
 import pandas as pd
-from documents import build_all_documents
-from embedding import HashedTokenEmbeddingProvider
-from storage import ingest_documents, load_config_from_env
 
-import log_settings
+from src import constants, log_settings
+from src.utils import fs_utils
 
-
-def resolve_output_directory() -> Path:
-    data_dir = Path(env_utils.get_data_dir())
-    output_directory = data_dir / "out"
-    fs_utils.create_dir_if_doesnt_exist(str(output_directory))
-    return output_directory
+from .documents import build_all_documents
+from .embedding import HashedTokenEmbeddingProvider
+from .storage import ingest_documents, load_config_from_env
 
 
 def to_builtin(value: Any) -> Any:
@@ -45,7 +38,7 @@ def to_builtin(value: Any) -> Any:
 
 
 def write_json(path: Path, payload: dict) -> None:
-    with path.open("w", encoding="utf-8") as file:
+    with path.open("w", encoding=constants.UTF_8) as file:
         json.dump(to_builtin(payload), file, indent=2)
 
 
@@ -89,7 +82,7 @@ def build_pgvector_summary() -> dict:
 
 
 def write_pgvector_analysis() -> None:
-    output_directory = resolve_output_directory()
+    output_directory = fs_utils.resolve_output_directory()
     summary = build_pgvector_summary()
     output_path = output_directory / "cid4_pgvector.summary.json"
     write_json(output_path, summary)
