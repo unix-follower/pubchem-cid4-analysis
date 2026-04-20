@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach CID4 Python server",
+      "name": "Attach CID4 Python app",
       "type": "debugpy",
       "request": "attach",
       "connect": {

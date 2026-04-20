@@ -1,26 +1,22 @@
-from __future__ import annotations
-
 import json
 import logging as log
 from pathlib import Path
 from typing import Any
 
-import env_utils
-import fs_utils
 import numpy as np
 import pandas as pd
-from graphs import (
+
+from src import log_settings
+from src.utils.fs_utils import resolve_output_directory
+
+from .graphs import (
     build_assay_graph,
     build_molecular_graph,
     build_organism_graph,
     build_pathway_reaction_graph,
-    build_structure_2d_graph,
-    build_unified_graph,
 )
-from queries import build_query_catalog
-from storage import ingest_graph, load_config_from_env
-
-import log_settings
+from .queries import build_query_catalog
+from .storage import ingest_graph, load_config_from_env
 
 
 def to_builtin(value: Any) -> Any:
@@ -43,13 +39,6 @@ def to_builtin(value: Any) -> Any:
     return value
 
 
-def resolve_output_directory() -> Path:
-    data_dir = Path(env_utils.get_data_dir())
-    output_directory = data_dir / "out"
-    fs_utils.create_dir_if_doesnt_exist(str(output_directory))
-    return output_directory
-
-
 def write_json(path: Path, payload: dict) -> None:
     with path.open("w", encoding="utf-8") as file:
         json.dump(to_builtin(payload), file, indent=2)
@@ -57,14 +46,13 @@ def write_json(path: Path, payload: dict) -> None:
 
 def build_age_summary() -> dict:
     config = load_config_from_env()
-    molecular_graph = build_molecular_graph()
-    structure_2d_graph = build_structure_2d_graph()
-    organism_graph = build_organism_graph()
-    pathway_graph = build_pathway_reaction_graph()
-    assay_graph = build_assay_graph()
-    unified_graph = build_unified_graph()
+    molecular_graph = build_molecular_graph("Conformer3D_COMPOUND_CID_4(1).json")
+    structure_2d_graph = build_molecular_graph("Structure2D_COMPOUND_CID_4.json")
+    organism_graph = build_organism_graph("cid_4.dot", "pubchem_cid_4_consolidatedcompoundtaxonomy.csv")
+    pathway_graph = build_pathway_reaction_graph("pubchem_cid_4_pathway.csv", "pubchem_cid_4_pathwayreaction.csv")
+    assay_graph = build_assay_graph("pubchem_cid_4_bioactivity.csv")
     query_catalog = build_query_catalog()
-    ingestion_result = ingest_graph(unified_graph, config)
+    ingestion_result = ingest_graph(molecular_graph, config)
 
     return {
         "status": ingestion_result["status"],
@@ -75,7 +63,6 @@ def build_age_summary() -> dict:
             "organism": organism_graph.to_summary(),
             "pathway_reaction": pathway_graph.to_summary(),
             "assay": assay_graph.to_summary(),
-            "unified": unified_graph.to_summary(),
         },
         "database": ingestion_result,
         "query_catalog": query_catalog,

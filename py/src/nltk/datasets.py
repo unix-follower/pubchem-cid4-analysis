@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import env_utils
 import pandas as pd
+
+from src.utils import env_utils
 
 LITERATURE_FILENAME = "pubchem_cid_4_literature.csv"
 PATENT_FILENAME = "pubchem_cid_4_patent.csv"

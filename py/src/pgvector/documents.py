@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from typing import Any
 
 import pandas as pd
-from datasets import (
+
+from .datasets import (
     BIOACTIVITY_FILENAME,
     CPDAT_FILENAME,
     LITERATURE_FILENAME,
