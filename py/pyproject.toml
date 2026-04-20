@@ -7,19 +7,26 @@ dependencies = [
     "jupyter>=1.1.1",
     "matplotlib>=3.10.6",
     "networkx>=3.5",
-    "numpy<2.1.0",
-    "pandas>=2.3.2",
+    "numpy>=2.4.4", # https://pypi.org/project/numpy/
+    "pandas>=3.0.2",
+    "rdkit>=2026.3.1", # https://pypi.org/project/rdkit/
     "pandas-stubs==2.3.2.250827",
-    "rdkit<=2025.9.3",
     "scikit-learn>=1.7.1",
-    "scipy>=1.16.1",
     "seaborn>=0.13.2",
     "sympy>=1.14.0",
     "xgboost>=3.2.0",
+    "torch>=2.11.0", # https://pypi.org/project/torch/
+    "scipy>=1.17.1",
+    "scikit-learn>=1.8.0",
+    "tensorflow>=2.21.0", # https://pypi.org/project/tensorflow/
+    "nltk>=3.9.4",
+    "pgvector>=0.4.2",
+    "psycopg[binary]>=3.3.3",
 ]
 
 [dependency-groups]
 dev = [
+    "debugpy>=1.8.16",
     "ruff>=0.12.10",
 ]
 

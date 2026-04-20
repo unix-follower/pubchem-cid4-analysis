@@ -45,7 +45,17 @@ jobs:
         shell: bash
         run: uv tool run ruff check
 
+      # - name: Run unit tests
+      #   working-directory: py
+      #   shell: bash
+      #   run: uv run python -m unittest discover -s tests -v
+
       - name: Build python app
         working-directory: py
         shell: bash
         run: uv build
+
+      - name: Build cid4 Docker image
+        working-directory: py
+        shell: bash
+        run: docker build -t cid4:latest .
