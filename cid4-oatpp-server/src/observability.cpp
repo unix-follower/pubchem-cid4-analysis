@@ -1,4 +1,5 @@
 #include "observability.hpp"
+#include "app_utils.hpp"
 
 #include <prometheus/counter.h>
 #include <prometheus/exposer.h>
@@ -26,31 +27,6 @@
 
 namespace pubchem::cid4observability {
 namespace cid4observability_detail {
-
-std::optional<std::string> envValue(const std::string& name)
-{
-    if (name.empty()) {
-        return std::nullopt;
-    }
-
-    if (const char* value = std::getenv(name.c_str()); value != nullptr && value[0] != '\0') {
-        return std::string(value);
-    }
-
-    return std::nullopt;
-}
-
-std::optional<std::string> firstEnvValue(std::initializer_list<std::string> names)
-{
-    for (const auto& name : names) {
-        if (const auto value = envValue(name); value.has_value()) {
-            return value;
-        }
-    }
-
-    return std::nullopt;
-}
-
 bool parseBool(std::string_view value, bool fallback)
 {
     if (value == "1" || value == "true" || value == "TRUE" || value == "on" || value == "ON" ||
@@ -64,37 +40,6 @@ bool parseBool(std::string_view value, bool fallback)
     }
 
     return fallback;
-}
-
-std::optional<std::uint16_t> parsePort(const std::optional<std::string>& value)
-{
-    if (!value.has_value()) {
-        return std::nullopt;
-    }
-
-    try {
-        const auto parsed = std::stoul(*value);
-        if (parsed > 0 && parsed <= 65535) {
-            return static_cast<std::uint16_t>(parsed);
-        }
-    }
-    catch (const std::invalid_argument&) {
-        return std::nullopt;
-    }
-    catch (const std::out_of_range&) {
-        return std::nullopt;
-    }
-
-    return std::nullopt;
-}
-
-std::string prefixedName(std::string_view prefix, std::string_view name)
-{
-    if (prefix.empty()) {
-        return std::string(name);
-    }
-
-    return std::string(prefix) + "_" + std::string(name);
 }
 
 std::string normalizeLevel(std::string level)
@@ -150,66 +95,43 @@ std::string metricKey(std::string_view method, std::string_view route, std::stri
 
 } // namespace cid4observability_detail
 
-ObservabilityConfig resolveObservabilityConfig(std::string_view servicePrefix,
-                                               std::string_view defaultServiceName)
+ObservabilityConfig resolveObservabilityConfig(std::string_view defaultServiceOtelName)
 {
     ObservabilityConfig config;
-    config.serviceName = std::string(defaultServiceName);
 
-    if (const auto value = cid4observability_detail::firstEnvValue(
-            {cid4observability_detail::prefixedName(servicePrefix, "OBSERVABILITY_ENABLED"),
-             "OBSERVABILITY_ENABLED"});
+    if (const auto value = app::utils::env::getEnvValue("OBSERVABILITY_ENABLED");
         value.has_value()) {
         config.enabled = cid4observability_detail::parseBool(*value, config.enabled);
     }
 
-    if (const auto value = cid4observability_detail::firstEnvValue(
-            {cid4observability_detail::prefixedName(servicePrefix, "LOGGING_ENABLED"),
-             "OBSERVABILITY_LOGGING_ENABLED"});
-        value.has_value()) {
+    if (const auto value = app::utils::env::getEnvValue("LOGGING_ENABLED"); value.has_value()) {
         config.loggingEnabled = cid4observability_detail::parseBool(*value, config.loggingEnabled);
     }
 
-    if (const auto value = cid4observability_detail::firstEnvValue(
-            {cid4observability_detail::prefixedName(servicePrefix, "METRICS_ENABLED"),
-             "OBSERVABILITY_METRICS_ENABLED"});
-        value.has_value()) {
+    if (const auto value = app::utils::env::getEnvValue("METRICS_ENABLED"); value.has_value()) {
         config.metricsEnabled = cid4observability_detail::parseBool(*value, config.metricsEnabled);
     }
 
-    if (const auto value = cid4observability_detail::firstEnvValue(
-            {cid4observability_detail::prefixedName(servicePrefix, "TRACING_ENABLED"),
-             "OBSERVABILITY_TRACING_ENABLED"});
-        value.has_value()) {
+    if (const auto value = app::utils::env::getEnvValue("TRACING_ENABLED"); value.has_value()) {
         config.tracingEnabled = cid4observability_detail::parseBool(*value, config.tracingEnabled);
     }
 
-    if (const auto value = cid4observability_detail::firstEnvValue(
-            {cid4observability_detail::prefixedName(servicePrefix, "SERVICE_NAME"),
-             "OTEL_SERVICE_NAME"});
-        value.has_value()) {
+    if (const auto value = app::utils::env::getEnvValue("OTEL_SERVICE_NAME"); value.has_value()) {
         config.serviceName = *value;
     }
+    else {
+        config.serviceName = std::string(defaultServiceOtelName);
+    }
 
-    if (const auto value = cid4observability_detail::firstEnvValue(
-            {cid4observability_detail::prefixedName(servicePrefix, "LOG_LEVEL"),
-             "OBSERVABILITY_LOG_LEVEL",
-             "LOG_LEVEL"});
-        value.has_value()) {
+    if (const auto value = app::utils::env::getEnvValue("LOG_LEVEL"); value.has_value()) {
         config.logLevel = cid4observability_detail::normalizeLevel(*value);
     }
 
-    if (const auto value = cid4observability_detail::firstEnvValue(
-            {cid4observability_detail::prefixedName(servicePrefix, "METRICS_HOST"),
-             "OBSERVABILITY_METRICS_HOST"});
-        value.has_value()) {
+    if (const auto value = app::utils::env::getEnvValue("METRICS_HOST"); value.has_value()) {
         config.metricsHost = *value;
     }
 
-    if (const auto value =
-            cid4observability_detail::parsePort(cid4observability_detail::firstEnvValue(
-                {cid4observability_detail::prefixedName(servicePrefix, "METRICS_PORT"),
-                 "OBSERVABILITY_METRICS_PORT"}));
+    if (const auto value = app::utils::net::parsePort(app::utils::env::getEnvValue("METRICS_PORT"));
         value.has_value()) {
         config.metricsPort = *value;
     }

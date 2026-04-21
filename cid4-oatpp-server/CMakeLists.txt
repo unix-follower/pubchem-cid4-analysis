@@ -18,7 +18,6 @@ project(cid4_oatpp VERSION 1.0.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CROW_ENABLE_SSL ON)
 
 if(APPLE AND EXISTS "/usr/local/opt/openssl@3")
 	set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl@3")
@@ -31,12 +30,11 @@ find_package(OpenSSL REQUIRED)
 find_package(prometheus-cpp CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 
+add_library(app_utils src/app_utils.cpp)
+target_include_directories(app_utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 add_library(cid4_http_support src/cid4_http.cpp)
 target_include_directories(cid4_http_support PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_compile_definitions(
-	cid4_http_support
-	PUBLIC PUBCHEM_DEFAULT_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../data"
-)
 target_link_libraries(cid4_http_support PUBLIC nlohmann_json::nlohmann_json)
 
 add_library(observability src/observability.cpp)
@@ -47,6 +45,7 @@ target_link_libraries(
 		nlohmann_json::nlohmann_json
 		prometheus-cpp::pull
 		spdlog::spdlog
+		app_utils
 )
 
 add_executable(main src/main.cpp)
