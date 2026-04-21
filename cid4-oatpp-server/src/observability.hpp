@@ -43,8 +43,7 @@ struct CompletedRequest {
 
 class Runtime;
 
-ObservabilityConfig resolveObservabilityConfig(std::string_view servicePrefix,
-                                               std::string_view defaultServiceName);
+ObservabilityConfig resolveObservabilityConfig(std::string_view defaultServiceOtelName);
 std::shared_ptr<Runtime> initialize(const ObservabilityConfig& config);
 void shutdown(const std::shared_ptr<Runtime>& runtime);
 

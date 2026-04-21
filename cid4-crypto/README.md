@@ -3,7 +3,7 @@
 uv sync
 source .venv/bin/activate
 export DATA_DIR="$(pwd)/../data"
-python src/main.py
+uv run python src/main.py
 ```
 
 If the crypto dependencies are not installed, the runner still completes and writes explicit `skipped` sections for the unavailable examples instead of failing.

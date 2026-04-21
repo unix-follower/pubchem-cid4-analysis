@@ -96,6 +96,7 @@ std::shared_ptr<oatpp::openssl::Config>
 buildTlsConfig(const pubchem::cid4http::ServerConfig& config)
 {
     auto tlsConfig = oatpp::openssl::Config::createShared();
+
     if (config.keyPassword.has_value()) {
         tlsConfig->addContextConfigurer(std::make_shared<PasswordConfigurer>(*config.keyPassword));
     }
@@ -104,6 +105,7 @@ buildTlsConfig(const pubchem::cid4http::ServerConfig& config)
             config.certFile.string().c_str()));
     tlsConfig->addContextConfigurer(std::make_shared<oatpp::openssl::configurer::PrivateKeyFile>(
         config.keyFile.string().c_str()));
+
     return tlsConfig;
 }
 
@@ -192,11 +194,11 @@ class OatApiController : public oatpp::web::server::api::ApiController {
                                                        std::nullopt);
         const auto conformerIndex = static_cast<int>(*index);
         try {
-            auto response =
-                jsonResponse(Status::CODE_200,
-                             pubchem::cid4http::loadJsonPayload(
-                                 pubchem::cid4http::conformerPath(dataDir_, conformerIndex)),
-                             &scope);
+            const std::filesystem::path conformerPath =
+                dataDir_ /
+                ("Conformer3D_COMPOUND_CID_4(" + std::to_string(conformerIndex) + ").json");
+            auto response = jsonResponse(
+                Status::CODE_200, pubchem::cid4http::loadJsonPayload(conformerPath), &scope);
             scope.finish(200);
             return response;
         }
@@ -222,10 +224,10 @@ class OatApiController : public oatpp::web::server::api::ApiController {
         pubchem::cid4observability::RequestScope scope(
             observability_, "GET", "/api/cid4/structure/2d", "/api/cid4/structure/2d");
         try {
+            const std::filesystem::path structure2dPath =
+                dataDir_ / "Structure2D_COMPOUND_CID_4.json";
             auto response = jsonResponse(
-                Status::CODE_200,
-                pubchem::cid4http::loadJsonPayload(pubchem::cid4http::structure2dPath(dataDir_)),
-                &scope);
+                Status::CODE_200, pubchem::cid4http::loadJsonPayload(structure2dPath), &scope);
             scope.finish(200);
             return response;
         }
@@ -243,10 +245,9 @@ class OatApiController : public oatpp::web::server::api::ApiController {
         pubchem::cid4observability::RequestScope scope(
             observability_, "GET", "/api/cid4/compound", "/api/cid4/compound");
         try {
+            const std::filesystem::path compoundPath = dataDir_ / "COMPOUND_CID_4.json";
             auto response = jsonResponse(
-                Status::CODE_200,
-                pubchem::cid4http::loadJsonPayload(pubchem::cid4http::compoundPath(dataDir_)),
-                &scope);
+                Status::CODE_200, pubchem::cid4http::loadJsonPayload(compoundPath), &scope);
             scope.finish(200);
             return response;
         }
@@ -324,10 +325,9 @@ int main(int argc, char** argv)
 
     try {
         const auto dataDir = pubchem::cid4http::resolveDataDir();
-        auto config =
-            pubchem::cid4http::resolveServerConfig(dataDir, {"OATPP_HOST"}, {"OATPP_PORT"});
+        auto config = pubchem::cid4http::resolveServerConfig(dataDir);
         const auto observabilityConfig =
-            pubchem::cid4observability::resolveObservabilityConfig("OATPP", "pubchem-cid4-oatpp");
+            pubchem::cid4observability::resolveObservabilityConfig("pubchem-cid4-oatpp");
 
         if (const auto cliHost = hostOverride(argc, argv); !cliHost.empty()) {
             config.host = cliHost;
@@ -343,8 +343,17 @@ int main(int argc, char** argv)
         router->addController(OatApiController::createShared(objectMapper, dataDir, observability));
 
         auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
-        auto connectionProvider = oatpp::openssl::server::ConnectionProvider::createShared(
-            buildTlsConfig(config), {config.host.c_str(), config.port});
+
+        std::shared_ptr<oatpp::network::ServerConnectionProvider> connectionProvider;
+        if (config.tlsEnabled) {
+            connectionProvider = oatpp::openssl::server::ConnectionProvider::createShared(
+                buildTlsConfig(config), {config.host.c_str(), config.port});
+        }
+        else {
+            connectionProvider = oatpp::network::tcp::server::ConnectionProvider::createShared(
+                {config.host.c_str(), config.port});
+        }
+
         auto server = oatpp::network::Server::createShared(connectionProvider, connectionHandler);
 
         if (observability) {
