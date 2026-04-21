@@ -16,7 +16,7 @@ from .graphs import (
     build_pathway_reaction_graph,
 )
 from .queries import build_query_catalog
-from .storage import ingest_graph, load_config_from_env
+from .storage import ingest_graph
 
 
 def to_builtin(value: Any) -> Any:
@@ -45,18 +45,15 @@ def write_json(path: Path, payload: dict) -> None:
 
 
 def build_age_summary() -> dict:
-    config = load_config_from_env()
     molecular_graph = build_molecular_graph("Conformer3D_COMPOUND_CID_4(1).json")
     structure_2d_graph = build_molecular_graph("Structure2D_COMPOUND_CID_4.json")
     organism_graph = build_organism_graph("cid_4.dot", "pubchem_cid_4_consolidatedcompoundtaxonomy.csv")
     pathway_graph = build_pathway_reaction_graph("pubchem_cid_4_pathway.csv", "pubchem_cid_4_pathwayreaction.csv")
     assay_graph = build_assay_graph("pubchem_cid_4_bioactivity.csv")
     query_catalog = build_query_catalog()
-    ingestion_result = ingest_graph(molecular_graph, config)
+    ingestion_result = ingest_graph(molecular_graph)
 
     return {
-        "status": ingestion_result["status"],
-        "graph_name": config.graph_name,
         "graph_families": {
             "molecular": molecular_graph.to_summary(),
             "structure_2d": structure_2d_graph.to_summary(),
