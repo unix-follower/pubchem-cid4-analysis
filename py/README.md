@@ -49,17 +49,15 @@ uv run python src/cid4_analysis.py
 
 ## Apache AGE runner
 ```bash
+apt search postgresql-client
+sudo apt install -y postgresql-client-common postgresql-client
+
+export AGE_DSN='host=localhost port=5432 dbname=cid4_analysis user=chemist password=chemist'
 # pwd -> ...<git repo root>/py
 uv run python -m debugpy --listen 5678 --wait-for-client src.age_graph.main
 # or
 uv run python -m src.age_graph.main
 ```
-
-If `AGE_DSN` is not set or Apache AGE is not available on the target PostgreSQL instance, the runner still completes. It falls back to a dry-run summary that reports node and edge counts, sample Cypher statements, and example multi-hop queries.
-
-Environment variables:
-- `AGE_DSN` - PostgreSQL connection string for an instance where the Apache AGE extension is installed
-- `AGE_GRAPH_NAME` - optional AGE graph name, default `cid4_graph`
 
 Expected output under `data/out`:
 - `cid4_age.summary.json`
