@@ -61,7 +61,6 @@ def build_pgvector_summary() -> dict:
     ]
 
     return {
-        "status": ingestion_result["status"],
         "document_count": int(len(documents)),
         "doc_type_counts": {key: int(value) for key, value in sorted(document_type_counts.items())},
         "embedding": {

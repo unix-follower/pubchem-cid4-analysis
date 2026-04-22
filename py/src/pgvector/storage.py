@@ -1,50 +1,31 @@
 from __future__ import annotations
 
-import importlib
 import json
 import os
 from dataclasses import dataclass
 from typing import Any
 
+import psycopg
+from pgvector.psycopg import register_vector
+
 from .documents import VectorDocument
 from .embedding import HashedTokenEmbeddingProvider
-
-DEFAULT_TABLE_NAME = "cid4_documents"
 
 
 @dataclass(frozen=True)
 class PgvectorConfig:
-    dsn: str | None
-    table_name: str = DEFAULT_TABLE_NAME
     embedding_dimension: int = 96
 
 
 def load_config_from_env() -> PgvectorConfig:
     return PgvectorConfig(
-        dsn=os.environ.get("PGVECTOR_DSN"),
-        table_name=os.environ.get("PGVECTOR_TABLE", DEFAULT_TABLE_NAME),
         embedding_dimension=int(os.environ.get("PGVECTOR_EMBED_DIM", "96")),
     )
 
 
-def import_pgvector_stack() -> dict[str, Any] | Any:
-    try:
-        psycopg = importlib.import_module("psycopg")
-        pgvector_psycopg = importlib.import_module("pgvector.psycopg")
-        return {
-            "psycopg": psycopg,
-            "register_vector": pgvector_psycopg.register_vector,
-        }
-    except (ImportError, ModuleNotFoundError) as exc:
-        return {
-            "status": "skipped",
-            "reason": f"pgvector dependencies are not installed in the current environment: {exc}",
-        }
-
-
-def build_upsert_sql(table_name: str) -> str:
-    return f"""
-INSERT INTO {table_name} (
+def build_upsert_sql() -> str:
+    return """
+INSERT INTO cid4_documents (
     doc_id,
     doc_type,
     source_file,
@@ -95,7 +76,7 @@ ON CONFLICT (doc_id) DO UPDATE SET
 """.strip()
 
 
-def build_similarity_query_sql(table_name: str, metadata_filters: dict[str, str] | None = None) -> str:
+def build_similarity_query_sql(metadata_filters: dict[str, str] | None = None) -> str:
     where_clauses = ["TRUE"]
     if metadata_filters:
         for _ in metadata_filters:
@@ -111,7 +92,7 @@ SELECT
     source_row_id,
     metadata,
     1 - (embedding <=> %s) AS similarity
-FROM {table_name}
+FROM cid4_documents
 WHERE {where_sql}
 ORDER BY embedding <=> %s
 LIMIT %s
@@ -121,7 +102,7 @@ LIMIT %s
 def ensure_schema(connection: Any, config: PgvectorConfig) -> None:
     create_extension_sql = "CREATE EXTENSION IF NOT EXISTS vector"
     create_table_sql = f"""
-CREATE TABLE IF NOT EXISTS {config.table_name} (
+CREATE TABLE IF NOT EXISTS cid4_documents (
     doc_id TEXT PRIMARY KEY,
     doc_type TEXT NOT NULL,
     source_file TEXT NOT NULL,
@@ -139,11 +120,9 @@ CREATE TABLE IF NOT EXISTS {config.table_name} (
     embedding vector({config.embedding_dimension}) NOT NULL
 )
 """.strip()
-    create_doc_type_index_sql = (
-        f"CREATE INDEX IF NOT EXISTS idx_{config.table_name}_doc_type ON {config.table_name} (doc_type)"
-    )
+    create_doc_type_index_sql = "CREATE INDEX IF NOT EXISTS idx_cid4_documents_doc_type ON cid4_documents (doc_type)"
     create_taxonomy_index_sql = (
-        f"CREATE INDEX IF NOT EXISTS idx_{config.table_name}_taxonomy_id ON {config.table_name} (taxonomy_id)"
+        "CREATE INDEX IF NOT EXISTS idx_cid4_documents_taxonomy_id ON cid4_documents (taxonomy_id)"
     )
 
     with connection.cursor() as cursor:
@@ -171,36 +150,17 @@ def ingest_documents(
     config: PgvectorConfig,
     embedding_provider: HashedTokenEmbeddingProvider,
 ) -> dict[str, Any]:
-    if not documents:
-        return {
-            "status": "skipped",
-            "reason": "No documents were generated for pgvector ingestion.",
-        }
-
-    if not config.dsn:
-        return {
-            "status": "dry_run",
-            "reason": "PGVECTOR_DSN is not set; documents were prepared but not written to PostgreSQL.",
-            "prepared_row_count": int(len(documents)),
-            "table_name": config.table_name,
-        }
-
-    stack = import_pgvector_stack()
-    if isinstance(stack, dict) and stack.get("status") == "skipped":
-        result = dict(stack)
-        result["prepared_row_count"] = int(len(documents))
-        result["table_name"] = config.table_name
-        return result
+    dsn = os.environ.get("PG_DSN")
+    if not dsn:
+        raise ValueError("PG_DSN env variable is not set")
 
     rows = prepare_upsert_rows(documents, embedding_provider)
-    with stack["psycopg"].connect(config.dsn, autocommit=True) as connection:
-        stack["register_vector"](connection)
+    with psycopg.connect(dsn, autocommit=True) as connection:
+        register_vector(connection)
         ensure_schema(connection, config)
         with connection.cursor() as cursor:
-            cursor.executemany(build_upsert_sql(config.table_name), rows)
+            cursor.executemany(build_upsert_sql(), rows)
 
     return {
-        "status": "ok",
         "ingested_row_count": int(len(rows)),
-        "table_name": config.table_name,
     }

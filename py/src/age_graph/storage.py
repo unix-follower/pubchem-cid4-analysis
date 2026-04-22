@@ -10,9 +10,9 @@ from .graphs import GraphEdge, GraphNode, PropertyGraph
 
 
 def ingest_graph(graph: PropertyGraph) -> dict[str, Any]:
-    dsn = os.environ.get("AGE_DSN")
+    dsn = os.environ.get("PG_DSN")
     if not dsn:
-        raise RuntimeError("AGE_DSN env variable is not set")
+        raise ValueError("PG_DSN env variable is not set")
 
     statements = build_ingestion_statements(graph)
 
