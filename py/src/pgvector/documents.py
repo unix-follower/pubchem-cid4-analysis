@@ -5,6 +5,9 @@ from typing import Any
 
 import pandas as pd
 
+from src.utils.number_utils import safe_int
+from src.utils.text_utils import clean_text
+
 from .datasets import (
     BIOACTIVITY_FILENAME,
     CPDAT_FILENAME,
@@ -311,22 +314,6 @@ def build_doc_id(doc_type: str, source_file: str, source_row_id: Any) -> str:
 def compose_text_payload(row: pd.Series, fields: list[str]) -> str:
     values = [clean_text(row.get(field)) for field in fields]
     return "\n".join(value for value in values if value)
-
-
-def clean_text(value: Any) -> str:
-    if value is None or pd.isna(value):
-        return ""
-    return str(value).strip()
-
-
-def safe_int(value: Any) -> int | None:
-    text = clean_text(value)
-    if text == "":
-        return None
-    try:
-        return int(float(text))
-    except ValueError:
-        return None
 
 
 def first_int_from_pipe_list(value: Any) -> int | None:

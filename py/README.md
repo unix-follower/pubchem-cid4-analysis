@@ -7,8 +7,15 @@ uv venv --python ./.micromamba/cid4_age/bin/python --system-site-packages .venv
 source ./.micromamba/cid4_age/bin/activate
 source .venv/bin/activate
 ```
+Install psql
+```bash
+apt search postgresql-client
+sudo apt install -y postgresql-client-common postgresql-client
+```
 ```bash
 export DATA_DIR="$(pwd)/../data"
+export PG_DSN='host=localhost port=5432 dbname=cid4_analysis user=chemist password=chemist'
+
 source .venv/bin/activate
 uv sync
 uv run python src/cid4_analysis.py
@@ -49,10 +56,6 @@ uv run python src/cid4_analysis.py
 
 ## Apache AGE runner
 ```bash
-apt search postgresql-client
-sudo apt install -y postgresql-client-common postgresql-client
-
-export AGE_DSN='host=localhost port=5432 dbname=cid4_analysis user=chemist password=chemist'
 # pwd -> ...<git repo root>/py
 uv run python -m debugpy --listen 5678 --wait-for-client src.age_graph.main
 # or
