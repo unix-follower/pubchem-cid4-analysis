@@ -1,7 +1,0 @@
-{
-  "dependencies": [
-    "boost-system",
-    "boost-asio",
-    "nlohmann-json"
-  ]
-}
