@@ -1,9 +1,0 @@
-{
-  "dependencies": [
-    "crow",
-    "nlohmann-json",
-    "prometheus-cpp",
-    "spdlog",
-    "gtest"
-  ]
-}
