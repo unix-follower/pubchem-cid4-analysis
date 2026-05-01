@@ -1,6 +1,8 @@
 name: Build python app
 on:
   pull_request:
+    paths-ignore:
+      - py/README.md
     paths:
       - .github/workflows/build-py.yaml
       - py/**

@@ -1,6 +1,9 @@
 name: Build C++ app
 on:
   pull_request:
+    paths-ignore:
+      - cpp/README.md
+      - cpp/CLAUDE.md
     paths:
       - .github/workflows/build-cpp.yaml
       - cpp/**
