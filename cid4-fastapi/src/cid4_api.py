@@ -291,10 +291,18 @@ def _build_reaction_network_payload(data_dir: Path) -> dict[str, object]:
     reaction_rows = _read_csv_rows(data_dir / "pubchem_cid_4_pathwayreaction.csv")
     graph = _build_reaction_network_graph(pathway_rows, reaction_rows)
 
-    pathway_count = sum(1 for node in graph["nodes"] if str(node["id"]).startswith("pathway:"))
-    reaction_count = sum(1 for node in graph["nodes"] if str(node["id"]).startswith("reaction:"))
-    compound_count = sum(1 for node in graph["nodes"] if str(node["id"]).startswith("compound:"))
-    taxonomy_count = sum(1 for node in graph["nodes"] if str(node["id"]).startswith("taxonomy:"))
+    pathway_count = sum(
+        1 for node in graph["nodes"] if str(node["id"]).startswith("pathway:")
+    )
+    reaction_count = sum(
+        1 for node in graph["nodes"] if str(node["id"]).startswith("reaction:")
+    )
+    compound_count = sum(
+        1 for node in graph["nodes"] if str(node["id"]).startswith("compound:")
+    )
+    taxonomy_count = sum(
+        1 for node in graph["nodes"] if str(node["id"]).startswith("taxonomy:")
+    )
     cid4_edges = sum(
         1
         for edge in graph["edges"]
@@ -348,7 +356,9 @@ def _build_reaction_network_graph(
     for row_index, row in enumerate(reaction_rows, start=1):
         pathway_key = _string_cell(row, "PubChem_Pathway")
         pathway_id = f"pathway:{pathway_key or row_index}"
-        pathway_label = pathway_lookup.get(pathway_key) or pathway_key or f"Pathway {row_index}"
+        pathway_label = (
+            pathway_lookup.get(pathway_key) or pathway_key or f"Pathway {row_index}"
+        )
         reaction_id = f"reaction:{pathway_key or 'unassigned'}:{row_index}"
         reaction_label = _truncate_label(
             _clean_text(_string_cell(row, "Equation"))
@@ -365,14 +375,20 @@ def _build_reaction_network_graph(
         taxonomy_name = _clean_text(_string_cell(row, "Taxonomy"))
         taxonomy_id_value = _string_cell(row, "Taxonomy_ID")
         if taxonomy_name or taxonomy_id_value:
-            taxonomy_suffix = taxonomy_id_value or taxonomy_name.lower().replace(" ", "-")
+            taxonomy_suffix = taxonomy_id_value or taxonomy_name.lower().replace(
+                " ", "-"
+            )
             taxonomy_id = f"taxonomy:{taxonomy_suffix}"
             add_node(taxonomy_id, taxonomy_name or f"Taxonomy {taxonomy_id_value}")
-            add_edge(f"{reaction_id}->{taxonomy_id}", reaction_id, taxonomy_id, "taxonomy")
+            add_edge(
+                f"{reaction_id}->{taxonomy_id}", reaction_id, taxonomy_id, "taxonomy"
+            )
 
         for compound_id in _parse_compound_ids(_string_cell(row, "Reactant_CID")):
             compound_node_id = f"compound:{compound_id}"
-            add_node(compound_node_id, _format_compound_label(compound_id, compound_labels))
+            add_node(
+                compound_node_id, _format_compound_label(compound_id, compound_labels)
+            )
             add_edge(
                 f"{compound_node_id}->{reaction_id}",
                 compound_node_id,
@@ -382,7 +398,9 @@ def _build_reaction_network_graph(
 
         for compound_id in _parse_compound_ids(_string_cell(row, "Product_CID")):
             compound_node_id = f"compound:{compound_id}"
-            add_node(compound_node_id, _format_compound_label(compound_id, compound_labels))
+            add_node(
+                compound_node_id, _format_compound_label(compound_id, compound_labels)
+            )
             add_edge(
                 f"{reaction_id}->{compound_node_id}",
                 reaction_id,
@@ -411,7 +429,9 @@ def _build_pathway_lookup(pathway_rows: list[dict[str, str]]) -> dict[str, str]:
         source_id = _string_cell(row, "Source_ID")
         pathway_accession = _string_cell(row, "Pathway_Accession")
         label = _string_cell(row, "Pathway_Name") or source_id or pathway_accession
-        suffix = pathway_accession.split(":", maxsplit=1)[-1] if pathway_accession else ""
+        suffix = (
+            pathway_accession.split(":", maxsplit=1)[-1] if pathway_accession else ""
+        )
 
         for key in (source_id, suffix, pathway_accession):
             if key:

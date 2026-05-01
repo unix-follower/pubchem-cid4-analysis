@@ -13,11 +13,11 @@ from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
 from scipy import linalg, stats
 
-import env_utils
-import fs_utils as fs
-import log_settings
-from constants import ARR_1ST_IDX as IDX1
-from constants import UTF_8
+from src import env_utils
+import src.fs_utils as fs
+from src import log_settings
+from src.constants import ARR_1ST_IDX as IDX1
+from src.constants import UTF_8
 
 CONFORMER_ATOM_COUNT = 14
 NULL_SPACE_TOLERANCE = 1e-10
@@ -71,7 +71,9 @@ def reduce_mol_weights(mol_weights: list[float]) -> float:
 
 
 def resolve_data_path(filename: str, data_dir: Path | None = None) -> Path:
-    base_dir = Path(data_dir) if data_dir is not None else Path(env_utils.get_data_dir())
+    base_dir = (
+        Path(data_dir) if data_dir is not None else Path(env_utils.get_data_dir())
+    )
     return base_dir / filename
 
 
@@ -118,10 +120,18 @@ def build_reaction_network_payload(data_dir: Path | None = None) -> dict[str, ob
     reaction_frame = load_pathway_reaction_frame(data_dir=data_dir)
     graph = build_reaction_network_graph(pathway_frame, reaction_frame)
 
-    pathway_count = sum(1 for node in graph["nodes"] if str(node["id"]).startswith("pathway:"))
-    reaction_count = sum(1 for node in graph["nodes"] if str(node["id"]).startswith("reaction:"))
-    compound_count = sum(1 for node in graph["nodes"] if str(node["id"]).startswith("compound:"))
-    taxonomy_count = sum(1 for node in graph["nodes"] if str(node["id"]).startswith("taxonomy:"))
+    pathway_count = sum(
+        1 for node in graph["nodes"] if str(node["id"]).startswith("pathway:")
+    )
+    reaction_count = sum(
+        1 for node in graph["nodes"] if str(node["id"]).startswith("reaction:")
+    )
+    compound_count = sum(
+        1 for node in graph["nodes"] if str(node["id"]).startswith("compound:")
+    )
+    taxonomy_count = sum(
+        1 for node in graph["nodes"] if str(node["id"]).startswith("taxonomy:")
+    )
     cid4_reactions = sum(
         1
         for edge in graph["edges"]
@@ -176,7 +186,9 @@ def build_reaction_network_graph(
         pathway_key = _string_cell(row, "PubChem_Pathway")
         pathway_meta = pathway_lookup.get(pathway_key, {})
         pathway_id = f"pathway:{pathway_key or row_index}"
-        pathway_label = str(pathway_meta.get("label") or pathway_key or f"Pathway {row_index + 1}")
+        pathway_label = str(
+            pathway_meta.get("label") or pathway_key or f"Pathway {row_index + 1}"
+        )
         reaction_id = f"reaction:{pathway_key or 'unassigned'}:{row_index + 1}"
         reaction_label = _truncate_label(
             _string_cell(row, "Equation")
@@ -193,15 +205,21 @@ def build_reaction_network_graph(
         add_edge(f"{pathway_id}->{reaction_id}", pathway_id, reaction_id, "contains")
 
         if taxonomy_name or taxonomy_id_value:
-            taxonomy_suffix = taxonomy_id_value or taxonomy_name.lower().replace(" ", "-")
+            taxonomy_suffix = taxonomy_id_value or taxonomy_name.lower().replace(
+                " ", "-"
+            )
             taxonomy_id = f"taxonomy:{taxonomy_suffix}"
             taxonomy_label = taxonomy_name or f"Taxonomy {taxonomy_id_value}"
             add_node(taxonomy_id, taxonomy_label)
-            add_edge(f"{reaction_id}->{taxonomy_id}", reaction_id, taxonomy_id, "taxonomy")
+            add_edge(
+                f"{reaction_id}->{taxonomy_id}", reaction_id, taxonomy_id, "taxonomy"
+            )
 
         for compound_id in _parse_compound_ids(_string_cell(row, "Reactant_CID")):
             compound_node_id = f"compound:{compound_id}"
-            add_node(compound_node_id, _format_compound_label(compound_id, compound_labels))
+            add_node(
+                compound_node_id, _format_compound_label(compound_id, compound_labels)
+            )
             add_edge(
                 f"{compound_node_id}->{reaction_id}",
                 compound_node_id,
@@ -211,7 +229,9 @@ def build_reaction_network_graph(
 
         for compound_id in _parse_compound_ids(_string_cell(row, "Product_CID")):
             compound_node_id = f"compound:{compound_id}"
-            add_node(compound_node_id, _format_compound_label(compound_id, compound_labels))
+            add_node(
+                compound_node_id, _format_compound_label(compound_id, compound_labels)
+            )
             add_edge(
                 f"{reaction_id}->{compound_node_id}",
                 reaction_id,
@@ -235,7 +255,9 @@ def _build_pathway_lookup(pathway_frame: pd.DataFrame) -> dict[str, dict[str, st
         source_id = _string_cell(row, "Source_ID")
         pathway_accession = _string_cell(row, "Pathway_Accession")
         label = _string_cell(row, "Pathway_Name") or source_id or pathway_accession
-        suffix = pathway_accession.split(":", maxsplit=1)[-1] if pathway_accession else ""
+        suffix = (
+            pathway_accession.split(":", maxsplit=1)[-1] if pathway_accession else ""
+        )
 
         for key in (source_id, suffix, pathway_accession):
             if key:

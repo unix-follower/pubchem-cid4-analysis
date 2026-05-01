@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from langchain_cid4.documents import (
+from src.langchain_cid4.documents import (
     chunk_documents,
     import_langchain_stack,
     load_domain_documents,
 )
-from langchain_cid4.retrieval import (
+from src.langchain_cid4.retrieval import (
     InMemoryRetriever,
     RetrievedPassage,
     retrieve_with_pgvector,

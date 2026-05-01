@@ -4,7 +4,7 @@ Try this on macOS with Intel CPU
 micromamba create -c conda-forge -p ./.micromamba/cid4_age python=3.12 rdkit
 uv venv --python ./.micromamba/cid4_age/bin/python --system-site-packages .venv
 
-source ./.micromamba/cid4_age/bin/activate
+source ./.micromamba/cid4-analysis/bin/activate
 source .venv/bin/activate
 ```
 Install psql
@@ -26,14 +26,13 @@ uv run jupyter lab
 
 docker run -it --rm pytorch/pytorch:2.11.0-cuda13.0-cudnn9-devel bash
 
-docker build -t cid4-pytorch:latest .
-docker run --rm --name cid4-pytorch -p 8888:8888 cid4-pytorch:latest
+docker build -t cid4:latest .
+docker run --rm --name cid4 -p 8888:8888 --volume ./src:/opt/app/src cid4:latest
 nc -vz $(minikube ip) 8888
 
-docker image rm cid4-pytorch:latest
+docker image rm cid4:latest
 ```
 http://192.168.64.23:8888/lab?token=<token>
-
 
 ## Format code
 ```sh

@@ -5,7 +5,7 @@ from typing import Any
 
 import pandas as pd
 
-from datasets import (
+from src.datasets import (
     BIOACTIVITY_FILENAME,
     CPDAT_FILENAME,
     LITERATURE_FILENAME,

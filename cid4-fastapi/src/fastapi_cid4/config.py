@@ -5,9 +5,9 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from cid4_api import ServerConfig
-from cid4_api import resolve_data_dir as shared_resolve_data_dir
-from cid4_api import resolve_server_config as shared_resolve_server_config
+from src.cid4_api import ServerConfig
+from src.cid4_api import resolve_data_dir as shared_resolve_data_dir
+from src.cid4_api import resolve_server_config as shared_resolve_server_config
 
 
 @dataclass(frozen=True)
