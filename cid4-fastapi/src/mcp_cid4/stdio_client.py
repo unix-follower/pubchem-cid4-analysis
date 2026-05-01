@@ -4,7 +4,7 @@ import os
 
 from mcp import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
-import env_utils
+from src import env_utils
 
 
 async def main():
@@ -13,7 +13,7 @@ async def main():
 
     server = StdioServerParameters(
         command="uv",
-        args=["run", "python", "src/cid4_mcp.py"],
+        args=["run", "python", "-m", "src.cid4_mcp"],
         cwd=cwd,
         env={
             "DATA_DIR": env_utils.get_data_dir(),
@@ -35,7 +35,9 @@ async def main():
         print("\nTOOL RESULT:")
         print("result:", result)
         print("isError:", result.isError)
-        print("content:", [item.text for item in result.content if hasattr(item, "text")])
+        print(
+            "content:", [item.text for item in result.content if hasattr(item, "text")]
+        )
         print("structuredContent:")
         print(json.dumps(result.structuredContent, indent=2))
 

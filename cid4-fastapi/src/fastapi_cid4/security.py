@@ -13,7 +13,7 @@ from urllib.parse import urlencode
 from fastapi import Request, WebSocket
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 
-from fastapi_cid4.config import SecuritySettings
+from src.fastapi_cid4.config import SecuritySettings
 
 AuthMethod = Literal["basic", "digest", "oauth2"]
 

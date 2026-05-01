@@ -2,6 +2,7 @@
 ```sh
 ./setup.sh
 export DATA_DIR="$(pwd)/../data"
+source .venv/bin/activate
 uv run python -m debugpy --listen 5678 --wait-for-client src/cid4_fastapi.py
 ```
 
@@ -20,11 +21,11 @@ If explicit TLS files are not set, the server falls back to the PEM certificate,
 Quick verification:
 
 ```sh
-curl -k https://localhost:8443/api/health
-curl -k https://localhost:8443/api/cid4/structure/2d
-curl -k https://localhost:8443/api/cid4/conformer/1
-curl -k https://localhost:8443/api/algorithms/pathway
-curl -k "https://localhost:8443/api/health?mode=error"
+curl -vk https://localhost:8443/api/health
+curl -vk https://localhost:8443/api/cid4/structure/2d
+curl -vk https://localhost:8443/api/cid4/conformer/1
+curl -vk https://localhost:8443/api/algorithms/pathway
+curl -vk "https://localhost:8443/api/health?mode=error"
 curl -isk https://localhost:8443/api/health
 curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
 ```
@@ -107,6 +108,7 @@ Run the local stdio server:
 ```sh
 export DATA_DIR="$(pwd)/../data"
 uv run python src/cid4_mcp.py
+uv run python -m src.mcp_cid4.stdio_client
 ```
 
 The initial MCP surface is read-focused:

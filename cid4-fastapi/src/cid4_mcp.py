@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import log_settings
-from cid4_api import resolve_data_dir
-from mcp_cid4.server import create_cid4_mcp_server
+from src import log_settings
+from src.cid4_api import resolve_data_dir
+from src.mcp_cid4.server import create_cid4_mcp_server
 
 
 def main() -> None:

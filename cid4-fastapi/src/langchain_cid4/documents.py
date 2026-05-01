@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from documents import (
+from src.documents import (
     VectorDocument,
     build_bioactivity_documents,
     build_cpdat_documents,

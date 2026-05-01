@@ -3,9 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from embedding import HashedTokenEmbeddingProvider
-from langchain_cid4.documents import ChunkRecord
-from storage import PgvectorConfig, import_pgvector_stack, load_config_from_env
+from src.embedding import HashedTokenEmbeddingProvider
+from src.langchain_cid4.documents import ChunkRecord
+from src.storage import PgvectorConfig, import_pgvector_stack, load_config_from_env
 
 
 @dataclass(frozen=True)
