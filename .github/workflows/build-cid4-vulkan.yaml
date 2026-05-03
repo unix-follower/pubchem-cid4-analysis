@@ -1,8 +1,6 @@
 name: Build cid4-vulkan
 on:
   pull_request:
-    paths-ignore:
-      - cid4-vulkan/README.md
     paths:
       - .github/workflows/build-cid4-vulkan.yaml
       - cid4-vulkan/**
