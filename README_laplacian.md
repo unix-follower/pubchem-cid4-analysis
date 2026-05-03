@@ -1,12 +1,7 @@
 # Task definition
-- Build a **14×14 adjacency matrix** of the molecular graph (atoms as nodes, bonds `aid1`/`aid2` as edges). Use files: Conformer3D_COMPOUND_CID_4(1).json, Conformer3D_COMPOUND_CID_4(1).sdf, Conformer3D_COMPOUND_CID_4(1).asnt.
+- Build a **14×14 adjacency matrix** of the molecular graph (atoms as nodes, bonds `aid1`/`aid2` as edges). Use files: _Conformer3D_COMPOUND_CID_4(1).json_, _Conformer3D_COMPOUND_CID_4(1).sdf_, _Conformer3D_COMPOUND_CID_4(1).asnt_.
 - Compute **eigenvalues/eigenvectors** of the molecular adjacency matrix (graph spectrum — relates to molecular orbital theory.
 - Build the **Laplacian** $L = D - A$ and find its null space (connected components).
-
-## Eigenvalues meaning for this data
-* one zero eigenvalue means one connected molecule;
-* more than one zero eigenvalue means the graph has split into pieces;
-* the smallest nonzero eigenvalue is a rough measure of how easily the graph could be separated.
 
 ## Laplacian meaning for this data
 * It verifies the molecule is one connected object, not accidental fragments. In this code, the null-space dimension should match the number of connected components. For a valid single CID 4 molecule, that should be 1.
@@ -16,18 +11,31 @@
 * It supports downstream graph algorithms. Shortest paths, spectral clustering ideas, graph ML features, and graph sanity checks all build naturally on the adjacency/Laplacian representation.
 
 # Solution
-To compute the Laplacian matrix $L = D - A$, perform element-wise subtraction.
-* If $i = j$ (Diagonal): $L_{i,i} = D_{i,i} - A_{i,i}$. Since $A_{i,i}$ is always $0$ (no self-loops), the diagonal of $L$ is just the degree of that node.
-* If $i \neq j$ (Off-Diagonal): $L_{i,j} = 0 - A_{i,j}$. This means if there is an edge ($1$), it becomes $-1$. If there is no edge ($0$), it stays $0$.
----
-**1. The Degree Matrix ($D$)**
+## 1. Compute the degree vector
 
-The degree matrix is a diagonal matrix where $D_{ii}$ is the degree of node $i$. Based on the degree vector:
+The degree of each atom is the number of bonds attached to it.
+
+From the bond list:
+
+- atom 1: degree 2
+- atom 2: degree 3
+- atom 3: degree 4
+- atom 4: degree 4
+- atom 5: degree 4
+- atoms 6–14: degree 1
+
 ```json
 {
-	"degreeVector": [ 2.0, 3.0, 4.0, 4.0, 4.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 ]
+	"degreeVector": [ 2, 3, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
 }
 ```
+
+## 2. Build the degree matrix `D` (diagonal)
+
+$$
+D = \mathrm{diag}(2,3,4,4,4,1,1,1,1,1,1,1,1,1)
+$$
+
 $$
 D = \begin{bmatrix}
 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -45,10 +53,21 @@ D = \begin{bmatrix}
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1
 \end{bmatrix}
-$$ 
-**2. The Adjacency Matrix ($A$)**
+$$
 
-This represents the connections between nodes.
+---
+
+## 3. Build the adjacency matrix `A`
+
+Create a `14 × 14` matrix initialized to zero.
+
+For each bond `(i, j)`:
+
+- set `A[i-1][j-1] = 1`
+- set `A[j-1][i-1] = 1`
+
+The resulting adjacency matrix $A$ is:
+
 ```json
 {
   "adjacencyMatrix": [
@@ -87,10 +106,60 @@ A = \begin{bmatrix}
 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0
 \end{bmatrix}
-$$ 
-**3. Step-by-Step Subtraction ($L = D - A$)**
+$$
 
-$L_{ij} = D_{ij} - A_{ij}$. Since $D$ is diagonal, the diagonal of $L$ is simply the degree, and the off-diagonal entries are $-1$ if an edge exists and $0$ otherwise.
+---
+
+## 4. Build the Laplacian matrix `L`
+
+$L = D - A$, perform element-wise subtraction.
+* If $i = j$ (Diagonal): $L_{i,i} = D_{i,i} - A_{i,i}$. Since $A_{i,i}$ is always $0$ (no self-loops). Diagonal entries = node degrees.
+* If $i \neq j$ (Off-Diagonal): $L_{i,j} = 0 - A_{i,j}$. This means if there is an edge (`1`), i.e. a bond exists, it becomes `-1`. Otherwise `0`, i.e. no edge.
+
+**Resulting Matrix:**
+```json
+{
+	"laplacianMatrix": [
+		[ 2.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0 ],
+		[ 0.0, 3.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -1.0, 0.0 ],
+		[ -1.0, 0.0, 4.0, -1.0, -1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, -1.0, -1.0, 4.0, 0.0, 0.0, -1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, 0.0, -1.0, 0.0, 4.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 ],
+		[ 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 ],
+		[ 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ],
+		[ -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
+	]
+}
+```
+
+$$
+L = \begin{bmatrix}
+2 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 \\
+0 & 3 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & -1 & 0 \\
+-1 & 0 & 4 & -1 & -1 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & -1 & -1 & 4 & 0 & 0 & -1 & -1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & -1 & 0 & 4 & 0 & 0 & 0 & -1 & -1 & -1 & 0 & 0 & 0 \\
+0 & 0 & -1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & -1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & -1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+-1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1
+\end{bmatrix}
+$$
+
+---
+
+## 5. Step-by-Step Subtraction
 
 _Row 1_:
 $$[2-0, 0-0, 0-1, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-1] = [2, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]$$
@@ -120,43 +189,3 @@ _Row 13_:
 $$[0-0, 0-1, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 1-0, 0-0] = [0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]$$
 _Row 14_:
 $$[0-1, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 0-0, 1-0] = [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]$$
-
-```json
-{
-	"laplacianMatrix": [
-		[ 2.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0 ],
-		[ 0.0, 3.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -1.0, 0.0 ],
-		[ -1.0, 0.0, 4.0, -1.0, -1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, -1.0, -1.0, 4.0, 0.0, 0.0, -1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, 0.0, -1.0, 0.0, 4.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 ],
-		[ 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0 ],
-		[ 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 ],
-		[ -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
-	]
-}
-```
-Resulting Matrix:
-$$
-L = \begin{bmatrix}
-2 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 \\
-0 & 3 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & -1 & 0 \\
--1 & 0 & 4 & -1 & -1 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & -1 & -1 & 4 & 0 & 0 & -1 & -1 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & -1 & 0 & 4 & 0 & 0 & 0 & -1 & -1 & -1 & 0 & 0 & 0 \\
-0 & 0 & -1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & -1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & -1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
-0 & 0 & 0 & 0 & -1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
-0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
-0 & -1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
--1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1
-\end{bmatrix}
-$$
