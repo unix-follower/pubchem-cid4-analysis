@@ -10,9 +10,9 @@
 #include <string>
 
 namespace {
-pubchem::AdjacencyMatrix sampleSpectrumMatrix()
+cid4::AdjacencyMatrix sampleSpectrumMatrix()
 {
-    return pubchem::AdjacencyMatrix{
+    return cid4::AdjacencyMatrix{
         .sourceFile = "sample.json",
         .method = "arrays",
         .atomIds = {1, 2, 3},
@@ -81,8 +81,8 @@ std::vector<std::vector<double>> diagonalMatrix(const std::vector<double>& diago
     return matrix;
 }
 
-void expectReconstructionMatches(const pubchem::AdjacencyMatrix& adjacencyMatrix,
-                                 const pubchem::EigendecompositionResult& eigendecomposition)
+void expectReconstructionMatches(const cid4::AdjacencyMatrix& adjacencyMatrix,
+                                 const cid4::EigendecompositionResult& eigendecomposition)
 {
     const auto left =
         multiplyMatrices(toDoubleMatrix(adjacencyMatrix.values), eigendecomposition.eigenvectors);
@@ -106,10 +106,10 @@ std::filesystem::path writeTempFile(const std::string& fileName, const std::stri
     return filePath;
 }
 
-pubchem::DistanceMatrixInput sampleDistanceInput(const std::filesystem::path& jsonPath,
-                                                 const std::filesystem::path& sdfPath)
+cid4::DistanceMatrixInput sampleDistanceInput(const std::filesystem::path& jsonPath,
+                                              const std::filesystem::path& sdfPath)
 {
-    return pubchem::DistanceMatrixInput{
+    return cid4::DistanceMatrixInput{
         .atomIds = {1, 2, 3},
         .jsonPath = jsonPath,
         .sdfPath = sdfPath,
@@ -217,230 +217,230 @@ std::string sampleChiSquareDegenerateBioactivityCsv()
            "14,104,Probe,,IC50,Assay E,Target E\n";
 }
 
-std::vector<pubchem::AtomRecord> sampleGradientAtoms()
+std::vector<cid4::AtomRecord> sampleGradientAtoms()
 {
     return {
-        pubchem::AtomRecord{.index = 0,
-                            .bondCount = 1,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 2,
-                            .symbol = "He",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.0,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 1,
-                            .bondCount = 1,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 4,
-                            .symbol = "Be",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 2.0,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 2,
-                            .bondCount = 1,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 6,
-                            .symbol = "C",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 3.0,
-                            .hybridization = "SP"},
+        cid4::AtomRecord{.index = 0,
+                         .bondCount = 1,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 2,
+                         .symbol = "He",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.0,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 1,
+                         .bondCount = 1,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 4,
+                         .symbol = "Be",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 2.0,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 2,
+                         .bondCount = 1,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 6,
+                         .symbol = "C",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 3.0,
+                         .hybridization = "SP"},
     };
 }
 
-std::vector<pubchem::AtomRecord> sampleSpringAtoms()
+std::vector<cid4::AtomRecord> sampleSpringAtoms()
 {
     return {
-        pubchem::AtomRecord{.index = 0,
-                            .bondCount = 1,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 6,
-                            .symbol = "C",
-                            .valency = 4,
-                            .isAromatic = false,
-                            .mass = 12.011,
-                            .hybridization = "SP3"},
-        pubchem::AtomRecord{.index = 1,
-                            .bondCount = 1,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 1,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
+        cid4::AtomRecord{.index = 0,
+                         .bondCount = 1,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 6,
+                         .symbol = "C",
+                         .valency = 4,
+                         .isAromatic = false,
+                         .mass = 12.011,
+                         .hybridization = "SP3"},
+        cid4::AtomRecord{.index = 1,
+                         .bondCount = 1,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 1,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
     };
 }
 
-std::vector<pubchem::AtomRecord> cid4SpringAtoms()
+std::vector<cid4::AtomRecord> cid4SpringAtoms()
 {
     return {
-        pubchem::AtomRecord{.index = 0,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 8,
-                            .symbol = "O",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 15.999,
-                            .hybridization = "SP3"},
-        pubchem::AtomRecord{.index = 1,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 7,
-                            .symbol = "N",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 14.007,
-                            .hybridization = "SP3"},
-        pubchem::AtomRecord{.index = 2,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 6,
-                            .symbol = "C",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 12.011,
-                            .hybridization = "SP3"},
-        pubchem::AtomRecord{.index = 3,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 6,
-                            .symbol = "C",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 12.011,
-                            .hybridization = "SP3"},
-        pubchem::AtomRecord{.index = 4,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 6,
-                            .symbol = "C",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 12.011,
-                            .hybridization = "SP3"},
-        pubchem::AtomRecord{.index = 5,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 6,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 7,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 8,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 9,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 10,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 11,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 12,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
-        pubchem::AtomRecord{.index = 13,
-                            .bondCount = 0,
-                            .charge = 0,
-                            .implicitHydrogenCount = 0,
-                            .totalHydrogenCount = 0,
-                            .atomicNumber = 1,
-                            .symbol = "H",
-                            .valency = 0,
-                            .isAromatic = false,
-                            .mass = 1.008,
-                            .hybridization = "S"},
+        cid4::AtomRecord{.index = 0,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 8,
+                         .symbol = "O",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 15.999,
+                         .hybridization = "SP3"},
+        cid4::AtomRecord{.index = 1,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 7,
+                         .symbol = "N",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 14.007,
+                         .hybridization = "SP3"},
+        cid4::AtomRecord{.index = 2,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 6,
+                         .symbol = "C",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 12.011,
+                         .hybridization = "SP3"},
+        cid4::AtomRecord{.index = 3,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 6,
+                         .symbol = "C",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 12.011,
+                         .hybridization = "SP3"},
+        cid4::AtomRecord{.index = 4,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 6,
+                         .symbol = "C",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 12.011,
+                         .hybridization = "SP3"},
+        cid4::AtomRecord{.index = 5,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 6,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 7,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 8,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 9,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 10,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 11,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 12,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
+        cid4::AtomRecord{.index = 13,
+                         .bondCount = 0,
+                         .charge = 0,
+                         .implicitHydrogenCount = 0,
+                         .totalHydrogenCount = 0,
+                         .atomicNumber = 1,
+                         .symbol = "H",
+                         .valency = 0,
+                         .isAromatic = false,
+                         .mass = 1.008,
+                         .hybridization = "S"},
     };
 }
 
@@ -448,34 +448,34 @@ std::vector<pubchem::AtomRecord> cid4SpringAtoms()
 
 TEST(AnalysisHelpersTest, AverageReturnsZeroForEmptyInput)
 {
-    EXPECT_DOUBLE_EQ(pubchem::averageOrZero({}), 0.0);
+    EXPECT_DOUBLE_EQ(cid4::averageOrZero({}), 0.0);
 }
 
 TEST(AnalysisHelpersTest, AverageComputesArithmeticMean)
 {
-    EXPECT_DOUBLE_EQ(pubchem::averageOrZero({10.0, 20.0, 30.0}), 20.0);
+    EXPECT_DOUBLE_EQ(cid4::averageOrZero({10.0, 20.0, 30.0}), 20.0);
 }
 
 TEST(AnalysisHelpersTest, OutputJsonPathPreservesSourceFilename)
 {
-    const auto path = pubchem::outputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf");
+    const auto path = cid4::outputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf");
     EXPECT_EQ(path.filename().string(), "Conformer3D_COMPOUND_CID_4(1).sdf.json");
 }
 
 TEST(AdjacencyHelpersTest, SupportedMethodsIncludeArraysAndArmadillo)
 {
-    EXPECT_EQ(pubchem::supportedAdjacencyMethods(),
+    EXPECT_EQ(cid4::supportedAdjacencyMethods(),
               (std::vector<std::string>{"arrays", "armadillo", "boost-graph"}));
 }
 
 TEST(AdjacencyHelpersTest, ParseAdjacencyMethodRejectsUnsupportedValues)
 {
-    EXPECT_THROW(static_cast<void>(pubchem::parseAdjacencyMethod("lemon")), std::invalid_argument);
+    EXPECT_THROW(static_cast<void>(cid4::parseAdjacencyMethod("lemon")), std::invalid_argument);
 }
 
 TEST(AdjacencyStrategiesTest, ArraysStrategyBuildsWeightedSymmetricMatrix)
 {
-    const pubchem::NormalizedAdjacencyInput input{
+    const cid4::NormalizedAdjacencyInput input{
         .atomIds = {1, 2, 3},
         .bonds =
             {
@@ -492,7 +492,7 @@ TEST(AdjacencyStrategiesTest, ArraysStrategyBuildsWeightedSymmetricMatrix)
             },
     };
 
-    const auto matrix = pubchem::buildAdjacencyMatrix(input, "sample.json", "arrays");
+    const auto matrix = cid4::buildAdjacencyMatrix(input, "sample.json", "arrays");
 
     EXPECT_EQ(matrix.method, "arrays");
     EXPECT_EQ(matrix.values, (std::vector<std::vector<int>>{{0, 1, 0}, {1, 0, 2}, {0, 2, 0}}));
@@ -500,7 +500,7 @@ TEST(AdjacencyStrategiesTest, ArraysStrategyBuildsWeightedSymmetricMatrix)
 
 TEST(AdjacencyStrategiesTest, ArmadilloStrategyMatchesArraysStrategy)
 {
-    const pubchem::NormalizedAdjacencyInput input{
+    const cid4::NormalizedAdjacencyInput input{
         .atomIds = {1, 2, 3, 4},
         .bonds =
             {
@@ -517,10 +517,9 @@ TEST(AdjacencyStrategiesTest, ArmadilloStrategyMatchesArraysStrategy)
             },
     };
 
-    const auto arraysMatrix = pubchem::buildAdjacencyMatrix(input, "sample.json", "arrays");
-    const auto armadilloMatrix = pubchem::buildAdjacencyMatrix(input, "sample.json", "armadillo");
-    const auto boostGraphMatrix =
-        pubchem::buildAdjacencyMatrix(input, "sample.json", "boost-graph");
+    const auto arraysMatrix = cid4::buildAdjacencyMatrix(input, "sample.json", "arrays");
+    const auto armadilloMatrix = cid4::buildAdjacencyMatrix(input, "sample.json", "armadillo");
+    const auto boostGraphMatrix = cid4::buildAdjacencyMatrix(input, "sample.json", "boost-graph");
 
     EXPECT_EQ(armadilloMatrix.method, "armadillo");
     EXPECT_EQ(armadilloMatrix.atomIds, arraysMatrix.atomIds);
@@ -532,7 +531,7 @@ TEST(AdjacencyStrategiesTest, ArmadilloStrategyMatchesArraysStrategy)
 
 TEST(AdjacencyStrategiesTest, BoostGraphStrategyBuildsWeightedSymmetricMatrix)
 {
-    const pubchem::NormalizedAdjacencyInput input{
+    const cid4::NormalizedAdjacencyInput input{
         .atomIds = {1, 2, 3},
         .bonds =
             {
@@ -549,7 +548,7 @@ TEST(AdjacencyStrategiesTest, BoostGraphStrategyBuildsWeightedSymmetricMatrix)
             },
     };
 
-    const auto matrix = pubchem::buildAdjacencyMatrix(input, "sample.json", "boost-graph");
+    const auto matrix = cid4::buildAdjacencyMatrix(input, "sample.json", "boost-graph");
 
     EXPECT_EQ(matrix.method, "boost-graph");
     EXPECT_EQ(matrix.values, (std::vector<std::vector<int>>{{0, 1, 4}, {1, 0, 0}, {4, 0, 0}}));
@@ -557,7 +556,7 @@ TEST(AdjacencyStrategiesTest, BoostGraphStrategyBuildsWeightedSymmetricMatrix)
 
 TEST(AdjacencyHelpersTest, AdjacencyOutputPathIncludesMethodSuffix)
 {
-    const auto path = pubchem::adjacencyOutputJsonPath(
+    const auto path = cid4::adjacencyOutputJsonPath(
         "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "armadillo");
     EXPECT_EQ(path.filename().string(),
               "Conformer3D_COMPOUND_CID_4(1).armadillo.adjacency_matrix.json");
@@ -565,19 +564,19 @@ TEST(AdjacencyHelpersTest, AdjacencyOutputPathIncludesMethodSuffix)
 
 TEST(EigendecompositionHelpersTest, SupportedMethodsIncludeArmadilloAndBoost)
 {
-    EXPECT_EQ(pubchem::supportedEigendecompositionMethods(),
+    EXPECT_EQ(cid4::supportedEigendecompositionMethods(),
               (std::vector<std::string>{"armadillo", "boost"}));
 }
 
 TEST(EigendecompositionHelpersTest, ParseMethodRejectsUnsupportedValues)
 {
-    EXPECT_THROW(static_cast<void>(pubchem::parseEigendecompositionMethod("lapack")),
+    EXPECT_THROW(static_cast<void>(cid4::parseEigendecompositionMethod("lapack")),
                  std::invalid_argument);
 }
 
 TEST(EigendecompositionHelpersTest, OutputPathIncludesMethodSuffix)
 {
-    const auto path = pubchem::eigendecompositionOutputJsonPath(
+    const auto path = cid4::eigendecompositionOutputJsonPath(
         "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "boost");
     EXPECT_EQ(path.filename().string(),
               "Conformer3D_COMPOUND_CID_4(1).boost.eigendecomposition.json");
@@ -585,7 +584,7 @@ TEST(EigendecompositionHelpersTest, OutputPathIncludesMethodSuffix)
 
 TEST(EigendecompositionStrategiesTest, ArmadilloComputesSortedSpectrum)
 {
-    const auto result = pubchem::buildEigendecomposition(sampleSpectrumMatrix(), "armadillo");
+    const auto result = cid4::buildEigendecomposition(sampleSpectrumMatrix(), "armadillo");
 
     EXPECT_EQ(result.method, "armadillo");
     ASSERT_EQ(result.eigenvalues.size(), 3U);
@@ -600,8 +599,8 @@ TEST(EigendecompositionStrategiesTest, ArmadilloComputesSortedSpectrum)
 TEST(EigendecompositionStrategiesTest, BoostMatchesArmadilloEigenvalues)
 {
     const auto adjacencyMatrix = sampleSpectrumMatrix();
-    const auto armadilloResult = pubchem::buildEigendecomposition(adjacencyMatrix, "armadillo");
-    const auto boostResult = pubchem::buildEigendecomposition(adjacencyMatrix, "boost");
+    const auto armadilloResult = cid4::buildEigendecomposition(adjacencyMatrix, "armadillo");
+    const auto boostResult = cid4::buildEigendecomposition(adjacencyMatrix, "boost");
 
     EXPECT_EQ(boostResult.method, "boost");
     ASSERT_EQ(boostResult.eigenvalues.size(), armadilloResult.eigenvalues.size());
@@ -617,26 +616,25 @@ TEST(EigendecompositionStrategiesTest, BoostMatchesArmadilloEigenvalues)
 
 TEST(LaplacianHelpersTest, SupportedMethodsIncludeArmadilloAndBoost)
 {
-    EXPECT_EQ(pubchem::supportedLaplacianMethods(),
-              (std::vector<std::string>{"armadillo", "boost"}));
+    EXPECT_EQ(cid4::supportedLaplacianMethods(), (std::vector<std::string>{"armadillo", "boost"}));
 }
 
 TEST(LaplacianHelpersTest, ParseMethodRejectsUnsupportedValues)
 {
-    EXPECT_THROW(static_cast<void>(pubchem::parseLaplacianMethod("lapack")), std::invalid_argument);
+    EXPECT_THROW(static_cast<void>(cid4::parseLaplacianMethod("lapack")), std::invalid_argument);
 }
 
 TEST(LaplacianHelpersTest, OutputPathIncludesMethodSuffix)
 {
     const auto path =
-        pubchem::laplacianOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "boost");
+        cid4::laplacianOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "boost");
     EXPECT_EQ(path.filename().string(),
               "Conformer3D_COMPOUND_CID_4(1).boost.laplacian_analysis.json");
 }
 
 TEST(LaplacianStrategiesTest, ArmadilloProducesValidLaplacianAnalysis)
 {
-    const auto result = pubchem::buildLaplacianAnalysis(sampleSpectrumMatrix(), "armadillo");
+    const auto result = cid4::buildLaplacianAnalysis(sampleSpectrumMatrix(), "armadillo");
 
     EXPECT_EQ(result.method, "armadillo");
     EXPECT_EQ(result.degreeVector, (std::vector<double>{1.0, 3.0, 2.0}));
@@ -657,8 +655,8 @@ TEST(LaplacianStrategiesTest, ArmadilloProducesValidLaplacianAnalysis)
 TEST(LaplacianStrategiesTest, BoostMatchesArmadilloLaplacianEigenvalues)
 {
     const auto adjacencyMatrix = sampleSpectrumMatrix();
-    const auto armadilloResult = pubchem::buildLaplacianAnalysis(adjacencyMatrix, "armadillo");
-    const auto boostResult = pubchem::buildLaplacianAnalysis(adjacencyMatrix, "boost");
+    const auto armadilloResult = cid4::buildLaplacianAnalysis(adjacencyMatrix, "armadillo");
+    const auto boostResult = cid4::buildLaplacianAnalysis(adjacencyMatrix, "boost");
 
     EXPECT_EQ(boostResult.method, "boost");
     EXPECT_EQ(boostResult.degreeVector, armadilloResult.degreeVector);
@@ -678,24 +676,24 @@ TEST(LaplacianStrategiesTest, BoostMatchesArmadilloLaplacianEigenvalues)
 
 TEST(DistanceHelpersTest, SupportedMethodsIncludeJsonAndSdf)
 {
-    EXPECT_EQ(pubchem::supportedDistanceMethods(), (std::vector<std::string>{"json", "sdf"}));
+    EXPECT_EQ(cid4::supportedDistanceMethods(), (std::vector<std::string>{"json", "sdf"}));
 }
 
 TEST(DistanceHelpersTest, ParseMethodRejectsUnsupportedValues)
 {
-    EXPECT_THROW(static_cast<void>(pubchem::parseDistanceMethod("rdkit")), std::invalid_argument);
+    EXPECT_THROW(static_cast<void>(cid4::parseDistanceMethod("rdkit")), std::invalid_argument);
 }
 
 TEST(DistanceHelpersTest, OutputPathIncludesMethodSuffix)
 {
     const auto path =
-        pubchem::distanceOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
+        cid4::distanceOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
     EXPECT_EQ(path.filename().string(), "Conformer3D_COMPOUND_CID_4(1).json.distance_matrix.json");
 }
 
 TEST(DistanceHelpersTest, BondedDistanceOutputPathIncludesMethodSuffix)
 {
-    const auto path = pubchem::bondedDistanceOutputJsonPath(
+    const auto path = cid4::bondedDistanceOutputJsonPath(
         "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
     EXPECT_EQ(path.filename().string(),
               "Conformer3D_COMPOUND_CID_4(1).json.bonded_distance_analysis.json");
@@ -704,14 +702,14 @@ TEST(DistanceHelpersTest, BondedDistanceOutputPathIncludesMethodSuffix)
 TEST(DistanceHelpersTest, BondAngleOutputPathIncludesMethodSuffix)
 {
     const auto path =
-        pubchem::bondAngleOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
+        cid4::bondAngleOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
     EXPECT_EQ(path.filename().string(),
               "Conformer3D_COMPOUND_CID_4(1).json.bond_angle_analysis.json");
 }
 
 TEST(DistanceHelpersTest, SpringBondPotentialOutputPathIncludesMethodSuffix)
 {
-    const auto path = pubchem::springBondPotentialOutputJsonPath(
+    const auto path = cid4::springBondPotentialOutputJsonPath(
         "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
     EXPECT_EQ(path.filename().string(),
               "Conformer3D_COMPOUND_CID_4(1).json.spring_bond_potential_analysis.json");
@@ -722,8 +720,7 @@ TEST(DistanceStrategiesTest, JsonBuildsExpectedDistanceMatrix)
     const auto jsonPath = writeTempFile("distance-sample.json", sampleDistanceJson());
     const auto sdfPath = jsonPath;
 
-    const auto result =
-        pubchem::buildDistanceMatrix(sampleDistanceInput(jsonPath, sdfPath), "json");
+    const auto result = cid4::buildDistanceMatrix(sampleDistanceInput(jsonPath, sdfPath), "json");
 
     EXPECT_EQ(result.method, "json");
     EXPECT_EQ(result.atomIds, (std::vector<int>{1, 2, 3}));
@@ -742,15 +739,15 @@ TEST(DistanceStrategiesTest, SdfMatchesJsonDistanceMatrix)
     const auto dataDirectory = repositoryRoot() / "data";
     const auto jsonPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).json";
     const auto sdfPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).sdf";
-    const auto adjacencyInput = pubchem::loadAdjacencyInput(jsonPath);
-    const auto input = pubchem::DistanceMatrixInput{
+    const auto adjacencyInput = cid4::loadAdjacencyInput(jsonPath);
+    const auto input = cid4::DistanceMatrixInput{
         .atomIds = adjacencyInput.atomIds,
         .jsonPath = jsonPath,
         .sdfPath = sdfPath,
     };
 
-    const auto jsonResult = pubchem::buildDistanceMatrix(input, "json");
-    const auto sdfResult = pubchem::buildDistanceMatrix(input, "sdf");
+    const auto jsonResult = cid4::buildDistanceMatrix(input, "json");
+    const auto sdfResult = cid4::buildDistanceMatrix(input, "sdf");
 
     EXPECT_EQ(sdfResult.method, "sdf");
     EXPECT_EQ(sdfResult.atomIds, jsonResult.atomIds);
@@ -767,27 +764,27 @@ TEST(DistanceStrategiesTest, SdfMatchesJsonDistanceMatrix)
 
 TEST(DistanceStrategiesTest, BondedDistanceAnalysisPartitionsDistancesAndSummaries)
 {
-    const pubchem::DistanceMatrixResult distanceMatrix{
+    const cid4::DistanceMatrixResult distanceMatrix{
         .sourceFile = "distance-sample.json",
         .method = "json",
         .atomIds = {1, 2, 3},
         .xyzCoordinates = {{0.0, 0.0, 0.0}, {3.0, 0.0, 0.0}, {0.0, 4.0, 0.0}},
         .distanceMatrix = {{0.0, 3.0, 4.0}, {3.0, 0.0, 5.0}, {4.0, 5.0, 0.0}},
         .metadata =
-            pubchem::DistanceMatrixMetadata{
+            cid4::DistanceMatrixMetadata{
                 .atomCount = 3U,
                 .coordinateDimension = 3U,
                 .units = "angstrom",
             },
     };
-    const pubchem::AdjacencyMatrix adjacencyMatrix{
+    const cid4::AdjacencyMatrix adjacencyMatrix{
         .sourceFile = "distance-sample.json",
         .method = "arrays",
         .atomIds = {1, 2, 3},
         .values = {{0, 1, 1}, {1, 0, 0}, {1, 0, 0}},
     };
 
-    const auto result = pubchem::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
+    const auto result = cid4::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
 
     EXPECT_EQ(result.atomIds, (std::vector<int>{1, 2, 3}));
     ASSERT_EQ(result.bondedAtomPairs.size(), 2U);
@@ -817,17 +814,17 @@ TEST(DistanceStrategiesTest, BondedDistanceAnalysisMatchesCid4RealData)
     const auto dataDirectory = repositoryRoot() / "data";
     const auto jsonPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).json";
     const auto sdfPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).sdf";
-    const auto adjacencyInput = pubchem::loadAdjacencyInput(jsonPath);
-    const auto distanceInput = pubchem::DistanceMatrixInput{
+    const auto adjacencyInput = cid4::loadAdjacencyInput(jsonPath);
+    const auto distanceInput = cid4::DistanceMatrixInput{
         .atomIds = adjacencyInput.atomIds,
         .jsonPath = jsonPath,
         .sdfPath = sdfPath,
     };
-    const auto distanceMatrix = pubchem::buildDistanceMatrix(distanceInput, "json");
+    const auto distanceMatrix = cid4::buildDistanceMatrix(distanceInput, "json");
     const auto adjacencyMatrix =
-        pubchem::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
+        cid4::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
 
-    const auto result = pubchem::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
+    const auto result = cid4::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
 
     EXPECT_EQ(result.metadata.atomCount, 14U);
     EXPECT_EQ(result.metadata.bondedPairCount, 13U);
@@ -840,27 +837,27 @@ TEST(DistanceStrategiesTest, BondedDistanceAnalysisMatchesCid4RealData)
 
 TEST(DistanceStrategiesTest, BondAngleAnalysisComputesTripletsAndStatistics)
 {
-    const pubchem::DistanceMatrixResult distanceMatrix{
+    const cid4::DistanceMatrixResult distanceMatrix{
         .sourceFile = "distance-sample.json",
         .method = "json",
         .atomIds = {1, 2, 3},
         .xyzCoordinates = {{1.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}},
         .distanceMatrix = {{0.0, 1.0, std::sqrt(2.0)}, {1.0, 0.0, 1.0}, {std::sqrt(2.0), 1.0, 0.0}},
         .metadata =
-            pubchem::DistanceMatrixMetadata{
+            cid4::DistanceMatrixMetadata{
                 .atomCount = 3U,
                 .coordinateDimension = 3U,
                 .units = "angstrom",
             },
     };
-    const pubchem::AdjacencyMatrix adjacencyMatrix{
+    const cid4::AdjacencyMatrix adjacencyMatrix{
         .sourceFile = "distance-sample.json",
         .method = "arrays",
         .atomIds = {1, 2, 3},
         .values = {{0, 1, 0}, {1, 0, 1}, {0, 1, 0}},
     };
 
-    const auto result = pubchem::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
+    const auto result = cid4::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
 
     EXPECT_EQ(result.atomIds, (std::vector<int>{1, 2, 3}));
     ASSERT_EQ(result.bondAngleTriplets.size(), 1U);
@@ -882,17 +879,17 @@ TEST(DistanceStrategiesTest, BondAngleAnalysisMatchesCid4RealData)
     const auto dataDirectory = repositoryRoot() / "data";
     const auto jsonPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).json";
     const auto sdfPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).sdf";
-    const auto adjacencyInput = pubchem::loadAdjacencyInput(jsonPath);
-    const auto distanceInput = pubchem::DistanceMatrixInput{
+    const auto adjacencyInput = cid4::loadAdjacencyInput(jsonPath);
+    const auto distanceInput = cid4::DistanceMatrixInput{
         .atomIds = adjacencyInput.atomIds,
         .jsonPath = jsonPath,
         .sdfPath = sdfPath,
     };
-    const auto distanceMatrix = pubchem::buildDistanceMatrix(distanceInput, "json");
+    const auto distanceMatrix = cid4::buildDistanceMatrix(distanceInput, "json");
     const auto adjacencyMatrix =
-        pubchem::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
+        cid4::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
 
-    const auto result = pubchem::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
+    const auto result = cid4::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
 
     EXPECT_EQ(result.metadata.atomCount, 14U);
     EXPECT_EQ(result.metadata.bondedAngleTripletCount, 22U);
@@ -904,24 +901,24 @@ TEST(DistanceStrategiesTest, BondAngleAnalysisMatchesCid4RealData)
 
 TEST(DistanceStrategiesTest, SpringBondPotentialAnalysisComputesExpectedCartesianDerivatives)
 {
-    const pubchem::DistanceMatrixResult distanceMatrix{
+    const cid4::DistanceMatrixResult distanceMatrix{
         .sourceFile = "distance-sample.json",
         .method = "json",
         .atomIds = {1, 2},
         .xyzCoordinates = {{0.0, 0.0, 0.0}, {1.0, 0.0, 0.0}},
         .distanceMatrix = {{0.0, 1.0}, {1.0, 0.0}},
-        .metadata = pubchem::DistanceMatrixMetadata{.atomCount = 2U,
-                                                    .coordinateDimension = 3U,
-                                                    .units = "angstrom"},
+        .metadata = cid4::DistanceMatrixMetadata{.atomCount = 2U,
+                                                 .coordinateDimension = 3U,
+                                                 .units = "angstrom"},
     };
-    const pubchem::AdjacencyMatrix adjacencyMatrix{
+    const cid4::AdjacencyMatrix adjacencyMatrix{
         .sourceFile = "distance-sample.json",
         .method = "arrays",
         .atomIds = {1, 2},
         .values = {{0, 1}, {1, 0}},
     };
 
-    const auto result = pubchem::buildSpringBondPotentialAnalysis(
+    const auto result = cid4::buildSpringBondPotentialAnalysis(
         distanceMatrix, adjacencyMatrix, sampleSpringAtoms());
 
     ASSERT_EQ(result.bondedPairSpringRecords.size(), 1U);
@@ -955,18 +952,18 @@ TEST(DistanceStrategiesTest, SpringBondPotentialAnalysisMatchesCid4RealData)
     const auto dataDirectory = repositoryRoot() / "data";
     const auto jsonPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).json";
     const auto sdfPath = dataDirectory / "Conformer3D_COMPOUND_CID_4(1).sdf";
-    const auto adjacencyInput = pubchem::loadAdjacencyInput(jsonPath);
-    const auto distanceInput = pubchem::DistanceMatrixInput{
+    const auto adjacencyInput = cid4::loadAdjacencyInput(jsonPath);
+    const auto distanceInput = cid4::DistanceMatrixInput{
         .atomIds = adjacencyInput.atomIds,
         .jsonPath = jsonPath,
         .sdfPath = sdfPath,
     };
-    const auto distanceMatrix = pubchem::buildDistanceMatrix(distanceInput, "json");
+    const auto distanceMatrix = cid4::buildDistanceMatrix(distanceInput, "json");
     const auto adjacencyMatrix =
-        pubchem::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
+        cid4::buildAdjacencyMatrix(adjacencyInput, jsonPath.filename().string(), "arrays");
 
-    const auto result = pubchem::buildSpringBondPotentialAnalysis(
-        distanceMatrix, adjacencyMatrix, cid4SpringAtoms());
+    const auto result =
+        cid4::buildSpringBondPotentialAnalysis(distanceMatrix, adjacencyMatrix, cid4SpringAtoms());
 
     EXPECT_EQ(result.metadata.atomCount, 14U);
     EXPECT_EQ(result.metadata.bondedPairCount, 13U);
@@ -998,96 +995,89 @@ TEST(DistanceStrategiesTest, SpringBondPotentialAnalysisMatchesCid4RealData)
 
 TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
 {
-    EXPECT_EQ(pubchem::bioactivityFilteredCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::bioactivityFilteredCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.ic50_pic50.csv");
-    EXPECT_EQ(pubchem::bioactivitySummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::bioactivitySummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.ic50_pic50.summary.json");
-    EXPECT_EQ(pubchem::bioactivityPlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::bioactivityPlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.ic50_pic50.svg");
-    EXPECT_EQ(pubchem::posteriorBioactivityCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::posteriorBioactivityCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.activity_posterior_binary_evidence.csv");
-    EXPECT_EQ(
-        pubchem::posteriorBioactivitySummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-            .filename()
-            .string(),
-        "pubchem_cid_4_bioactivity.activity_posterior.summary.json");
-    EXPECT_EQ(
-        pubchem::binomialActivityDistributionCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-            .filename()
-            .string(),
-        "pubchem_cid_4_bioactivity.activity_binomial_pmf.csv");
-    EXPECT_EQ(pubchem::binomialActivityDistributionSummaryJsonPath("/tmp/out",
-                                                                   "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::posteriorBioactivitySummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.activity_posterior.summary.json");
+    EXPECT_EQ(cid4::binomialActivityDistributionCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.activity_binomial_pmf.csv");
+    EXPECT_EQ(cid4::binomialActivityDistributionSummaryJsonPath("/tmp/out",
+                                                                "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.activity_binomial.summary.json");
-    EXPECT_EQ(pubchem::hillDoseResponseCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::hillDoseResponseCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.hill_dose_response.csv");
-    EXPECT_EQ(pubchem::hillDoseResponseSummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::hillDoseResponseSummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.hill_dose_response.summary.json");
-    EXPECT_EQ(pubchem::hillDoseResponsePlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::hillDoseResponsePlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.hill_dose_response.svg");
-    EXPECT_EQ(pubchem::activityValueStatisticsCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+    EXPECT_EQ(cid4::activityValueStatisticsCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
                   .filename()
                   .string(),
               "pubchem_cid_4_bioactivity.activity_value_statistics.csv");
     EXPECT_EQ(
-        pubchem::activityValueStatisticsSummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+        cid4::activityValueStatisticsSummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
             .filename()
             .string(),
         "pubchem_cid_4_bioactivity.activity_value_statistics.summary.json");
-    EXPECT_EQ(
-        pubchem::activityValueStatisticsPlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-            .filename()
-            .string(),
-        "pubchem_cid_4_bioactivity.activity_value_statistics.svg");
-    EXPECT_EQ(pubchem::gradientDescentCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+    EXPECT_EQ(cid4::activityValueStatisticsPlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
+                  .filename()
+                  .string(),
+              "pubchem_cid_4_bioactivity.activity_value_statistics.svg");
+    EXPECT_EQ(cid4::gradientDescentCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
                   .filename()
                   .string(),
               "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.csv");
-    EXPECT_EQ(
-        pubchem::gradientDescentSummaryJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-            .filename()
-            .string(),
-        "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.summary.json");
-    EXPECT_EQ(
-        pubchem::gradientDescentLossPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-            .filename()
-            .string(),
-        "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.loss.svg");
-    EXPECT_EQ(
-        pubchem::gradientDescentFitPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-            .filename()
-            .string(),
-        "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.fit.svg");
-    EXPECT_EQ(pubchem::atomElementEntropyCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+    EXPECT_EQ(cid4::gradientDescentSummaryJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+                  .filename()
+                  .string(),
+              "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.summary.json");
+    EXPECT_EQ(cid4::gradientDescentLossPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+                  .filename()
+                  .string(),
+              "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.loss.svg");
+    EXPECT_EQ(cid4::gradientDescentFitPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+                  .filename()
+                  .string(),
+              "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.fit.svg");
+    EXPECT_EQ(cid4::atomElementEntropyCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
                   .filename()
                   .string(),
               "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy_proportions.csv");
     EXPECT_EQ(
-        pubchem::atomElementEntropySummaryJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+        cid4::atomElementEntropySummaryJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
             .filename()
             .string(),
         "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.summary.json");
-    EXPECT_EQ(
-        pubchem::atomElementEntropyPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-            .filename()
-            .string(),
-        "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.svg");
+    EXPECT_EQ(cid4::atomElementEntropyPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
+                  .filename()
+                  .string(),
+              "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.svg");
 }
 
 TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisBuildsPositiveNumericSummary)
@@ -1095,7 +1085,7 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisBuildsPositiveNum
     const auto csvPath =
         writeTempFile("bioactivity-activity-value-sample.csv", sampleBioactivityCsv());
 
-    const auto result = pubchem::buildActivityValueStatisticsAnalysis(csvPath);
+    const auto result = cid4::buildActivityValueStatisticsAnalysis(csvPath);
 
     EXPECT_EQ(result.sourceFile, "bioactivity-activity-value-sample.csv");
     EXPECT_EQ(result.rowCounts.totalRows, 4U);
@@ -1132,7 +1122,7 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisDefersShapiroBeyo
     const auto csvPath = writeTempFile("bioactivity-activity-value-normality-sample.csv",
                                        sampleActivityValueNormalityDeferredCsv());
 
-    const auto result = pubchem::buildActivityValueStatisticsAnalysis(csvPath);
+    const auto result = cid4::buildActivityValueStatisticsAnalysis(csvPath);
 
     EXPECT_EQ(result.rowCounts.retainedPositiveNumericRows, 4U);
     EXPECT_FALSE(result.normalityTest.computed);
@@ -1146,7 +1136,7 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsCsvAndSvgWritersEmitArtif
 {
     const auto csvPath =
         writeTempFile("bioactivity-activity-value-writer.csv", sampleBioactivityCsv());
-    const auto result = pubchem::buildActivityValueStatisticsAnalysis(csvPath);
+    const auto result = cid4::buildActivityValueStatisticsAnalysis(csvPath);
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-activity-value";
     std::filesystem::create_directories(outputDirectory);
@@ -1154,8 +1144,8 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsCsvAndSvgWritersEmitArtif
     const auto filteredCsvPath = outputDirectory / "bioactivity.activity_value.csv";
     const auto plotSvgPath = outputDirectory / "bioactivity.activity_value.svg";
 
-    pubchem::writeActivityValueStatisticsCsv(result, filteredCsvPath);
-    pubchem::writeActivityValueStatisticsPlotSvg(result, plotSvgPath);
+    cid4::writeActivityValueStatisticsCsv(result, filteredCsvPath);
+    cid4::writeActivityValueStatisticsPlotSvg(result, plotSvgPath);
 
     std::ifstream filteredInput(filteredCsvPath);
     std::ifstream svgInput(plotSvgPath);
@@ -1175,7 +1165,7 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsCsvAndSvgWritersEmitArtif
 
 TEST(DistanceStrategiesTest, AtomElementEntropyAnalysisMatchesCid4ElementCounts)
 {
-    const auto result = pubchem::buildAtomElementEntropyAnalysis(cid4SpringAtoms(), "sample.sdf");
+    const auto result = cid4::buildAtomElementEntropyAnalysis(cid4SpringAtoms(), "sample.sdf");
 
     EXPECT_EQ(result.sourceFile, "sample.sdf");
     EXPECT_EQ(result.rowCounts.totalAtomRows, 14U);
@@ -1199,7 +1189,7 @@ TEST(DistanceStrategiesTest, AtomElementEntropyAnalysisMatchesCid4ElementCounts)
 
 TEST(DistanceStrategiesTest, AtomElementEntropyWritersEmitArtifacts)
 {
-    const auto result = pubchem::buildAtomElementEntropyAnalysis(cid4SpringAtoms(), "sample.sdf");
+    const auto result = cid4::buildAtomElementEntropyAnalysis(cid4SpringAtoms(), "sample.sdf");
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-atom-entropy";
     std::filesystem::create_directories(outputDirectory);
@@ -1207,8 +1197,8 @@ TEST(DistanceStrategiesTest, AtomElementEntropyWritersEmitArtifacts)
     const auto csvPath = outputDirectory / "atom_entropy.csv";
     const auto svgPath = outputDirectory / "atom_entropy.svg";
 
-    pubchem::writeAtomElementEntropyCsv(result, csvPath);
-    pubchem::writeAtomElementEntropyPlotSvg(result, svgPath);
+    cid4::writeAtomElementEntropyCsv(result, csvPath);
+    cid4::writeAtomElementEntropyPlotSvg(result, svgPath);
 
     std::ifstream csvInput(csvPath);
     std::ifstream svgInput(svgPath);
@@ -1228,7 +1218,7 @@ TEST(DistanceStrategiesTest, AtomElementEntropyWritersEmitArtifacts)
 TEST(GradientDescentStrategiesTest, AnalysisConvergesTowardClosedFormWeight)
 {
     const auto result =
-        pubchem::buildGradientDescentAnalysis(sampleGradientAtoms(), "sample.sdf", 0.05, 40U);
+        cid4::buildGradientDescentAnalysis(sampleGradientAtoms(), "sample.sdf", 0.05, 40U);
 
     EXPECT_EQ(result.sourceFile, "sample.sdf");
     EXPECT_EQ(
@@ -1253,7 +1243,7 @@ TEST(GradientDescentStrategiesTest, AnalysisConvergesTowardClosedFormWeight)
 TEST(GradientDescentStrategiesTest, WritersEmitCsvAndSvgArtifacts)
 {
     const auto result =
-        pubchem::buildGradientDescentAnalysis(sampleGradientAtoms(), "sample.sdf", 0.05, 20U);
+        cid4::buildGradientDescentAnalysis(sampleGradientAtoms(), "sample.sdf", 0.05, 20U);
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-gradient-descent";
     std::filesystem::create_directories(outputDirectory);
@@ -1262,9 +1252,9 @@ TEST(GradientDescentStrategiesTest, WritersEmitCsvAndSvgArtifacts)
     const auto lossSvgPath = outputDirectory / "gradient.loss.svg";
     const auto fitSvgPath = outputDirectory / "gradient.fit.svg";
 
-    pubchem::writeGradientDescentCsv(result, csvPath);
-    pubchem::writeGradientDescentLossPlotSvg(result, lossSvgPath);
-    pubchem::writeGradientDescentFitPlotSvg(result, fitSvgPath);
+    cid4::writeGradientDescentCsv(result, csvPath);
+    cid4::writeGradientDescentLossPlotSvg(result, lossSvgPath);
+    cid4::writeGradientDescentFitPlotSvg(result, fitSvgPath);
 
     std::ifstream csvInput(csvPath);
     std::ifstream lossSvgInput(lossSvgPath);
@@ -1291,7 +1281,7 @@ TEST(BioactivityStrategiesTest, AnalysisFiltersIc50RowsAndComputesPic50)
 {
     const auto csvPath = writeTempFile("bioactivity-sample.csv", sampleBioactivityCsv());
 
-    const auto result = pubchem::buildBioactivityAnalysis(csvPath);
+    const auto result = cid4::buildBioactivityAnalysis(csvPath);
 
     EXPECT_EQ(result.sourceFile, "bioactivity-sample.csv");
     EXPECT_EQ(result.rowCounts.totalRows, 4U);
@@ -1310,7 +1300,7 @@ TEST(BioactivityStrategiesTest, AnalysisFiltersIc50RowsAndComputesPic50)
 TEST(BioactivityStrategiesTest, CsvAndSvgWritersEmitArtifacts)
 {
     const auto csvPath = writeTempFile("bioactivity-writer-sample.csv", sampleBioactivityCsv());
-    const auto result = pubchem::buildBioactivityAnalysis(csvPath);
+    const auto result = cid4::buildBioactivityAnalysis(csvPath);
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-bioactivity";
     std::filesystem::create_directories(outputDirectory);
@@ -1318,8 +1308,8 @@ TEST(BioactivityStrategiesTest, CsvAndSvgWritersEmitArtifacts)
     const auto filteredCsvPath = outputDirectory / "bioactivity.csv";
     const auto plotSvgPath = outputDirectory / "bioactivity.svg";
 
-    pubchem::writeBioactivityFilteredCsv(result, filteredCsvPath);
-    pubchem::writeBioactivityPlotSvg(result, plotSvgPath);
+    cid4::writeBioactivityFilteredCsv(result, filteredCsvPath);
+    cid4::writeBioactivityPlotSvg(result, plotSvgPath);
 
     std::ifstream filteredInput(filteredCsvPath);
     std::ifstream svgInput(plotSvgPath);
@@ -1341,7 +1331,7 @@ TEST(BioactivityStrategiesTest, HillAnalysisBuildsReferenceRowsAndSummary)
 {
     const auto csvPath = writeTempFile("bioactivity-hill-sample.csv", sampleBioactivityCsv());
 
-    const auto result = pubchem::buildHillDoseResponseAnalysis(csvPath);
+    const auto result = cid4::buildHillDoseResponseAnalysis(csvPath);
 
     EXPECT_EQ(result.sourceFile, "bioactivity-hill-sample.csv");
     EXPECT_EQ(result.rowCounts.totalRows, 4U);
@@ -1384,7 +1374,7 @@ TEST(BioactivityStrategiesTest, PosteriorAnalysisBuildsBinaryEvidenceAndSummary)
     const auto csvPath =
         writeTempFile("bioactivity-posterior-sample.csv", samplePosteriorBioactivityCsv());
 
-    const auto result = pubchem::buildPosteriorBioactivityAnalysis(csvPath);
+    const auto result = cid4::buildPosteriorBioactivityAnalysis(csvPath);
 
     EXPECT_EQ(result.sourceFile, "bioactivity-posterior-sample.csv");
     EXPECT_EQ(result.rowCounts.totalRows, 5U);
@@ -1424,14 +1414,14 @@ TEST(BioactivityStrategiesTest, PosteriorCsvWriterEmitsArtifacts)
 {
     const auto csvPath =
         writeTempFile("bioactivity-posterior-writer-sample.csv", samplePosteriorBioactivityCsv());
-    const auto result = pubchem::buildPosteriorBioactivityAnalysis(csvPath);
+    const auto result = cid4::buildPosteriorBioactivityAnalysis(csvPath);
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-posterior-bioactivity";
     std::filesystem::create_directories(outputDirectory);
 
     const auto filteredCsvPath = outputDirectory / "bioactivity.posterior.csv";
 
-    pubchem::writePosteriorBioactivityCsv(result, filteredCsvPath);
+    cid4::writePosteriorBioactivityCsv(result, filteredCsvPath);
 
     std::ifstream filteredInput(filteredCsvPath);
     ASSERT_TRUE(filteredInput.good());
@@ -1450,7 +1440,7 @@ TEST(BioactivityStrategiesTest, BinomialAnalysisBuildsAssayLevelPmfAndSummary)
     const auto csvPath =
         writeTempFile("bioactivity-binomial-sample.csv", sampleBinomialBioactivityCsv());
 
-    const auto result = pubchem::buildBinomialActivityDistributionAnalysis(csvPath);
+    const auto result = cid4::buildBinomialActivityDistributionAnalysis(csvPath);
 
     EXPECT_EQ(result.sourceFile, "bioactivity-binomial-sample.csv");
     EXPECT_EQ(result.rowCounts.totalRows, 6U);
@@ -1498,14 +1488,14 @@ TEST(BioactivityStrategiesTest, BinomialCsvWriterEmitsArtifacts)
 {
     const auto csvPath =
         writeTempFile("bioactivity-binomial-writer-sample.csv", sampleBinomialBioactivityCsv());
-    const auto result = pubchem::buildBinomialActivityDistributionAnalysis(csvPath);
+    const auto result = cid4::buildBinomialActivityDistributionAnalysis(csvPath);
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-binomial-bioactivity";
     std::filesystem::create_directories(outputDirectory);
 
     const auto pmfCsvPath = outputDirectory / "bioactivity.binomial.csv";
 
-    pubchem::writeBinomialActivityDistributionCsv(result, pmfCsvPath);
+    cid4::writeBinomialActivityDistributionCsv(result, pmfCsvPath);
 
     std::ifstream pmfInput(pmfCsvPath);
     ASSERT_TRUE(pmfInput.good());
@@ -1523,7 +1513,7 @@ TEST(BioactivityStrategiesTest, ChiSquareAnalysisBuildsContingencyAndSummary)
     const auto csvPath =
         writeTempFile("bioactivity-chi-square-sample.csv", sampleChiSquareBioactivityCsv());
 
-    const auto result = pubchem::buildChiSquareActivityAidTypeAnalysis(csvPath);
+    const auto result = cid4::buildChiSquareActivityAidTypeAnalysis(csvPath);
 
     EXPECT_EQ(result.sourceFile, "bioactivity-chi-square-sample.csv");
     EXPECT_EQ(result.rowCounts.totalRows, 6U);
@@ -1567,7 +1557,7 @@ TEST(BioactivityStrategiesTest, ChiSquareAnalysisHandlesDegenerateTables)
     const auto csvPath = writeTempFile("bioactivity-chi-square-degenerate.csv",
                                        sampleChiSquareDegenerateBioactivityCsv());
 
-    const auto result = pubchem::buildChiSquareActivityAidTypeAnalysis(csvPath);
+    const auto result = cid4::buildChiSquareActivityAidTypeAnalysis(csvPath);
 
     EXPECT_EQ(result.rowCounts.totalRows, 5U);
     EXPECT_EQ(result.rowCounts.activeRows, 3U);
@@ -1595,14 +1585,14 @@ TEST(BioactivityStrategiesTest, ChiSquareCsvWriterEmitsArtifacts)
 {
     const auto csvPath =
         writeTempFile("bioactivity-chi-square-writer.csv", sampleChiSquareBioactivityCsv());
-    const auto result = pubchem::buildChiSquareActivityAidTypeAnalysis(csvPath);
+    const auto result = cid4::buildChiSquareActivityAidTypeAnalysis(csvPath);
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-chi-square-bioactivity";
     std::filesystem::create_directories(outputDirectory);
 
     const auto contingencyCsvPath = outputDirectory / "bioactivity.chi_square.csv";
 
-    pubchem::writeChiSquareActivityAidTypeCsv(result, contingencyCsvPath);
+    cid4::writeChiSquareActivityAidTypeCsv(result, contingencyCsvPath);
 
     std::ifstream contingencyInput(contingencyCsvPath);
     ASSERT_TRUE(contingencyInput.good());
@@ -1619,7 +1609,7 @@ TEST(BioactivityStrategiesTest, HillAnalysisSupportsPositiveLinearInflectionForN
 {
     const auto csvPath = writeTempFile("bioactivity-hill-n2-sample.csv", sampleBioactivityCsv());
 
-    const auto result = pubchem::buildHillDoseResponseAnalysis(csvPath, 2.0);
+    const auto result = cid4::buildHillDoseResponseAnalysis(csvPath, 2.0);
 
     ASSERT_TRUE(result.analysis.linearConcentrationInflection.has_value());
     const auto& inflection = *result.analysis.linearConcentrationInflection;
@@ -1639,7 +1629,7 @@ TEST(BioactivityStrategiesTest, HillCsvAndSvgWritersEmitArtifacts)
 {
     const auto csvPath =
         writeTempFile("bioactivity-hill-writer-sample.csv", sampleBioactivityCsv());
-    const auto result = pubchem::buildHillDoseResponseAnalysis(csvPath);
+    const auto result = cid4::buildHillDoseResponseAnalysis(csvPath);
     const auto outputDirectory =
         std::filesystem::temp_directory_path() / "pubchem-cid4-hill-bioactivity";
     std::filesystem::create_directories(outputDirectory);
@@ -1647,8 +1637,8 @@ TEST(BioactivityStrategiesTest, HillCsvAndSvgWritersEmitArtifacts)
     const auto filteredCsvPath = outputDirectory / "bioactivity.hill.csv";
     const auto plotSvgPath = outputDirectory / "bioactivity.hill.svg";
 
-    pubchem::writeHillDoseResponseCsv(result, filteredCsvPath);
-    pubchem::writeHillDoseResponsePlotSvg(result, plotSvgPath);
+    cid4::writeHillDoseResponseCsv(result, filteredCsvPath);
+    cid4::writeHillDoseResponsePlotSvg(result, plotSvgPath);
 
     std::ifstream filteredInput(filteredCsvPath);
     std::ifstream svgInput(plotSvgPath);
@@ -1673,7 +1663,7 @@ TEST(BioactivityStrategiesTest, HillAnalysisMatchesCid4RealData)
 {
     const auto csvPath = repositoryRoot() / "data" / "pubchem_cid_4_bioactivity.csv";
 
-    const auto result = pubchem::buildHillDoseResponseAnalysis(csvPath);
+    const auto result = cid4::buildHillDoseResponseAnalysis(csvPath);
 
     EXPECT_EQ(result.rowCounts.totalRows, 406U);
     EXPECT_EQ(result.rowCounts.rowsWithNumericActivityValue, 2U);
@@ -1701,7 +1691,7 @@ TEST(BioactivityStrategiesTest, PosteriorAnalysisMatchesCid4RealData)
 {
     const auto csvPath = repositoryRoot() / "data" / "pubchem_cid_4_bioactivity.csv";
 
-    const auto result = pubchem::buildPosteriorBioactivityAnalysis(csvPath);
+    const auto result = cid4::buildPosteriorBioactivityAnalysis(csvPath);
 
     EXPECT_EQ(result.rowCounts.totalRows, 406U);
     EXPECT_EQ(result.rowCounts.activeRows, 3U);
@@ -1735,7 +1725,7 @@ TEST(BioactivityStrategiesTest, BinomialAnalysisMatchesCid4RealData)
 {
     const auto csvPath = repositoryRoot() / "data" / "pubchem_cid_4_bioactivity.csv";
 
-    const auto result = pubchem::buildBinomialActivityDistributionAnalysis(csvPath);
+    const auto result = cid4::buildBinomialActivityDistributionAnalysis(csvPath);
 
     EXPECT_EQ(result.rowCounts.totalRows, 406U);
     EXPECT_EQ(result.rowCounts.activeRows, 3U);
@@ -1767,7 +1757,7 @@ TEST(BioactivityStrategiesTest, ChiSquareAnalysisMatchesCid4RealData)
 {
     const auto csvPath = repositoryRoot() / "data" / "pubchem_cid_4_bioactivity.csv";
 
-    const auto result = pubchem::buildChiSquareActivityAidTypeAnalysis(csvPath);
+    const auto result = cid4::buildChiSquareActivityAidTypeAnalysis(csvPath);
 
     EXPECT_EQ(result.rowCounts.totalRows, 406U);
     EXPECT_EQ(result.rowCounts.activeRows, 3U);

@@ -9,7 +9,7 @@
 #include <utility>
 #include <vector>
 
-namespace pubchem {
+namespace cid4 {
 struct AtomRecord {
     int index;
     int bondCount;
@@ -1071,4 +1071,6 @@ atomElementEntropySummaryJsonPath(const std::filesystem::path& outputDirectory,
                                   const std::filesystem::path& sourceFile);
 std::filesystem::path atomElementEntropyPlotSvgPath(const std::filesystem::path& outputDirectory,
                                                     const std::filesystem::path& sourceFile);
-} // namespace pubchem
+
+DistanceMatrixResult readDistanceMatrix(const std::filesystem::path& jsonPath);
+} // namespace cid4
