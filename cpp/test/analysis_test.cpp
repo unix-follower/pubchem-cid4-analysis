@@ -838,9 +838,6 @@ TEST(DistanceStrategiesTest, BondedDistanceAnalysisMatchesCid4RealData)
 TEST(DistanceStrategiesTest, BondAngleAnalysisComputesTripletsAndStatistics)
 {
     const cid4::DistanceMatrixResult distanceMatrix{
-        // .sourceFile = "distance-sample.json",
-        // .method = "json",
-        // .atomIds = {1, 2, 3},
         .xyzCoordinates = {{1.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}},
         .distanceMatrix = {{0.0, 1.0, std::sqrt(2.0)}, {1.0, 0.0, 1.0}, {std::sqrt(2.0), 1.0, 0.0}},
         .metadata =
@@ -855,7 +852,6 @@ TEST(DistanceStrategiesTest, BondAngleAnalysisComputesTripletsAndStatistics)
         .method = "arrays",
         .atomIds = {1, 2, 3},
         .values = {{0, 1, 0}, {1, 0, 1}, {0, 1, 0}},
-        // .values = {{1, 0, 0}, {0, 0, 0}, {0, 1, 0}},
     };
 
     const auto result = cid4::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
