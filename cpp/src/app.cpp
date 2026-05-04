@@ -3,8 +3,10 @@
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <iomanip>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -22,6 +24,7 @@ class SdfReadError : public std::runtime_error {
 };
 
 struct CommandLineOptions {
+    std::string command;
     std::filesystem::path sdfFile = "Conformer3D_COMPOUND_CID_4(1).sdf";
     std::filesystem::path adjacencyJsonFile = "Conformer3D_COMPOUND_CID_4(1).json";
     std::filesystem::path bioactivityFile = "pubchem_cid_4_bioactivity.csv";
@@ -100,6 +103,11 @@ CommandLineOptions parseArguments(int argc, char* argv[])
             return argv[index];
         };
 
+        if (argument == "--cmd") {
+            options.command = readValue("--cmd");
+            continue;
+        }
+
         if (argument == "--sdf") {
             options.sdfFile = readValue("--sdf");
             continue;
@@ -116,24 +124,22 @@ CommandLineOptions parseArguments(int argc, char* argv[])
         }
 
         if (argument == "--method") {
-            options.adjacencyMethod = pubchem::parseAdjacencyMethod(readValue("--method"));
+            options.adjacencyMethod = cid4::parseAdjacencyMethod(readValue("--method"));
             continue;
         }
 
         if (argument == "--eigenmethod") {
-            options.eigenMethod =
-                pubchem::parseEigendecompositionMethod(readValue("--eigenmethod"));
+            options.eigenMethod = cid4::parseEigendecompositionMethod(readValue("--eigenmethod"));
             continue;
         }
 
         if (argument == "--laplacian-method") {
-            options.laplacianMethod =
-                pubchem::parseLaplacianMethod(readValue("--laplacian-method"));
+            options.laplacianMethod = cid4::parseLaplacianMethod(readValue("--laplacian-method"));
             continue;
         }
 
         if (argument == "--distance-method") {
-            options.distanceMethod = pubchem::parseDistanceMethod(readValue("--distance-method"));
+            options.distanceMethod = cid4::parseDistanceMethod(readValue("--distance-method"));
             continue;
         }
 
@@ -143,13 +149,13 @@ CommandLineOptions parseArguments(int argc, char* argv[])
     return options;
 }
 
-pubchem::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
+cid4::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
 {
     RDKit::v1::SDMolSupplier supplier(sdfPath.string(), true, false, true);
 
     std::vector<double> molecularWeights;
     std::vector<double> exactMasses;
-    std::vector<pubchem::AtomRecord> atoms;
+    std::vector<cid4::AtomRecord> atoms;
 
     while (!supplier.atEnd()) {
         std::unique_ptr<RDKit::ROMol> molecule(supplier.next());
@@ -161,7 +167,7 @@ pubchem::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
         exactMasses.push_back(RDKit::Descriptors::calcExactMW(*molecule));
 
         for (const RDKit::Atom* atom : molecule->atoms()) {
-            atoms.push_back(pubchem::AtomRecord{
+            atoms.push_back(cid4::AtomRecord{
                 .index = static_cast<int>(atom->getIdx()),
                 .bondCount = static_cast<int>(atom->getDegree()),
                 .charge = atom->getFormalCharge(),
@@ -181,16 +187,16 @@ pubchem::AnalysisResult analyzeSdf(const std::filesystem::path& sdfPath)
         throw SdfReadError("No valid molecules were read from the SDF file");
     }
 
-    return pubchem::AnalysisResult{
+    return cid4::AnalysisResult{
         .sourceFile = sdfPath.filename().string(),
-        .averageMolecularWeight = pubchem::averageOrZero(molecularWeights),
-        .exactMolecularMass = pubchem::averageOrZero(exactMasses),
+        .averageMolecularWeight = cid4::averageOrZero(molecularWeights),
+        .exactMolecularMass = cid4::averageOrZero(exactMasses),
         .moleculeCount = molecularWeights.size(),
         .atoms = std::move(atoms),
     };
 }
 
-nlohmann::json toJson(const pubchem::AnalysisResult& result)
+nlohmann::json toJson(const cid4::AnalysisResult& result)
 {
     nlohmann::json atoms = nlohmann::json::array();
     for (const auto& atom : result.atoms) {
@@ -218,7 +224,7 @@ nlohmann::json toJson(const pubchem::AnalysisResult& result)
     };
 }
 
-nlohmann::json toJson(const pubchem::AdjacencyMatrix& adjacencyMatrix)
+nlohmann::json toJson(const cid4::AdjacencyMatrix& adjacencyMatrix)
 {
     return {
         {"sourceFile", adjacencyMatrix.sourceFile},
@@ -228,7 +234,7 @@ nlohmann::json toJson(const pubchem::AdjacencyMatrix& adjacencyMatrix)
     };
 }
 
-nlohmann::json toJson(const pubchem::EigendecompositionResult& eigendecomposition)
+nlohmann::json toJson(const cid4::EigendecompositionResult& eigendecomposition)
 {
     return {
         {"sourceFile", eigendecomposition.sourceFile},
@@ -239,7 +245,7 @@ nlohmann::json toJson(const pubchem::EigendecompositionResult& eigendecompositio
     };
 }
 
-nlohmann::json toJson(const pubchem::LaplacianAnalysisResult& laplacianAnalysis)
+nlohmann::json toJson(const cid4::LaplacianAnalysisResult& laplacianAnalysis)
 {
     return {
         {"sourceFile", laplacianAnalysis.sourceFile},
@@ -275,7 +281,7 @@ nlohmann::json toJson(const pubchem::LaplacianAnalysisResult& laplacianAnalysis)
     };
 }
 
-nlohmann::json toJson(const pubchem::DistanceMatrixResult& distanceMatrix)
+nlohmann::json toJson(const cid4::DistanceMatrixResult& distanceMatrix)
 {
     return {
         {"sourceFile", distanceMatrix.sourceFile},
@@ -292,14 +298,14 @@ nlohmann::json toJson(const pubchem::DistanceMatrixResult& distanceMatrix)
     };
 }
 
-nlohmann::json toJson(const pubchem::BondedDistanceAnalysisResult& bondedDistanceAnalysis)
+nlohmann::json toJson(const cid4::BondedDistanceAnalysisResult& bondedDistanceAnalysis)
 {
     nlohmann::json bondedAtomPairs = nlohmann::json::array();
     for (const auto& pair : bondedDistanceAnalysis.bondedAtomPairs) {
         bondedAtomPairs.push_back({{"atomId1", pair.atomId1}, {"atomId2", pair.atomId2}});
     }
 
-    auto pairDistancesToJson = [](const std::vector<pubchem::AtomPairDistance>& pairDistances) {
+    auto pairDistancesToJson = [](const std::vector<cid4::AtomPairDistance>& pairDistances) {
         nlohmann::json values = nlohmann::json::array();
         for (const auto& pairDistance : pairDistances) {
             values.push_back({{"atomId1", pairDistance.atomId1},
@@ -309,7 +315,7 @@ nlohmann::json toJson(const pubchem::BondedDistanceAnalysisResult& bondedDistanc
         return values;
     };
 
-    auto statisticsToJson = [](const pubchem::BondedDistanceStatistics& statistics) {
+    auto statisticsToJson = [](const cid4::BondedDistanceStatistics& statistics) {
         return nlohmann::json{{"count", statistics.count},
                               {"minDistanceAngstrom", statistics.minDistanceAngstrom},
                               {"meanDistanceAngstrom", statistics.meanDistanceAngstrom},
@@ -343,7 +349,7 @@ nlohmann::json toJson(const pubchem::BondedDistanceAnalysisResult& bondedDistanc
     };
 }
 
-nlohmann::json toJson(const pubchem::BondAngleAnalysisResult& bondAngleAnalysis)
+nlohmann::json toJson(const cid4::BondAngleAnalysisResult& bondAngleAnalysis)
 {
     nlohmann::json triplets = nlohmann::json::array();
     for (const auto& triplet : bondAngleAnalysis.bondAngleTriplets) {
@@ -382,9 +388,9 @@ nlohmann::json toJson(const pubchem::BondAngleAnalysisResult& bondAngleAnalysis)
     };
 }
 
-nlohmann::json toJson(const pubchem::SpringBondPotentialAnalysisResult& springBondAnalysis)
+nlohmann::json toJson(const cid4::SpringBondPotentialAnalysisResult& springBondAnalysis)
 {
-    auto partialDerivativesToJson = [](const pubchem::CartesianPartialDerivatives& derivatives) {
+    auto partialDerivativesToJson = [](const cid4::CartesianPartialDerivatives& derivatives) {
         return nlohmann::json{{"dEDx", derivatives.dEDx},
                               {"dEDy", derivatives.dEDy},
                               {"dEDz", derivatives.dEDz},
@@ -504,7 +510,7 @@ nlohmann::json toJson(const pubchem::SpringBondPotentialAnalysisResult& springBo
     };
 }
 
-nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
+nlohmann::json toJson(const cid4::BioactivityAnalysisResult& bioactivity)
 {
     return {
         {"sourceFile", bioactivity.sourceFile},
@@ -540,7 +546,7 @@ nlohmann::json toJson(const pubchem::BioactivityAnalysisResult& bioactivity)
     };
 }
 
-nlohmann::json toJson(const pubchem::PosteriorBioactivityAnalysisResult& posteriorBioactivity)
+nlohmann::json toJson(const cid4::PosteriorBioactivityAnalysisResult& posteriorBioactivity)
 {
     nlohmann::json representativeRows = nlohmann::json::array();
     for (const auto& row : posteriorBioactivity.analysis.representativeRows) {
@@ -620,7 +626,7 @@ nlohmann::json toJson(const pubchem::PosteriorBioactivityAnalysisResult& posteri
     };
 }
 
-nlohmann::json toJson(const pubchem::BinomialActivityDistributionAnalysisResult& binomialActivity)
+nlohmann::json toJson(const cid4::BinomialActivityDistributionAnalysisResult& binomialActivity)
 {
     nlohmann::json representativeAssays = nlohmann::json::array();
     for (const auto& assay : binomialActivity.analysis.representativeAssays) {
@@ -689,7 +695,7 @@ nlohmann::json toJson(const pubchem::BinomialActivityDistributionAnalysisResult&
     };
 }
 
-nlohmann::json toJson(const pubchem::ChiSquareActivityAidTypeAnalysisResult& chiSquareActivity)
+nlohmann::json toJson(const cid4::ChiSquareActivityAidTypeAnalysisResult& chiSquareActivity)
 {
     nlohmann::json observedCounts = nlohmann::json::object();
     for (const auto& [activity, aidTypeCounts] :
@@ -789,7 +795,7 @@ nlohmann::json toJson(const pubchem::ChiSquareActivityAidTypeAnalysisResult& chi
     };
 }
 
-nlohmann::json toJson(const pubchem::GradientDescentAnalysisResult& gradientDescent)
+nlohmann::json toJson(const cid4::GradientDescentAnalysisResult& gradientDescent)
 {
     nlohmann::json atomRows = nlohmann::json::array();
     for (const auto& atomRow : gradientDescent.summary.dataset.atomRows) {
@@ -843,7 +849,7 @@ nlohmann::json toJson(const pubchem::GradientDescentAnalysisResult& gradientDesc
     };
 }
 
-nlohmann::json toJson(const pubchem::ActivityValueStatisticsAnalysisResult& activityValue)
+nlohmann::json toJson(const cid4::ActivityValueStatisticsAnalysisResult& activityValue)
 {
     nlohmann::json representativeRows = nlohmann::json::array();
     for (const auto& row : activityValue.analysis.representativeRows) {
@@ -916,7 +922,7 @@ nlohmann::json toJson(const pubchem::ActivityValueStatisticsAnalysisResult& acti
     };
 }
 
-nlohmann::json toJson(const pubchem::AtomElementEntropyAnalysisResult& atomEntropy)
+nlohmann::json toJson(const cid4::AtomElementEntropyAnalysisResult& atomEntropy)
 {
     nlohmann::json distribution = nlohmann::json::object();
     for (const auto& [element, entry] : atomEntropy.distribution) {
@@ -965,7 +971,7 @@ nlohmann::json toJson(const pubchem::AtomElementEntropyAnalysisResult& atomEntro
 }
 } // namespace
 
-nlohmann::json toJson(const pubchem::HillDoseResponseAnalysisResult& hillAnalysis)
+nlohmann::json toJson(const cid4::HillDoseResponseAnalysisResult& hillAnalysis)
 {
     nlohmann::json activityTypeCounts = nlohmann::json::object();
     for (const auto& entry : hillAnalysis.activityTypeCounts) {
@@ -1052,277 +1058,326 @@ nlohmann::json toJson(const pubchem::HillDoseResponseAnalysisResult& hillAnalysi
     };
 }
 
+void runLaplasianAnalysis(const CommandLineOptions& options)
+{
+    std::cout << "Execute laplacian coomand";
+}
+
+void buildDistanceMatrix(const CommandLineOptions& options)
+{
+    std::cout << "Build distance matrix";
+
+    const std::filesystem::path dataDir = resolveDataDir();
+    const std::filesystem::path sdfPath = dataDir / options.sdfFile;
+
+    const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
+    const cid4::NormalizedAdjacencyInput adjacencyInput =
+        cid4::loadAdjacencyInput(adjacencyJsonPath);
+
+    const cid4::DistanceMatrixInput distanceInput{
+        .atomIds = adjacencyInput.atomIds,
+        .jsonPath = adjacencyJsonPath,
+        .sdfPath = sdfPath,
+    };
+
+    const cid4::DistanceMatrixResult distanceMatrix =
+        cid4::buildDistanceMatrix(distanceInput, options.distanceMethod);
+
+    const std::filesystem::path outputDir = cid4::outputDirectoryFor(dataDir);
+    const std::filesystem::path distanceOutputPath =
+        cid4::distanceOutputJsonPath(outputDir, options.adjacencyJsonFile, distanceMatrix.method);
+    std::ofstream distanceOutput(distanceOutputPath);
+    distanceOutput << std::setw(2) << toJson(distanceMatrix) << '\n';
+
+    std::cout << "Distance method: " << distanceMatrix.method << '\n';
+    std::cout << "Distance matrix written to: " << distanceOutputPath << '\n';
+}
+
 int main(int argc, char* argv[])
 {
     try {
         const CommandLineOptions options = parseArguments(argc, argv);
-        const std::filesystem::path dataDir = resolveDataDir();
-        const std::filesystem::path sdfPath = dataDir / options.sdfFile;
 
-        const pubchem::AnalysisResult result = analyzeSdf(sdfPath);
-        const std::filesystem::path outputDir = pubchem::outputDirectoryFor(dataDir);
-        const std::filesystem::path outputPath =
-            pubchem::outputJsonPath(outputDir, options.sdfFile);
+        if (options.command.empty()) {
+            const std::filesystem::path dataDir = resolveDataDir();
+            const std::filesystem::path sdfPath = dataDir / options.sdfFile;
 
-        const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
-        const std::filesystem::path bioactivityCsvPath = dataDir / options.bioactivityFile;
-        const pubchem::NormalizedAdjacencyInput adjacencyInput =
-            pubchem::loadAdjacencyInput(adjacencyJsonPath);
-        const pubchem::DistanceMatrixInput distanceInput{
-            .atomIds = adjacencyInput.atomIds,
-            .jsonPath = adjacencyJsonPath,
-            .sdfPath = sdfPath,
-        };
-        const pubchem::DistanceMatrixResult distanceMatrix =
-            pubchem::buildDistanceMatrix(distanceInput, options.distanceMethod);
-        const std::filesystem::path distanceOutputPath = pubchem::distanceOutputJsonPath(
-            outputDir, options.adjacencyJsonFile, distanceMatrix.method);
-        const pubchem::AdjacencyMatrix adjacencyMatrix = pubchem::buildAdjacencyMatrix(
-            adjacencyInput, options.adjacencyJsonFile.filename().string(), options.adjacencyMethod);
-        const pubchem::BondedDistanceAnalysisResult bondedDistanceAnalysis =
-            pubchem::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
-        const std::filesystem::path bondedDistanceOutputPath =
-            pubchem::bondedDistanceOutputJsonPath(
-                outputDir,
-                options.adjacencyJsonFile,
-                bondedDistanceAnalysis.metadata.sourceDistanceMethod);
-        const pubchem::BondAngleAnalysisResult bondAngleAnalysis =
-            pubchem::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
-        const std::filesystem::path bondAngleOutputPath = pubchem::bondAngleOutputJsonPath(
-            outputDir, options.adjacencyJsonFile, bondAngleAnalysis.metadata.sourceDistanceMethod);
-        const pubchem::SpringBondPotentialAnalysisResult springBondPotentialAnalysis =
-            pubchem::buildSpringBondPotentialAnalysis(
-                distanceMatrix, adjacencyMatrix, result.atoms);
-        const std::filesystem::path springBondPotentialOutputPath =
-            pubchem::springBondPotentialOutputJsonPath(
-                outputDir,
-                options.adjacencyJsonFile,
-                springBondPotentialAnalysis.metadata.sourceDistanceMethod);
-        const std::filesystem::path adjacencyOutputPath = pubchem::adjacencyOutputJsonPath(
-            outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
-        const pubchem::EigendecompositionResult eigendecomposition =
-            pubchem::buildEigendecomposition(adjacencyMatrix, options.eigenMethod);
-        const std::filesystem::path eigendecompositionOutputPath =
-            pubchem::eigendecompositionOutputJsonPath(
-                outputDir, options.adjacencyJsonFile, eigendecomposition.method);
-        const pubchem::LaplacianAnalysisResult laplacianAnalysis =
-            pubchem::buildLaplacianAnalysis(adjacencyMatrix, options.laplacianMethod);
-        const std::filesystem::path laplacianOutputPath = pubchem::laplacianOutputJsonPath(
-            outputDir, options.adjacencyJsonFile, laplacianAnalysis.method);
-        const pubchem::BioactivityAnalysisResult bioactivityAnalysis =
-            pubchem::buildBioactivityAnalysis(bioactivityCsvPath);
-        const std::filesystem::path bioactivityCsvOutputPath =
-            pubchem::bioactivityFilteredCsvPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path bioactivitySummaryOutputPath =
-            pubchem::bioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path bioactivityPlotOutputPath =
-            pubchem::bioactivityPlotSvgPath(outputDir, options.bioactivityFile);
-        const pubchem::PosteriorBioactivityAnalysisResult posteriorBioactivityAnalysis =
-            pubchem::buildPosteriorBioactivityAnalysis(bioactivityCsvPath);
-        const std::filesystem::path posteriorBioactivityCsvOutputPath =
-            pubchem::posteriorBioactivityCsvPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path posteriorBioactivitySummaryOutputPath =
-            pubchem::posteriorBioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
-        const pubchem::BinomialActivityDistributionAnalysisResult binomialActivityDistribution =
-            pubchem::buildBinomialActivityDistributionAnalysis(bioactivityCsvPath);
-        const std::filesystem::path binomialActivityDistributionCsvOutputPath =
-            pubchem::binomialActivityDistributionCsvPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path binomialActivityDistributionSummaryOutputPath =
-            pubchem::binomialActivityDistributionSummaryJsonPath(outputDir,
-                                                                 options.bioactivityFile);
-        const pubchem::ChiSquareActivityAidTypeAnalysisResult chiSquareActivityAidTypeAnalysis =
-            pubchem::buildChiSquareActivityAidTypeAnalysis(bioactivityCsvPath);
-        const std::filesystem::path chiSquareActivityAidTypeCsvOutputPath =
-            pubchem::chiSquareActivityAidTypeCsvPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path chiSquareActivityAidTypeSummaryOutputPath =
-            pubchem::chiSquareActivityAidTypeSummaryJsonPath(outputDir, options.bioactivityFile);
-        const pubchem::HillDoseResponseAnalysisResult hillDoseResponseAnalysis =
-            pubchem::buildHillDoseResponseAnalysis(bioactivityCsvPath);
-        const std::filesystem::path hillDoseResponseCsvOutputPath =
-            pubchem::hillDoseResponseCsvPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path hillDoseResponseSummaryOutputPath =
-            pubchem::hillDoseResponseSummaryJsonPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path hillDoseResponsePlotOutputPath =
-            pubchem::hillDoseResponsePlotSvgPath(outputDir, options.bioactivityFile);
-        const pubchem::ActivityValueStatisticsAnalysisResult activityValueStatisticsAnalysis =
-            pubchem::buildActivityValueStatisticsAnalysis(bioactivityCsvPath);
-        const std::filesystem::path activityValueStatisticsCsvOutputPath =
-            pubchem::activityValueStatisticsCsvPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path activityValueStatisticsSummaryOutputPath =
-            pubchem::activityValueStatisticsSummaryJsonPath(outputDir, options.bioactivityFile);
-        const std::filesystem::path activityValueStatisticsPlotOutputPath =
-            pubchem::activityValueStatisticsPlotSvgPath(outputDir, options.bioactivityFile);
-        const pubchem::GradientDescentAnalysisResult gradientDescentAnalysis =
-            pubchem::buildGradientDescentAnalysis(result.atoms,
-                                                  options.sdfFile.filename().string());
-        const std::filesystem::path gradientDescentCsvOutputPath =
-            pubchem::gradientDescentCsvPath(outputDir, options.sdfFile);
-        const std::filesystem::path gradientDescentSummaryOutputPath =
-            pubchem::gradientDescentSummaryJsonPath(outputDir, options.sdfFile);
-        const std::filesystem::path gradientDescentLossPlotOutputPath =
-            pubchem::gradientDescentLossPlotSvgPath(outputDir, options.sdfFile);
-        const std::filesystem::path gradientDescentFitPlotOutputPath =
-            pubchem::gradientDescentFitPlotSvgPath(outputDir, options.sdfFile);
-        const pubchem::AtomElementEntropyAnalysisResult atomElementEntropyAnalysis =
-            pubchem::buildAtomElementEntropyAnalysis(result.atoms,
-                                                     options.sdfFile.filename().string());
-        const std::filesystem::path atomElementEntropyCsvOutputPath =
-            pubchem::atomElementEntropyCsvPath(outputDir, options.sdfFile);
-        const std::filesystem::path atomElementEntropySummaryOutputPath =
-            pubchem::atomElementEntropySummaryJsonPath(outputDir, options.sdfFile);
-        const std::filesystem::path atomElementEntropyPlotOutputPath =
-            pubchem::atomElementEntropyPlotSvgPath(outputDir, options.sdfFile);
+            const cid4::AnalysisResult result = analyzeSdf(sdfPath);
+            const std::filesystem::path outputDir = cid4::outputDirectoryFor(dataDir);
+            const std::filesystem::path outputPath =
+                cid4::outputJsonPath(outputDir, options.sdfFile);
 
-        std::filesystem::create_directories(outputDir);
+            const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
+            const std::filesystem::path bioactivityCsvPath = dataDir / options.bioactivityFile;
+            const cid4::NormalizedAdjacencyInput adjacencyInput =
+                cid4::loadAdjacencyInput(adjacencyJsonPath);
+            const cid4::DistanceMatrixInput distanceInput{
+                .atomIds = adjacencyInput.atomIds,
+                .jsonPath = adjacencyJsonPath,
+                .sdfPath = sdfPath,
+            };
+            const cid4::DistanceMatrixResult distanceMatrix = cid4::readDistanceMatrix(
+                outputDir / "Conformer3D_COMPOUND_CID_4(1).json.distance_matrix.json");
 
-        std::ofstream output(outputPath);
-        output << std::setw(2) << toJson(result) << '\n';
+            const std::filesystem::path distanceOutputPath = cid4::distanceOutputJsonPath(
+                outputDir, options.adjacencyJsonFile, distanceMatrix.method);
+            const cid4::AdjacencyMatrix adjacencyMatrix =
+                cid4::buildAdjacencyMatrix(adjacencyInput,
+                                           options.adjacencyJsonFile.filename().string(),
+                                           options.adjacencyMethod);
+            const cid4::BondedDistanceAnalysisResult bondedDistanceAnalysis =
+                cid4::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
+            const std::filesystem::path bondedDistanceOutputPath =
+                cid4::bondedDistanceOutputJsonPath(
+                    outputDir,
+                    options.adjacencyJsonFile,
+                    bondedDistanceAnalysis.metadata.sourceDistanceMethod);
+            const cid4::BondAngleAnalysisResult bondAngleAnalysis =
+                cid4::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
+            const std::filesystem::path bondAngleOutputPath =
+                cid4::bondAngleOutputJsonPath(outputDir,
+                                              options.adjacencyJsonFile,
+                                              bondAngleAnalysis.metadata.sourceDistanceMethod);
+            const cid4::SpringBondPotentialAnalysisResult springBondPotentialAnalysis =
+                cid4::buildSpringBondPotentialAnalysis(
+                    distanceMatrix, adjacencyMatrix, result.atoms);
+            const std::filesystem::path springBondPotentialOutputPath =
+                cid4::springBondPotentialOutputJsonPath(
+                    outputDir,
+                    options.adjacencyJsonFile,
+                    springBondPotentialAnalysis.metadata.sourceDistanceMethod);
+            const std::filesystem::path adjacencyOutputPath = cid4::adjacencyOutputJsonPath(
+                outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
+            const cid4::EigendecompositionResult eigendecomposition =
+                cid4::buildEigendecomposition(adjacencyMatrix, options.eigenMethod);
+            const std::filesystem::path eigendecompositionOutputPath =
+                cid4::eigendecompositionOutputJsonPath(
+                    outputDir, options.adjacencyJsonFile, eigendecomposition.method);
+            const cid4::LaplacianAnalysisResult laplacianAnalysis =
+                cid4::buildLaplacianAnalysis(adjacencyMatrix, options.laplacianMethod);
+            const std::filesystem::path laplacianOutputPath = cid4::laplacianOutputJsonPath(
+                outputDir, options.adjacencyJsonFile, laplacianAnalysis.method);
+            const cid4::BioactivityAnalysisResult bioactivityAnalysis =
+                cid4::buildBioactivityAnalysis(bioactivityCsvPath);
+            const std::filesystem::path bioactivityCsvOutputPath =
+                cid4::bioactivityFilteredCsvPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path bioactivitySummaryOutputPath =
+                cid4::bioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path bioactivityPlotOutputPath =
+                cid4::bioactivityPlotSvgPath(outputDir, options.bioactivityFile);
+            const cid4::PosteriorBioactivityAnalysisResult posteriorBioactivityAnalysis =
+                cid4::buildPosteriorBioactivityAnalysis(bioactivityCsvPath);
+            const std::filesystem::path posteriorBioactivityCsvOutputPath =
+                cid4::posteriorBioactivityCsvPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path posteriorBioactivitySummaryOutputPath =
+                cid4::posteriorBioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
+            const cid4::BinomialActivityDistributionAnalysisResult binomialActivityDistribution =
+                cid4::buildBinomialActivityDistributionAnalysis(bioactivityCsvPath);
+            const std::filesystem::path binomialActivityDistributionCsvOutputPath =
+                cid4::binomialActivityDistributionCsvPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path binomialActivityDistributionSummaryOutputPath =
+                cid4::binomialActivityDistributionSummaryJsonPath(outputDir,
+                                                                  options.bioactivityFile);
+            const cid4::ChiSquareActivityAidTypeAnalysisResult chiSquareActivityAidTypeAnalysis =
+                cid4::buildChiSquareActivityAidTypeAnalysis(bioactivityCsvPath);
+            const std::filesystem::path chiSquareActivityAidTypeCsvOutputPath =
+                cid4::chiSquareActivityAidTypeCsvPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path chiSquareActivityAidTypeSummaryOutputPath =
+                cid4::chiSquareActivityAidTypeSummaryJsonPath(outputDir, options.bioactivityFile);
+            const cid4::HillDoseResponseAnalysisResult hillDoseResponseAnalysis =
+                cid4::buildHillDoseResponseAnalysis(bioactivityCsvPath);
+            const std::filesystem::path hillDoseResponseCsvOutputPath =
+                cid4::hillDoseResponseCsvPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path hillDoseResponseSummaryOutputPath =
+                cid4::hillDoseResponseSummaryJsonPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path hillDoseResponsePlotOutputPath =
+                cid4::hillDoseResponsePlotSvgPath(outputDir, options.bioactivityFile);
+            const cid4::ActivityValueStatisticsAnalysisResult activityValueStatisticsAnalysis =
+                cid4::buildActivityValueStatisticsAnalysis(bioactivityCsvPath);
+            const std::filesystem::path activityValueStatisticsCsvOutputPath =
+                cid4::activityValueStatisticsCsvPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path activityValueStatisticsSummaryOutputPath =
+                cid4::activityValueStatisticsSummaryJsonPath(outputDir, options.bioactivityFile);
+            const std::filesystem::path activityValueStatisticsPlotOutputPath =
+                cid4::activityValueStatisticsPlotSvgPath(outputDir, options.bioactivityFile);
+            const cid4::GradientDescentAnalysisResult gradientDescentAnalysis =
+                cid4::buildGradientDescentAnalysis(result.atoms,
+                                                   options.sdfFile.filename().string());
+            const std::filesystem::path gradientDescentCsvOutputPath =
+                cid4::gradientDescentCsvPath(outputDir, options.sdfFile);
+            const std::filesystem::path gradientDescentSummaryOutputPath =
+                cid4::gradientDescentSummaryJsonPath(outputDir, options.sdfFile);
+            const std::filesystem::path gradientDescentLossPlotOutputPath =
+                cid4::gradientDescentLossPlotSvgPath(outputDir, options.sdfFile);
+            const std::filesystem::path gradientDescentFitPlotOutputPath =
+                cid4::gradientDescentFitPlotSvgPath(outputDir, options.sdfFile);
+            const cid4::AtomElementEntropyAnalysisResult atomElementEntropyAnalysis =
+                cid4::buildAtomElementEntropyAnalysis(result.atoms,
+                                                      options.sdfFile.filename().string());
+            const std::filesystem::path atomElementEntropyCsvOutputPath =
+                cid4::atomElementEntropyCsvPath(outputDir, options.sdfFile);
+            const std::filesystem::path atomElementEntropySummaryOutputPath =
+                cid4::atomElementEntropySummaryJsonPath(outputDir, options.sdfFile);
+            const std::filesystem::path atomElementEntropyPlotOutputPath =
+                cid4::atomElementEntropyPlotSvgPath(outputDir, options.sdfFile);
 
-        std::ofstream adjacencyOutput(adjacencyOutputPath);
-        adjacencyOutput << std::setw(2) << toJson(adjacencyMatrix) << '\n';
+            std::filesystem::create_directories(outputDir);
 
-        std::ofstream distanceOutput(distanceOutputPath);
-        distanceOutput << std::setw(2) << toJson(distanceMatrix) << '\n';
+            std::ofstream output(outputPath);
+            output << std::setw(2) << toJson(result) << '\n';
 
-        std::ofstream bondedDistanceOutput(bondedDistanceOutputPath);
-        bondedDistanceOutput << std::setw(2) << toJson(bondedDistanceAnalysis) << '\n';
+            std::ofstream adjacencyOutput(adjacencyOutputPath);
+            adjacencyOutput << std::setw(2) << toJson(adjacencyMatrix) << '\n';
 
-        std::ofstream bondAngleOutput(bondAngleOutputPath);
-        bondAngleOutput << std::setw(2) << toJson(bondAngleAnalysis) << '\n';
+            std::ofstream bondedDistanceOutput(bondedDistanceOutputPath);
+            bondedDistanceOutput << std::setw(2) << toJson(bondedDistanceAnalysis) << '\n';
 
-        std::ofstream springBondPotentialOutput(springBondPotentialOutputPath);
-        springBondPotentialOutput << std::setw(2) << toJson(springBondPotentialAnalysis) << '\n';
+            std::ofstream bondAngleOutput(bondAngleOutputPath);
+            bondAngleOutput << std::setw(2) << toJson(bondAngleAnalysis) << '\n';
 
-        std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
-        eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
+            std::ofstream springBondPotentialOutput(springBondPotentialOutputPath);
+            springBondPotentialOutput << std::setw(2) << toJson(springBondPotentialAnalysis)
+                                      << '\n';
 
-        std::ofstream laplacianOutput(laplacianOutputPath);
-        laplacianOutput << std::setw(2) << toJson(laplacianAnalysis) << '\n';
+            std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
+            eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
 
-        pubchem::writeBioactivityFilteredCsv(bioactivityAnalysis, bioactivityCsvOutputPath);
+            std::ofstream laplacianOutput(laplacianOutputPath);
+            laplacianOutput << std::setw(2) << toJson(laplacianAnalysis) << '\n';
 
-        std::ofstream bioactivitySummaryOutput(bioactivitySummaryOutputPath);
-        bioactivitySummaryOutput << std::setw(2) << toJson(bioactivityAnalysis) << '\n';
+            cid4::writeBioactivityFilteredCsv(bioactivityAnalysis, bioactivityCsvOutputPath);
 
-        pubchem::writeBioactivityPlotSvg(bioactivityAnalysis, bioactivityPlotOutputPath);
+            std::ofstream bioactivitySummaryOutput(bioactivitySummaryOutputPath);
+            bioactivitySummaryOutput << std::setw(2) << toJson(bioactivityAnalysis) << '\n';
 
-        pubchem::writePosteriorBioactivityCsv(posteriorBioactivityAnalysis,
-                                              posteriorBioactivityCsvOutputPath);
+            cid4::writeBioactivityPlotSvg(bioactivityAnalysis, bioactivityPlotOutputPath);
 
-        std::ofstream posteriorBioactivitySummaryOutput(posteriorBioactivitySummaryOutputPath);
-        posteriorBioactivitySummaryOutput << std::setw(2) << toJson(posteriorBioactivityAnalysis)
+            cid4::writePosteriorBioactivityCsv(posteriorBioactivityAnalysis,
+                                               posteriorBioactivityCsvOutputPath);
+
+            std::ofstream posteriorBioactivitySummaryOutput(posteriorBioactivitySummaryOutputPath);
+            posteriorBioactivitySummaryOutput << std::setw(2)
+                                              << toJson(posteriorBioactivityAnalysis) << '\n';
+
+            cid4::writeBinomialActivityDistributionCsv(binomialActivityDistribution,
+                                                       binomialActivityDistributionCsvOutputPath);
+
+            std::ofstream binomialActivityDistributionSummaryOutput(
+                binomialActivityDistributionSummaryOutputPath);
+            binomialActivityDistributionSummaryOutput
+                << std::setw(2) << toJson(binomialActivityDistribution) << '\n';
+
+            cid4::writeChiSquareActivityAidTypeCsv(chiSquareActivityAidTypeAnalysis,
+                                                   chiSquareActivityAidTypeCsvOutputPath);
+
+            std::ofstream chiSquareActivityAidTypeSummaryOutput(
+                chiSquareActivityAidTypeSummaryOutputPath);
+            chiSquareActivityAidTypeSummaryOutput
+                << std::setw(2) << toJson(chiSquareActivityAidTypeAnalysis) << '\n';
+
+            cid4::writeHillDoseResponseCsv(hillDoseResponseAnalysis, hillDoseResponseCsvOutputPath);
+
+            std::ofstream hillDoseResponseSummaryOutput(hillDoseResponseSummaryOutputPath);
+            hillDoseResponseSummaryOutput << std::setw(2) << toJson(hillDoseResponseAnalysis)
                                           << '\n';
 
-        pubchem::writeBinomialActivityDistributionCsv(binomialActivityDistribution,
-                                                      binomialActivityDistributionCsvOutputPath);
+            cid4::writeHillDoseResponsePlotSvg(hillDoseResponseAnalysis,
+                                               hillDoseResponsePlotOutputPath);
 
-        std::ofstream binomialActivityDistributionSummaryOutput(
-            binomialActivityDistributionSummaryOutputPath);
-        binomialActivityDistributionSummaryOutput << std::setw(2)
-                                                  << toJson(binomialActivityDistribution) << '\n';
+            cid4::writeActivityValueStatisticsCsv(activityValueStatisticsAnalysis,
+                                                  activityValueStatisticsCsvOutputPath);
 
-        pubchem::writeChiSquareActivityAidTypeCsv(chiSquareActivityAidTypeAnalysis,
-                                                  chiSquareActivityAidTypeCsvOutputPath);
+            std::ofstream activityValueStatisticsSummaryOutput(
+                activityValueStatisticsSummaryOutputPath);
+            activityValueStatisticsSummaryOutput << std::setw(2)
+                                                 << toJson(activityValueStatisticsAnalysis) << '\n';
 
-        std::ofstream chiSquareActivityAidTypeSummaryOutput(
-            chiSquareActivityAidTypeSummaryOutputPath);
-        chiSquareActivityAidTypeSummaryOutput << std::setw(2)
-                                              << toJson(chiSquareActivityAidTypeAnalysis) << '\n';
+            cid4::writeActivityValueStatisticsPlotSvg(activityValueStatisticsAnalysis,
+                                                      activityValueStatisticsPlotOutputPath);
 
-        pubchem::writeHillDoseResponseCsv(hillDoseResponseAnalysis, hillDoseResponseCsvOutputPath);
+            cid4::writeGradientDescentCsv(gradientDescentAnalysis, gradientDescentCsvOutputPath);
 
-        std::ofstream hillDoseResponseSummaryOutput(hillDoseResponseSummaryOutputPath);
-        hillDoseResponseSummaryOutput << std::setw(2) << toJson(hillDoseResponseAnalysis) << '\n';
+            std::ofstream gradientDescentSummaryOutput(gradientDescentSummaryOutputPath);
+            gradientDescentSummaryOutput << std::setw(2) << toJson(gradientDescentAnalysis) << '\n';
 
-        pubchem::writeHillDoseResponsePlotSvg(hillDoseResponseAnalysis,
-                                              hillDoseResponsePlotOutputPath);
+            cid4::writeGradientDescentLossPlotSvg(gradientDescentAnalysis,
+                                                  gradientDescentLossPlotOutputPath);
+            cid4::writeGradientDescentFitPlotSvg(gradientDescentAnalysis,
+                                                 gradientDescentFitPlotOutputPath);
 
-        pubchem::writeActivityValueStatisticsCsv(activityValueStatisticsAnalysis,
-                                                 activityValueStatisticsCsvOutputPath);
+            cid4::writeAtomElementEntropyCsv(atomElementEntropyAnalysis,
+                                             atomElementEntropyCsvOutputPath);
 
-        std::ofstream activityValueStatisticsSummaryOutput(
-            activityValueStatisticsSummaryOutputPath);
-        activityValueStatisticsSummaryOutput << std::setw(2)
-                                             << toJson(activityValueStatisticsAnalysis) << '\n';
+            std::ofstream atomElementEntropySummaryOutput(atomElementEntropySummaryOutputPath);
+            atomElementEntropySummaryOutput << std::setw(2) << toJson(atomElementEntropyAnalysis)
+                                            << '\n';
 
-        pubchem::writeActivityValueStatisticsPlotSvg(activityValueStatisticsAnalysis,
-                                                     activityValueStatisticsPlotOutputPath);
+            cid4::writeAtomElementEntropyPlotSvg(atomElementEntropyAnalysis,
+                                                 atomElementEntropyPlotOutputPath);
 
-        pubchem::writeGradientDescentCsv(gradientDescentAnalysis, gradientDescentCsvOutputPath);
-
-        std::ofstream gradientDescentSummaryOutput(gradientDescentSummaryOutputPath);
-        gradientDescentSummaryOutput << std::setw(2) << toJson(gradientDescentAnalysis) << '\n';
-
-        pubchem::writeGradientDescentLossPlotSvg(gradientDescentAnalysis,
-                                                 gradientDescentLossPlotOutputPath);
-        pubchem::writeGradientDescentFitPlotSvg(gradientDescentAnalysis,
-                                                gradientDescentFitPlotOutputPath);
-
-        pubchem::writeAtomElementEntropyCsv(atomElementEntropyAnalysis,
-                                            atomElementEntropyCsvOutputPath);
-
-        std::ofstream atomElementEntropySummaryOutput(atomElementEntropySummaryOutputPath);
-        atomElementEntropySummaryOutput << std::setw(2) << toJson(atomElementEntropyAnalysis)
-                                        << '\n';
-
-        pubchem::writeAtomElementEntropyPlotSvg(atomElementEntropyAnalysis,
-                                                atomElementEntropyPlotOutputPath);
-
-        std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
-        std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
-        std::cout << "Atom records written to: " << outputPath << '\n';
-        std::cout << "Distance method: " << distanceMatrix.method << '\n';
-        std::cout << "Distance matrix written to: " << distanceOutputPath << '\n';
-        std::cout << "Bonded distance analysis written to: " << bondedDistanceOutputPath << '\n';
-        std::cout << "Bond angle analysis written to: " << bondAngleOutputPath << '\n';
-        std::cout << "Spring bond potential analysis written to: " << springBondPotentialOutputPath
-                  << '\n';
-        std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
-        std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
-        std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';
-        std::cout << "Eigendecomposition written to: " << eigendecompositionOutputPath << '\n';
-        std::cout << "Laplacian method: " << laplacianAnalysis.method << '\n';
-        std::cout << "Laplacian analysis written to: " << laplacianOutputPath << '\n';
-        std::cout << "Bioactivity rows written to: " << bioactivityCsvOutputPath << '\n';
-        std::cout << "Bioactivity summary written to: " << bioactivitySummaryOutputPath << '\n';
-        std::cout << "Bioactivity plot written to: " << bioactivityPlotOutputPath << '\n';
-        std::cout << "Posterior bioactivity rows written to: " << posteriorBioactivityCsvOutputPath
-                  << '\n';
-        std::cout << "Posterior bioactivity summary written to: "
-                  << posteriorBioactivitySummaryOutputPath << '\n';
-        std::cout << "Binomial activity distribution rows written to: "
-                  << binomialActivityDistributionCsvOutputPath << '\n';
-        std::cout << "Binomial activity distribution summary written to: "
-                  << binomialActivityDistributionSummaryOutputPath << '\n';
-        std::cout << "Chi-square activity vs Aid_Type rows written to: "
-                  << chiSquareActivityAidTypeCsvOutputPath << '\n';
-        std::cout << "Chi-square activity vs Aid_Type summary written to: "
-                  << chiSquareActivityAidTypeSummaryOutputPath << '\n';
-        std::cout << "Hill dose-response rows written to: " << hillDoseResponseCsvOutputPath
-                  << '\n';
-        std::cout << "Hill dose-response summary written to: " << hillDoseResponseSummaryOutputPath
-                  << '\n';
-        std::cout << "Hill dose-response plot written to: " << hillDoseResponsePlotOutputPath
-                  << '\n';
-        std::cout << "Activity_Value statistics rows written to: "
-                  << activityValueStatisticsCsvOutputPath << '\n';
-        std::cout << "Activity_Value statistics summary written to: "
-                  << activityValueStatisticsSummaryOutputPath << '\n';
-        std::cout << "Activity_Value statistics plot written to: "
-                  << activityValueStatisticsPlotOutputPath << '\n';
-        std::cout << "Gradient descent trace written to: " << gradientDescentCsvOutputPath << '\n';
-        std::cout << "Gradient descent summary written to: " << gradientDescentSummaryOutputPath
-                  << '\n';
-        std::cout << "Gradient descent loss plot written to: " << gradientDescentLossPlotOutputPath
-                  << '\n';
-        std::cout << "Gradient descent fit plot written to: " << gradientDescentFitPlotOutputPath
-                  << '\n';
-        std::cout << "Atom element entropy rows written to: " << atomElementEntropyCsvOutputPath
-                  << '\n';
-        std::cout << "Atom element entropy summary written to: "
-                  << atomElementEntropySummaryOutputPath << '\n';
-        std::cout << "Atom element entropy plot written to: " << atomElementEntropyPlotOutputPath
-                  << '\n';
+            std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
+            std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
+            std::cout << "Atom records written to: " << outputPath << '\n';
+            std::cout << "Bonded distance analysis written to: " << bondedDistanceOutputPath
+                      << '\n';
+            std::cout << "Bond angle analysis written to: " << bondAngleOutputPath << '\n';
+            std::cout << "Spring bond potential analysis written to: "
+                      << springBondPotentialOutputPath << '\n';
+            std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
+            std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
+            std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';
+            std::cout << "Eigendecomposition written to: " << eigendecompositionOutputPath << '\n';
+            std::cout << "Laplacian method: " << laplacianAnalysis.method << '\n';
+            std::cout << "Laplacian analysis written to: " << laplacianOutputPath << '\n';
+            std::cout << "Bioactivity rows written to: " << bioactivityCsvOutputPath << '\n';
+            std::cout << "Bioactivity summary written to: " << bioactivitySummaryOutputPath << '\n';
+            std::cout << "Bioactivity plot written to: " << bioactivityPlotOutputPath << '\n';
+            std::cout << "Posterior bioactivity rows written to: "
+                      << posteriorBioactivityCsvOutputPath << '\n';
+            std::cout << "Posterior bioactivity summary written to: "
+                      << posteriorBioactivitySummaryOutputPath << '\n';
+            std::cout << "Binomial activity distribution rows written to: "
+                      << binomialActivityDistributionCsvOutputPath << '\n';
+            std::cout << "Binomial activity distribution summary written to: "
+                      << binomialActivityDistributionSummaryOutputPath << '\n';
+            std::cout << "Chi-square activity vs Aid_Type rows written to: "
+                      << chiSquareActivityAidTypeCsvOutputPath << '\n';
+            std::cout << "Chi-square activity vs Aid_Type summary written to: "
+                      << chiSquareActivityAidTypeSummaryOutputPath << '\n';
+            std::cout << "Hill dose-response rows written to: " << hillDoseResponseCsvOutputPath
+                      << '\n';
+            std::cout << "Hill dose-response summary written to: "
+                      << hillDoseResponseSummaryOutputPath << '\n';
+            std::cout << "Hill dose-response plot written to: " << hillDoseResponsePlotOutputPath
+                      << '\n';
+            std::cout << "Activity_Value statistics rows written to: "
+                      << activityValueStatisticsCsvOutputPath << '\n';
+            std::cout << "Activity_Value statistics summary written to: "
+                      << activityValueStatisticsSummaryOutputPath << '\n';
+            std::cout << "Activity_Value statistics plot written to: "
+                      << activityValueStatisticsPlotOutputPath << '\n';
+            std::cout << "Gradient descent trace written to: " << gradientDescentCsvOutputPath
+                      << '\n';
+            std::cout << "Gradient descent summary written to: " << gradientDescentSummaryOutputPath
+                      << '\n';
+            std::cout << "Gradient descent loss plot written to: "
+                      << gradientDescentLossPlotOutputPath << '\n';
+            std::cout << "Gradient descent fit plot written to: "
+                      << gradientDescentFitPlotOutputPath << '\n';
+            std::cout << "Atom element entropy rows written to: " << atomElementEntropyCsvOutputPath
+                      << '\n';
+            std::cout << "Atom element entropy summary written to: "
+                      << atomElementEntropySummaryOutputPath << '\n';
+            std::cout << "Atom element entropy plot written to: "
+                      << atomElementEntropyPlotOutputPath << '\n';
+        }
+        else {
+            const std::map<std::string, std::function<void(CommandLineOptions)>> commands = {
+                {"laplacian", [](CommandLineOptions opts) { runLaplasianAnalysis(opts); }},
+                {"distance-matrix", [](CommandLineOptions opts) { buildDistanceMatrix(opts); }}};
+            const auto iterator = commands.find(options.command);
+            iterator->second(options);
+        }
     }
     catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

@@ -22,5 +22,6 @@ fi
 
 vcpkg install
 cmake --preset=vcpkg
+# cmake -DCMAKE_BUILD_TYPE=Debug ./build
 cmake --build --preset=vcpkg
 ctest --preset=vcpkg

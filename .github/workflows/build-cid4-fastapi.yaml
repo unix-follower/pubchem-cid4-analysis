@@ -1,8 +1,6 @@
 name: Build Fastapi app
 on:
   pull_request:
-    paths-ignore:
-      - cid4-fastapi/README.md
     paths:
       - .github/workflows/build-cid4-fastapi.yaml
       - cid4-fastapi/**

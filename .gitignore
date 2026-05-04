@@ -1,6 +1,5 @@
 .vscode/*
 !.vscode/launch.json
-*/**/.vscode
 HELP.md
 build
 
@@ -28,3 +27,5 @@ data/pubchem_cid_4_patent.csv
 ### C++ ###
 CMakeUserPresets.json
 vcpkg_installed
+CMakeFiles
+CMakeCache.txt

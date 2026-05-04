@@ -27,7 +27,7 @@
 
 #include <GraphMol/PeriodicTable.h>
 
-namespace pubchem {
+namespace cid4 {
 namespace {
 using Json = nlohmann::json;
 
@@ -1006,47 +1006,8 @@ double computePercentile(std::vector<double> values, const double percentile)
 void validateBondedDistanceAlignment(const DistanceMatrixResult& distanceMatrix,
                                      const AdjacencyMatrix& adjacencyMatrix)
 {
-    if (distanceMatrix.atomIds != adjacencyMatrix.atomIds) {
-        throw DistanceAnalysisError(
-            "Distance and adjacency atomIds must be aligned for bonded-distance analysis");
-    }
-
     if (distanceMatrix.distanceMatrix.size() != adjacencyMatrix.values.size()) {
         throw DistanceAnalysisError("Distance matrix and adjacency matrix must have the same size");
-    }
-}
-
-void validateBondAngleAlignment(const DistanceMatrixResult& distanceMatrix,
-                                const AdjacencyMatrix& adjacencyMatrix)
-{
-    if (distanceMatrix.atomIds != adjacencyMatrix.atomIds) {
-        throw DistanceAnalysisError(
-            "Distance and adjacency atomIds must be aligned for bond-angle analysis");
-    }
-
-    if (distanceMatrix.xyzCoordinates.size() != adjacencyMatrix.values.size()) {
-        throw DistanceAnalysisError(
-            "Distance coordinates and adjacency matrix must have the same size");
-    }
-}
-
-void validateSpringBondPotentialAlignment(const DistanceMatrixResult& distanceMatrix,
-                                          const AdjacencyMatrix& adjacencyMatrix,
-                                          const std::vector<AtomRecord>& atoms)
-{
-    if (distanceMatrix.atomIds != adjacencyMatrix.atomIds) {
-        throw DistanceAnalysisError(
-            "Distance and adjacency atomIds must be aligned for spring-bond analysis");
-    }
-
-    if (distanceMatrix.xyzCoordinates.size() != adjacencyMatrix.values.size()) {
-        throw DistanceAnalysisError(
-            "Distance coordinates and adjacency matrix must have the same size");
-    }
-
-    if (atoms.size() != distanceMatrix.atomIds.size()) {
-        throw DistanceAnalysisError(
-            "Spring-bond analysis requires atom records aligned with distance-matrix atom ids");
     }
 }
 
@@ -1382,22 +1343,21 @@ BondAngleStatistics summarizeBondAngles(const std::vector<BondAngleMeasurement>&
     };
 }
 
-BondAngleAnalysisResult makeBondAngleAnalysisResult(const DistanceMatrixResult& distanceMatrix,
+BondAngleAnalysisResult makeBondAngleAnalysisResult(const AdjacencyMatrix& adjacencyMatrix,
                                                     std::vector<BondAngleTriplet> triplets,
                                                     std::vector<BondAngleMeasurement> bondAngles)
 {
     const BondAngleStatistics statistics = summarizeBondAngles(bondAngles);
 
     return BondAngleAnalysisResult{
-        .atomIds = distanceMatrix.atomIds,
+        .atomIds = adjacencyMatrix.atomIds,
         .bondAngleTriplets = std::move(triplets),
         .bondAngles = std::move(bondAngles),
         .statistics = statistics,
         .metadata =
             BondAngleMetadata{
-                .atomCount = distanceMatrix.atomIds.size(),
+                .atomCount = adjacencyMatrix.atomIds.size(),
                 .bondedAngleTripletCount = statistics.count,
-                .sourceDistanceMethod = distanceMatrix.method,
                 .units = "degrees",
                 .selectionRule =
                     "angles A-B-C where A-B and B-C are bonded and B is the central atom",
@@ -2261,6 +2221,30 @@ NormalizedAdjacencyInput loadAdjacencyInput(const std::filesystem::path& jsonPat
     return NormalizedAdjacencyInput{
         .atomIds = std::move(atomIds),
         .bonds = std::move(bonds),
+    };
+}
+
+DistanceMatrixResult readDistanceMatrix(const std::filesystem::path& jsonPath)
+{
+    std::ifstream input(jsonPath);
+    if (!input) {
+        throw std::runtime_error("Could not open distance matrix file: " + jsonPath.string());
+    }
+
+    Json root;
+    input >> root;
+
+    const auto& distanceMatrix = root.at("distanceMatrix");
+
+    if (!distanceMatrix.is_array() || distanceMatrix.empty()) {
+        throw DistanceAnalysisError("distanceMatrix doesn't contain any data");
+    }
+
+    const auto& xyzCoordinates = root.at("xyzCoordinates");
+
+    return DistanceMatrixResult{
+        .xyzCoordinates = xyzCoordinates,
+        .distanceMatrix = distanceMatrix,
     };
 }
 
@@ -4505,8 +4489,6 @@ DistanceMatrixResult buildDistanceMatrix(const DistanceMatrixInput& input,
 BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixResult& distanceMatrix,
                                                          const AdjacencyMatrix& adjacencyMatrix)
 {
-    validateBondedDistanceAlignment(distanceMatrix, adjacencyMatrix);
-
     std::vector<BondedAtomPair> bondedAtomPairs = bondedAtomPairsFromAdjacency(adjacencyMatrix);
     std::set<std::pair<int, int>> bondedPairSet;
     for (const auto& pair : bondedAtomPairs) {
@@ -4516,12 +4498,12 @@ BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixRes
     std::vector<AtomPairDistance> bondedPairDistances;
     std::vector<AtomPairDistance> nonbondedPairDistances;
 
-    for (std::size_t rowIndex = 0; rowIndex < distanceMatrix.atomIds.size(); ++rowIndex) {
-        for (std::size_t columnIndex = rowIndex + 1; columnIndex < distanceMatrix.atomIds.size();
+    for (std::size_t rowIndex = 0; rowIndex < adjacencyMatrix.atomIds.size(); ++rowIndex) {
+        for (std::size_t columnIndex = rowIndex + 1; columnIndex < adjacencyMatrix.atomIds.size();
              ++columnIndex) {
             AtomPairDistance pairDistance{
-                .atomId1 = distanceMatrix.atomIds[rowIndex],
-                .atomId2 = distanceMatrix.atomIds[columnIndex],
+                .atomId1 = adjacencyMatrix.atomIds[rowIndex],
+                .atomId2 = adjacencyMatrix.atomIds[columnIndex],
                 .distanceAngstrom = distanceMatrix.distanceMatrix[rowIndex][columnIndex],
             };
 
@@ -4535,7 +4517,7 @@ BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixRes
     }
 
     const std::size_t expectedPairCount =
-        distanceMatrix.atomIds.size() * (distanceMatrix.atomIds.size() - 1U) / 2U;
+        adjacencyMatrix.atomIds.size() * (adjacencyMatrix.atomIds.size() - 1U) / 2U;
     if (bondedPairDistances.size() + nonbondedPairDistances.size() != expectedPairCount) {
         throw DistanceAnalysisError(
             "Expected " + std::to_string(expectedPairCount) + " unique atom pairs, partitioned " +
@@ -4552,12 +4534,10 @@ BondedDistanceAnalysisResult buildBondedDistanceAnalysis(const DistanceMatrixRes
 BondAngleAnalysisResult buildBondAngleAnalysis(const DistanceMatrixResult& distanceMatrix,
                                                const AdjacencyMatrix& adjacencyMatrix)
 {
-    validateBondAngleAlignment(distanceMatrix, adjacencyMatrix);
-
     const std::vector<BondAngleTriplet> triplets = bondAngleTripletsFromAdjacency(adjacencyMatrix);
     std::map<int, std::size_t> atomIndexById;
-    for (std::size_t index = 0; index < distanceMatrix.atomIds.size(); ++index) {
-        atomIndexById.emplace(distanceMatrix.atomIds[index], index);
+    for (std::size_t index = 0; index < adjacencyMatrix.atomIds.size(); ++index) {
+        atomIndexById.emplace(adjacencyMatrix.atomIds[index], index);
     }
 
     std::vector<BondAngleMeasurement> bondAngles;
@@ -4579,7 +4559,7 @@ BondAngleAnalysisResult buildBondAngleAnalysis(const DistanceMatrixResult& dista
         });
     }
 
-    return makeBondAngleAnalysisResult(distanceMatrix, triplets, std::move(bondAngles));
+    return makeBondAngleAnalysisResult(adjacencyMatrix, triplets, std::move(bondAngles));
 }
 
 SpringBondPotentialAnalysisResult
@@ -4587,12 +4567,10 @@ buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
                                  const AdjacencyMatrix& adjacencyMatrix,
                                  const std::vector<AtomRecord>& atoms)
 {
-    validateSpringBondPotentialAlignment(distanceMatrix, adjacencyMatrix, atoms);
-
     std::map<int, std::size_t> atomIndexById;
     std::map<int, std::string> atomSymbolById;
-    for (std::size_t index = 0; index < distanceMatrix.atomIds.size(); ++index) {
-        const int atomId = distanceMatrix.atomIds[index];
+    for (std::size_t index = 0; index < adjacencyMatrix.atomIds.size(); ++index) {
+        const int atomId = adjacencyMatrix.atomIds[index];
         atomIndexById.emplace(atomId, index);
         atomSymbolById.emplace(atomId, normalizedAtomSymbol(atoms[index]));
     }
@@ -4600,7 +4578,7 @@ buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
     const std::vector<BondedPairWithOrder> bondedPairs =
         bondedPairsWithOrderFromAdjacency(adjacencyMatrix);
     std::map<int, AtomGradientAccumulator> atomGradientAccumulators;
-    for (const int atomId : distanceMatrix.atomIds) {
+    for (const int atomId : adjacencyMatrix.atomIds) {
         atomGradientAccumulators.emplace(
             atomId,
             AtomGradientAccumulator{.atomId = atomId,
@@ -4664,9 +4642,9 @@ buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
     }
 
     std::vector<AtomGradientRecord> atomGradientRecords;
-    atomGradientRecords.reserve(distanceMatrix.atomIds.size());
+    atomGradientRecords.reserve(adjacencyMatrix.atomIds.size());
     std::vector<double> netGradientVector{0.0, 0.0, 0.0};
-    for (const int atomId : distanceMatrix.atomIds) {
+    for (const int atomId : adjacencyMatrix.atomIds) {
         const auto& accumulator = atomGradientAccumulators.at(atomId);
         netGradientVector = addCoordinates(netGradientVector, accumulator.gradientVector);
         atomGradientRecords.push_back(
@@ -4711,7 +4689,7 @@ buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
     }
 
     return SpringBondPotentialAnalysisResult{
-        .atomIds = distanceMatrix.atomIds,
+        .atomIds = adjacencyMatrix.atomIds,
         .bondedPairSpringRecords = std::move(bondRecords),
         .atomGradientRecords = std::move(atomGradientRecords),
         .statistics =
@@ -4746,9 +4724,8 @@ buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
                     "each bonded atom in the current CID 4 conformer.",
             },
         .metadata = SpringBondPotentialMetadata{
-            .atomCount = distanceMatrix.atomIds.size(),
+            .atomCount = adjacencyMatrix.atomIds.size(),
             .bondedPairCount = bondedPairs.size(),
-            .sourceDistanceMethod = distanceMatrix.method,
             .sourceAdjacencyMethod = adjacencyMatrix.method,
             .distanceUnits = distanceMatrix.metadata.units,
             .referenceDistanceUnits = "angstrom",
@@ -4973,4 +4950,4 @@ std::filesystem::path atomElementEntropyPlotSvgPath(const std::filesystem::path&
 {
     return outputDirectory / (sourceFile.stem().string() + ".atom_element_entropy.svg");
 }
-} // namespace pubchem
+} // namespace cid4
