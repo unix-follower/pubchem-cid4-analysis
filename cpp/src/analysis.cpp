@@ -2235,11 +2235,15 @@ DistanceMatrixResult readDistanceMatrix(const std::filesystem::path& jsonPath)
     input >> root;
 
     const auto& distanceMatrix = root.at("distanceMatrix");
+
     if (!distanceMatrix.is_array() || distanceMatrix.empty()) {
         throw DistanceAnalysisError("distanceMatrix doesn't contain any data");
     }
 
+    const auto& xyzCoordinates = root.at("xyzCoordinates");
+
     return DistanceMatrixResult{
+        .xyzCoordinates = xyzCoordinates,
         .distanceMatrix = distanceMatrix,
     };
 }
@@ -4542,18 +4546,10 @@ BondAngleAnalysisResult buildBondAngleAnalysis(const DistanceMatrixResult& dista
         const std::size_t aIndex = atomIndexById.at(triplet.atomIdA);
         const std::size_t centerIndex = atomIndexById.at(triplet.atomIdBCenter);
         const std::size_t cIndex = atomIndexById.at(triplet.atomIdC);
-
-        std::vector<double> leftVector(adjacencyMatrix.values[aIndex].begin(),
-                                       adjacencyMatrix.values[aIndex].end());
-        std::vector<double> rightVector(adjacencyMatrix.values[centerIndex].begin(),
-                                        adjacencyMatrix.values[centerIndex].end());
-        const auto firstBondVector = subtractCoordinates(leftVector, rightVector);
-
-        leftVector.assign(adjacencyMatrix.values[cIndex].begin(),
-                          adjacencyMatrix.values[cIndex].end());
-        rightVector.assign(adjacencyMatrix.values[centerIndex].begin(),
-                           adjacencyMatrix.values[centerIndex].end());
-        const auto secondBondVector = subtractCoordinates(leftVector, rightVector);
+        const auto firstBondVector = subtractCoordinates(
+            distanceMatrix.xyzCoordinates[aIndex], distanceMatrix.xyzCoordinates[centerIndex]);
+        const auto secondBondVector = subtractCoordinates(
+            distanceMatrix.xyzCoordinates[cIndex], distanceMatrix.xyzCoordinates[centerIndex]);
 
         bondAngles.push_back(BondAngleMeasurement{
             .atomIdA = triplet.atomIdA,
@@ -4600,11 +4596,8 @@ buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
         const std::size_t atomIndex2 = atomIndexById.at(bondedPair.atomId2);
         const std::string& atomSymbol1 = atomSymbolById.at(bondedPair.atomId1);
         const std::string& atomSymbol2 = atomSymbolById.at(bondedPair.atomId2);
-        std::vector<double> leftVector(adjacencyMatrix.values[atomIndex1].begin(),
-                                       adjacencyMatrix.values[atomIndex1].end());
-        std::vector<double> rightVector(adjacencyMatrix.values[atomIndex2].begin(),
-                                        adjacencyMatrix.values[atomIndex2].end());
-        const std::vector<double> bondVector = subtractCoordinates(leftVector, rightVector);
+        const std::vector<double> bondVector = subtractCoordinates(
+            distanceMatrix.xyzCoordinates[atomIndex1], distanceMatrix.xyzCoordinates[atomIndex2]);
         const double distance = distanceMatrix.distanceMatrix[atomIndex1][atomIndex2];
         if (distance <= kSpringDistanceTolerance) {
             throw DistanceAnalysisError(

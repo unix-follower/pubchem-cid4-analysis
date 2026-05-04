@@ -1,6 +1,5 @@
 .vscode/*
 !.vscode/launch.json
-*/**/.vscode
 HELP.md
 build
 

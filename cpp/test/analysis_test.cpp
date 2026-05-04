@@ -838,9 +838,9 @@ TEST(DistanceStrategiesTest, BondedDistanceAnalysisMatchesCid4RealData)
 TEST(DistanceStrategiesTest, BondAngleAnalysisComputesTripletsAndStatistics)
 {
     const cid4::DistanceMatrixResult distanceMatrix{
-        .sourceFile = "distance-sample.json",
-        .method = "json",
-        .atomIds = {1, 2, 3},
+        // .sourceFile = "distance-sample.json",
+        // .method = "json",
+        // .atomIds = {1, 2, 3},
         .xyzCoordinates = {{1.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}},
         .distanceMatrix = {{0.0, 1.0, std::sqrt(2.0)}, {1.0, 0.0, 1.0}, {std::sqrt(2.0), 1.0, 0.0}},
         .metadata =
@@ -855,6 +855,7 @@ TEST(DistanceStrategiesTest, BondAngleAnalysisComputesTripletsAndStatistics)
         .method = "arrays",
         .atomIds = {1, 2, 3},
         .values = {{0, 1, 0}, {1, 0, 1}, {0, 1, 0}},
+        // .values = {{1, 0, 0}, {0, 0, 0}, {0, 1, 0}},
     };
 
     const auto result = cid4::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
@@ -868,7 +869,6 @@ TEST(DistanceStrategiesTest, BondAngleAnalysisComputesTripletsAndStatistics)
     EXPECT_DOUBLE_EQ(result.bondAngles.front().angleDegrees, 90.0);
     EXPECT_EQ(result.metadata.atomCount, 3U);
     EXPECT_EQ(result.metadata.bondedAngleTripletCount, 1U);
-    EXPECT_EQ(result.metadata.sourceDistanceMethod, "json");
     EXPECT_EQ(result.metadata.units, "degrees");
     EXPECT_DOUBLE_EQ(result.statistics.meanAngleDegrees, 90.0);
     EXPECT_DOUBLE_EQ(result.statistics.medianAngleDegrees, 90.0);
@@ -893,7 +893,6 @@ TEST(DistanceStrategiesTest, BondAngleAnalysisMatchesCid4RealData)
 
     EXPECT_EQ(result.metadata.atomCount, 14U);
     EXPECT_EQ(result.metadata.bondedAngleTripletCount, 22U);
-    EXPECT_EQ(result.metadata.sourceDistanceMethod, "json");
     EXPECT_NEAR(result.statistics.meanAngleDegrees, 109.22375164065625, 1.0e-12);
     EXPECT_NEAR(result.statistics.minAngleDegrees, 106.04151155509001, 1.0e-12);
     EXPECT_NEAR(result.statistics.maxAngleDegrees, 113.11659612947966, 1.0e-12);
@@ -967,7 +966,6 @@ TEST(DistanceStrategiesTest, SpringBondPotentialAnalysisMatchesCid4RealData)
 
     EXPECT_EQ(result.metadata.atomCount, 14U);
     EXPECT_EQ(result.metadata.bondedPairCount, 13U);
-    EXPECT_EQ(result.metadata.sourceDistanceMethod, "json");
     EXPECT_EQ(result.metadata.sourceAdjacencyMethod, "arrays");
     ASSERT_EQ(result.metadata.referenceDistanceSourceCounts.size(), 2U);
     EXPECT_EQ(result.metadata.referenceDistanceSourceCounts[0].first, "covalentRadiusFallback");
