@@ -1058,14 +1058,14 @@ nlohmann::json toJson(const cid4::HillDoseResponseAnalysisResult& hillAnalysis)
     };
 }
 
-void runLaplasianAnalysis(const CommandLineOptions& options)
+void doLaplacianAnalysis(const CommandLineOptions& options)
 {
-    std::cout << "Execute laplacian coomand";
+    std::cout << "Do Laplacian analysis" << '\n';
 }
 
-void buildDistanceMatrix(const CommandLineOptions& options)
+void makeDistanceMatrix(const CommandLineOptions& options)
 {
-    std::cout << "Build distance matrix";
+    std::cout << "Make distance matrix" << '\n';
 
     const std::filesystem::path dataDir = resolveDataDir();
     const std::filesystem::path sdfPath = dataDir / options.sdfFile;
@@ -1091,6 +1091,35 @@ void buildDistanceMatrix(const CommandLineOptions& options)
 
     std::cout << "Distance method: " << distanceMatrix.method << '\n';
     std::cout << "Distance matrix written to: " << distanceOutputPath << '\n';
+}
+
+void makeBinomialActivityDistribution(const CommandLineOptions& options)
+{
+    std::cout << "Make binomial activity distribution" << '\n';
+
+    const std::filesystem::path dataDir = resolveDataDir();
+    const std::filesystem::path outputDir = cid4::outputDirectoryFor(dataDir);
+
+    const std::filesystem::path binomialActivityDistributionCsvOutputPath =
+        cid4::binomialActivityDistributionCsvPath(outputDir, options.bioactivityFile);
+
+    const std::filesystem::path binomialActivityDistributionSummaryOutputPath =
+        cid4::binomialActivityDistributionSummaryJsonPath(outputDir, options.bioactivityFile);
+
+    const std::filesystem::path bioactivityCsvPath = dataDir / options.bioactivityFile;
+    const cid4::BinomialActivityDistributionAnalysisResult binomialActivityDistribution =
+        cid4::buildBinomialActivityDistributionAnalysis(bioactivityCsvPath);
+    cid4::writeBinomialActivityDistributionCsv(binomialActivityDistribution,
+                                               binomialActivityDistributionCsvOutputPath);
+    std::ofstream binomialActivityDistributionSummaryOutput(
+        binomialActivityDistributionSummaryOutputPath);
+    binomialActivityDistributionSummaryOutput << std::setw(2)
+                                              << toJson(binomialActivityDistribution) << '\n';
+
+    std::cout << "Binomial activity distribution rows written to: "
+              << binomialActivityDistributionCsvOutputPath << '\n';
+    std::cout << "Binomial activity distribution summary written to: "
+              << binomialActivityDistributionSummaryOutputPath << '\n';
 }
 
 int main(int argc, char* argv[])
@@ -1171,13 +1200,6 @@ int main(int argc, char* argv[])
                 cid4::posteriorBioactivityCsvPath(outputDir, options.bioactivityFile);
             const std::filesystem::path posteriorBioactivitySummaryOutputPath =
                 cid4::posteriorBioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
-            const cid4::BinomialActivityDistributionAnalysisResult binomialActivityDistribution =
-                cid4::buildBinomialActivityDistributionAnalysis(bioactivityCsvPath);
-            const std::filesystem::path binomialActivityDistributionCsvOutputPath =
-                cid4::binomialActivityDistributionCsvPath(outputDir, options.bioactivityFile);
-            const std::filesystem::path binomialActivityDistributionSummaryOutputPath =
-                cid4::binomialActivityDistributionSummaryJsonPath(outputDir,
-                                                                  options.bioactivityFile);
             const cid4::ChiSquareActivityAidTypeAnalysisResult chiSquareActivityAidTypeAnalysis =
                 cid4::buildChiSquareActivityAidTypeAnalysis(bioactivityCsvPath);
             const std::filesystem::path chiSquareActivityAidTypeCsvOutputPath =
@@ -1259,14 +1281,6 @@ int main(int argc, char* argv[])
             posteriorBioactivitySummaryOutput << std::setw(2)
                                               << toJson(posteriorBioactivityAnalysis) << '\n';
 
-            cid4::writeBinomialActivityDistributionCsv(binomialActivityDistribution,
-                                                       binomialActivityDistributionCsvOutputPath);
-
-            std::ofstream binomialActivityDistributionSummaryOutput(
-                binomialActivityDistributionSummaryOutputPath);
-            binomialActivityDistributionSummaryOutput
-                << std::setw(2) << toJson(binomialActivityDistribution) << '\n';
-
             cid4::writeChiSquareActivityAidTypeCsv(chiSquareActivityAidTypeAnalysis,
                                                    chiSquareActivityAidTypeCsvOutputPath);
 
@@ -1336,10 +1350,6 @@ int main(int argc, char* argv[])
                       << posteriorBioactivityCsvOutputPath << '\n';
             std::cout << "Posterior bioactivity summary written to: "
                       << posteriorBioactivitySummaryOutputPath << '\n';
-            std::cout << "Binomial activity distribution rows written to: "
-                      << binomialActivityDistributionCsvOutputPath << '\n';
-            std::cout << "Binomial activity distribution summary written to: "
-                      << binomialActivityDistributionSummaryOutputPath << '\n';
             std::cout << "Chi-square activity vs Aid_Type rows written to: "
                       << chiSquareActivityAidTypeCsvOutputPath << '\n';
             std::cout << "Chi-square activity vs Aid_Type summary written to: "
@@ -1373,8 +1383,10 @@ int main(int argc, char* argv[])
         }
         else {
             const std::map<std::string, std::function<void(CommandLineOptions)>> commands = {
-                {"laplacian", [](CommandLineOptions opts) { runLaplasianAnalysis(opts); }},
-                {"distance-matrix", [](CommandLineOptions opts) { buildDistanceMatrix(opts); }}};
+                {"laplacian", [](CommandLineOptions opts) { doLaplacianAnalysis(opts); }},
+                {"distance-matrix", [](CommandLineOptions opts) { makeDistanceMatrix(opts); }},
+                {"binomial-activity-distribution",
+                 [](CommandLineOptions opts) { makeBinomialActivityDistribution(opts); }}};
             const auto iterator = commands.find(options.command);
             iterator->second(options);
         }
