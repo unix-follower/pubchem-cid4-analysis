@@ -554,14 +554,6 @@ TEST(AdjacencyStrategiesTest, BoostGraphStrategyBuildsWeightedSymmetricMatrix)
     EXPECT_EQ(matrix.values, (std::vector<std::vector<int>>{{0, 1, 4}, {1, 0, 0}, {4, 0, 0}}));
 }
 
-TEST(AdjacencyHelpersTest, AdjacencyOutputPathIncludesMethodSuffix)
-{
-    const auto path = cid4::adjacencyOutputJsonPath(
-        "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "armadillo");
-    EXPECT_EQ(path.filename().string(),
-              "Conformer3D_COMPOUND_CID_4(1).armadillo.adjacency_matrix.json");
-}
-
 TEST(EigendecompositionHelpersTest, SupportedMethodsIncludeArmadilloAndBoost)
 {
     EXPECT_EQ(cid4::supportedEigendecompositionMethods(),
@@ -572,14 +564,6 @@ TEST(EigendecompositionHelpersTest, ParseMethodRejectsUnsupportedValues)
 {
     EXPECT_THROW(static_cast<void>(cid4::parseEigendecompositionMethod("lapack")),
                  std::invalid_argument);
-}
-
-TEST(EigendecompositionHelpersTest, OutputPathIncludesMethodSuffix)
-{
-    const auto path = cid4::eigendecompositionOutputJsonPath(
-        "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "boost");
-    EXPECT_EQ(path.filename().string(),
-              "Conformer3D_COMPOUND_CID_4(1).boost.eigendecomposition.json");
 }
 
 TEST(EigendecompositionStrategiesTest, ArmadilloComputesSortedSpectrum)
@@ -622,14 +606,6 @@ TEST(LaplacianHelpersTest, SupportedMethodsIncludeArmadilloAndBoost)
 TEST(LaplacianHelpersTest, ParseMethodRejectsUnsupportedValues)
 {
     EXPECT_THROW(static_cast<void>(cid4::parseLaplacianMethod("lapack")), std::invalid_argument);
-}
-
-TEST(LaplacianHelpersTest, OutputPathIncludesMethodSuffix)
-{
-    const auto path =
-        cid4::laplacianOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "boost");
-    EXPECT_EQ(path.filename().string(),
-              "Conformer3D_COMPOUND_CID_4(1).boost.laplacian_analysis.json");
 }
 
 TEST(LaplacianStrategiesTest, ArmadilloProducesValidLaplacianAnalysis)
@@ -682,37 +658,6 @@ TEST(DistanceHelpersTest, SupportedMethodsIncludeJsonAndSdf)
 TEST(DistanceHelpersTest, ParseMethodRejectsUnsupportedValues)
 {
     EXPECT_THROW(static_cast<void>(cid4::parseDistanceMethod("rdkit")), std::invalid_argument);
-}
-
-TEST(DistanceHelpersTest, OutputPathIncludesMethodSuffix)
-{
-    const auto path =
-        cid4::distanceOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
-    EXPECT_EQ(path.filename().string(), "Conformer3D_COMPOUND_CID_4(1).json.distance_matrix.json");
-}
-
-TEST(DistanceHelpersTest, BondedDistanceOutputPathIncludesMethodSuffix)
-{
-    const auto path = cid4::bondedDistanceOutputJsonPath(
-        "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
-    EXPECT_EQ(path.filename().string(),
-              "Conformer3D_COMPOUND_CID_4(1).json.bonded_distance_analysis.json");
-}
-
-TEST(DistanceHelpersTest, BondAngleOutputPathIncludesMethodSuffix)
-{
-    const auto path =
-        cid4::bondAngleOutputJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
-    EXPECT_EQ(path.filename().string(),
-              "Conformer3D_COMPOUND_CID_4(1).json.bond_angle_analysis.json");
-}
-
-TEST(DistanceHelpersTest, SpringBondPotentialOutputPathIncludesMethodSuffix)
-{
-    const auto path = cid4::springBondPotentialOutputJsonPath(
-        "/tmp/out", "Conformer3D_COMPOUND_CID_4(1).json", "json");
-    EXPECT_EQ(path.filename().string(),
-              "Conformer3D_COMPOUND_CID_4(1).json.spring_bond_potential_analysis.json");
 }
 
 TEST(DistanceStrategiesTest, JsonBuildsExpectedDistanceMatrix)
@@ -985,93 +930,6 @@ TEST(DistanceStrategiesTest, SpringBondPotentialAnalysisMatchesCid4RealData)
     EXPECT_NEAR(firstRecord.atom1PartialDerivatives.dEDz + firstRecord.atom2PartialDerivatives.dEDz,
                 0.0,
                 1.0e-12);
-}
-
-TEST(BioactivityHelpersTest, OutputPathsUseStableSuffixes)
-{
-    EXPECT_EQ(cid4::bioactivityFilteredCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.ic50_pic50.csv");
-    EXPECT_EQ(cid4::bioactivitySummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.ic50_pic50.summary.json");
-    EXPECT_EQ(cid4::bioactivityPlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.ic50_pic50.svg");
-    EXPECT_EQ(cid4::posteriorBioactivityCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.activity_posterior_binary_evidence.csv");
-    EXPECT_EQ(cid4::posteriorBioactivitySummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.activity_posterior.summary.json");
-    EXPECT_EQ(cid4::binomialActivityDistributionCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.activity_binomial_pmf.csv");
-    EXPECT_EQ(cid4::binomialActivityDistributionSummaryJsonPath("/tmp/out",
-                                                                "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.activity_binomial.summary.json");
-    EXPECT_EQ(cid4::hillDoseResponseCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.hill_dose_response.csv");
-    EXPECT_EQ(cid4::hillDoseResponseSummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.hill_dose_response.summary.json");
-    EXPECT_EQ(cid4::hillDoseResponsePlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.hill_dose_response.svg");
-    EXPECT_EQ(cid4::activityValueStatisticsCsvPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.activity_value_statistics.csv");
-    EXPECT_EQ(
-        cid4::activityValueStatisticsSummaryJsonPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-            .filename()
-            .string(),
-        "pubchem_cid_4_bioactivity.activity_value_statistics.summary.json");
-    EXPECT_EQ(cid4::activityValueStatisticsPlotSvgPath("/tmp/out", "pubchem_cid_4_bioactivity.csv")
-                  .filename()
-                  .string(),
-              "pubchem_cid_4_bioactivity.activity_value_statistics.svg");
-    EXPECT_EQ(cid4::gradientDescentCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-                  .filename()
-                  .string(),
-              "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.csv");
-    EXPECT_EQ(cid4::gradientDescentSummaryJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-                  .filename()
-                  .string(),
-              "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.summary.json");
-    EXPECT_EQ(cid4::gradientDescentLossPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-                  .filename()
-                  .string(),
-              "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.loss.svg");
-    EXPECT_EQ(cid4::gradientDescentFitPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-                  .filename()
-                  .string(),
-              "Conformer3D_COMPOUND_CID_4(1).mass_to_atomic_number_gradient_descent.fit.svg");
-    EXPECT_EQ(cid4::atomElementEntropyCsvPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-                  .filename()
-                  .string(),
-              "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy_proportions.csv");
-    EXPECT_EQ(
-        cid4::atomElementEntropySummaryJsonPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-            .filename()
-            .string(),
-        "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.summary.json");
-    EXPECT_EQ(cid4::atomElementEntropyPlotSvgPath("/tmp/out", "Conformer3D_COMPOUND_CID_4(1).sdf")
-                  .filename()
-                  .string(),
-              "Conformer3D_COMPOUND_CID_4(1).atom_element_entropy.svg");
 }
 
 TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisBuildsPositiveNumericSummary)

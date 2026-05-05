@@ -207,7 +207,6 @@ The dataset gives you **two distinct graphs** to work with:
 **Graph 1 — Molecular graph** (from Conformer3D_COMPOUND_CID_4.json)
 - 14 nodes (atoms), 13 edges (bonds), undirected, unweighted → or weight by bond length from 3D SDF
 - Compute: degree sequence, diameter, eccentricity of each atom, graph density
-- Compute **graph Laplacian** $L = D - A$; its second-smallest eigenvalue (Fiedler value) measures connectivity
 - Apply **Morgan algorithm** (iterative node-label propagation) — basis of circular fingerprints (ECFP)
 - 3D SDF: weight edges by actual bond lengths → weighted shortest path
 
@@ -2340,30 +2339,19 @@ That makes CID 4 a good small NLP engineering dataset for building sentence, tok
 
 ## 15. Browser Graphics and Visualization with WebGL
 
-WebGL is useful in this repository when you want interactive browser-side rendering in `cid4-ui/` or `cid4-angular-ui/` without requiring WebGPU support.
-
-Compared with the earlier WebGPU section, WebGL is the better fit when you want:
-
-- the broadest browser compatibility
-- mature rendering stacks such as Three.js or regl
-- interactive 2D or 3D visualization of coordinates, graphs, images, and plots
-- a pragmatic graphics layer for the existing web apps
-
-The same scale caveat applies: CID 4 is a small molecule, so WebGL is most valuable here for interactivity, rendering architecture, and visual analytics rather than for handling a computationally heavy molecular scene.
-
 ### Best files to use with WebGL
 
 | File | WebGL use |
 |---|---|
 | `Conformer3D_COMPOUND_CID_4(1..6).json` | Best source for interactive 3D molecule rendering, conformer switching, and animation |
 | `Structure2D_COMPOUND_CID_4.json` | Good source for 2D structure rendering, bond-line overlays, and coordinate-driven diagrams |
-| `Conformer3D_COMPOUND_CID_4(1..6).sdf` | Good structured source if you want to parse molecule geometry into WebGL buffers |
+| `Conformer3D_COMPOUND_CID_4(1..6).sdf` | Good structured source if you want to parse molecule geometry into WebGL buffers, OpenGL vertex buffers |
 | `Structure2D_COMPOUND_CID_4.sdf` | Good source for a canonical 2D renderer or SVG/WebGL hybrid pipeline |
 | `1-Amino-2-propanol.png` | Texture, reference image, or fallback asset for 2D structure display |
 | `1-Amino-2-propanol_Conformer3D_large(1..6).png` | Reference textures for image galleries, comparison views, or render-validation overlays |
 | `pubchem_cid_4_bioactivity.csv` | Good for WebGL-accelerated scatterplots, histograms, and interactive assay dashboards |
 | `cid_4.dot` | Good for rendering a small compound-to-organism graph in a browser canvas |
-| `pubchem_cid_4_pathway.csv` and `pubchem_cid_4_pathwayreaction.csv` | Good for interactive pathway or reaction visualizations |
+| `pubchem_cid_4_pathway.csv` and `pubchem_cid_4_pathwayreaction.csv` | Good for interactive pathway or reaction visualizations, node-link views, and metadata overlays |
 
 ### What WebGL is good for here
 
@@ -2381,13 +2369,11 @@ The same scale caveat applies: CID 4 is a small molecule, so WebGL is most valua
 
 With WebGL you can:
 
-- map atoms to spheres, billboards, or point sprites
+- map atoms to spheres, billboards, or point sprites, or impostors
 - map bonds to line segments or cylinders
 - color atoms by element type: O, N, C, H
 - switch between the six conformers with a dropdown or timeline
 - animate transitions between conformers for visual comparison
-
-This is the strongest WebGL use case in the current repository.
 
 #### 2. Build a 2D molecule renderer
 
@@ -2399,8 +2385,6 @@ With WebGL you can:
 - draw atoms or labels at coordinate positions
 - highlight the stereocenter or selected atoms
 - zoom and pan around the 2D structure smoothly
-
-This is useful if you want an interactive alternative to the static PNG image.
 
 #### 3. Compare rendered conformers with PNG references
 
@@ -2426,8 +2410,6 @@ With WebGL you can:
 - build brushing and hover interactions without redrawing the whole scene on the CPU
 - connect point selection to assay metadata panels in the UI
 
-Even though the current dataset is moderate in size, WebGL is still a good fit for responsive visualization.
-
 #### 5. Render graphs and pathways
 
 `cid_4.dot`, `pubchem_cid_4_pathway.csv`, and `pubchem_cid_4_pathwayreaction.csv` are useful for small network views.
@@ -2439,200 +2421,9 @@ With WebGL you can:
 - render pathway nodes with linked taxonomy or source metadata
 - animate selections, edge highlighting, and node emphasis in the browser
 
-This is a good use case for a lightweight graph view inside the existing UIs.
-
-### WebGL tooling that fits this repository
-
-- Three.js
-	- good for fast 3D molecule rendering and camera controls
-- regl
-	- good for compact custom GPU pipelines and chart rendering
-- raw WebGL
-	- good if you want low-level control and a small dependency surface
-- deck.gl style plot layers
-	- good for GPU-assisted charts if you later expand the dashboard work
-
-### Example WebGL projects you can build from these files
-
-- an interactive conformer viewer for `Conformer3D_COMPOUND_CID_4(1..6).json`
-- a 2D bond-and-atom renderer driven by `Structure2D_COMPOUND_CID_4.json`
-- a browser charting dashboard over `pubchem_cid_4_bioactivity.csv`
-- a graph viewer for `cid_4.dot`
-- a PNG-versus-live-render comparison tool for the structure and conformer images
-
-### When WebGL is worth it here
-
-WebGL is worth using when:
-
-- you want broad browser support across the existing web apps
-- you need interactive rendering or charts in the browser
-- you want a practical graphics layer without depending on the newest browser GPU APIs
-- you want to prototype visualizations quickly with established libraries
-
-WebGL is less attractive if your main goal is browser-side compute or cutting-edge GPU features. In those cases, WebGPU is the better long-term option.
-
-### Why WebGL is a good fit here
-
-WebGL fits this repository because `data/` already contains the right inputs for browser visualization:
-
-- coordinate-rich structure and conformer files
-- reference PNG images
-- tabular assay data for plots
-- graph and pathway data for network views
-
-That makes CID 4 a good small but complete browser-graphics dataset for building interactive chemistry and analytics views.
-
 ---
 
-## 16. Native Graphics and Visualization with OpenGL
-
-OpenGL is useful in this repository when you want a native desktop rendering path for the chemistry and analytics data in `data/`, especially if you want something simpler and more widely supported than Vulkan.
-
-Compared with Vulkan, OpenGL is the better fit when you want:
-
-- a faster path to a working native renderer
-- broad cross-platform graphics support
-- straightforward rendering of atoms, bonds, plots, and graphs
-- compatibility with existing C++ visualization stacks
-
-Compared with WebGL, OpenGL is the better fit when you want a native application in `cpp/` rather than a browser-based UI.
-
-The same scale caveat still applies: CID 4 is a small molecule, so OpenGL is most valuable here for rendering, interaction design, and visual analysis rather than for pushing a massive scene.
-
-### Best files to use with OpenGL
-
-| File | OpenGL use |
-|---|---|
-| `Conformer3D_COMPOUND_CID_4(1..6).json` | Best source for native 3D molecule rendering, conformer switching, and geometry overlays |
-| `Structure2D_COMPOUND_CID_4.json` | Good source for a native 2D structure viewer with bond and atom rendering |
-| `Conformer3D_COMPOUND_CID_4(1..6).sdf` | Good structured geometry input if you want to parse into OpenGL vertex buffers |
-| `Structure2D_COMPOUND_CID_4.sdf` | Good source for a canonical 2D rendering pipeline |
-| `1-Amino-2-propanol.png` | Texture or reference image for validating 2D structure output |
-| `1-Amino-2-propanol_Conformer3D_large(1..6).png` | Reference images for conformer render comparison or screenshot regression |
-| `pubchem_cid_4_bioactivity.csv` | Good for OpenGL-rendered plots and interactive assay dashboards in a native app |
-| `cid_4.dot` | Good for a small native graph viewer showing compound-to-organism relationships |
-| `pubchem_cid_4_pathway.csv` and `pubchem_cid_4_pathwayreaction.csv` | Good for pathway diagrams, node-link views, and metadata overlays |
-
-### What OpenGL is good for here
-
-- native 2D and 3D molecule rendering
-- conformer comparison in a desktop viewer
-- interactive charts for assay values and metadata
-- graph and pathway visualization in a lightweight native app
-- offscreen rendering for image comparison against the PNG assets
-
-### Practical OpenGL workflows for this dataset
-
-#### 1. Build a native 3D conformer viewer
-
-`Conformer3D_COMPOUND_CID_4(1..6).json` already contains atom identities, bond connectivity, and coordinates.
-
-With OpenGL you can:
-
-- render atoms as spheres, billboards, or impostors
-- render bonds as cylinders or line segments
-- color atoms by element type: O, N, C, H
-- switch between the six conformers interactively
-- animate camera motion or conformer transitions
-
-This is the clearest OpenGL use case in the repository.
-
-#### 2. Build a native 2D structure viewer
-
-`Structure2D_COMPOUND_CID_4.json` and `Structure2D_COMPOUND_CID_4.sdf` are good inputs for a 2D depiction renderer.
-
-With OpenGL you can:
-
-- draw bond lines cleanly with zoom and pan support
-- label atoms or highlight hetero atoms
-- mark the stereocenter or selected bonds
-- compare the live-rendered structure to the provided PNG asset
-
-This is useful if you want an inspectable, interactive alternative to static images.
-
-#### 3. Validate rendering against the PNG assets
-
-The files `1-Amino-2-propanol.png` and `1-Amino-2-propanol_Conformer3D_large(1..6).png` are useful as visual references.
-
-With OpenGL you can:
-
-- render the structure or conformer offscreen
-- save screenshots from the framebuffer
-- compare those images to the reference PNGs
-- highlight visual drift after renderer changes
-
-This is a practical path for native visual regression testing.
-
-#### 4. Build native assay plots
-
-`pubchem_cid_4_bioactivity.csv` contains a mix of numeric and categorical data that can be visualized in a desktop application.
-
-With OpenGL you can:
-
-- draw scatterplots of `Activity_Value`
-- color points by `Aid_Type`, `Activity`, or `Bioassay_Data_Source`
-- render many plot points efficiently with instancing
-- link chart interactions to a molecule viewer or metadata panel
-
-This is the native counterpart to the WebGL and WebGPU dashboard ideas.
-
-#### 5. Render graphs and pathways
-
-`cid_4.dot`, `pubchem_cid_4_pathway.csv`, and `pubchem_cid_4_pathwayreaction.csv` are useful for small interactive network views.
-
-With OpenGL you can:
-
-- render nodes and edges for the animal-association graph
-- highlight bird versus mammal groups from the DOT clusters
-- display pathway nodes or reaction labels in a native scene
-- animate selection, hover, and filtering states
-
-This is a good use case for a lightweight desktop visualization tool.
-
-### OpenGL tooling that fits this repository
-
-- GLFW or SDL
-	- good for window creation and input handling in a native viewer
-- modern OpenGL with shaders
-	- good for atoms, bonds, charts, and graph rendering
-- ImGui overlays
-	- useful for debug panels, metadata inspection, and UI controls in a native app
-- offscreen framebuffer rendering
-	- useful for screenshot generation and PNG comparison workflows
-
-### Example OpenGL projects you can build from these files
-
-- a native conformer viewer driven by `Conformer3D_COMPOUND_CID_4(1..6).json`
-- a 2D molecule renderer from `Structure2D_COMPOUND_CID_4.sdf`
-- a native assay dashboard over `pubchem_cid_4_bioactivity.csv`
-- a graph viewer for `cid_4.dot`
-- a screenshot regression harness using the provided PNG images
-
-### When OpenGL is worth it here
-
-OpenGL is worth using when:
-
-- you want a native desktop visualization app
-- you want a lower-complexity alternative to Vulkan
-- you need interactive rendering of molecules, charts, or graphs outside the browser
-- you are working in the `cpp/` part of the repository and want mature graphics tooling
-
-OpenGL is less attractive if you specifically need browser deployment or newer GPU compute features. In those cases, WebGL/WebGPU or Vulkan/CUDA are better fits.
-
-### Why OpenGL is a good fit here
-
-OpenGL fits this repository because `data/` already contains everything needed for a small but complete native visualization stack:
-
-- structure and conformer coordinates
-- reference PNG images
-- assay tables for charts
-- graph and pathway data for network views
-
-That makes CID 4 a good correctness-sized dataset for building a native graphics application that combines molecule rendering with scientific data exploration.
-
----
-
-## 17. LLM Pipelines and RAG with LangChain
+## 16. LLM Pipelines and RAG with LangChain
 
 LangChain is useful in this repository when you want to build question-answering, retrieval-augmented generation, summarization, or agent workflows over the files in `data/`.
 
@@ -2826,7 +2617,7 @@ That makes CID 4 a good dataset for building a practical scientific QA or assist
 
 ---
 
-## 18. Stateful Agent Workflows with LangGraph
+## 17. Stateful Agent Workflows with LangGraph
 
 LangGraph is useful in this repository when you want a multi-step, stateful workflow over the CID 4 data rather than a single retrieval or prompt chain.
 
@@ -3006,7 +2797,7 @@ That makes CID 4 a good small but realistic dataset for building a stateful scie
 
 ---
 
-## 19. Property Graphs in PostgreSQL with Apache AGE
+## 18. Property Graphs in PostgreSQL with Apache AGE
 
 Apache AGE is useful in this repository when you want to represent the CID 4 data as a labeled-property graph inside PostgreSQL and query it with Cypher.
 
