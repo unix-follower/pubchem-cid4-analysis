@@ -1061,6 +1061,27 @@ nlohmann::json toJson(const cid4::HillDoseResponseAnalysisResult& hillAnalysis)
 void doLaplacianAnalysis(const CommandLineOptions& options)
 {
     std::cout << "Do Laplacian analysis" << '\n';
+
+    const std::filesystem::path dataDir = resolveDataDir();
+    const std::filesystem::path outputDir = cid4::outputDirectoryFor(dataDir);
+
+    const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
+    const cid4::NormalizedAdjacencyInput adjacencyInput =
+        cid4::loadAdjacencyInput(adjacencyJsonPath);
+
+    const cid4::AdjacencyMatrix adjacencyMatrix = cid4::buildAdjacencyMatrix(
+        adjacencyInput, options.adjacencyJsonFile.filename().string(), options.adjacencyMethod);
+
+    const cid4::LaplacianAnalysisResult laplacianAnalysis =
+        cid4::buildLaplacianAnalysis(adjacencyMatrix, options.laplacianMethod);
+    const std::filesystem::path laplacianOutputPath = cid4::laplacianOutputJsonPath(
+        outputDir, options.adjacencyJsonFile, laplacianAnalysis.method);
+
+    std::ofstream laplacianOutput(laplacianOutputPath);
+    laplacianOutput << std::setw(2) << toJson(laplacianAnalysis) << '\n';
+
+    std::cout << "Laplacian method: " << laplacianAnalysis.method << '\n';
+    std::cout << "Laplacian analysis written to: " << laplacianOutputPath << '\n';
 }
 
 void makeDistanceMatrix(const CommandLineOptions& options)
@@ -1091,6 +1112,31 @@ void makeDistanceMatrix(const CommandLineOptions& options)
 
     std::cout << "Distance method: " << distanceMatrix.method << '\n';
     std::cout << "Distance matrix written to: " << distanceOutputPath << '\n';
+}
+
+void makeEigenDecomposition(const CommandLineOptions& options)
+{
+    const std::filesystem::path dataDir = resolveDataDir();
+    const std::filesystem::path outputDir = cid4::outputDirectoryFor(dataDir);
+
+    const std::filesystem::path adjacencyJsonPath = dataDir / options.adjacencyJsonFile;
+    const cid4::NormalizedAdjacencyInput adjacencyInput =
+        cid4::loadAdjacencyInput(adjacencyJsonPath);
+
+    const cid4::AdjacencyMatrix adjacencyMatrix = cid4::buildAdjacencyMatrix(
+        adjacencyInput, options.adjacencyJsonFile.filename().string(), options.adjacencyMethod);
+
+    const cid4::EigendecompositionResult eigendecomposition =
+        cid4::buildEigendecomposition(adjacencyMatrix, options.eigenMethod);
+    const std::filesystem::path eigendecompositionOutputPath =
+        cid4::eigendecompositionOutputJsonPath(
+            outputDir, options.adjacencyJsonFile, eigendecomposition.method);
+
+    std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
+    eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
+
+    std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';
+    std::cout << "Eigendecomposition written to: " << eigendecompositionOutputPath << '\n';
 }
 
 void makeBinomialActivityDistribution(const CommandLineOptions& options)
@@ -1386,15 +1432,6 @@ int main(int argc, char* argv[])
                     springBondPotentialAnalysis.metadata.sourceDistanceMethod);
             const std::filesystem::path adjacencyOutputPath = cid4::adjacencyOutputJsonPath(
                 outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
-            const cid4::EigendecompositionResult eigendecomposition =
-                cid4::buildEigendecomposition(adjacencyMatrix, options.eigenMethod);
-            const std::filesystem::path eigendecompositionOutputPath =
-                cid4::eigendecompositionOutputJsonPath(
-                    outputDir, options.adjacencyJsonFile, eigendecomposition.method);
-            const cid4::LaplacianAnalysisResult laplacianAnalysis =
-                cid4::buildLaplacianAnalysis(adjacencyMatrix, options.laplacianMethod);
-            const std::filesystem::path laplacianOutputPath = cid4::laplacianOutputJsonPath(
-                outputDir, options.adjacencyJsonFile, laplacianAnalysis.method);
 
             std::filesystem::create_directories(outputDir);
 
@@ -1414,12 +1451,6 @@ int main(int argc, char* argv[])
             springBondPotentialOutput << std::setw(2) << toJson(springBondPotentialAnalysis)
                                       << '\n';
 
-            std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
-            eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
-
-            std::ofstream laplacianOutput(laplacianOutputPath);
-            laplacianOutput << std::setw(2) << toJson(laplacianAnalysis) << '\n';
-
             std::cout << "Average molecular weight: " << result.averageMolecularWeight << '\n';
             std::cout << "Exact molecular mass: " << result.exactMolecularMass << '\n';
             std::cout << "Atom records written to: " << outputPath << '\n';
@@ -1430,15 +1461,13 @@ int main(int argc, char* argv[])
                       << springBondPotentialOutputPath << '\n';
             std::cout << "Adjacency matrix method: " << adjacencyMatrix.method << '\n';
             std::cout << "Adjacency matrix written to: " << adjacencyOutputPath << '\n';
-            std::cout << "Eigendecomposition method: " << eigendecomposition.method << '\n';
-            std::cout << "Eigendecomposition written to: " << eigendecompositionOutputPath << '\n';
-            std::cout << "Laplacian method: " << laplacianAnalysis.method << '\n';
-            std::cout << "Laplacian analysis written to: " << laplacianOutputPath << '\n';
         }
         else {
             const std::map<std::string, std::function<void(CommandLineOptions)>> commands = {
                 {"laplacian", [](CommandLineOptions opts) { doLaplacianAnalysis(opts); }},
                 {"distance-matrix", [](CommandLineOptions opts) { makeDistanceMatrix(opts); }},
+                {"eigen-decomposition",
+                 [](CommandLineOptions opts) { makeEigenDecomposition(opts); }},
                 {"binomial-activity-distribution",
                  [](CommandLineOptions opts) { makeBinomialActivityDistribution(opts); }},
                 {"chi-square-activity",
