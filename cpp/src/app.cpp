@@ -1074,8 +1074,9 @@ void doLaplacianAnalysis(const CommandLineOptions& options)
 
     const cid4::LaplacianAnalysisResult laplacianAnalysis =
         cid4::buildLaplacianAnalysis(adjacencyMatrix, options.laplacianMethod);
-    const std::filesystem::path laplacianOutputPath = cid4::laplacianOutputJsonPath(
-        outputDir, options.adjacencyJsonFile, laplacianAnalysis.method);
+    const std::filesystem::path laplacianOutputPath =
+        outputDir / (options.adjacencyJsonFile.stem().string() + "." +
+                     std::string(laplacianAnalysis.method) + ".laplacian_analysis.json");
 
     std::ofstream laplacianOutput(laplacianOutputPath);
     laplacianOutput << std::setw(2) << toJson(laplacianAnalysis) << '\n';
@@ -1106,7 +1107,8 @@ void makeDistanceMatrix(const CommandLineOptions& options)
 
     const std::filesystem::path outputDir = cid4::outputDirectoryFor(dataDir);
     const std::filesystem::path distanceOutputPath =
-        cid4::distanceOutputJsonPath(outputDir, options.adjacencyJsonFile, distanceMatrix.method);
+        outputDir / (options.adjacencyJsonFile.stem().string() + "." +
+                     std::string(options.distanceMethod) + ".distance_matrix.json");
     std::ofstream distanceOutput(distanceOutputPath);
     distanceOutput << std::setw(2) << toJson(distanceMatrix) << '\n';
 
@@ -1129,8 +1131,8 @@ void makeEigenDecomposition(const CommandLineOptions& options)
     const cid4::EigendecompositionResult eigendecomposition =
         cid4::buildEigendecomposition(adjacencyMatrix, options.eigenMethod);
     const std::filesystem::path eigendecompositionOutputPath =
-        cid4::eigendecompositionOutputJsonPath(
-            outputDir, options.adjacencyJsonFile, eigendecomposition.method);
+        outputDir / (options.adjacencyJsonFile.stem().string() + "." +
+                     std::string(eigendecomposition.method) + ".eigendecomposition.json");
 
     std::ofstream eigendecompositionOutput(eigendecompositionOutputPath);
     eigendecompositionOutput << std::setw(2) << toJson(eigendecomposition) << '\n';
@@ -1147,10 +1149,10 @@ void makeBinomialActivityDistribution(const CommandLineOptions& options)
     const std::filesystem::path outputDir = cid4::outputDirectoryFor(dataDir);
 
     const std::filesystem::path binomialActivityDistributionCsvOutputPath =
-        cid4::binomialActivityDistributionCsvPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".activity_binomial_pmf.csv");
 
     const std::filesystem::path binomialActivityDistributionSummaryOutputPath =
-        cid4::binomialActivityDistributionSummaryJsonPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".activity_binomial.summary.json");
 
     const std::filesystem::path bioactivityCsvPath = dataDir / options.bioactivityFile;
     const cid4::BinomialActivityDistributionAnalysisResult binomialActivityDistribution =
@@ -1177,9 +1179,11 @@ void makeChiSquareActivity(const CommandLineOptions& options)
     const cid4::ChiSquareActivityAidTypeAnalysisResult chiSquareActivityAidTypeAnalysis =
         cid4::buildChiSquareActivityAidTypeAnalysis(bioactivityCsvPath);
     const std::filesystem::path chiSquareActivityAidTypeCsvOutputPath =
-        cid4::chiSquareActivityAidTypeCsvPath(outputDir, options.bioactivityFile);
+        outputDir /
+        (options.bioactivityFile.stem().string() + ".activity_aid_type_chi_square_contingency.csv");
     const std::filesystem::path chiSquareActivityAidTypeSummaryOutputPath =
-        cid4::chiSquareActivityAidTypeSummaryJsonPath(outputDir, options.bioactivityFile);
+        outputDir /
+        (options.bioactivityFile.stem().string() + ".activity_aid_type_chi_square.summary.json");
 
     cid4::writeChiSquareActivityAidTypeCsv(chiSquareActivityAidTypeAnalysis,
                                            chiSquareActivityAidTypeCsvOutputPath);
@@ -1205,13 +1209,17 @@ void makeGradientDescent(const CommandLineOptions& options)
     const cid4::GradientDescentAnalysisResult gradientDescentAnalysis =
         cid4::buildGradientDescentAnalysis(result.atoms, options.sdfFile.filename().string());
     const std::filesystem::path gradientDescentCsvOutputPath =
-        cid4::gradientDescentCsvPath(outputDir, options.sdfFile);
+        outputDir /
+        (options.sdfFile.stem().string() + ".mass_to_atomic_number_gradient_descent.csv");
     const std::filesystem::path gradientDescentSummaryOutputPath =
-        cid4::gradientDescentSummaryJsonPath(outputDir, options.sdfFile);
+        outputDir /
+        (options.sdfFile.stem().string() + ".mass_to_atomic_number_gradient_descent.summary.json");
     const std::filesystem::path gradientDescentLossPlotOutputPath =
-        cid4::gradientDescentLossPlotSvgPath(outputDir, options.sdfFile);
+        outputDir /
+        (options.sdfFile.stem().string() + ".mass_to_atomic_number_gradient_descent.loss.svg");
     const std::filesystem::path gradientDescentFitPlotOutputPath =
-        cid4::gradientDescentFitPlotSvgPath(outputDir, options.sdfFile);
+        outputDir /
+        (options.sdfFile.stem().string() + ".mass_to_atomic_number_gradient_descent.fit.svg");
 
     cid4::writeGradientDescentCsv(gradientDescentAnalysis, gradientDescentCsvOutputPath);
 
@@ -1240,11 +1248,11 @@ void makeHillDoseResponse(const CommandLineOptions& options)
     const cid4::HillDoseResponseAnalysisResult hillDoseResponseAnalysis =
         cid4::buildHillDoseResponseAnalysis(bioactivityCsvPath);
     const std::filesystem::path hillDoseResponseCsvOutputPath =
-        cid4::hillDoseResponseCsvPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".hill_dose_response.csv");
     const std::filesystem::path hillDoseResponseSummaryOutputPath =
-        cid4::hillDoseResponseSummaryJsonPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".hill_dose_response.summary.json");
     const std::filesystem::path hillDoseResponsePlotOutputPath =
-        cid4::hillDoseResponsePlotSvgPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".hill_dose_response.svg");
 
     cid4::writeHillDoseResponseCsv(hillDoseResponseAnalysis, hillDoseResponseCsvOutputPath);
 
@@ -1270,14 +1278,13 @@ void makeAtomElementEntropy(const CommandLineOptions& options)
     const cid4::AtomElementEntropyAnalysisResult atomElementEntropyAnalysis =
         cid4::buildAtomElementEntropyAnalysis(result.atoms, options.sdfFile.filename().string());
     const std::filesystem::path atomElementEntropyCsvOutputPath =
-        cid4::atomElementEntropyCsvPath(outputDir, options.sdfFile);
+        outputDir / (options.sdfFile.stem().string() + ".atom_element_entropy_proportions.csv");
     const std::filesystem::path atomElementEntropySummaryOutputPath =
-        cid4::atomElementEntropySummaryJsonPath(outputDir, options.sdfFile);
+        outputDir / (options.sdfFile.stem().string() + ".atom_element_entropy.summary.json");
     const std::filesystem::path atomElementEntropyPlotOutputPath =
-        cid4::atomElementEntropyPlotSvgPath(outputDir, options.sdfFile);
+        outputDir / (options.sdfFile.stem().string() + ".atom_element_entropy.svg");
 
     cid4::writeAtomElementEntropyCsv(atomElementEntropyAnalysis, atomElementEntropyCsvOutputPath);
-
     cid4::writeAtomElementEntropyPlotSvg(atomElementEntropyAnalysis,
                                          atomElementEntropyPlotOutputPath);
 
@@ -1301,11 +1308,12 @@ void makeActivityValueStats(const CommandLineOptions& options)
     const cid4::ActivityValueStatisticsAnalysisResult activityValueStatisticsAnalysis =
         cid4::buildActivityValueStatisticsAnalysis(bioactivityCsvPath);
     const std::filesystem::path activityValueStatisticsCsvOutputPath =
-        cid4::activityValueStatisticsCsvPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".activity_value_statistics.csv");
     const std::filesystem::path activityValueStatisticsSummaryOutputPath =
-        cid4::activityValueStatisticsSummaryJsonPath(outputDir, options.bioactivityFile);
+        outputDir /
+        (options.bioactivityFile.stem().string() + ".activity_value_statistics.summary.json");
     const std::filesystem::path activityValueStatisticsPlotOutputPath =
-        cid4::activityValueStatisticsPlotSvgPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".activity_value_statistics.svg");
 
     cid4::writeActivityValueStatisticsCsv(activityValueStatisticsAnalysis,
                                           activityValueStatisticsCsvOutputPath);
@@ -1334,11 +1342,11 @@ void makeBioactivity(const CommandLineOptions& options)
     const cid4::BioactivityAnalysisResult bioactivityAnalysis =
         cid4::buildBioactivityAnalysis(bioactivityCsvPath);
     const std::filesystem::path bioactivityCsvOutputPath =
-        cid4::bioactivityFilteredCsvPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".ic50_pic50.csv");
     const std::filesystem::path bioactivitySummaryOutputPath =
-        cid4::bioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".ic50_pic50.summary.json");
     const std::filesystem::path bioactivityPlotOutputPath =
-        cid4::bioactivityPlotSvgPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".ic50_pic50.svg");
 
     cid4::writeBioactivityFilteredCsv(bioactivityAnalysis, bioactivityCsvOutputPath);
 
@@ -1361,9 +1369,10 @@ void makePosteriorBioactivity(const CommandLineOptions& options)
     const cid4::PosteriorBioactivityAnalysisResult posteriorBioactivityAnalysis =
         cid4::buildPosteriorBioactivityAnalysis(bioactivityCsvPath);
     const std::filesystem::path posteriorBioactivityCsvOutputPath =
-        cid4::posteriorBioactivityCsvPath(outputDir, options.bioactivityFile);
+        outputDir /
+        (options.bioactivityFile.stem().string() + ".activity_posterior_binary_evidence.csv");
     const std::filesystem::path posteriorBioactivitySummaryOutputPath =
-        cid4::posteriorBioactivitySummaryJsonPath(outputDir, options.bioactivityFile);
+        outputDir / (options.bioactivityFile.stem().string() + ".activity_posterior.summary.json");
 
     cid4::writePosteriorBioactivityCsv(posteriorBioactivityAnalysis,
                                        posteriorBioactivityCsvOutputPath);
@@ -1403,8 +1412,6 @@ int main(int argc, char* argv[])
             const cid4::DistanceMatrixResult distanceMatrix = cid4::readDistanceMatrix(
                 outputDir / "Conformer3D_COMPOUND_CID_4(1).json.distance_matrix.json");
 
-            const std::filesystem::path distanceOutputPath = cid4::distanceOutputJsonPath(
-                outputDir, options.adjacencyJsonFile, distanceMatrix.method);
             const cid4::AdjacencyMatrix adjacencyMatrix =
                 cid4::buildAdjacencyMatrix(adjacencyInput,
                                            options.adjacencyJsonFile.filename().string(),
@@ -1412,26 +1419,26 @@ int main(int argc, char* argv[])
             const cid4::BondedDistanceAnalysisResult bondedDistanceAnalysis =
                 cid4::buildBondedDistanceAnalysis(distanceMatrix, adjacencyMatrix);
             const std::filesystem::path bondedDistanceOutputPath =
-                cid4::bondedDistanceOutputJsonPath(
-                    outputDir,
-                    options.adjacencyJsonFile,
-                    bondedDistanceAnalysis.metadata.sourceDistanceMethod);
+                outputDir / (options.adjacencyJsonFile.stem().string() + "." +
+                             std::string(bondedDistanceAnalysis.metadata.sourceDistanceMethod) +
+                             ".bonded_distance_analysis.json");
             const cid4::BondAngleAnalysisResult bondAngleAnalysis =
                 cid4::buildBondAngleAnalysis(distanceMatrix, adjacencyMatrix);
             const std::filesystem::path bondAngleOutputPath =
-                cid4::bondAngleOutputJsonPath(outputDir,
-                                              options.adjacencyJsonFile,
-                                              bondAngleAnalysis.metadata.sourceDistanceMethod);
+                outputDir / (options.adjacencyJsonFile.stem().string() + "." +
+                             std::string(bondAngleAnalysis.metadata.sourceDistanceMethod) +
+                             ".bond_angle_analysis.json");
             const cid4::SpringBondPotentialAnalysisResult springBondPotentialAnalysis =
                 cid4::buildSpringBondPotentialAnalysis(
                     distanceMatrix, adjacencyMatrix, result.atoms);
             const std::filesystem::path springBondPotentialOutputPath =
-                cid4::springBondPotentialOutputJsonPath(
-                    outputDir,
-                    options.adjacencyJsonFile,
-                    springBondPotentialAnalysis.metadata.sourceDistanceMethod);
-            const std::filesystem::path adjacencyOutputPath = cid4::adjacencyOutputJsonPath(
-                outputDir, options.adjacencyJsonFile, adjacencyMatrix.method);
+                outputDir /
+                (options.adjacencyJsonFile.stem().string() + "." +
+                 std::string(springBondPotentialAnalysis.metadata.sourceDistanceMethod) +
+                 ".spring_bond_potential_analysis.json");
+            const std::filesystem::path adjacencyOutputPath =
+                outputDir / (options.adjacencyJsonFile.stem().string() + "." +
+                             std::string(adjacencyMatrix.method) + ".adjacency_matrix.json");
 
             std::filesystem::create_directories(outputDir);
 
