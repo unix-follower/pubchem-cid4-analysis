@@ -1,0 +1,142 @@
+<section class="hero card" aria-labelledby="llm-title">
+  <div>
+    <p class="eyebrow">LLM Protocol Lab</p>
+    <h1 id="llm-title">Switch between HTTP, SSE, and WebSocket generation</h1>
+    <p class="lede">
+      Use the same FastAPI LLM backend with three delivery modes. The protocol toggle changes
+      transport only; the prompt, framework, and generation settings stay shared.
+    </p>
+  </div>
+
+  <dl class="hero-meta">
+    <div>
+      <dt>Protocol</dt>
+      <dd>{{ protocol().toUpperCase() }}</dd>
+    </div>
+    <div>
+      <dt>Framework</dt>
+      <dd>{{ framework() }}</dd>
+    </div>
+    <div>
+      <dt>Status</dt>
+      <dd>{{ statusLabel() }}</dd>
+    </div>
+  </dl>
+</section>
+
+<section class="workspace-grid llm-grid">
+  <article class="card composer-card">
+    <div class="card-header">
+      <div>
+        <p class="eyebrow">Prompt</p>
+        <h2>Transport-aware generation</h2>
+      </div>
+    </div>
+
+    <div class="toggle-group" aria-label="Protocol selector">
+      <button
+        type="button"
+        class="chip"
+        [class.active]="protocol() === 'http'"
+        (click)="setProtocol('http')"
+      >
+        HTTP
+      </button>
+      <button
+        type="button"
+        class="chip"
+        [class.active]="protocol() === 'sse'"
+        (click)="setProtocol('sse')"
+      >
+        SSE
+      </button>
+      <button
+        type="button"
+        class="chip"
+        [class.active]="protocol() === 'websocket'"
+        (click)="setProtocol('websocket')"
+      >
+        WebSocket
+      </button>
+    </div>
+
+    <div class="toggle-group" aria-label="Framework selector">
+      <button
+        type="button"
+        class="chip ghost"
+        [class.active]="framework() === 'pytorch'"
+        (click)="setFramework('pytorch')"
+      >
+        PyTorch
+      </button>
+      <button
+        type="button"
+        class="chip ghost"
+        [class.active]="framework() === 'tensorflow'"
+        (click)="setFramework('tensorflow')"
+      >
+        TensorFlow
+      </button>
+    </div>
+
+    <label class="field">
+      <span>Model name</span>
+      <input [(ngModel)]="modelName" placeholder="cid4_pytorch_gru_lm" />
+    </label>
+
+    <label class="field">
+      <span>Prompt</span>
+      <textarea [(ngModel)]="prompt" rows="8" placeholder="CID 4 literature summary:"></textarea>
+    </label>
+
+    <div class="settings-grid">
+      <label class="field compact">
+        <span>Max new tokens</span>
+        <input type="number" [(ngModel)]="maxNewTokens" min="1" max="400" />
+      </label>
+      <label class="field compact">
+        <span>Temperature</span>
+        <input type="number" [(ngModel)]="temperature" min="0" max="5" step="0.1" />
+      </label>
+      <label class="field compact">
+        <span>Top-k</span>
+        <input type="number" [(ngModel)]="topK" min="0" max="128" />
+      </label>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="primary-action" [disabled]="busy()" (click)="submitPrompt()">
+        {{ busy() ? "Generating…" : "Generate" }}
+      </button>
+      <button type="button" class="chip ghost" [disabled]="busy()" (click)="clearTranscript()">
+        Clear transcript
+      </button>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="error-banner">{{ errorMessage() }}</p>
+    }
+  </article>
+
+  <article class="card transcript-card">
+    <div class="card-header">
+      <div>
+        <p class="eyebrow">Transcript</p>
+        <h2>Shared prompt, switched transport</h2>
+      </div>
+    </div>
+
+    <div class="transcript">
+      @for (message of transcript(); track $index) {
+        <article
+          class="message"
+          [class.assistant]="message.role === 'assistant'"
+          [class.user]="message.role === 'user'"
+        >
+          <p class="message-role">{{ message.role }}</p>
+          <p class="message-body">{{ message.text }}</p>
+        </article>
+      }
+    </div>
+  </article>
+</section>

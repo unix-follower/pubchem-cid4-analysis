@@ -1,0 +1,33 @@
+<section class="card hero">
+  <div>
+    <p class="eyebrow">HTTP Digest</p>
+    <h1>Use challenge-response authentication</h1>
+    <p class="lede">
+      The backend issues a standards-based Digest challenge and the browser handles the credential
+      exchange before redirecting back into the chat flow.
+    </p>
+  </div>
+
+  <dl class="credentials">
+    <div>
+      <dt>Demo username</dt>
+      <dd>digestor</dd>
+    </div>
+    <div>
+      <dt>Demo password</dt>
+      <dd>cid4-digest-password</dd>
+    </div>
+  </dl>
+</section>
+
+<section class="card panel">
+  <p class="eyebrow">Next step</p>
+  <h2>Start the Digest login flow</h2>
+  <p>The browser challenge completes against FastAPI, then redirects to {{ returnTo() }}.</p>
+  <div class="actions">
+    <button type="button" class="primary-action" (click)="startLogin()">Start Digest login</button>
+    <a class="ghost-action" [routerLink]="['/auth']" [queryParams]="{ returnTo: returnTo() }"
+      >Back</a
+    >
+  </div>
+</section>

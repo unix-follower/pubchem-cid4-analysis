@@ -1,0 +1,33 @@
+<section class="card hero">
+  <div>
+    <p class="eyebrow">HTTP Basic</p>
+    <h1>Authenticate with a browser challenge</h1>
+    <p class="lede">
+      The backend will issue a standard Basic challenge. Your browser handles the credential prompt,
+      then FastAPI stores the chat session and returns you to the protected flow.
+    </p>
+  </div>
+
+  <dl class="credentials">
+    <div>
+      <dt>Demo username</dt>
+      <dd>analyst</dd>
+    </div>
+    <div>
+      <dt>Demo password</dt>
+      <dd>cid4-basic-password</dd>
+    </div>
+  </dl>
+</section>
+
+<section class="card panel">
+  <p class="eyebrow">Next step</p>
+  <h2>Start the challenge</h2>
+  <p>The login completes on the backend and redirects to {{ returnTo() }} on success.</p>
+  <div class="actions">
+    <button type="button" class="primary-action" (click)="startLogin()">Start Basic login</button>
+    <a class="ghost-action" [routerLink]="['/auth']" [queryParams]="{ returnTo: returnTo() }"
+      >Back</a
+    >
+  </div>
+</section>

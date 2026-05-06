@@ -1,0 +1,153 @@
+:host {
+  display: block;
+}
+.hero,
+.card {
+  background: rgba(255, 251, 245, 0.78);
+  border: 1px solid rgba(16, 35, 61, 0.09);
+  border-radius: 28px;
+  box-shadow: 0 22px 46px rgba(16, 35, 61, 0.08);
+}
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.9fr);
+  gap: 20px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.status-grid div,
+.message {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 14px 16px;
+}
+dt,
+.message-role,
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8b6325;
+}
+dd,
+.message-body,
+.lede,
+p {
+  margin: 0;
+  line-height: 1.6;
+  color: #10233d;
+}
+.workspace-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 430px) minmax(0, 1fr);
+}
+.card {
+  padding: 24px;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.toolbar,
+.toggle-group,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.form-grid {
+  display: grid;
+  gap: 16px;
+}
+.settings-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.field {
+  display: grid;
+  gap: 8px;
+}
+.field span {
+  font-weight: 700;
+  color: #20415d;
+}
+input,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(16, 35, 61, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #10233d;
+  font: inherit;
+  padding: 14px 16px;
+}
+textarea {
+  min-height: 176px;
+  resize: vertical;
+}
+.chip,
+.primary-action,
+.ghost-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: 700;
+  padding: 11px 16px;
+}
+.chip,
+.ghost-action {
+  border: 1px solid rgba(16, 35, 61, 0.14);
+  background: rgba(255, 255, 255, 0.8);
+  color: #20415d;
+  text-decoration: none;
+}
+.chip.active,
+.primary-action {
+  border: none;
+  background: #10233d;
+  color: #f8fbfc;
+}
+.transcript {
+  display: grid;
+  gap: 12px;
+  max-height: 680px;
+  overflow: auto;
+}
+.message.user {
+  background: rgba(196, 90, 27, 0.1);
+}
+.message.assistant {
+  background: rgba(16, 35, 61, 0.08);
+}
+.error-banner {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(155, 41, 72, 0.12);
+  color: #7a1738;
+  font-weight: 700;
+}
+@media (max-width: 980px) {
+  .hero,
+  .workspace-grid,
+  .settings-grid,
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+  .card-header {
+    flex-direction: column;
+  }
+}

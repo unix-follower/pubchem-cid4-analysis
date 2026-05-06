@@ -1,0 +1,33 @@
+<section class="card hero">
+  <div>
+    <p class="eyebrow">Protocol Selection</p>
+    <h1>Choose how the model should respond</h1>
+    <p class="lede">
+      Pick the transport once for this chat session. The workspace will stream partial output over
+      SSE or WebSocket, or use a single request-response cycle over plain HTTP.
+    </p>
+  </div>
+
+  <div class="session-card">
+    <p class="session-label">Signed in as</p>
+    <p class="session-value">{{ authSession.username() ?? "Unknown user" }}</p>
+    <p class="session-meta">Method: {{ authSession.authMethod() ?? "unknown" }}</p>
+  </div>
+</section>
+
+<section class="protocol-grid">
+  @for (protocol of protocols; track protocol.id) {
+    <article class="card protocol-card">
+      <p class="eyebrow">{{ protocol.badge }}</p>
+      <h2>{{ protocol.title }}</h2>
+      <p>{{ protocol.copy }}</p>
+      <button type="button" class="primary-action" (click)="selectProtocol(protocol.id)">
+        Use {{ protocol.title }}
+      </button>
+    </article>
+  }
+</section>
+
+<section class="card footer-card">
+  <a class="ghost-action" [routerLink]="['/auth']">Switch auth method</a>
+</section>

@@ -1,0 +1,39 @@
+<div class="viewer-header">
+  <div>
+    <p class="eyebrow">Renderer Strategy</p>
+    <h3>WebGL / WebGPU viewer</h3>
+  </div>
+
+  <app-renderer-switcher
+    [currentRenderer]="rendererService.currentRenderer()"
+    [options]="rendererService.switchOptions()"
+    (rendererSelected)="switchRenderer($event)"
+    (resetView)="resetView()"
+  />
+</div>
+
+@if (statusMessage(); as message) {
+  <p class="status-banner" [class.status-warning]="isWarning()" [class.status-error]="isError()">
+    {{ message }}
+  </p>
+}
+
+@if (molecule(); as activeMolecule) {
+  <div class="viewer-metrics">
+    <span>{{ rendererService.currentRenderer().toUpperCase() }}</span>
+    <span>{{ activeMolecule.atoms.length }} atoms</span>
+    <span>{{ activeMolecule.bonds.length }} bonds</span>
+    <span>Render {{ renderDurationLabel() }}</span>
+  </div>
+}
+
+@if (comparisonSummary(); as summary) {
+  <div class="comparison-banner">
+    <span>Overlay vs {{ comparisonReferenceLabel() ?? "reference" }}</span>
+    <span>Mean displacement {{ summary.meanAtomDisplacement.toFixed(3) }}</span>
+    <span>Max displacement {{ summary.maxAtomDisplacement.toFixed(3) }}</span>
+    <span>Max bond delta {{ summary.maxBondLengthDelta.toFixed(3) }}</span>
+  </div>
+}
+
+<div #host class="viewer-host" role="img" aria-label="Strategy-based molecular renderer"></div>
