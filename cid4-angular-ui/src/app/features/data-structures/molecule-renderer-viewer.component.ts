@@ -69,6 +69,8 @@ import { RendererSwitcherComponent } from "./renderer-switcher.component"
     `
       :host {
         display: block;
+        width: 100%;
+        min-width: 0;
       }
 
       .viewer-header {
@@ -142,7 +144,10 @@ import { RendererSwitcherComponent } from "./renderer-switcher.component"
       }
 
       .viewer-host {
+        position: relative;
+        width: 100%;
         min-height: 420px;
+        overflow: hidden;
         border-radius: 24px;
         background:
           radial-gradient(circle at top left, rgba(244, 211, 163, 0.42), transparent 28%),

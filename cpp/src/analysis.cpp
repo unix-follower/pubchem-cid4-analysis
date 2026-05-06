@@ -582,46 +582,6 @@ BinaryBioactivityContext loadBinaryBioactivityContext(const std::filesystem::pat
     };
 }
 
-void writeCsvTable(const std::vector<std::string>& headers,
-                   const std::vector<std::vector<std::string>>& rows,
-                   const std::filesystem::path& outputPath,
-                   const std::string_view context)
-{
-    std::ofstream output(outputPath);
-    if (!output) {
-        throw BioactivityAnalysisError("Could not open " + std::string(context) + ": " +
-                                       outputPath.string());
-    }
-
-    const auto writeCsvRow = [&](const std::vector<std::string>& row) {
-        for (std::size_t index = 0; index < row.size(); ++index) {
-            if (index > 0) {
-                output << ',';
-            }
-            const bool requiresQuotes = row[index].find_first_of(",\"\n\r") != std::string::npos;
-            if (requiresQuotes) {
-                output << '"';
-                for (const char character : row[index]) {
-                    if (character == '"') {
-                        output << '"';
-                    }
-                    output << character;
-                }
-                output << '"';
-            }
-            else {
-                output << row[index];
-            }
-        }
-        output << '\n';
-    };
-
-    writeCsvRow(headers);
-    for (const auto& row : rows) {
-        writeCsvRow(row);
-    }
-}
-
 std::pair<double, double> expandedDomain(const double minValue, const double maxValue)
 {
     if (std::abs(minValue - maxValue) < 1.0e-12) {
@@ -2076,6 +2036,46 @@ std::vector<int> jsonToIntVector(const Json& value, const std::string_view field
 }
 } // namespace
 
+void writeCsvTable(const std::vector<std::string>& headers,
+                   const std::vector<std::vector<std::string>>& rows,
+                   const std::filesystem::path& outputPath,
+                   const std::string_view context)
+{
+    std::ofstream output(outputPath);
+    if (!output) {
+        throw BioactivityAnalysisError("Could not open " + std::string(context) + ": " +
+                                       outputPath.string());
+    }
+
+    const auto writeCsvRow = [&](const std::vector<std::string>& row) {
+        for (std::size_t index = 0; index < row.size(); ++index) {
+            if (index > 0) {
+                output << ',';
+            }
+            const bool requiresQuotes = row[index].find_first_of(",\"\n\r") != std::string::npos;
+            if (requiresQuotes) {
+                output << '"';
+                for (const char character : row[index]) {
+                    if (character == '"') {
+                        output << '"';
+                    }
+                    output << character;
+                }
+                output << '"';
+            }
+            else {
+                output << row[index];
+            }
+        }
+        output << '\n';
+    };
+
+    writeCsvRow(headers);
+    for (const auto& row : rows) {
+        writeCsvRow(row);
+    }
+}
+
 double averageOrZero(const std::vector<double>& values)
 {
     if (values.empty()) {
@@ -2387,12 +2387,6 @@ BioactivityAnalysisResult buildBioactivityAnalysis(const std::filesystem::path& 
     };
 }
 
-void writeBioactivityFilteredCsv(const BioactivityAnalysisResult& result,
-                                 const std::filesystem::path& outputPath)
-{
-    writeCsvTable(result.headers, result.filteredRows, outputPath, "bioactivity CSV output path");
-}
-
 PosteriorBioactivityAnalysisResult
 buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
                                   const double priorAlpha,
@@ -2539,12 +2533,6 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
                     },
             },
     };
-}
-
-void writePosteriorBioactivityCsv(const PosteriorBioactivityAnalysisResult& result,
-                                  const std::filesystem::path& outputPath)
-{
-    writeCsvTable(result.headers, result.rows, outputPath, "posterior bioactivity CSV output path");
 }
 
 BinomialActivityDistributionAnalysisResult
@@ -2733,13 +2721,6 @@ buildBinomialActivityDistributionAnalysis(const std::filesystem::path& csvPath)
                     },
             },
     };
-}
-
-void writeBinomialActivityDistributionCsv(const BinomialActivityDistributionAnalysisResult& result,
-                                          const std::filesystem::path& outputPath)
-{
-    writeCsvTable(
-        result.headers, result.rows, outputPath, "binomial activity distribution CSV output path");
 }
 
 ChiSquareActivityAidTypeAnalysisResult
@@ -2969,13 +2950,6 @@ buildChiSquareActivityAidTypeAnalysis(const std::filesystem::path& csvPath,
                     },
             },
     };
-}
-
-void writeChiSquareActivityAidTypeCsv(const ChiSquareActivityAidTypeAnalysisResult& result,
-                                      const std::filesystem::path& outputPath)
-{
-    writeCsvTable(
-        result.headers, result.rows, outputPath, "chi-square activity Aid_Type CSV output path");
 }
 
 HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
@@ -3296,12 +3270,6 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
                     },
             },
     };
-}
-
-void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
-                              const std::filesystem::path& outputPath)
-{
-    writeCsvTable(result.headers, result.rows, outputPath, "Hill dose-response CSV output path");
 }
 
 void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
@@ -3648,13 +3616,6 @@ buildActivityValueStatisticsAnalysis(const std::filesystem::path& csvPath,
                           "for Shapiro-Wilk availability."},
             },
     };
-}
-
-void writeActivityValueStatisticsCsv(const ActivityValueStatisticsAnalysisResult& result,
-                                     const std::filesystem::path& outputPath)
-{
-    writeCsvTable(
-        result.headers, result.rows, outputPath, "Activity_Value statistics CSV output path");
 }
 
 void writeActivityValueStatisticsPlotSvg(const ActivityValueStatisticsAnalysisResult& result,
@@ -4271,12 +4232,6 @@ buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms, std::strin
                           "required-element support rather than the fixed four-element support."},
             },
     };
-}
-
-void writeAtomElementEntropyCsv(const AtomElementEntropyAnalysisResult& result,
-                                const std::filesystem::path& outputPath)
-{
-    writeCsvTable(result.headers, result.rows, outputPath, "atom element entropy CSV output path");
 }
 
 void writeAtomElementEntropyPlotSvg(const AtomElementEntropyAnalysisResult& result,

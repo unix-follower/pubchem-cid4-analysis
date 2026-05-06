@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from "@angular/core"
-import { RouterLink } from "@angular/router"
-import { ActivatedRoute } from "@angular/router"
+import { RouterLink, ActivatedRoute } from "@angular/router"
 
 @Component({
   selector: "app-auth-home-page",

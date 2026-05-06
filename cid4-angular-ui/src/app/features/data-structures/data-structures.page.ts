@@ -150,11 +150,6 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
       <div>
         <p class="eyebrow">Data Structures</p>
         <h1 id="page-title">Interactive Molecular Graph Workbench</h1>
-        <p class="lede">
-          Fetch CID 4 through mocked API routes, drop in a PubChem conformer JSON file, and inspect
-          the same molecule as an adjacency list, adjacency matrix, atom property map, and
-          union-find component model.
-        </p>
       </div>
 
       <dl class="hero-meta">
@@ -219,10 +214,6 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
         <div class="dataset-panel">
           <div>
             <p class="dataset-title">Dataset source</p>
-            <p class="dataset-copy">
-              Switch between the 2D structure and six conformer snapshots while keeping the same
-              graph, matrix, and renderer views in sync.
-            </p>
           </div>
 
           <div class="dataset-selector" aria-label="Molecule source selector">
@@ -427,39 +418,6 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
           [comparisonReferenceLabel]="comparisonReferenceLabel()"
         />
       </article>
-
-      <article class="card aside-card">
-        <div class="card-header">
-          <div>
-            <p class="eyebrow">Compound Tree</p>
-            <h2>Mocked record outline</h2>
-          </div>
-        </div>
-
-        @if (compoundQuery.isPending()) {
-          <p class="status-text">Loading mocked compound outline...</p>
-        } @else if (compoundQuery.isError()) {
-          <p class="error-banner" aria-live="assertive">{{ compoundErrorMessage() }}</p>
-        } @else {
-          <p class="aside-title">{{ compoundQuery.data()?.title }}</p>
-          <p class="aside-copy">
-            Recursive traversal flattens the Section tree into an indented outline for quick
-            inspection.
-          </p>
-
-          <ol class="section-outline">
-            @for (item of sectionOutline(); track item.id) {
-              <li [style.padding-inline-start.px]="item.depth * 16">
-                <span class="section-heading">{{ item.heading }}</span>
-                <span class="section-meta">{{ item.childCount }} children</span>
-                @if (item.description) {
-                  <p>{{ item.description }}</p>
-                }
-              </li>
-            }
-          </ol>
-        }
-      </article>
     </section>
 
     <section class="panel-grid">
@@ -468,6 +426,7 @@ async function fetchCompoundRecord(): Promise<CompoundRecord> {
           <div>
             <p class="eyebrow">Adjacency List</p>
             <h2>Bonded neighbors by atom</h2>
+            <p>Out degree = number of neighbors.</p>
           </div>
         </div>
 
