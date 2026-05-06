@@ -94,10 +94,6 @@ interface TaxonomyResponse {
       <div>
         <p class="eyebrow">Algorithms</p>
         <h1 id="algorithms-title">CID 4 Algorithm Studio</h1>
-        <p class="lede">
-          Graph-centric exercises run in Cytoscape on a lazy route, while sorting, threshold search,
-          and hash-based dedup stay in table-first views with explicit step traces.
-        </p>
       </div>
 
       <dl class="hero-meta">
@@ -112,10 +108,6 @@ interface TaxonomyResponse {
         <div>
           <dt>Bioactivity rows</dt>
           <dd>{{ bioactivityValues().length }}</dd>
-        </div>
-        <div>
-          <dt>Unique organisms</dt>
-          <dd>{{ deduplicationResult()?.uniqueItems?.length ?? 0 }}</dd>
         </div>
         <div>
           <dt>Fiedler value</dt>
@@ -250,10 +242,6 @@ interface TaxonomyResponse {
         @if (molecularMetrics(); as metrics) {
           <div class="sort-stats metric-triptych">
             <div>
-              <span>Degree sequence</span>
-              <strong>{{ metrics.degreeSequence.join(", ") }}</strong>
-            </div>
-            <div>
               <span>Graph density</span>
               <strong>{{ metrics.density }}</strong>
             </div>
@@ -272,7 +260,6 @@ interface TaxonomyResponse {
               <thead>
                 <tr>
                   <th scope="col">Atom</th>
-                  <th scope="col">Degree</th>
                   <th scope="col">Eccentricity</th>
                 </tr>
               </thead>
@@ -280,7 +267,6 @@ interface TaxonomyResponse {
                 @for (metric of metrics.nodeMetrics; track metric.nodeId) {
                   <tr>
                     <td>{{ metric.label }}</td>
-                    <td>{{ metric.degree }}</td>
                     <td>{{ metric.eccentricity }}</td>
                   </tr>
                 }
@@ -601,57 +587,6 @@ interface TaxonomyResponse {
               </li>
             }
           </ol>
-        }
-      </article>
-
-      <article class="card analysis-card dedup-card">
-        <div class="card-header compact">
-          <div>
-            <p class="eyebrow">Hash-based Dedup</p>
-            <h2>Source organism uniqueness via map semantics</h2>
-          </div>
-        </div>
-
-        @if (deduplicationResult(); as result) {
-          <div class="sort-stats">
-            <div>
-              <span>Total rows</span>
-              <strong>{{ taxonomyRows().length }}</strong>
-            </div>
-            <div>
-              <span>Unique rows</span>
-              <strong>{{ result.uniqueItems.length }}</strong>
-            </div>
-            <div>
-              <span>Duplicate keys</span>
-              <strong>{{ result.duplicateKeys.join(", ") || "None" }}</strong>
-            </div>
-          </div>
-
-          <div class="table-frame">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Status</th>
-                  <th scope="col">Organism</th>
-                  <th scope="col">Taxonomy ID</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (row of taxonomyRows(); track $index) {
-                  <tr [class.row-duplicate]="result.duplicateKeys.includes(row.sourceOrganism)">
-                    <td>
-                      {{
-                        result.duplicateKeys.includes(row.sourceOrganism) ? "Duplicate" : "Unique"
-                      }}
-                    </td>
-                    <td>{{ row.sourceOrganism }}</td>
-                    <td>{{ row.taxonomyId }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
         }
       </article>
     </section>
@@ -1225,13 +1160,6 @@ export class AlgorithmsPage {
   protected readonly binarySearchTrace = computed<BinarySearchTraceResult>(() => {
     return buildThresholdBinarySearchTrace(this.mergeSortTrace().sortedValues, 100)
   })
-  protected readonly taxonomyRows = computed(() => this.taxonomyQuery.data()?.organisms ?? [])
-  protected readonly deduplicationResult = computed<DeduplicationResult<TaxonomyRecord> | null>(
-    () => {
-      const rows = this.taxonomyRows()
-      return rows.length > 0 ? deduplicateByKey(rows, (row) => row.sourceOrganism) : null
-    },
-  )
 
   constructor() {
     effect(

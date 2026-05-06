@@ -393,18 +393,6 @@ const compoundFixture = {
     Section: [
       {
         TOCHeading: "Structures",
-        Description:
-          "Structure depictions of this compound, including computationally generated two-dimensional (2D) and three-dimensional (3D) structures.",
-        Section: [
-          {
-            TOCHeading: "2D Structure",
-            Description: "A two-dimensional structure representation of the compound.",
-          },
-          {
-            TOCHeading: "3D Conformer",
-            Description: "A three-dimensional structure representation computed by PubChem.",
-          },
-        ],
       },
       {
         TOCHeading: "Names and Identifiers",

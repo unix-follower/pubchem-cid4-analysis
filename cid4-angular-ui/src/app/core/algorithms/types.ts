@@ -45,13 +45,11 @@ export interface GraphTraceResult {
 export interface GraphNodeMetric {
   nodeId: string
   label: string
-  degree: number
   eccentricity: number
 }
 
 export interface MolecularGraphMetrics {
   nodeMetrics: GraphNodeMetric[]
-  degreeSequence: number[]
   density: number
   diameter: number
   radius: number

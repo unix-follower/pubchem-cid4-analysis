@@ -508,16 +508,11 @@ export function buildMinimumSpanningTreeTrace(graph: AlgorithmGraph): GraphTrace
 
 export function buildMolecularGraphMetrics(graph: AlgorithmGraph): MolecularGraphMetrics {
   const distances = buildDistanceMatrix(graph, false)
-  const degrees = buildDegreeMap(graph)
   const nodeMetrics = graph.nodes.map((node) => ({
     nodeId: node.id,
     label: node.label,
-    degree: degrees.get(node.id) ?? 0,
     eccentricity: computeEccentricity(node.id, distances),
   }))
-  const degreeSequence = [...nodeMetrics]
-    .map((metric) => metric.degree)
-    .sort((left, right) => right - left)
   const eccentricities = nodeMetrics.map((metric) => metric.eccentricity)
   const diameter = Math.max(...eccentricities, 0)
   const radius = eccentricities.length > 0 ? Math.min(...eccentricities) : 0
@@ -527,7 +522,6 @@ export function buildMolecularGraphMetrics(graph: AlgorithmGraph): MolecularGrap
 
   return {
     nodeMetrics,
-    degreeSequence,
     density: computeGraphDensity(graph),
     diameter,
     radius,

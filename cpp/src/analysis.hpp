@@ -928,8 +928,6 @@ std::vector<std::string> supportedDistanceMethods();
 std::string parseDistanceMethod(std::string_view method);
 NormalizedAdjacencyInput loadAdjacencyInput(const std::filesystem::path& jsonPath);
 BioactivityAnalysisResult buildBioactivityAnalysis(const std::filesystem::path& csvPath);
-void writeBioactivityFilteredCsv(const BioactivityAnalysisResult& result,
-                                 const std::filesystem::path& outputPath);
 void writeBioactivityPlotSvg(const BioactivityAnalysisResult& result,
                              const std::filesystem::path& outputPath);
 PosteriorBioactivityAnalysisResult
@@ -937,28 +935,18 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
                                   double priorAlpha = 1.0,
                                   double priorBeta = 1.0,
                                   double credibleIntervalMass = 0.95);
-void writePosteriorBioactivityCsv(const PosteriorBioactivityAnalysisResult& result,
-                                  const std::filesystem::path& outputPath);
 BinomialActivityDistributionAnalysisResult
 buildBinomialActivityDistributionAnalysis(const std::filesystem::path& csvPath);
-void writeBinomialActivityDistributionCsv(const BinomialActivityDistributionAnalysisResult& result,
-                                          const std::filesystem::path& outputPath);
 ChiSquareActivityAidTypeAnalysisResult
 buildChiSquareActivityAidTypeAnalysis(const std::filesystem::path& csvPath,
                                       double expectedCountThreshold = 5.0);
-void writeChiSquareActivityAidTypeCsv(const ChiSquareActivityAidTypeAnalysisResult& result,
-                                      const std::filesystem::path& outputPath);
 HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesystem::path& csvPath,
                                                              double hillCoefficient = 1.0);
-void writeHillDoseResponseCsv(const HillDoseResponseAnalysisResult& result,
-                              const std::filesystem::path& outputPath);
 void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
                                   const std::filesystem::path& outputPath);
 ActivityValueStatisticsAnalysisResult
 buildActivityValueStatisticsAnalysis(const std::filesystem::path& csvPath,
                                      double shapiroAlpha = 0.05);
-void writeActivityValueStatisticsCsv(const ActivityValueStatisticsAnalysisResult& result,
-                                     const std::filesystem::path& outputPath);
 void writeActivityValueStatisticsPlotSvg(const ActivityValueStatisticsAnalysisResult& result,
                                          const std::filesystem::path& outputPath);
 GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<AtomRecord>& atoms,
@@ -974,8 +962,6 @@ void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
                                     const std::filesystem::path& outputPath);
 AtomElementEntropyAnalysisResult
 buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms, std::string_view sourceFile);
-void writeAtomElementEntropyCsv(const AtomElementEntropyAnalysisResult& result,
-                                const std::filesystem::path& outputPath);
 void writeAtomElementEntropyPlotSvg(const AtomElementEntropyAnalysisResult& result,
                                     const std::filesystem::path& outputPath);
 AdjacencyMatrix buildAdjacencyMatrix(const NormalizedAdjacencyInput& input,
@@ -1000,4 +986,9 @@ std::filesystem::path outputJsonPath(const std::filesystem::path& outputDirector
                                      const std::filesystem::path& sourceFile);
 
 DistanceMatrixResult readDistanceMatrix(const std::filesystem::path& jsonPath);
+
+void writeCsvTable(const std::vector<std::string>& headers,
+                   const std::vector<std::vector<std::string>>& rows,
+                   const std::filesystem::path& outputPath,
+                   const std::string_view context);
 } // namespace cid4

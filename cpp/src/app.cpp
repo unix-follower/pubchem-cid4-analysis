@@ -1157,8 +1157,10 @@ void makeBinomialActivityDistribution(const CommandLineOptions& options)
     const std::filesystem::path bioactivityCsvPath = dataDir / options.bioactivityFile;
     const cid4::BinomialActivityDistributionAnalysisResult binomialActivityDistribution =
         cid4::buildBinomialActivityDistributionAnalysis(bioactivityCsvPath);
-    cid4::writeBinomialActivityDistributionCsv(binomialActivityDistribution,
-                                               binomialActivityDistributionCsvOutputPath);
+    cid4::writeCsvTable(binomialActivityDistribution.headers,
+                        binomialActivityDistribution.rows,
+                        binomialActivityDistributionCsvOutputPath,
+                        "binomial activity distribution CSV output path");
     std::ofstream binomialActivityDistributionSummaryOutput(
         binomialActivityDistributionSummaryOutputPath);
     binomialActivityDistributionSummaryOutput << std::setw(2)
@@ -1185,8 +1187,10 @@ void makeChiSquareActivity(const CommandLineOptions& options)
         outputDir /
         (options.bioactivityFile.stem().string() + ".activity_aid_type_chi_square.summary.json");
 
-    cid4::writeChiSquareActivityAidTypeCsv(chiSquareActivityAidTypeAnalysis,
-                                           chiSquareActivityAidTypeCsvOutputPath);
+    cid4::writeCsvTable(chiSquareActivityAidTypeAnalysis.headers,
+                        chiSquareActivityAidTypeAnalysis.rows,
+                        chiSquareActivityAidTypeCsvOutputPath,
+                        "chi-square activity Aid_Type CSV output path");
 
     std::ofstream chiSquareActivityAidTypeSummaryOutput(chiSquareActivityAidTypeSummaryOutputPath);
     chiSquareActivityAidTypeSummaryOutput << std::setw(2)
@@ -1254,7 +1258,10 @@ void makeHillDoseResponse(const CommandLineOptions& options)
     const std::filesystem::path hillDoseResponsePlotOutputPath =
         outputDir / (options.bioactivityFile.stem().string() + ".hill_dose_response.svg");
 
-    cid4::writeHillDoseResponseCsv(hillDoseResponseAnalysis, hillDoseResponseCsvOutputPath);
+    cid4::writeCsvTable(hillDoseResponseAnalysis.headers,
+                        hillDoseResponseAnalysis.rows,
+                        hillDoseResponseCsvOutputPath,
+                        "Hill dose-response CSV output path");
 
     std::ofstream hillDoseResponseSummaryOutput(hillDoseResponseSummaryOutputPath);
     hillDoseResponseSummaryOutput << std::setw(2) << toJson(hillDoseResponseAnalysis) << '\n';
@@ -1284,7 +1291,10 @@ void makeAtomElementEntropy(const CommandLineOptions& options)
     const std::filesystem::path atomElementEntropyPlotOutputPath =
         outputDir / (options.sdfFile.stem().string() + ".atom_element_entropy.svg");
 
-    cid4::writeAtomElementEntropyCsv(atomElementEntropyAnalysis, atomElementEntropyCsvOutputPath);
+    cid4::writeCsvTable(atomElementEntropyAnalysis.headers,
+                        atomElementEntropyAnalysis.rows,
+                        atomElementEntropyCsvOutputPath,
+                        "atom element entropy CSV output path");
     cid4::writeAtomElementEntropyPlotSvg(atomElementEntropyAnalysis,
                                          atomElementEntropyPlotOutputPath);
 
@@ -1315,8 +1325,10 @@ void makeActivityValueStats(const CommandLineOptions& options)
     const std::filesystem::path activityValueStatisticsPlotOutputPath =
         outputDir / (options.bioactivityFile.stem().string() + ".activity_value_statistics.svg");
 
-    cid4::writeActivityValueStatisticsCsv(activityValueStatisticsAnalysis,
-                                          activityValueStatisticsCsvOutputPath);
+    cid4::writeCsvTable(activityValueStatisticsAnalysis.headers,
+                        activityValueStatisticsAnalysis.rows,
+                        activityValueStatisticsCsvOutputPath,
+                        "Activity_Value statistics CSV output path");
 
     std::ofstream activityValueStatisticsSummaryOutput(activityValueStatisticsSummaryOutputPath);
     activityValueStatisticsSummaryOutput << std::setw(2) << toJson(activityValueStatisticsAnalysis)
@@ -1348,7 +1360,10 @@ void makeBioactivity(const CommandLineOptions& options)
     const std::filesystem::path bioactivityPlotOutputPath =
         outputDir / (options.bioactivityFile.stem().string() + ".ic50_pic50.svg");
 
-    cid4::writeBioactivityFilteredCsv(bioactivityAnalysis, bioactivityCsvOutputPath);
+    cid4::writeCsvTable(bioactivityAnalysis.headers,
+                        bioactivityAnalysis.filteredRows,
+                        bioactivityCsvOutputPath,
+                        "bioactivity CSV output path");
 
     std::ofstream bioactivitySummaryOutput(bioactivitySummaryOutputPath);
     bioactivitySummaryOutput << std::setw(2) << toJson(bioactivityAnalysis) << '\n';
@@ -1374,8 +1389,10 @@ void makePosteriorBioactivity(const CommandLineOptions& options)
     const std::filesystem::path posteriorBioactivitySummaryOutputPath =
         outputDir / (options.bioactivityFile.stem().string() + ".activity_posterior.summary.json");
 
-    cid4::writePosteriorBioactivityCsv(posteriorBioactivityAnalysis,
-                                       posteriorBioactivityCsvOutputPath);
+    cid4::writeCsvTable(posteriorBioactivityAnalysis.headers,
+                        posteriorBioactivityAnalysis.rows,
+                        posteriorBioactivityCsvOutputPath,
+                        "posterior bioactivity CSV output path");
 
     std::ofstream posteriorBioactivitySummaryOutput(posteriorBioactivitySummaryOutputPath);
     posteriorBioactivitySummaryOutput << std::setw(2) << toJson(posteriorBioactivityAnalysis)

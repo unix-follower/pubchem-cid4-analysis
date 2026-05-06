@@ -996,7 +996,8 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsCsvAndSvgWritersEmitArtif
     const auto filteredCsvPath = outputDirectory / "bioactivity.activity_value.csv";
     const auto plotSvgPath = outputDirectory / "bioactivity.activity_value.svg";
 
-    cid4::writeActivityValueStatisticsCsv(result, filteredCsvPath);
+    cid4::writeCsvTable(
+        result.headers, result.rows, filteredCsvPath, "Activity_Value statistics CSV output path");
     cid4::writeActivityValueStatisticsPlotSvg(result, plotSvgPath);
 
     std::ifstream filteredInput(filteredCsvPath);
@@ -1049,7 +1050,8 @@ TEST(DistanceStrategiesTest, AtomElementEntropyWritersEmitArtifacts)
     const auto csvPath = outputDirectory / "atom_entropy.csv";
     const auto svgPath = outputDirectory / "atom_entropy.svg";
 
-    cid4::writeAtomElementEntropyCsv(result, csvPath);
+    cid4::writeCsvTable(
+        result.headers, result.rows, csvPath, "atom element entropy CSV output path");
     cid4::writeAtomElementEntropyPlotSvg(result, svgPath);
 
     std::ifstream csvInput(csvPath);
@@ -1160,7 +1162,8 @@ TEST(BioactivityStrategiesTest, CsvAndSvgWritersEmitArtifacts)
     const auto filteredCsvPath = outputDirectory / "bioactivity.csv";
     const auto plotSvgPath = outputDirectory / "bioactivity.svg";
 
-    cid4::writeBioactivityFilteredCsv(result, filteredCsvPath);
+    cid4::writeCsvTable(
+        result.headers, result.filteredRows, filteredCsvPath, "bioactivity CSV output path");
     cid4::writeBioactivityPlotSvg(result, plotSvgPath);
 
     std::ifstream filteredInput(filteredCsvPath);
@@ -1273,7 +1276,8 @@ TEST(BioactivityStrategiesTest, PosteriorCsvWriterEmitsArtifacts)
 
     const auto filteredCsvPath = outputDirectory / "bioactivity.posterior.csv";
 
-    cid4::writePosteriorBioactivityCsv(result, filteredCsvPath);
+    cid4::writeCsvTable(
+        result.headers, result.rows, filteredCsvPath, "posterior bioactivity CSV output path");
 
     std::ifstream filteredInput(filteredCsvPath);
     ASSERT_TRUE(filteredInput.good());
@@ -1347,7 +1351,8 @@ TEST(BioactivityStrategiesTest, BinomialCsvWriterEmitsArtifacts)
 
     const auto pmfCsvPath = outputDirectory / "bioactivity.binomial.csv";
 
-    cid4::writeBinomialActivityDistributionCsv(result, pmfCsvPath);
+    cid4::writeCsvTable(
+        result.headers, result.rows, pmfCsvPath, "binomial activity distribution CSV output path");
 
     std::ifstream pmfInput(pmfCsvPath);
     ASSERT_TRUE(pmfInput.good());
@@ -1444,7 +1449,10 @@ TEST(BioactivityStrategiesTest, ChiSquareCsvWriterEmitsArtifacts)
 
     const auto contingencyCsvPath = outputDirectory / "bioactivity.chi_square.csv";
 
-    cid4::writeChiSquareActivityAidTypeCsv(result, contingencyCsvPath);
+    cid4::writeCsvTable(result.headers,
+                        result.rows,
+                        contingencyCsvPath,
+                        "chi-square activity Aid_Type CSV output path");
 
     std::ifstream contingencyInput(contingencyCsvPath);
     ASSERT_TRUE(contingencyInput.good());
@@ -1489,7 +1497,8 @@ TEST(BioactivityStrategiesTest, HillCsvAndSvgWritersEmitArtifacts)
     const auto filteredCsvPath = outputDirectory / "bioactivity.hill.csv";
     const auto plotSvgPath = outputDirectory / "bioactivity.hill.svg";
 
-    cid4::writeHillDoseResponseCsv(result, filteredCsvPath);
+    cid4::writeCsvTable(
+        result.headers, result.rows, filteredCsvPath, "Hill dose-response CSV output path");
     cid4::writeHillDoseResponsePlotSvg(result, plotSvgPath);
 
     std::ifstream filteredInput(filteredCsvPath);
