@@ -1,0 +1,20 @@
+<div class="switcher" role="radiogroup" aria-label="Graphics renderer">
+  @for (option of options(); track option.kind) {
+    <button
+      type="button"
+      class="chip"
+      [class.active]="currentRenderer() === option.kind"
+      [class.unsupported]="!option.supported"
+      [disabled]="!option.supported"
+      [attr.aria-pressed]="currentRenderer() === option.kind"
+      (click)="rendererSelected.emit(option.kind)"
+    >
+      {{ option.label }}
+      @if (!option.supported) {
+        <span class="chip-note">Unavailable</span>
+      }
+    </button>
+  }
+
+  <button type="button" class="chip ghost" (click)="resetView.emit()">Reset view</button>
+</div>

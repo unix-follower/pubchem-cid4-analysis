@@ -1,0 +1,425 @@
+<section class="hero card" aria-labelledby="page-title">
+  <div>
+    <p class="eyebrow">Data Structures</p>
+    <h1 id="page-title">Interactive Molecular Graph Workbench</h1>
+  </div>
+
+  <dl class="hero-meta">
+    <div>
+      <dt>Source</dt>
+      <dd>{{ dataSourceLabel() }}</dd>
+    </div>
+    <div>
+      <dt>Atoms</dt>
+      <dd>{{ activeMolecule()?.atoms?.length ?? 0 }}</dd>
+    </div>
+    <div>
+      <dt>Active Bonds</dt>
+      <dd>{{ activeBonds().length }}</dd>
+    </div>
+    <div>
+      <dt>Components</dt>
+      <dd>{{ connectedComponents().length }}</dd>
+    </div>
+  </dl>
+</section>
+
+<section class="workspace-grid">
+  <article class="card viewer-card">
+    <div class="card-header">
+      <div>
+        <p class="eyebrow">Graph Canvas</p>
+        <h2>Rearrangeable molecule view</h2>
+      </div>
+      <div class="toolbar" aria-label="Graph controls">
+        <button
+          type="button"
+          class="chip"
+          [class.active]="layoutMode() === 'source'"
+          (click)="setLayoutMode('source')"
+        >
+          Conformer layout
+        </button>
+        <button
+          type="button"
+          class="chip"
+          [class.active]="layoutMode() === 'circle'"
+          (click)="setLayoutMode('circle')"
+        >
+          Circle layout
+        </button>
+        <button type="button" class="chip ghost" (click)="resetLayout()">Reset nodes</button>
+        <button type="button" class="chip ghost" (click)="toggleLabels()">
+          {{ showLabels() ? "Hide labels" : "Show labels" }}
+        </button>
+        <button
+          type="button"
+          class="chip ghost"
+          [disabled]="!localMolecule()"
+          (click)="restoreApiData()"
+        >
+          Use selected dataset
+        </button>
+      </div>
+    </div>
+
+    <div class="dataset-panel">
+      <div>
+        <p class="dataset-title">Dataset source</p>
+      </div>
+
+      <div class="dataset-selector" aria-label="Molecule source selector">
+        @for (option of datasetOptions; track option.id) {
+          <button
+            type="button"
+            class="chip"
+            [class.active]="selectedDatasetId() === option.id && !localMolecule()"
+            (click)="selectDataset(option.id)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div
+      class="dropzone"
+      [class.dropzone-active]="dropzoneActive()"
+      (dragenter)="onDragEnter($event)"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+    >
+      <div>
+        <p class="drop-title">Drop a PubChem coordinate JSON file here</p>
+        <p class="drop-copy">
+          The parser reads the PC_Compounds[0] entry, bonds, and the first coordinate set, whether
+          the file carries 2D or 3D coordinates.
+        </p>
+      </div>
+      <label class="upload-button">
+        <span>Choose file</span>
+        <input type="file" accept="application/json,.json" (change)="onFileSelected($event)" />
+      </label>
+    </div>
+
+    @if (uploadError()) {
+      <p class="error-banner" aria-live="assertive">{{ uploadError() }}</p>
+    }
+
+    @if (moleculeQuery.isPending() && !activeMolecule()) {
+      <p class="status-text">Loading mocked molecule payload...</p>
+    } @else if (moleculeQuery.isError() && !activeMolecule()) {
+      <p class="error-banner" aria-live="assertive">{{ moleculeErrorMessage() }}</p>
+    } @else if (activeMolecule(); as molecule) {
+      <svg
+        #graphSvg
+        class="graph-canvas"
+        [attr.viewBox]="'0 0 ' + viewboxWidth + ' ' + viewboxHeight"
+        role="img"
+        aria-label="CID 4 molecular graph"
+        (pointermove)="onGraphPointerMove($event, graphSvg)"
+        (pointerup)="stopDragging()"
+        (pointercancel)="stopDragging()"
+        (pointerleave)="stopDragging()"
+      >
+        <rect x="0" y="0" [attr.width]="viewboxWidth" [attr.height]="viewboxHeight" rx="28" />
+
+        @for (bond of displayBonds(); track bond.id) {
+          <line
+            class="bond"
+            [class.bond-disabled]="bond.disabled"
+            [attr.x1]="bond.x1"
+            [attr.y1]="bond.y1"
+            [attr.x2]="bond.x2"
+            [attr.y2]="bond.y2"
+          />
+        }
+
+        @for (atom of displayAtoms(); track atom.id) {
+          <g class="atom-group" [class.atom-selected]="selectedAtomId() === atom.id">
+            <circle
+              class="atom-hit"
+              [attr.cx]="atom.x"
+              [attr.cy]="atom.y"
+              r="24"
+              (click)="selectAtom(atom.id)"
+              (pointerdown)="onNodePointerDown($event, atom.id)"
+            />
+            <circle
+              class="atom-core"
+              [attr.cx]="atom.x"
+              [attr.cy]="atom.y"
+              r="18"
+              [attr.fill]="atomFill(atom.componentIndex)"
+            />
+            <text class="atom-text" [attr.x]="atom.x" [attr.y]="atom.y + 1">
+              {{ atom.elementSymbol }}
+            </text>
+            @if (showLabels()) {
+              <text class="atom-label" [attr.x]="atom.x" [attr.y]="atom.y - 28">
+                #{{ atom.id }}
+              </text>
+            }
+          </g>
+        }
+      </svg>
+
+      <div class="legend-row" aria-label="Connected component legend">
+        @for (component of connectedComponents(); track component.id; let index = $index) {
+          <div class="legend-pill">
+            <span class="legend-dot" [style.background]="atomFill(index)"></span>
+            <span>Component {{ index + 1 }}: {{ component.atomIds.join(", ") }}</span>
+          </div>
+        }
+      </div>
+    }
+  </article>
+
+  <article class="card renderer-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Browser Graphics</p>
+        <h2>Strategy-based molecule renderer</h2>
+      </div>
+    </div>
+
+    <p class="aside-copy renderer-copy">
+      WebGL is the compatibility baseline. WebGPU is exposed through the same UI as an experimental
+      progressive-enhancement path.
+    </p>
+
+    <div class="comparison-panel">
+      <label class="bond-toggle comparison-toggle">
+        <input
+          type="checkbox"
+          [checked]="comparisonEnabled()"
+          (change)="setComparisonEnabled($any($event.target).checked)"
+        />
+        <span>Enable comparison overlay</span>
+      </label>
+
+      @if (comparisonEnabled()) {
+        <div class="dataset-selector" aria-label="Comparison reference selector">
+          @for (option of datasetOptions; track option.id) {
+            <button
+              type="button"
+              class="chip"
+              [class.active]="referenceDatasetId() === option.id"
+              [disabled]="option.id === selectedDatasetId() && !localMolecule()"
+              (click)="selectReferenceDataset(option.id)"
+            >
+              {{ option.label }}
+            </button>
+          }
+        </div>
+      }
+
+      @if (comparisonEnabled() && comparisonSummary(); as summary) {
+        <div class="comparison-grid">
+          <div class="comparison-stat">
+            <span class="comparison-label">Reference</span>
+            <strong>{{ comparisonReferenceLabel() }}</strong>
+          </div>
+          <div class="comparison-stat">
+            <span class="comparison-label">Mean atom displacement</span>
+            <strong>{{ summary.meanAtomDisplacement.toFixed(3) }}</strong>
+          </div>
+          <div class="comparison-stat">
+            <span class="comparison-label">Max bond delta</span>
+            <strong>{{ summary.maxBondLengthDelta.toFixed(3) }}</strong>
+          </div>
+        </div>
+
+        <div class="comparison-list-grid">
+          <div>
+            <p class="comparison-list-title">Top atom shifts</p>
+            <ul class="comparison-list">
+              @for (row of summary.topAtomDisplacements; track row.atomId) {
+                <li>
+                  #{{ row.atomId }} {{ row.elementSymbol }} · {{ row.displacement.toFixed(3) }}
+                </li>
+              }
+            </ul>
+          </div>
+
+          <div>
+            <p class="comparison-list-title">Top bond deltas</p>
+            <ul class="comparison-list">
+              @for (row of summary.topBondDeltas; track row.bondId) {
+                <li>{{ row.source }} ↔ {{ row.target }} · {{ row.lengthDelta.toFixed(3) }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+      } @else if (comparisonEnabled() && comparisonReferenceErrorMessage()) {
+        <p class="error-banner" aria-live="assertive">
+          {{ comparisonReferenceErrorMessage() }}
+        </p>
+      } @else if (comparisonEnabled() && !comparisonSummary()) {
+        <p class="status-text">
+          Choose a different reference dataset to draw WebGPU comparison overlays.
+        </p>
+      }
+    </div>
+
+    <app-molecule-renderer-viewer
+      [molecule]="activeMolecule()"
+      [comparisonReference]="comparisonReferenceMolecule()"
+      [comparisonSummary]="comparisonSummary()"
+      [comparisonReferenceLabel]="comparisonReferenceLabel()"
+    />
+  </article>
+</section>
+
+<section class="panel-grid">
+  <article class="card data-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Adjacency List</p>
+        <h2>Bonded neighbors by atom</h2>
+        <p>Out degree = number of neighbors.</p>
+      </div>
+    </div>
+
+    <div class="table-frame">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Atom</th>
+            <th scope="col">Neighbors</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of adjacencyRows(); track row.atomId) {
+            <tr
+              [class.row-selected]="selectedAtomId() === row.atomId"
+              (click)="selectAtom(row.atomId)"
+            >
+              <th scope="row">{{ row.atomId }}</th>
+              <td>{{ row.neighbors.join(", ") || "None" }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="card data-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Atom Property Map</p>
+        <h2>Hash-map style inspector</h2>
+      </div>
+    </div>
+
+    @if (selectedAtom(); as atom) {
+      <div class="selected-atom">
+        <p class="selected-kicker">Selected atom #{{ atom.id }}</p>
+        <p>
+          {{ atom.elementSymbol }} · atomic number {{ atom.atomicNumber }} · mass
+          {{ atom.mass }}
+        </p>
+      </div>
+    }
+
+    <div class="table-frame">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Atom</th>
+            <th scope="col">Element</th>
+            <th scope="col">Mass</th>
+            <th scope="col">Degree</th>
+            <th scope="col">Hybridization</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (atom of displayAtoms(); track atom.id) {
+            <tr [class.row-selected]="selectedAtomId() === atom.id" (click)="selectAtom(atom.id)">
+              <th scope="row">{{ atom.id }}</th>
+              <td>{{ atom.elementSymbol }}</td>
+              <td>{{ atom.mass }}</td>
+              <td>{{ atom.degree }}</td>
+              <td>{{ activeMolecule()?.atoms?.[atom.id - 1]?.hybridization ?? "n/a" }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="card data-card matrix-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Adjacency Matrix</p>
+        <h2>Space-time trade-off view</h2>
+      </div>
+      <p class="tradeoff-copy">
+        Dense lookup is constant-time, but this 14×14 matrix carries many zeros compared with the
+        sparse adjacency list.
+      </p>
+    </div>
+
+    <div class="table-frame matrix-frame">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th scope="col">Atom</th>
+            @for (header of atomHeaders(); track header) {
+              <th scope="col">{{ header }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of matrixRows(); track row.atomId) {
+            <tr
+              [class.row-selected]="selectedAtomId() === row.atomId"
+              (click)="selectAtom(row.atomId)"
+            >
+              <th scope="row">{{ row.atomId }}</th>
+              @for (value of row.values; track $index) {
+                <td [class.matrix-live]="value > 0">{{ value }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <article class="card data-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Union-Find</p>
+        <h2>Connected components with bond toggles</h2>
+      </div>
+    </div>
+
+    <p class="aside-copy">
+      Disable bonds to simulate zeroed edges and watch the component partition update.
+    </p>
+
+    <div class="bond-toggle-list">
+      @for (bond of bondControls(); track bond.id) {
+        <label class="bond-toggle">
+          <input
+            type="checkbox"
+            [checked]="bond.enabled"
+            (change)="setBondEnabled(bond.id, $any($event.target).checked)"
+          />
+          <span>{{ bond.label }}</span>
+        </label>
+      }
+    </div>
+
+    <ul class="component-list">
+      @for (component of connectedComponents(); track component.id; let index = $index) {
+        <li>
+          <span class="legend-dot" [style.background]="atomFill(index)"></span>
+          Component {{ index + 1 }} → {{ component.atomIds.join(", ") }}
+        </li>
+      }
+    </ul>
+  </article>
+</section>

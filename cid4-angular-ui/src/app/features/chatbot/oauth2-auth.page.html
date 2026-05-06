@@ -1,0 +1,46 @@
+<section class="card hero">
+  <div>
+    <p class="eyebrow">OAuth2 / Keycloak</p>
+    <h1>Use a Keycloak-ready bearer token flow</h1>
+    <p class="lede">
+      This screen is wired for a Keycloak-backed Authorization Code with PKCE setup. In the current
+      repo it also supports a development bearer token so the protected chat flow is usable without
+      a live Keycloak environment.
+    </p>
+  </div>
+
+  <div class="config-card">
+    <p class="config-label">Provider</p>
+    <p class="config-value">{{ keycloakConfig()?.provider ?? "keycloak" }}</p>
+    <p class="config-meta">Configured: {{ keycloakConfig()?.configured ? "yes" : "no" }}</p>
+    <p class="config-meta">Client: {{ keycloakConfig()?.client_id ?? "placeholder" }}</p>
+    <p class="config-meta">Realm: {{ keycloakConfig()?.realm ?? "placeholder" }}</p>
+  </div>
+</section>
+
+<section class="card panel">
+  <p class="eyebrow">Token login</p>
+  <h2>Exchange a bearer token for a chat session</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+    <label class="field">
+      <span>Access token</span>
+      <textarea formControlName="token" rows="8" placeholder="cid4-keycloak-dev-token"></textarea>
+    </label>
+
+    <div class="actions">
+      <button type="submit" class="primary-action" [disabled]="busy() || form.invalid">
+        {{ busy() ? "Signing in…" : "Sign in with token" }}
+      </button>
+      <a class="ghost-action" [routerLink]="['/auth']" [queryParams]="{ returnTo: returnTo() }"
+        >Back</a
+      >
+    </div>
+  </form>
+
+  @if (errorMessage()) {
+    <p class="error-banner">{{ errorMessage() }}</p>
+  }
+
+  <p class="hint">Development token: cid4-keycloak-dev-token</p>
+</section>

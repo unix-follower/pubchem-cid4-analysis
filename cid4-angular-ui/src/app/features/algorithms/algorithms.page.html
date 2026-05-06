@@ -1,0 +1,491 @@
+<section class="hero card" aria-labelledby="algorithms-title">
+  <div>
+    <p class="eyebrow">Algorithms</p>
+    <h1 id="algorithms-title">CID 4 Algorithm Studio</h1>
+  </div>
+
+  <dl class="hero-meta">
+    <div>
+      <dt>Graph scenario</dt>
+      <dd>{{ graphScenarioLabel() }}</dd>
+    </div>
+    <div>
+      <dt>Trace steps</dt>
+      <dd>{{ activeGraphTrace()?.steps?.length ?? 0 }}</dd>
+    </div>
+    <div>
+      <dt>Bioactivity rows</dt>
+      <dd>{{ bioactivityValues().length }}</dd>
+    </div>
+    <div>
+      <dt>Fiedler value</dt>
+      <dd>{{ laplacianAnalysis()?.fiedlerValue ?? "Pending" }}</dd>
+    </div>
+  </dl>
+</section>
+
+<section class="graph-grid">
+  <article class="card graph-card">
+    <div class="card-header">
+      <div>
+        <p class="eyebrow">Graph Lab</p>
+        <h2>Traversal, path, cycle, MST, and topological ordering</h2>
+      </div>
+      <div class="scenario-grid" aria-label="Graph algorithm selector">
+        @for (scenario of graphScenarios; track scenario) {
+          <button
+            type="button"
+            class="chip"
+            [class.active]="graphScenario() === scenario"
+            (click)="selectGraphScenario(scenario)"
+          >
+            {{ formatScenarioLabel(scenario) }}
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (activeGraphTrace(); as trace) {
+      <app-cytoscape-graph
+        [graph]="activeGraphDisplayGraph()"
+        [state]="activeGraphStep()"
+        [ariaLabel]="trace.algorithm + ' graph view'"
+      />
+
+      <div class="step-toolbar">
+        <div>
+          <p class="trace-title">{{ trace.algorithm }}</p>
+          <p class="trace-copy">{{ trace.headline }}</p>
+        </div>
+        <div class="step-controls">
+          <button
+            type="button"
+            class="chip ghost"
+            (click)="stepGraphBackward()"
+            [disabled]="graphStepIndex() === 0"
+          >
+            Previous
+          </button>
+          <span class="step-counter"
+            >Step {{ graphStepIndex() + 1 }} / {{ trace.steps.length }}</span
+          >
+          <button
+            type="button"
+            class="chip ghost"
+            (click)="stepGraphForward()"
+            [disabled]="graphStepIndex() >= trace.steps.length - 1"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      @if (activeGraphStep(); as step) {
+        <div class="step-callout">
+          <p class="step-label">{{ step.label }}</p>
+          <p>{{ step.detail }}</p>
+        </div>
+      }
+    } @else {
+      <p class="status-text">Loading graph fixtures...</p>
+    }
+  </article>
+
+  <article class="card summary-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Trace Summary</p>
+        <h2>Text fallback for every graph step</h2>
+      </div>
+    </div>
+
+    @if (activeGraphTrace(); as trace) {
+      <p class="summary-copy">{{ trace.detail }}</p>
+
+      <dl class="metric-grid">
+        @for (metric of graphMetrics(); track metric.label) {
+          <div>
+            <dt>{{ metric.label }}</dt>
+            <dd>{{ metric.value }}</dd>
+          </div>
+        }
+      </dl>
+
+      @if (trace.order.length > 0) {
+        <p class="sequence-title">Derived order</p>
+        <ol class="sequence-list">
+          @for (item of trace.order; track item) {
+            <li>{{ item }}</li>
+          }
+        </ol>
+      }
+
+      <ol class="step-list">
+        @for (step of trace.steps; track $index; let index = $index) {
+          <li [class.current-step]="index === graphStepIndex()" (click)="graphStepIndex.set(index)">
+            <span class="step-index">{{ index + 1 }}</span>
+            <div>
+              <p class="step-label">{{ step.label }}</p>
+              <p>{{ step.detail }}</p>
+            </div>
+          </li>
+        }
+      </ol>
+    }
+  </article>
+</section>
+
+<section class="analysis-grid graph-theory-grid">
+  <article class="card analysis-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Molecular Metrics</p>
+        <h2>Degree sequence, density, radius, and diameter</h2>
+      </div>
+    </div>
+
+    @if (molecularMetrics(); as metrics) {
+      <div class="sort-stats metric-triptych">
+        <div>
+          <span>Graph density</span>
+          <strong>{{ metrics.density }}</strong>
+        </div>
+        <div>
+          <span>Diameter / radius</span>
+          <strong>{{ metrics.diameter }} / {{ metrics.radius }}</strong>
+        </div>
+        <div>
+          <span>Center atoms</span>
+          <strong>{{ metrics.centerNodeIds.join(", ") }}</strong>
+        </div>
+      </div>
+
+      <div class="table-frame">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Atom</th>
+              <th scope="col">Eccentricity</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (metric of metrics.nodeMetrics; track metric.nodeId) {
+              <tr>
+                <td>{{ metric.label }}</td>
+                <td>{{ metric.eccentricity }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </article>
+
+  <article class="card analysis-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Spectral View</p>
+        <h2>Laplacian and connectivity summary</h2>
+      </div>
+    </div>
+
+    @if (laplacianAnalysis(); as analysis) {
+      <p class="summary-copy">
+        The second-smallest Laplacian eigenvalue is
+        <strong>{{ analysis.fiedlerValue ?? 0 }}</strong
+        >, which stays positive for this connected molecular graph.
+      </p>
+
+      <div class="sort-stats metric-triptych">
+        <div>
+          <span>Eigenvalues</span>
+          <strong>{{ analysis.eigenvalues.join(", ") }}</strong>
+        </div>
+      </div>
+
+      <div class="table-frame matrix-frame">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Row</th>
+              @for (column of matrixHeader(); track column) {
+                <th scope="col">{{ column }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of laplacianRows(); track row.label) {
+              <tr>
+                <td>{{ row.label }}</td>
+                @for (value of row.values; track $index) {
+                  <td>{{ value }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </article>
+
+  <article class="card analysis-card dedup-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Morgan Propagation</p>
+        <h2>Iterative node labels for circular-fingerprint intuition</h2>
+      </div>
+    </div>
+
+    @if (morganAnalysis(); as analysis) {
+      <p class="summary-copy">
+        Label propagation stabilized after round {{ analysis.stabilizedAfterRound }}.
+      </p>
+
+      <ol class="step-list compact-list">
+        @for (round of analysis.rounds; track round.round) {
+          <li>
+            <span class="step-index">{{ round.round }}</span>
+            <div>
+              <p class="step-label">Round {{ round.round }}</p>
+              <p>{{ formatMorganLabels(round.labels) }}</p>
+              <p class="probe-copy">
+                Changed nodes: {{ round.changedNodeIds.join(", ") || "None" }}
+              </p>
+            </div>
+          </li>
+        }
+      </ol>
+    }
+  </article>
+</section>
+
+<section class="analysis-grid graph-theory-grid">
+  <article class="card graph-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Reaction Networks</p>
+        <h2>Pathway, reaction, taxonomy, and compound flow</h2>
+      </div>
+    </div>
+
+    @if (reactionNetworkGraph(); as graph) {
+      <app-cytoscape-graph [graph]="graph" ariaLabel="Reaction network graph" />
+
+      @if (reactionNetworkSummary(); as summary) {
+        <dl class="metric-grid">
+          <div>
+            <dt>Pathways</dt>
+            <dd>{{ summary.pathwayCount }}</dd>
+          </div>
+          <div>
+            <dt>Reactions</dt>
+            <dd>{{ summary.reactionCount }}</dd>
+          </div>
+          <div>
+            <dt>Compounds</dt>
+            <dd>{{ summary.compoundCount }}</dd>
+          </div>
+          <div>
+            <dt>Taxa</dt>
+            <dd>{{ summary.taxonomyCount }}</dd>
+          </div>
+          <div>
+            <dt>Edges</dt>
+            <dd>{{ summary.edgeCount }}</dd>
+          </div>
+          <div>
+            <dt>CID 4 links</dt>
+            <dd>{{ summary.cid4ParticipationEdgeCount }}</dd>
+          </div>
+        </dl>
+      }
+
+      @if (reactionNetworkTopologicalTrace(); as trace) {
+        <p class="summary-copy">{{ trace.detail }}</p>
+
+        <p class="sequence-title">Topological order</p>
+        <ol class="sequence-list">
+          @for (item of reactionNetworkOrderLabels(); track item) {
+            <li>{{ item }}</li>
+          }
+        </ol>
+      }
+    } @else {
+      <p class="status-text">Loading reaction-network graph...</p>
+    }
+  </article>
+
+  <article class="card analysis-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Reaction Spectral View</p>
+        <h2>Undirected projection for Laplacian connectivity</h2>
+      </div>
+    </div>
+
+    @if (reactionNetworkLaplacianAnalysis(); as analysis) {
+      <p class="summary-copy">
+        The directed reaction network is projected to an undirected graph so the Laplacian stays
+        symmetric. The smallest non-zero eigenvalue is
+        <strong>{{ analysis.fiedlerValue ?? 0 }}</strong
+        >.
+      </p>
+
+      @if (reactionNetworkMetrics(); as metrics) {
+        <div class="sort-stats metric-triptych">
+          <div>
+            <span>Connected components</span>
+            <strong>{{ metrics.connectedComponentCount }}</strong>
+          </div>
+          <div>
+            <span>Density</span>
+            <strong>{{ metrics.density }}</strong>
+          </div>
+          <div>
+            <span>Diameter / radius</span>
+            <strong>{{ metrics.diameter }} / {{ metrics.radius }}</strong>
+          </div>
+        </div>
+      }
+
+      <div class="table-frame matrix-frame">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Row</th>
+              @for (column of reactionNetworkMatrixHeader(); track column) {
+                <th scope="col">{{ column }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of reactionNetworkLaplacianRows(); track row.label) {
+              <tr>
+                <td>{{ row.label }}</td>
+                @for (value of row.values; track $index) {
+                  <td>{{ value }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="status-text">Loading reaction-network matrices...</p>
+    }
+  </article>
+</section>
+
+<section class="analysis-grid">
+  <article class="card analysis-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Sorting</p>
+        <h2>Merge sort versus quicksort</h2>
+      </div>
+      <div class="scenario-grid">
+        @for (algorithm of sortAlgorithms; track algorithm) {
+          <button
+            type="button"
+            class="chip"
+            [class.active]="sortAlgorithm() === algorithm"
+            (click)="selectSortAlgorithm(algorithm)"
+          >
+            {{ formatSortLabel(algorithm) }}
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (activeSortTrace(); as trace) {
+      <div class="sort-stats">
+        <div>
+          <span>Comparisons</span>
+          <strong>{{ trace.comparisons }}</strong>
+        </div>
+        <div>
+          <span>Writes</span>
+          <strong>{{ trace.writes }}</strong>
+        </div>
+        <div>
+          <span>Sorted output</span>
+          <strong>{{ trace.sortedValues.join(", ") }}</strong>
+        </div>
+      </div>
+
+      <div class="step-toolbar compact-toolbar">
+        <span class="step-counter">Step {{ sortStepIndex() + 1 }} / {{ trace.steps.length }}</span>
+        <div class="step-controls">
+          <button
+            type="button"
+            class="chip ghost"
+            (click)="stepSortBackward()"
+            [disabled]="sortStepIndex() === 0"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            class="chip ghost"
+            (click)="stepSortForward()"
+            [disabled]="sortStepIndex() >= trace.steps.length - 1"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      @if (activeSortStep(); as step) {
+        <div class="step-callout">
+          <p class="step-label">{{ step.label }}</p>
+          <p>{{ step.detail }}</p>
+        </div>
+        <div class="value-bar-grid" aria-label="Sorting trace bars">
+          @for (value of step.values; track $index; let index = $index) {
+            <div
+              class="value-bar"
+              [class.active-bar]="step.activeIndices.includes(index)"
+              [style.height.%]="sortBarHeight(value)"
+            >
+              <span>{{ value }}</span>
+            </div>
+          }
+        </div>
+      }
+    }
+  </article>
+
+  <article class="card analysis-card">
+    <div class="card-header compact">
+      <div>
+        <p class="eyebrow">Binary Search</p>
+        <h2>Find the first IC50 at or below 100 µM</h2>
+      </div>
+    </div>
+
+    @if (binarySearchTrace(); as trace) {
+      <p class="summary-copy">
+        {{
+          trace.index >= 0
+            ? "First qualifying value is " + trace.value + " at sorted index " + trace.index + "."
+            : "No values met the threshold."
+        }}
+      </p>
+
+      <ol class="step-list compact-list">
+        @for (step of trace.steps; track $index) {
+          <li>
+            <span class="step-index">{{ $index + 1 }}</span>
+            <div>
+              <p class="step-label">{{ step.label }}</p>
+              <p>{{ step.detail }}</p>
+              <p class="probe-copy">
+                low={{ step.low }}, mid={{ step.middle }}, high={{ step.high }}
+              </p>
+            </div>
+          </li>
+        }
+      </ol>
+    }
+  </article>
+</section>

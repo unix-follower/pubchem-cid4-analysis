@@ -1,0 +1,43 @@
+.switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 16px;
+  font: inherit;
+  font-weight: 700;
+  color: #10233d;
+  background: #dbeaf1;
+  cursor: pointer;
+}
+
+.chip.active {
+  background: #10233d;
+  color: #f8fbfc;
+}
+
+.chip.unsupported {
+  background: #ece5dc;
+  color: #6d7f94;
+}
+
+.chip.ghost {
+  background: #f2e8da;
+}
+
+.chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.chip-note {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
