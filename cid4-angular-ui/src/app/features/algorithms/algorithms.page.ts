@@ -5,7 +5,6 @@ import {
   buildMergeSortTrace,
   buildQuickSortTrace,
   buildThresholdBinarySearchTrace,
-  deduplicateByKey,
 } from "../../core/algorithms/array-algorithms"
 import {
   buildBfsTrace,
@@ -21,7 +20,6 @@ import {
 import {
   AlgorithmGraph,
   BinarySearchTraceResult,
-  DeduplicationResult,
   GraphTraceResult,
   MatrixAnalysis,
   MolecularGraphMetrics,
