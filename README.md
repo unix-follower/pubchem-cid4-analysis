@@ -178,44 +178,6 @@ mₑ^mono is the monoisotopic mass of element e
 
 ## 2. Data Structures, Algorithms, Graph Theory & Machine Learning
 
-### Data Structures
-| Structure | Exercise |
-|---|---|
-| **Adjacency list** | Represent the 14-atom molecular graph (atom ID → list of bonded neighbors) from `bonds.aid1`/`bonds.aid2` |
-| **Adjacency matrix** | Same molecular graph as a matrix; compare space/time trade-offs |
-| **Hash map** | Atom ID → properties map (element, mass, hybridization) from `cid4-sdf-extracted.json` |
-| **Nested dict / tree** | Parse `COMPOUND_CID_4.json`'s nested `Section` tree; write a recursive traversal |
-| **Priority queue** | Dijkstra's on the taxonomy graph weighting edges by taxonomic distance |
-| **Disjoint set (Union-Find)** | Find connected components of the molecular graph; useful if you zero out some bonds |
-
-### Algorithms
-| Algorithm | Exercise |
-|---|---|
-| **BFS** | Starting from atom 1 (O), traverse all atoms in breadth-first order; output atom sequence |
-| **DFS** | Same; detect back-edges (would indicate ring closure — none here, but generalizes) |
-| **Topological sort** | Apply to the DOT directed graph `cid4 → species`; apply to pathway reaction steps |
-| **Shortest path (BFS/Dijkstra)** | Shortest bond path between O (atom 1) and N (atom 2) in the molecular graph |
-| **Cycle detection** | Verify 1-Amino-2-propanol is **acyclic** using DFS coloring |
-| **Minimum spanning tree (Kruskal/Prim)** | Use 3D inter-atom distances as edge weights to find the MST of the complete atom graph (should approximate bond skeleton) |
-| **Sorting** | Sort bioassay records by `Activity_Value`; benchmark quicksort vs mergesort; sort organisms by `Taxonomy_ID` |
-| **Binary search** | After sorting `Activity_Value`, binary-search for a threshold (e.g., find first IC50 ≤ 100 µM) |
-| **Hash-based dedup** | Deduplicate `pubchem_cid_4_consolidatedcompoundtaxonomy.csv` by `Source_Organism` |
-
-### Graph Theory (Deep Dive)
-The dataset gives you **two distinct graphs** to work with:
-
-**Graph 1 — Molecular graph** (from Conformer3D_COMPOUND_CID_4.json)
-- 14 nodes (atoms), 13 edges (bonds), undirected, unweighted → or weight by bond length from 3D SDF
-- Compute: degree sequence, diameter, eccentricity of each atom, graph density
-- Apply **Morgan algorithm** (iterative node-label propagation) — basis of circular fingerprints (ECFP)
-- 3D SDF: weight edges by actual bond lengths → weighted shortest path
-
-**Graph 2 — Taxonomy graph** (from cid_4.dot)
-- 13 nodes (1 compound + 12 species visible in DOT), directed edges from compound to species, two subgraph clusters (mammals, birds)
-- In- and out-degree analysis; the compound node has out-degree 12, species have in-degree 1
-- Partition the species nodes: are mammal nodes and bird nodes distinguishable using **spectral clustering** on the adjacency matrix?
-- Add NCBI `Taxonomy_ID` values from the CSV as node attributes → compute taxonomic distance between species pairs as a tree-distance problem on the NCBI taxonomy tree
-
 ### Machine Learning
 
 **Feature engineering** — build a feature matrix from these sources:
