@@ -7,21 +7,17 @@ import {
   buildLayoutPositions,
   findConnectedComponents,
   flattenSections,
-} from "../../core/cid4/graph"
-import { compareMolecules } from "../../core/cid4/comparison"
-import {
-  parseCompoundRecordPayload,
-  parseConformerPayload,
-  parseStructurePayload,
-} from "../../core/cid4/parser"
-import {
-  CompoundRecord,
-  FlatSectionNode,
-  LayoutMode,
-  MoleculeGraph,
-  Point,
-} from "../../core/cid4/types"
+} from "@/app/core/cid4/graph"
+import { compareMolecules } from "@/app/core/cid4/comparison"
+import { parseConformerPayload } from "@/app/core/cid4/parser"
+import { FlatSectionNode, LayoutMode, MoleculeGraph, Point } from "@/app/core/cid4/types"
 import { MoleculeRendererViewerComponent } from "./molecule-renderer-viewer.component"
+import {
+  fetchMoleculeDataset,
+  fetchCompoundRecord,
+  MoleculeDatasetId,
+  MOLECULE_DATASETS,
+} from "@/api/cid4api"
 
 const VIEWBOX_WIDTH = 720
 const VIEWBOX_HEIGHT = 460
@@ -54,91 +50,6 @@ interface BondControlRow {
   id: string
   label: string
   enabled: boolean
-}
-
-type MoleculeDatasetId =
-  | "structure-2d"
-  | "conformer-1"
-  | "conformer-2"
-  | "conformer-3"
-  | "conformer-4"
-  | "conformer-5"
-  | "conformer-6"
-
-interface MoleculeDatasetOption {
-  id: MoleculeDatasetId
-  label: string
-  url: string
-  parser: (payload: unknown) => MoleculeGraph
-}
-
-const MOLECULE_DATASETS: MoleculeDatasetOption[] = [
-  {
-    id: "structure-2d",
-    label: "Structure2D",
-    url: "/api/cid4/structure/2d",
-    parser: parseStructurePayload,
-  },
-  {
-    id: "conformer-1",
-    label: "Conformer 1",
-    url: "/api/cid4/conformer/1",
-    parser: parseConformerPayload,
-  },
-  {
-    id: "conformer-2",
-    label: "Conformer 2",
-    url: "/api/cid4/conformer/2",
-    parser: parseConformerPayload,
-  },
-  {
-    id: "conformer-3",
-    label: "Conformer 3",
-    url: "/api/cid4/conformer/3",
-    parser: parseConformerPayload,
-  },
-  {
-    id: "conformer-4",
-    label: "Conformer 4",
-    url: "/api/cid4/conformer/4",
-    parser: parseConformerPayload,
-  },
-  {
-    id: "conformer-5",
-    label: "Conformer 5",
-    url: "/api/cid4/conformer/5",
-    parser: parseConformerPayload,
-  },
-  {
-    id: "conformer-6",
-    label: "Conformer 6",
-    url: "/api/cid4/conformer/6",
-    parser: parseConformerPayload,
-  },
-]
-
-async function fetchJson(url: string): Promise<unknown> {
-  const response = await fetch(url)
-
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`)
-  }
-
-  return response.json() as Promise<unknown>
-}
-
-async function fetchMoleculeDataset(datasetId: MoleculeDatasetId): Promise<MoleculeGraph> {
-  const dataset = MOLECULE_DATASETS.find((option) => option.id === datasetId)
-
-  if (!dataset) {
-    throw new Error(`Unknown dataset ${datasetId}`)
-  }
-
-  return dataset.parser(await fetchJson(dataset.url))
-}
-
-async function fetchCompoundRecord(): Promise<CompoundRecord> {
-  return parseCompoundRecordPayload(await fetchJson("/api/cid4/compound"))
 }
 
 @Component({

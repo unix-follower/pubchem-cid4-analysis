@@ -25,45 +25,42 @@ export function parseStructurePayload(input: unknown): MoleculeGraph {
 }
 
 function parsePcCompoundPayload(input: unknown, titleSuffix: string): MoleculeGraph {
-  const root = expectRecord(input, "root")
-  const compounds = expectArray(root["PC_Compounds"], "PC_Compounds")
-  const compound = expectRecord(compounds[0], "PC_Compounds[0]")
-  const compoundId = expectRecord(compound["id"], "PC_Compounds[0].id")
-  const compoundIdBody = expectRecord(compoundId["id"], "PC_Compounds[0].id.id")
-  const cid = expectNumber(compoundIdBody["cid"], "PC_Compounds[0].id.id.cid")
+  const root = input as UnknownRecord
+  const compounds = root["PC_Compounds"] as unknown[]
+  const compound = compounds[0] as UnknownRecord
+  const compoundId = compound["id"] as UnknownRecord
+  const compoundIdBody = compoundId["id"] as UnknownRecord
+  const cid = compoundIdBody["cid"] as number
 
-  const atoms = expectRecord(compound["atoms"], "PC_Compounds[0].atoms")
-  const atomIds = expectNumberArray(atoms["aid"], "PC_Compounds[0].atoms.aid")
-  const atomicNumbers = expectNumberArray(atoms["element"], "PC_Compounds[0].atoms.element")
+  const atoms = compound["atoms"] as UnknownRecord
+  const atomIds = atoms["aid"] as number[]
+  const atomicNumbers = atoms["element"] as number[]
 
   if (atomIds.length !== atomicNumbers.length) {
     throw new Error("Atom ids and element arrays must have the same length")
   }
 
-  const bonds = expectRecord(compound["bonds"], "PC_Compounds[0].bonds")
-  const bondAid1 = expectNumberArray(bonds["aid1"], "PC_Compounds[0].bonds.aid1")
-  const bondAid2 = expectNumberArray(bonds["aid2"], "PC_Compounds[0].bonds.aid2")
-  const bondOrders = expectNumberArray(bonds["order"], "PC_Compounds[0].bonds.order")
+  const bonds = compound["bonds"] as UnknownRecord
+  const bondAid1 = bonds["aid1"] as number[]
+  const bondAid2 = bonds["aid2"] as number[]
+  const bondOrders = bonds["order"] as number[]
 
   if (bondAid1.length !== bondAid2.length || bondAid1.length !== bondOrders.length) {
     throw new Error("Bond arrays must have the same length")
   }
 
-  const coords = expectArray(compound["coords"], "PC_Compounds[0].coords")
-  const coordinateRecord = expectRecord(coords[0], "PC_Compounds[0].coords[0]")
-  const conformers = expectArray(
-    coordinateRecord["conformers"],
-    "PC_Compounds[0].coords[0].conformers",
-  )
-  const conformer = expectRecord(conformers[0], "PC_Compounds[0].coords[0].conformers[0]")
+  const coords = compound["coords"] as unknown[]
+  const coordinateRecord = coords[0] as UnknownRecord
+  const conformers = coordinateRecord["conformers"] as unknown[]
+  const conformer = conformers[0] as UnknownRecord
   const coordinateAtomIds = Array.isArray(coordinateRecord["aid"])
-    ? expectNumberArray(coordinateRecord["aid"], "PC_Compounds[0].coords[0].aid")
+    ? (coordinateRecord["aid"] as number[])
     : atomIds
 
-  const x = expectNumberArray(conformer["x"], "PC_Compounds[0].coords[0].conformers[0].x")
-  const y = expectNumberArray(conformer["y"], "PC_Compounds[0].coords[0].conformers[0].y")
+  const x = conformer["x"] as number[]
+  const y = conformer["y"] as number[]
   const z = Array.isArray(conformer["z"])
-    ? expectNumberArray(conformer["z"], "PC_Compounds[0].coords[0].conformers[0].z")
+    ? (conformer["z"] as number[])
     : new Array(coordinateAtomIds.length).fill(0)
 
   if (
@@ -117,69 +114,25 @@ function parsePcCompoundPayload(input: unknown, titleSuffix: string): MoleculeGr
 }
 
 export function parseCompoundRecordPayload(input: unknown): CompoundRecord {
-  const root = expectRecord(input, "root")
-  const record = expectRecord(root["Record"], "Record")
-  const recordNumber = expectNumber(record["RecordNumber"], "Record.RecordNumber")
-  const title = expectString(record["RecordTitle"], "Record.RecordTitle")
-  const sections = expectArray(record["Section"], "Record.Section")
+  const root = input as UnknownRecord
+  const record = root["Record"] as UnknownRecord
+  const sections = record["Section"] as unknown[]
 
   return {
-    recordNumber,
-    title,
-    sections: sections.map((section, index) =>
-      parseSection(section, `section-${index}`, `Record.Section[${index}]`),
-    ),
+    recordNumber: record["RecordNumber"] as number,
+    title: record["RecordTitle"] as string,
+    sections: sections.map((section, index) => parseSection(section, `section-${index}`)),
   }
 }
 
-function parseSection(input: unknown, id: string, path: string): CompoundSectionNode {
-  const section = expectRecord(input, path)
-  const children = Array.isArray(section["Section"]) ? section["Section"] : []
+function parseSection(input: unknown, id: string): CompoundSectionNode {
+  const section = input as UnknownRecord
+  const children = section["Section"] as CompoundSectionNode[]
 
   return {
     id,
-    heading: expectString(section["TOCHeading"], `${path}.TOCHeading`),
-    description: typeof section["Description"] === "string" ? section["Description"] : null,
-    children: children.map((child, index) =>
-      parseSection(child, `${id}-${index}`, `${path}.Section[${index}]`),
-    ),
+    heading: section["TOCHeading"] as string,
+    description: section["Description"] as string,
+    children: children.map((child, index) => parseSection(child, `${id}-${index}`)),
   }
-}
-
-function expectRecord(input: unknown, path: string): UnknownRecord {
-  if (!input || typeof input !== "object" || Array.isArray(input)) {
-    throw new Error(`${path} must be an object`)
-  }
-
-  return input as UnknownRecord
-}
-
-function expectArray(input: unknown, path: string): unknown[] {
-  if (!Array.isArray(input)) {
-    throw new Error(`${path} must be an array`)
-  }
-
-  return input
-}
-
-function expectNumber(input: unknown, path: string): number {
-  if (typeof input !== "number" || Number.isNaN(input)) {
-    throw new Error(`${path} must be a number`)
-  }
-
-  return input
-}
-
-function expectString(input: unknown, path: string): string {
-  if (typeof input !== "string" || input.length === 0) {
-    throw new Error(`${path} must be a non-empty string`)
-  }
-
-  return input
-}
-
-function expectNumberArray(input: unknown, path: string): number[] {
-  const values = expectArray(input, path)
-
-  return values.map((value, index) => expectNumber(value, `${path}[${index}]`))
 }

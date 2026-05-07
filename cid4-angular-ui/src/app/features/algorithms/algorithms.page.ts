@@ -26,9 +26,15 @@ import {
   MorganAnalysisResult,
 } from "../../core/algorithms/types"
 import { buildLayoutPositions } from "../../core/cid4/graph"
-import { parseConformerPayload } from "../../core/cid4/parser"
 import { MoleculeGraph, Point } from "../../core/cid4/types"
 import { CytoscapeGraphComponent } from "./cytoscape-graph.component"
+import {
+  fetchBioactivity,
+  fetchPathway,
+  fetchReactionNetwork,
+  fetchTaxonomy,
+  fetchMolecule,
+} from "@/api/cid4api"
 
 const GRAPH_SCENARIOS = [
   "bfs",
@@ -45,43 +51,6 @@ const SORT_ALGORITHMS = ["merge-sort", "quick-sort"] as const
 
 type GraphScenario = (typeof GRAPH_SCENARIOS)[number]
 type SortAlgorithm = (typeof SORT_ALGORITHMS)[number]
-
-interface PathwayResponse {
-  graph: AlgorithmGraph
-}
-
-interface ReactionNetworkSummary {
-  pathwayCount: number
-  reactionCount: number
-  compoundCount: number
-  taxonomyCount: number
-  edgeCount: number
-  cid4ParticipationEdgeCount: number
-}
-
-interface ReactionNetworkResponse {
-  graph: AlgorithmGraph
-  summary: ReactionNetworkSummary
-}
-
-interface BioactivityRecord {
-  aid: number
-  assay: string
-  activityValue: number
-}
-
-interface BioactivityResponse {
-  records: BioactivityRecord[]
-}
-
-interface TaxonomyRecord {
-  taxonomyId: number
-  sourceOrganism: string
-}
-
-interface TaxonomyResponse {
-  organisms: TaxonomyRecord[]
-}
 
 @Component({
   selector: "app-algorithms-page",
@@ -384,37 +353,6 @@ export class AlgorithmsPage {
       .map(([nodeId, value]) => `${nodeId}:${value}`)
       .join(" · ")
   }
-}
-
-async function fetchJson(url: string): Promise<unknown> {
-  const response = await fetch(url)
-
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.status}`)
-  }
-
-  return response.json() as Promise<unknown>
-}
-
-async function fetchMolecule(): Promise<MoleculeGraph> {
-  return parseConformerPayload(await fetchJson("/api/cid4/conformer/1"))
-}
-
-async function fetchPathway(): Promise<AlgorithmGraph> {
-  const payload = (await fetchJson("/api/algorithms/pathway")) as PathwayResponse
-  return payload.graph
-}
-
-async function fetchReactionNetwork(): Promise<ReactionNetworkResponse> {
-  return (await fetchJson("/api/algorithms/reaction-network")) as ReactionNetworkResponse
-}
-
-async function fetchBioactivity(): Promise<BioactivityResponse> {
-  return (await fetchJson("/api/algorithms/bioactivity")) as BioactivityResponse
-}
-
-async function fetchTaxonomy(): Promise<TaxonomyResponse> {
-  return (await fetchJson("/api/algorithms/taxonomy")) as TaxonomyResponse
 }
 
 function mapMoleculeToAlgorithmGraph(molecule: MoleculeGraph): AlgorithmGraph {
