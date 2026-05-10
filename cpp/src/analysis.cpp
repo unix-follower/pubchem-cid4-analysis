@@ -2729,7 +2729,7 @@ buildChiSquareActivityAidTypeAnalysis(const std::filesystem::path& csvPath,
             static_cast<double>(sparseCount) /
             static_cast<double>(activityLevels.size() * aidTypeLevels.size());
     }
-    
+
     return ChiSquareActivityAidTypeAnalysisResult{
         .sourceFile = context.sourceFile,
         .rowCounts =

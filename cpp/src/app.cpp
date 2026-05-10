@@ -615,23 +615,22 @@ nlohmann::json toJson(const cid4::BinomialActivityDistributionAnalysisResult& bi
           {"unanimousInactiveAssayTrials",
            binomialActivity.rowCounts.unanimousInactiveAssayTrials}}},
         {"binomial",
-          {"parameters",
-           {{"nAssays", binomialActivity.binomial.parameters.nAssays},
-            {"observedActiveAssays", binomialActivity.binomial.parameters.observedActiveAssays},
-            {"successProbabilityActiveAssay",
-             binomialActivity.binomial.parameters.successProbabilityActiveAssay}}},
-          {"summary",
-           {{"pmfAtObservedActiveAssayCount",
-             binomialActivity.binomial.summary.pmfAtObservedActiveAssayCount},
-            {"cumulativeProbabilityLeqObservedActiveAssayCount",
-             binomialActivity.binomial.summary.cumulativeProbabilityLeqObservedActiveAssayCount},
-            {"cumulativeProbabilityGeqObservedActiveAssayCount",
-             binomialActivity.binomial.summary.cumulativeProbabilityGeqObservedActiveAssayCount},
-            {"binomialMeanActiveAssays",
-             binomialActivity.binomial.summary.binomialMeanActiveAssays},
-            {"binomialVarianceActiveAssays",
-             binomialActivity.binomial.summary.binomialVarianceActiveAssays},
-            {"pmfProbabilitySum", binomialActivity.binomial.summary.pmfProbabilitySum}}}},
+         {"parameters",
+          {{"nAssays", binomialActivity.binomial.parameters.nAssays},
+           {"observedActiveAssays", binomialActivity.binomial.parameters.observedActiveAssays},
+           {"successProbabilityActiveAssay",
+            binomialActivity.binomial.parameters.successProbabilityActiveAssay}}},
+         {"summary",
+          {{"pmfAtObservedActiveAssayCount",
+            binomialActivity.binomial.summary.pmfAtObservedActiveAssayCount},
+           {"cumulativeProbabilityLeqObservedActiveAssayCount",
+            binomialActivity.binomial.summary.cumulativeProbabilityLeqObservedActiveAssayCount},
+           {"cumulativeProbabilityGeqObservedActiveAssayCount",
+            binomialActivity.binomial.summary.cumulativeProbabilityGeqObservedActiveAssayCount},
+           {"binomialMeanActiveAssays", binomialActivity.binomial.summary.binomialMeanActiveAssays},
+           {"binomialVarianceActiveAssays",
+            binomialActivity.binomial.summary.binomialVarianceActiveAssays},
+           {"pmfProbabilitySum", binomialActivity.binomial.summary.pmfProbabilitySum}}}},
     };
 }
 
@@ -658,50 +657,49 @@ nlohmann::json toJson(const cid4::ChiSquareActivityAidTypeAnalysisResult& chiSqu
         expectedCounts[activity] = aidTypeObject;
     }
 
-    return {
-        {"sourceFile", chiSquareActivity.sourceFile},
-        {"rowCounts",
-         {{"totalRows", chiSquareActivity.rowCounts.totalRows},
-          {"activeRows", chiSquareActivity.rowCounts.activeRows},
-          {"inactiveRows", chiSquareActivity.rowCounts.inactiveRows},
-          {"unspecifiedRows", chiSquareActivity.rowCounts.unspecifiedRows},
-          {"otherActivityRows", chiSquareActivity.rowCounts.otherActivityRows},
-          {"retainedBinaryRows", chiSquareActivity.rowCounts.retainedBinaryRows},
-          {"droppedNonBinaryRows", chiSquareActivity.rowCounts.droppedNonBinaryRows},
-          {"retainedUniqueBioassays", chiSquareActivity.rowCounts.retainedUniqueBioassays},
-          {"retainedRowsWithAidType", chiSquareActivity.rowCounts.retainedRowsWithAidType},
-          {"activityLevelsTested", chiSquareActivity.rowCounts.activityLevelsTested},
-          {"aidTypeLevelsTested", chiSquareActivity.rowCounts.aidTypeLevelsTested}}},
-        {"contingencyTable",
-         {{"activityLevels", chiSquareActivity.contingencyTable.activityLevels},
-          {"aidTypeLevels", chiSquareActivity.contingencyTable.aidTypeLevels},
-          {"observedCounts", observedCounts},
-          {"expectedCounts", expectedCounts}}},
-        {"chiSquareTest",
-          {"chi2Statistic",
-           chiSquareActivity.chiSquareTest.chi2Statistic.has_value()
-               ? nlohmann::json(*chiSquareActivity.chiSquareTest.chi2Statistic)
-               : nlohmann::json(nullptr)},
-          {"pValue",
-           chiSquareActivity.chiSquareTest.pValue.has_value()
-               ? nlohmann::json(*chiSquareActivity.chiSquareTest.pValue)
-               : nlohmann::json(nullptr)},
-          {"degreesOfFreedom",
-           chiSquareActivity.chiSquareTest.degreesOfFreedom.has_value()
-               ? nlohmann::json(*chiSquareActivity.chiSquareTest.degreesOfFreedom)
-               : nlohmann::json(nullptr)},
-          {"minimumExpectedCountThreshold",
-           chiSquareActivity.chiSquareTest.minimumExpectedCountThreshold},
-          {"sparseExpectedCellCount",
-           chiSquareActivity.chiSquareTest.sparseExpectedCellCount.has_value()
-               ? nlohmann::json(*chiSquareActivity.chiSquareTest.sparseExpectedCellCount)
-               : nlohmann::json(nullptr)},
-          {"sparseExpectedCellFraction",
-           chiSquareActivity.chiSquareTest.sparseExpectedCellFraction.has_value()
-               ? nlohmann::json(*chiSquareActivity.chiSquareTest.sparseExpectedCellFraction)
-               : nlohmann::json(nullptr)}}};
-    };
-}
+    return {{"sourceFile", chiSquareActivity.sourceFile},
+            {"rowCounts",
+             {{"totalRows", chiSquareActivity.rowCounts.totalRows},
+              {"activeRows", chiSquareActivity.rowCounts.activeRows},
+              {"inactiveRows", chiSquareActivity.rowCounts.inactiveRows},
+              {"unspecifiedRows", chiSquareActivity.rowCounts.unspecifiedRows},
+              {"otherActivityRows", chiSquareActivity.rowCounts.otherActivityRows},
+              {"retainedBinaryRows", chiSquareActivity.rowCounts.retainedBinaryRows},
+              {"droppedNonBinaryRows", chiSquareActivity.rowCounts.droppedNonBinaryRows},
+              {"retainedUniqueBioassays", chiSquareActivity.rowCounts.retainedUniqueBioassays},
+              {"retainedRowsWithAidType", chiSquareActivity.rowCounts.retainedRowsWithAidType},
+              {"activityLevelsTested", chiSquareActivity.rowCounts.activityLevelsTested},
+              {"aidTypeLevelsTested", chiSquareActivity.rowCounts.aidTypeLevelsTested}}},
+            {"contingencyTable",
+             {{"activityLevels", chiSquareActivity.contingencyTable.activityLevels},
+              {"aidTypeLevels", chiSquareActivity.contingencyTable.aidTypeLevels},
+              {"observedCounts", observedCounts},
+              {"expectedCounts", expectedCounts}}},
+            {"chiSquareTest",
+             {"chi2Statistic",
+              chiSquareActivity.chiSquareTest.chi2Statistic.has_value()
+                  ? nlohmann::json(*chiSquareActivity.chiSquareTest.chi2Statistic)
+                  : nlohmann::json(nullptr)},
+             {"pValue",
+              chiSquareActivity.chiSquareTest.pValue.has_value()
+                  ? nlohmann::json(*chiSquareActivity.chiSquareTest.pValue)
+                  : nlohmann::json(nullptr)},
+             {"degreesOfFreedom",
+              chiSquareActivity.chiSquareTest.degreesOfFreedom.has_value()
+                  ? nlohmann::json(*chiSquareActivity.chiSquareTest.degreesOfFreedom)
+                  : nlohmann::json(nullptr)},
+             {"minimumExpectedCountThreshold",
+              chiSquareActivity.chiSquareTest.minimumExpectedCountThreshold},
+             {"sparseExpectedCellCount",
+              chiSquareActivity.chiSquareTest.sparseExpectedCellCount.has_value()
+                  ? nlohmann::json(*chiSquareActivity.chiSquareTest.sparseExpectedCellCount)
+                  : nlohmann::json(nullptr)},
+             {"sparseExpectedCellFraction",
+              chiSquareActivity.chiSquareTest.sparseExpectedCellFraction.has_value()
+                  ? nlohmann::json(*chiSquareActivity.chiSquareTest.sparseExpectedCellFraction)
+                  : nlohmann::json(nullptr)}}};
+};
+} // namespace
 
 nlohmann::json toJson(const cid4::GradientDescentAnalysisResult& gradientDescent)
 {
@@ -918,22 +916,24 @@ nlohmann::json toJson(const cid4::HillDoseResponseAnalysisResult& hillAnalysis)
             {"max", hillAnalysis.statistics.aucTrapezoidReferenceCurve.max}}}}},
         {"activityTypeCounts", activityTypeCounts},
         {"analysis",
-         {{"model", hillAnalysis.analysis.model},
-          {"equation", hillAnalysis.analysis.equation},
-          {"firstDerivative", hillAnalysis.analysis.firstDerivative},
-          {"secondDerivative", hillAnalysis.analysis.secondDerivative},
-          {"referenceHillCoefficientN", hillAnalysis.analysis.referenceHillCoefficientN},
-          {"parameterInterpretation", hillAnalysis.analysis.parameterInterpretation},
-          {"aucTrapezoidReferenceCurve",
-            {{"concentrationBoundsDefinition",
-             hillAnalysis.analysis.aucTrapezoidReferenceCurve.concentrationBoundsDefinition},
-            {"gridSize", hillAnalysis.analysis.aucTrapezoidReferenceCurve.gridSize},
-            {"concentrationUnits",
-             hillAnalysis.analysis.aucTrapezoidReferenceCurve.concentrationUnits},
-            {"interpretation", hillAnalysis.analysis.aucTrapezoidReferenceCurve.interpretation}}},
-          {"linearConcentrationInflection", linearInflection},
-          {"representativeRows", representativeRows},
-          }},
+         {
+             {"model", hillAnalysis.analysis.model},
+             {"equation", hillAnalysis.analysis.equation},
+             {"firstDerivative", hillAnalysis.analysis.firstDerivative},
+             {"secondDerivative", hillAnalysis.analysis.secondDerivative},
+             {"referenceHillCoefficientN", hillAnalysis.analysis.referenceHillCoefficientN},
+             {"parameterInterpretation", hillAnalysis.analysis.parameterInterpretation},
+             {"aucTrapezoidReferenceCurve",
+              {{"concentrationBoundsDefinition",
+                hillAnalysis.analysis.aucTrapezoidReferenceCurve.concentrationBoundsDefinition},
+               {"gridSize", hillAnalysis.analysis.aucTrapezoidReferenceCurve.gridSize},
+               {"concentrationUnits",
+                hillAnalysis.analysis.aucTrapezoidReferenceCurve.concentrationUnits},
+               {"interpretation",
+                hillAnalysis.analysis.aucTrapezoidReferenceCurve.interpretation}}},
+             {"linearConcentrationInflection", linearInflection},
+             {"representativeRows", representativeRows},
+         }},
     };
 }
 
