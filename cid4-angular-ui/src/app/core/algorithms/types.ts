@@ -107,9 +107,3 @@ export interface BinarySearchTraceResult {
   value: number | null
   steps: BinarySearchTraceStep[]
 }
-
-export interface DeduplicationResult<T> {
-  uniqueItems: T[]
-  duplicates: T[]
-  duplicateKeys: string[]
-}

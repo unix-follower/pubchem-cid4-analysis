@@ -548,18 +548,6 @@ nlohmann::json toJson(const cid4::BioactivityAnalysisResult& bioactivity)
 
 nlohmann::json toJson(const cid4::PosteriorBioactivityAnalysisResult& posteriorBioactivity)
 {
-    nlohmann::json representativeRows = nlohmann::json::array();
-    for (const auto& row : posteriorBioactivity.analysis.representativeRows) {
-        representativeRows.push_back({
-            {"bioactivityId", row.bioactivityId},
-            {"bioAssayAid", row.bioAssayAid},
-            {"activity", row.activity},
-            {"activityType", row.activityType},
-            {"targetName", row.targetName},
-            {"bioAssayName", row.bioAssayName},
-        });
-    }
-
     nlohmann::json posteriorMode = nullptr;
     if (posteriorBioactivity.posterior.summary.posteriorModeProbabilityActive.has_value()) {
         posteriorMode = *posteriorBioactivity.posterior.summary.posteriorModeProbabilityActive;
@@ -581,10 +569,6 @@ nlohmann::json toJson(const cid4::PosteriorBioactivityAnalysisResult& posteriorB
            {{"family", posteriorBioactivity.posterior.prior.family},
             {"alpha", posteriorBioactivity.posterior.prior.alpha},
             {"beta", posteriorBioactivity.posterior.prior.beta}}},
-          {"likelihood",
-           {{"family", posteriorBioactivity.posterior.likelihood.family},
-            {"successLabel", posteriorBioactivity.posterior.likelihood.successLabel},
-            {"failureLabel", posteriorBioactivity.posterior.likelihood.failureLabel}}},
           {"posteriorDistribution",
            {{"family", posteriorBioactivity.posterior.posteriorDistribution.family},
             {"alpha", posteriorBioactivity.posterior.posteriorDistribution.alpha},
@@ -607,42 +591,11 @@ nlohmann::json toJson(const cid4::PosteriorBioactivityAnalysisResult& posteriorB
              posteriorBioactivity.posterior.summary.posteriorProbabilityActiveGt0_5},
             {"observedActiveFractionInRetainedRows",
              posteriorBioactivity.posterior.summary.observedActiveFractionInRetainedRows}}}}},
-        {"analysis",
-         {{"targetQuantity", posteriorBioactivity.analysis.targetQuantity},
-          {"model", posteriorBioactivity.analysis.model},
-          {"updateEquations",
-           {{"posteriorAlpha", posteriorBioactivity.analysis.updateEquations.posteriorAlpha},
-            {"posteriorBeta", posteriorBioactivity.analysis.updateEquations.posteriorBeta},
-            {"posteriorMean", posteriorBioactivity.analysis.updateEquations.posteriorMean}}},
-          {"binaryEvidenceDefinition",
-           {{"retainedLabels",
-             posteriorBioactivity.analysis.binaryEvidenceDefinition.retainedLabels},
-            {"excludedLabels",
-             posteriorBioactivity.analysis.binaryEvidenceDefinition.excludedLabels},
-            {"interpretation",
-             posteriorBioactivity.analysis.binaryEvidenceDefinition.interpretation}}},
-          {"representativeRows", representativeRows},
-          {"notes", posteriorBioactivity.analysis.notes}}},
     };
 }
 
 nlohmann::json toJson(const cid4::BinomialActivityDistributionAnalysisResult& binomialActivity)
 {
-    nlohmann::json representativeAssays = nlohmann::json::array();
-    for (const auto& assay : binomialActivity.analysis.representativeAssays) {
-        representativeAssays.push_back({
-            {"bioAssayAid", assay.bioAssayAid},
-            {"assayActivity", assay.assayActivity},
-            {"retainedBinaryRows", assay.retainedBinaryRows},
-            {"activeRows", assay.activeRows},
-            {"inactiveRows", assay.inactiveRows},
-            {"mixedEvidence", assay.mixedEvidence},
-            {"activityType", assay.activityType},
-            {"targetName", assay.targetName},
-            {"bioAssayName", assay.bioAssayName},
-        });
-    }
-
     return {
         {"sourceFile", binomialActivity.sourceFile},
         {"rowCounts",
@@ -662,12 +615,6 @@ nlohmann::json toJson(const cid4::BinomialActivityDistributionAnalysisResult& bi
           {"unanimousInactiveAssayTrials",
            binomialActivity.rowCounts.unanimousInactiveAssayTrials}}},
         {"binomial",
-         {{"trialDefinition",
-           {{"unit", binomialActivity.binomial.trialDefinition.unit},
-            {"successLabel", binomialActivity.binomial.trialDefinition.successLabel},
-            {"failureLabel", binomialActivity.binomial.trialDefinition.failureLabel},
-            {"assayResolutionRule",
-             binomialActivity.binomial.trialDefinition.assayResolutionRule}}},
           {"parameters",
            {{"nAssays", binomialActivity.binomial.parameters.nAssays},
             {"observedActiveAssays", binomialActivity.binomial.parameters.observedActiveAssays},
@@ -684,14 +631,7 @@ nlohmann::json toJson(const cid4::BinomialActivityDistributionAnalysisResult& bi
              binomialActivity.binomial.summary.binomialMeanActiveAssays},
             {"binomialVarianceActiveAssays",
              binomialActivity.binomial.summary.binomialVarianceActiveAssays},
-            {"pmfProbabilitySum", binomialActivity.binomial.summary.pmfProbabilitySum}}}}},
-        {"analysis",
-         {{"targetQuantity", binomialActivity.analysis.targetQuantity},
-          {"model", binomialActivity.analysis.model},
-          {"equation", binomialActivity.analysis.equation},
-          {"parameterEstimation", binomialActivity.analysis.parameterEstimation},
-          {"representativeAssays", representativeAssays},
-          {"notes", binomialActivity.analysis.notes}}},
+            {"pmfProbabilitySum", binomialActivity.binomial.summary.pmfProbabilitySum}}}},
     };
 }
 
@@ -718,18 +658,6 @@ nlohmann::json toJson(const cid4::ChiSquareActivityAidTypeAnalysisResult& chiSqu
         expectedCounts[activity] = aidTypeObject;
     }
 
-    nlohmann::json representativeCells = nlohmann::json::array();
-    for (const auto& cell : chiSquareActivity.analysis.representativeCells) {
-        representativeCells.push_back({
-            {"activity", cell.activity},
-            {"aidType", cell.aidType},
-            {"observedCount", cell.observedCount},
-            {"expectedCount",
-             cell.expectedCount.has_value() ? nlohmann::json(*cell.expectedCount)
-                                            : nlohmann::json(nullptr)},
-        });
-    }
-
     return {
         {"sourceFile", chiSquareActivity.sourceFile},
         {"rowCounts",
@@ -750,16 +678,6 @@ nlohmann::json toJson(const cid4::ChiSquareActivityAidTypeAnalysisResult& chiSqu
           {"observedCounts", observedCounts},
           {"expectedCounts", expectedCounts}}},
         {"chiSquareTest",
-         {{"variables",
-           {{"row", chiSquareActivity.chiSquareTest.variables.row},
-            {"column", chiSquareActivity.chiSquareTest.variables.column}}},
-          {"nullHypothesis", chiSquareActivity.chiSquareTest.nullHypothesis},
-          {"alternativeHypothesis", chiSquareActivity.chiSquareTest.alternativeHypothesis},
-          {"computed", chiSquareActivity.chiSquareTest.computed},
-          {"reasonNotComputed",
-           chiSquareActivity.chiSquareTest.reasonNotComputed.has_value()
-               ? nlohmann::json(*chiSquareActivity.chiSquareTest.reasonNotComputed)
-               : nlohmann::json(nullptr)},
           {"chi2Statistic",
            chiSquareActivity.chiSquareTest.chi2Statistic.has_value()
                ? nlohmann::json(*chiSquareActivity.chiSquareTest.chi2Statistic)
@@ -781,17 +699,7 @@ nlohmann::json toJson(const cid4::ChiSquareActivityAidTypeAnalysisResult& chiSqu
           {"sparseExpectedCellFraction",
            chiSquareActivity.chiSquareTest.sparseExpectedCellFraction.has_value()
                ? nlohmann::json(*chiSquareActivity.chiSquareTest.sparseExpectedCellFraction)
-               : nlohmann::json(nullptr)}}},
-        {"analysis",
-         {{"targetQuantity", chiSquareActivity.analysis.targetQuantity},
-          {"model", chiSquareActivity.analysis.model},
-          {"binaryEvidenceDefinition",
-           {{"retainedLabels", chiSquareActivity.analysis.binaryEvidenceDefinition.retainedLabels},
-            {"excludedLabels", chiSquareActivity.analysis.binaryEvidenceDefinition.excludedLabels},
-            {"interpretation",
-             chiSquareActivity.analysis.binaryEvidenceDefinition.interpretation}}},
-          {"representativeCells", representativeCells},
-          {"notes", chiSquareActivity.analysis.notes}}},
+               : nlohmann::json(nullptr)}}};
     };
 }
 
@@ -851,18 +759,6 @@ nlohmann::json toJson(const cid4::GradientDescentAnalysisResult& gradientDescent
 
 nlohmann::json toJson(const cid4::ActivityValueStatisticsAnalysisResult& activityValue)
 {
-    nlohmann::json representativeRows = nlohmann::json::array();
-    for (const auto& row : activityValue.analysis.representativeRows) {
-        representativeRows.push_back({
-            {"bioactivityId", row.bioactivityId},
-            {"bioAssayAid", row.bioAssayAid},
-            {"activity", row.activity},
-            {"aidType", row.aidType},
-            {"activityType", row.activityType},
-            {"activityValue", row.activityValue},
-        });
-    }
-
     return {
         {"sourceFile", activityValue.sourceFile},
         {"rowCounts",
@@ -912,13 +808,6 @@ nlohmann::json toJson(const cid4::ActivityValueStatisticsAnalysisResult& activit
                ? nlohmann::json(*activityValue.normalityTest.rejectNormality)
                : nlohmann::json(nullptr)},
           {"interpretation", activityValue.normalityTest.interpretation}}},
-        {"analysis",
-         {{"targetQuantity", activityValue.analysis.targetQuantity},
-          {"retainedRowDefinition",
-           {{"predicate", activityValue.analysis.retainedRowDefinition.predicate},
-            {"excludedRows", activityValue.analysis.retainedRowDefinition.excludedRows}}},
-          {"representativeRows", representativeRows},
-          {"notes", activityValue.analysis.notes}}},
     };
 }
 
@@ -968,7 +857,6 @@ nlohmann::json toJson(const cid4::AtomElementEntropyAnalysisResult& atomEntropy)
           {"unexpectedElements", unexpectedElements},
           {"notes", atomEntropy.analysis.notes}}},
     };
-}
 } // namespace
 
 nlohmann::json toJson(const cid4::HillDoseResponseAnalysisResult& hillAnalysis)
@@ -1036,25 +924,16 @@ nlohmann::json toJson(const cid4::HillDoseResponseAnalysisResult& hillAnalysis)
           {"secondDerivative", hillAnalysis.analysis.secondDerivative},
           {"referenceHillCoefficientN", hillAnalysis.analysis.referenceHillCoefficientN},
           {"parameterInterpretation", hillAnalysis.analysis.parameterInterpretation},
-          {"midpointInLogConcentrationSpace",
-           {{"condition", hillAnalysis.analysis.midpointInLogConcentrationSpace.condition},
-            {"response", hillAnalysis.analysis.midpointInLogConcentrationSpace.response},
-            {"interpretation",
-             hillAnalysis.analysis.midpointInLogConcentrationSpace.interpretation}}},
           {"aucTrapezoidReferenceCurve",
-           {{"integrationMethod",
-             hillAnalysis.analysis.aucTrapezoidReferenceCurve.integrationMethod},
-            {"curveBasis", hillAnalysis.analysis.aucTrapezoidReferenceCurve.curveBasis},
-            {"concentrationBoundsDefinition",
+            {{"concentrationBoundsDefinition",
              hillAnalysis.analysis.aucTrapezoidReferenceCurve.concentrationBoundsDefinition},
             {"gridSize", hillAnalysis.analysis.aucTrapezoidReferenceCurve.gridSize},
             {"concentrationUnits",
              hillAnalysis.analysis.aucTrapezoidReferenceCurve.concentrationUnits},
             {"interpretation", hillAnalysis.analysis.aucTrapezoidReferenceCurve.interpretation}}},
           {"linearConcentrationInflection", linearInflection},
-          {"fitStatus", hillAnalysis.analysis.fitStatus},
           {"representativeRows", representativeRows},
-          {"notes", hillAnalysis.analysis.notes}}},
+          }},
     };
 }
 
@@ -1180,24 +1059,14 @@ void makeChiSquareActivity(const CommandLineOptions& options)
     const std::filesystem::path bioactivityCsvPath = dataDir / options.bioactivityFile;
     const cid4::ChiSquareActivityAidTypeAnalysisResult chiSquareActivityAidTypeAnalysis =
         cid4::buildChiSquareActivityAidTypeAnalysis(bioactivityCsvPath);
-    const std::filesystem::path chiSquareActivityAidTypeCsvOutputPath =
-        outputDir /
-        (options.bioactivityFile.stem().string() + ".activity_aid_type_chi_square_contingency.csv");
     const std::filesystem::path chiSquareActivityAidTypeSummaryOutputPath =
         outputDir /
         (options.bioactivityFile.stem().string() + ".activity_aid_type_chi_square.summary.json");
-
-    cid4::writeCsvTable(chiSquareActivityAidTypeAnalysis.headers,
-                        chiSquareActivityAidTypeAnalysis.rows,
-                        chiSquareActivityAidTypeCsvOutputPath,
-                        "chi-square activity Aid_Type CSV output path");
 
     std::ofstream chiSquareActivityAidTypeSummaryOutput(chiSquareActivityAidTypeSummaryOutputPath);
     chiSquareActivityAidTypeSummaryOutput << std::setw(2)
                                           << toJson(chiSquareActivityAidTypeAnalysis) << '\n';
 
-    std::cout << "Chi-square activity vs Aid_Type rows written to: "
-              << chiSquareActivityAidTypeCsvOutputPath << '\n';
     std::cout << "Chi-square activity vs Aid_Type summary written to: "
               << chiSquareActivityAidTypeSummaryOutputPath << '\n';
 }
@@ -1317,32 +1186,16 @@ void makeActivityValueStats(const CommandLineOptions& options)
 
     const cid4::ActivityValueStatisticsAnalysisResult activityValueStatisticsAnalysis =
         cid4::buildActivityValueStatisticsAnalysis(bioactivityCsvPath);
-    const std::filesystem::path activityValueStatisticsCsvOutputPath =
-        outputDir / (options.bioactivityFile.stem().string() + ".activity_value_statistics.csv");
     const std::filesystem::path activityValueStatisticsSummaryOutputPath =
         outputDir /
         (options.bioactivityFile.stem().string() + ".activity_value_statistics.summary.json");
-    const std::filesystem::path activityValueStatisticsPlotOutputPath =
-        outputDir / (options.bioactivityFile.stem().string() + ".activity_value_statistics.svg");
-
-    cid4::writeCsvTable(activityValueStatisticsAnalysis.headers,
-                        activityValueStatisticsAnalysis.rows,
-                        activityValueStatisticsCsvOutputPath,
-                        "Activity_Value statistics CSV output path");
 
     std::ofstream activityValueStatisticsSummaryOutput(activityValueStatisticsSummaryOutputPath);
     activityValueStatisticsSummaryOutput << std::setw(2) << toJson(activityValueStatisticsAnalysis)
                                          << '\n';
 
-    cid4::writeActivityValueStatisticsPlotSvg(activityValueStatisticsAnalysis,
-                                              activityValueStatisticsPlotOutputPath);
-
-    std::cout << "Activity value statistics rows written to: "
-              << activityValueStatisticsCsvOutputPath << '\n';
     std::cout << "Activity value statistics summary written to: "
               << activityValueStatisticsSummaryOutputPath << '\n';
-    std::cout << "Activity value statistics plot written to: "
-              << activityValueStatisticsPlotOutputPath << '\n';
 }
 
 void makeBioactivity(const CommandLineOptions& options)
@@ -1383,23 +1236,13 @@ void makePosteriorBioactivity(const CommandLineOptions& options)
 
     const cid4::PosteriorBioactivityAnalysisResult posteriorBioactivityAnalysis =
         cid4::buildPosteriorBioactivityAnalysis(bioactivityCsvPath);
-    const std::filesystem::path posteriorBioactivityCsvOutputPath =
-        outputDir /
-        (options.bioactivityFile.stem().string() + ".activity_posterior_binary_evidence.csv");
     const std::filesystem::path posteriorBioactivitySummaryOutputPath =
         outputDir / (options.bioactivityFile.stem().string() + ".activity_posterior.summary.json");
-
-    cid4::writeCsvTable(posteriorBioactivityAnalysis.headers,
-                        posteriorBioactivityAnalysis.rows,
-                        posteriorBioactivityCsvOutputPath,
-                        "posterior bioactivity CSV output path");
 
     std::ofstream posteriorBioactivitySummaryOutput(posteriorBioactivitySummaryOutputPath);
     posteriorBioactivitySummaryOutput << std::setw(2) << toJson(posteriorBioactivityAnalysis)
                                       << '\n';
 
-    std::cout << "Posterior bioactivity rows written to: " << posteriorBioactivityCsvOutputPath
-              << '\n';
     std::cout << "Posterior bioactivity summary written to: "
               << posteriorBioactivitySummaryOutputPath << '\n';
 }

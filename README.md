@@ -49,6 +49,64 @@ The 13 bond lines are:
 5 11
 ```
 
+## Posterior bioactivity analysis
+P(Active | CID=4)
+model = Beta-Binomial conjugate
+Likelihood:
+family = binomial
+success label = Active
+failure label = Inactive
+
+Equations:
+posteriorAlpha: alphaPost = alphaPrior + activeCount
+posteriorBeta: betaPost = betaPrior + inactiveCount
+posteriorMean: E[p | data] = alphaPost / (alphaPost + betaPost)
+
+Active
+```csv
+Bioactivity_ID
+32761399
+351848396
+351848428
+```
+
+## Activity value analysis
+
+Target: positive numeric Activity_Value distribution.
+Activity_Value is numeric and strictly greater than 0.
+
+
+Active
+```csv
+Bioactivity_ID
+334754348
+100909607
+```
+
+## Activity binomial analysis
+
+Target: P(K = k active assays in n assays )
+Model: Binomial distribution with plug-in success probability.
+Equation: P(K = k) = C(n, k) p^k (1-p)^(n-k)
+Parameter estimation: p is estimated as the observed active assay fraction active_assays / n_assays.
+
+## Hill dose response analysis
+
+Integration method: trapezoidal rule.
+Model: normalized Hill equation.
+Equation: f(c) = c^n / (K^n + c^n)
+First derivative: f'(c) = n K^n c^(n-1) / (K^n + c^n)^2
+Second derivative: f''(c) = n K^n c^(n-2) * ((n - 1)K^n - (n + 1)c^n) / (K^n + c^n)^3
+
+Midpoint:
+- the Hill curve is centered at c = K in log-concentration space.
+- response = 0.5
+
+## Chi-square test
+Model: Pearson chi-square test of independence
+Null hypothesis: Activity and Aid_Type are statistically independent within the retained binary bioactivity rows.
+Alternative hypothesis: Activity and Aid_Type are statistically associated within the retained binary bioactivity rows.
+
 ## Scala JDK Concurrent API
 
 The Scala project now includes a pure-JDK HTTPS backend alongside the existing Tomcat and Netty implementations. It lives under `scala/`, reuses the shared Scala route layer, avoids Servlet-style frameworks, and uses virtual threads plus JDK concurrency primitives for request handling.

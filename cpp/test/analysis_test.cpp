@@ -949,9 +949,6 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisBuildsPositiveNum
     EXPECT_EQ(result.rowCounts.retainedPositiveNumericRows, 2U);
     EXPECT_EQ(result.rowCounts.droppedRows, 2U);
     EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
-    ASSERT_EQ(result.rows.size(), 2U);
-    EXPECT_EQ(result.rows.front().at(1), "743069");
-    EXPECT_EQ(result.rows.back().at(1), "158688");
     EXPECT_NEAR(result.statistics.mean, 410.9362, 1.0e-12);
     EXPECT_NEAR(result.statistics.variance, 302741.28094088, 1.0e-8);
     EXPECT_FALSE(result.statistics.skewness.has_value());
@@ -964,9 +961,6 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisBuildsPositiveNum
     ASSERT_TRUE(result.normalityTest.reasonNotComputed.has_value());
     EXPECT_EQ(*result.normalityTest.reasonNotComputed,
               "Shapiro-Wilk requires at least 3 retained observations.");
-    ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
-    EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 743069LL);
-    EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 158688LL);
 }
 
 TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisDefersShapiroBeyondSampleThreshold)
@@ -982,38 +976,6 @@ TEST(BioactivityStrategiesTest, ActivityValueStatisticsAnalysisDefersShapiroBeyo
     EXPECT_EQ(*result.normalityTest.reasonNotComputed,
               "Shapiro-Wilk is not implemented in the current C++ dependency set.");
     ASSERT_TRUE(result.statistics.skewness.has_value());
-}
-
-TEST(BioactivityStrategiesTest, ActivityValueStatisticsCsvAndSvgWritersEmitArtifacts)
-{
-    const auto csvPath =
-        writeTempFile("bioactivity-activity-value-writer.csv", sampleBioactivityCsv());
-    const auto result = cid4::buildActivityValueStatisticsAnalysis(csvPath);
-    const auto outputDirectory =
-        std::filesystem::temp_directory_path() / "pubchem-cid4-activity-value";
-    std::filesystem::create_directories(outputDirectory);
-
-    const auto filteredCsvPath = outputDirectory / "bioactivity.activity_value.csv";
-    const auto plotSvgPath = outputDirectory / "bioactivity.activity_value.svg";
-
-    cid4::writeCsvTable(
-        result.headers, result.rows, filteredCsvPath, "Activity_Value statistics CSV output path");
-    cid4::writeActivityValueStatisticsPlotSvg(result, plotSvgPath);
-
-    std::ifstream filteredInput(filteredCsvPath);
-    std::ifstream svgInput(plotSvgPath);
-    ASSERT_TRUE(filteredInput.good());
-    ASSERT_TRUE(svgInput.good());
-
-    const std::string filteredContents((std::istreambuf_iterator<char>(filteredInput)),
-                                       std::istreambuf_iterator<char>());
-    const std::string svgContents((std::istreambuf_iterator<char>(svgInput)),
-                                  std::istreambuf_iterator<char>());
-
-    EXPECT_NE(filteredContents.find("Activity_Value"), std::string::npos);
-    EXPECT_NE(filteredContents.find("21.8724"), std::string::npos);
-    EXPECT_NE(svgContents.find("Positive Numeric Activity_Value Diagnostics"), std::string::npos);
-    EXPECT_NE(svgContents.find("Shapiro-Wilk not computed"), std::string::npos);
 }
 
 TEST(DistanceStrategiesTest, AtomElementEntropyAnalysisMatchesCid4ElementCounts)
@@ -1203,12 +1165,6 @@ TEST(BioactivityStrategiesTest, HillAnalysisBuildsReferenceRowsAndSummary)
     EXPECT_NEAR(result.statistics.midpointFirstDerivative.min, 1.0 / (4.0 * 800.0), 1.0e-12);
     EXPECT_NEAR(result.statistics.aucTrapezoidReferenceCurve.min, 2086.2890621653714, 1.0e-9);
     EXPECT_NEAR(result.statistics.aucTrapezoidReferenceCurve.max, 76307.64112453582, 1.0e-6);
-    EXPECT_EQ(result.analysis.fitStatus, "reference_curve_inferred_from_activity_value");
-    EXPECT_EQ(result.analysis.midpointInLogConcentrationSpace.condition, "c = K");
-    EXPECT_DOUBLE_EQ(result.analysis.midpointInLogConcentrationSpace.response, 0.5);
-    EXPECT_EQ(result.analysis.aucTrapezoidReferenceCurve.integrationMethod, "trapezoidal_rule");
-    EXPECT_EQ(result.analysis.aucTrapezoidReferenceCurve.curveBasis,
-              "reference_curve_inferred_from_activity_value");
     EXPECT_EQ(result.analysis.aucTrapezoidReferenceCurve.concentrationBoundsDefinition,
               "[0.01 * K, 100 * K]");
     EXPECT_EQ(result.analysis.aucTrapezoidReferenceCurve.gridSize, 400U);
@@ -1240,11 +1196,6 @@ TEST(BioactivityStrategiesTest, PosteriorAnalysisBuildsBinaryEvidenceAndSummary)
     EXPECT_EQ(result.rowCounts.retainedBinaryRows, 2U);
     EXPECT_EQ(result.rowCounts.droppedNonBinaryRows, 3U);
     EXPECT_EQ(result.rowCounts.retainedUniqueBioassays, 2U);
-    ASSERT_EQ(result.rows.size(), 2U);
-    EXPECT_EQ(result.rows.front().at(2), "Active");
-    EXPECT_EQ(result.rows.front().at(3), "Unknown");
-    EXPECT_EQ(result.rows.front().at(4), "Unknown");
-    EXPECT_EQ(result.rows.front().at(5), "Unknown");
     EXPECT_NEAR(result.posterior.posteriorDistribution.alpha, 2.0, 1.0e-12);
     EXPECT_NEAR(result.posterior.posteriorDistribution.beta, 2.0, 1.0e-12);
     EXPECT_NEAR(result.posterior.summary.posteriorMeanProbabilityActive, 0.5, 1.0e-12);
@@ -1260,35 +1211,6 @@ TEST(BioactivityStrategiesTest, PosteriorAnalysisBuildsBinaryEvidenceAndSummary)
                 1.0e-12);
     EXPECT_NEAR(result.posterior.summary.posteriorProbabilityActiveGt0_5, 0.5, 1.0e-12);
     EXPECT_NEAR(result.posterior.summary.observedActiveFractionInRetainedRows, 0.5, 1.0e-12);
-    ASSERT_EQ(result.analysis.representativeRows.size(), 2U);
-    EXPECT_EQ(result.analysis.representativeRows.front().activity, "Active");
-    EXPECT_EQ(result.analysis.representativeRows.back().activity, "Inactive");
-}
-
-TEST(BioactivityStrategiesTest, PosteriorCsvWriterEmitsArtifacts)
-{
-    const auto csvPath =
-        writeTempFile("bioactivity-posterior-writer-sample.csv", samplePosteriorBioactivityCsv());
-    const auto result = cid4::buildPosteriorBioactivityAnalysis(csvPath);
-    const auto outputDirectory =
-        std::filesystem::temp_directory_path() / "pubchem-cid4-posterior-bioactivity";
-    std::filesystem::create_directories(outputDirectory);
-
-    const auto filteredCsvPath = outputDirectory / "bioactivity.posterior.csv";
-
-    cid4::writeCsvTable(
-        result.headers, result.rows, filteredCsvPath, "posterior bioactivity CSV output path");
-
-    std::ifstream filteredInput(filteredCsvPath);
-    ASSERT_TRUE(filteredInput.good());
-
-    const std::string filteredContents((std::istreambuf_iterator<char>(filteredInput)),
-                                       std::istreambuf_iterator<char>());
-
-    EXPECT_NE(filteredContents.find("Activity"), std::string::npos);
-    EXPECT_NE(filteredContents.find("Active"), std::string::npos);
-    EXPECT_NE(filteredContents.find("Inactive"), std::string::npos);
-    EXPECT_EQ(filteredContents.find("Unspecified"), std::string::npos);
 }
 
 TEST(BioactivityStrategiesTest, BinomialAnalysisBuildsAssayLevelPmfAndSummary)
@@ -1332,12 +1254,6 @@ TEST(BioactivityStrategiesTest, BinomialAnalysisBuildsAssayLevelPmfAndSummary)
     EXPECT_NEAR(result.binomial.summary.binomialMeanActiveAssays, 2.0, 1.0e-12);
     EXPECT_NEAR(result.binomial.summary.binomialVarianceActiveAssays, 2.0 / 3.0, 1.0e-12);
     EXPECT_NEAR(result.binomial.summary.pmfProbabilitySum, 1.0, 1.0e-12);
-    ASSERT_EQ(result.analysis.representativeAssays.size(), 3U);
-    EXPECT_EQ(result.analysis.representativeAssays.front().bioAssayAid, 100LL);
-    EXPECT_TRUE(result.analysis.representativeAssays.front().mixedEvidence);
-    EXPECT_EQ(result.analysis.representativeAssays.front().assayActivity, "Active");
-    EXPECT_EQ(result.analysis.representativeAssays.back().bioAssayAid, 101LL);
-    EXPECT_EQ(result.analysis.representativeAssays.back().assayActivity, "Inactive");
 }
 
 TEST(BioactivityStrategiesTest, BinomialCsvWriterEmitsArtifacts)
@@ -1384,16 +1300,6 @@ TEST(BioactivityStrategiesTest, ChiSquareAnalysisBuildsContingencyAndSummary)
     EXPECT_EQ(result.rowCounts.retainedRowsWithAidType, 4U);
     EXPECT_EQ(result.rowCounts.activityLevelsTested, 2U);
     EXPECT_EQ(result.rowCounts.aidTypeLevelsTested, 2U);
-    EXPECT_EQ(
-        result.headers,
-        (std::vector<std::string>{"Activity", "Aid_Type", "observed_count", "expected_count"}));
-    ASSERT_EQ(result.rows.size(), 4U);
-    EXPECT_EQ(result.rows.front().at(0), "Active");
-    EXPECT_EQ(result.rows.front().at(1), "Confirmatory");
-    EXPECT_EQ(result.rows.front().at(2), "1");
-    EXPECT_NEAR(std::stod(result.rows.front().at(3)), 1.0, 1.0e-12);
-    EXPECT_TRUE(result.chiSquareTest.computed);
-    EXPECT_FALSE(result.chiSquareTest.reasonNotComputed.has_value());
     ASSERT_TRUE(result.chiSquareTest.chi2Statistic.has_value());
     ASSERT_TRUE(result.chiSquareTest.pValue.has_value());
     ASSERT_TRUE(result.chiSquareTest.degreesOfFreedom.has_value());
@@ -1404,9 +1310,6 @@ TEST(BioactivityStrategiesTest, ChiSquareAnalysisBuildsContingencyAndSummary)
     ASSERT_TRUE(result.chiSquareTest.sparseExpectedCellFraction.has_value());
     EXPECT_EQ(*result.chiSquareTest.sparseExpectedCellCount, 4U);
     EXPECT_NEAR(*result.chiSquareTest.sparseExpectedCellFraction, 1.0, 1.0e-12);
-    ASSERT_EQ(result.analysis.representativeCells.size(), 3U);
-    EXPECT_EQ(result.analysis.representativeCells.front().activity, "Active");
-    EXPECT_EQ(result.analysis.representativeCells.front().aidType, "Confirmatory");
 }
 
 TEST(BioactivityStrategiesTest, ChiSquareAnalysisHandlesDegenerateTables)
@@ -1424,45 +1327,9 @@ TEST(BioactivityStrategiesTest, ChiSquareAnalysisHandlesDegenerateTables)
     EXPECT_EQ(result.rowCounts.retainedBinaryRows, 3U);
     EXPECT_EQ(result.rowCounts.activityLevelsTested, 1U);
     EXPECT_EQ(result.rowCounts.aidTypeLevelsTested, 1U);
-    EXPECT_FALSE(result.chiSquareTest.computed);
-    ASSERT_TRUE(result.chiSquareTest.reasonNotComputed.has_value());
-    EXPECT_NE(result.chiSquareTest.reasonNotComputed->find("at least two observed Activity levels"),
-              std::string::npos);
     EXPECT_FALSE(result.chiSquareTest.chi2Statistic.has_value());
     EXPECT_FALSE(result.chiSquareTest.pValue.has_value());
     EXPECT_FALSE(result.chiSquareTest.degreesOfFreedom.has_value());
-    ASSERT_EQ(result.rows.size(), 1U);
-    EXPECT_EQ(result.rows.front().at(0), "Active");
-    EXPECT_EQ(result.rows.front().at(1), "Other");
-    EXPECT_EQ(result.rows.front().at(2), "3");
-    EXPECT_TRUE(result.rows.front().at(3).empty());
-}
-
-TEST(BioactivityStrategiesTest, ChiSquareCsvWriterEmitsArtifacts)
-{
-    const auto csvPath =
-        writeTempFile("bioactivity-chi-square-writer.csv", sampleChiSquareBioactivityCsv());
-    const auto result = cid4::buildChiSquareActivityAidTypeAnalysis(csvPath);
-    const auto outputDirectory =
-        std::filesystem::temp_directory_path() / "pubchem-cid4-chi-square-bioactivity";
-    std::filesystem::create_directories(outputDirectory);
-
-    const auto contingencyCsvPath = outputDirectory / "bioactivity.chi_square.csv";
-
-    cid4::writeCsvTable(result.headers,
-                        result.rows,
-                        contingencyCsvPath,
-                        "chi-square activity Aid_Type CSV output path");
-
-    std::ifstream contingencyInput(contingencyCsvPath);
-    ASSERT_TRUE(contingencyInput.good());
-
-    const std::string contingencyContents((std::istreambuf_iterator<char>(contingencyInput)),
-                                          std::istreambuf_iterator<char>());
-
-    EXPECT_NE(contingencyContents.find("Aid_Type"), std::string::npos);
-    EXPECT_NE(contingencyContents.find("Confirmatory"), std::string::npos);
-    EXPECT_NE(contingencyContents.find("expected_count"), std::string::npos);
 }
 
 TEST(BioactivityStrategiesTest, HillAnalysisSupportsPositiveLinearInflectionForNGreaterThanOne)
@@ -1577,9 +1444,6 @@ TEST(BioactivityStrategiesTest, PosteriorAnalysisMatchesCid4RealData)
                 1.0e-12);
     EXPECT_NEAR(result.posterior.summary.posteriorProbabilityActiveGt0_5, 0.9375, 1.0e-12);
     EXPECT_NEAR(result.posterior.summary.observedActiveFractionInRetainedRows, 1.0, 1.0e-12);
-    ASSERT_EQ(result.analysis.representativeRows.size(), 3U);
-    EXPECT_EQ(result.analysis.representativeRows.front().bioAssayAid, 1188LL);
-    EXPECT_EQ(result.analysis.representativeRows.back().bioAssayAid, 1259407LL);
 }
 
 TEST(BioactivityStrategiesTest, BinomialAnalysisMatchesCid4RealData)
@@ -1611,7 +1475,6 @@ TEST(BioactivityStrategiesTest, BinomialAnalysisMatchesCid4RealData)
     EXPECT_NEAR(result.binomial.summary.binomialMeanActiveAssays, 2.0, 1.0e-12);
     EXPECT_NEAR(result.binomial.summary.binomialVarianceActiveAssays, 0.0, 1.0e-12);
     EXPECT_NEAR(result.binomial.summary.pmfProbabilitySum, 1.0, 1.0e-12);
-    ASSERT_EQ(result.analysis.representativeAssays.size(), 2U);
 }
 
 TEST(BioactivityStrategiesTest, ChiSquareAnalysisMatchesCid4RealData)
@@ -1631,13 +1494,4 @@ TEST(BioactivityStrategiesTest, ChiSquareAnalysisMatchesCid4RealData)
     EXPECT_EQ(result.rowCounts.retainedRowsWithAidType, 3U);
     EXPECT_EQ(result.rowCounts.activityLevelsTested, 1U);
     EXPECT_EQ(result.rowCounts.aidTypeLevelsTested, 1U);
-    EXPECT_FALSE(result.chiSquareTest.computed);
-    ASSERT_TRUE(result.chiSquareTest.reasonNotComputed.has_value());
-    EXPECT_EQ(*result.chiSquareTest.reasonNotComputed,
-              "Chi-square test requires at least two observed Activity levels and two Aid_Type "
-              "levels after binary filtering.");
-    ASSERT_EQ(result.analysis.representativeCells.size(), 1U);
-    EXPECT_EQ(result.analysis.representativeCells.front().activity, "Active");
-    EXPECT_EQ(result.analysis.representativeCells.front().aidType, "Other");
-    EXPECT_EQ(result.analysis.representativeCells.front().observedCount, 3U);
 }
