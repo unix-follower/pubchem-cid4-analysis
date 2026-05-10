@@ -2431,26 +2431,8 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
             ? std::optional<double>((posteriorAlpha - 1.0) / (posteriorAlpha + posteriorBeta - 2.0))
             : std::nullopt;
 
-    std::vector<PosteriorBioactivityRepresentativeRow> representativeRows;
-    for (const std::size_t position : representativeRowPositions(retainedRows.size())) {
-        const auto& row = retainedRows[position];
-        representativeRows.push_back(PosteriorBioactivityRepresentativeRow{
-            .bioactivityId = parseRequiredLong(row, context.headerIndex, "Bioactivity_ID"),
-            .bioAssayAid = parseRequiredLong(row, context.headerIndex, "BioAssay_AID"),
-            .activity = row.at(context.activityIndex),
-            .activityType =
-                normalizeOptionalLabel(valueAtOrEmpty(row, context.activityTypeIndex), "Unknown"),
-            .targetName =
-                normalizeOptionalLabel(valueAtOrEmpty(row, context.targetNameIndex), "Unknown"),
-            .bioAssayName =
-                normalizeOptionalLabel(valueAtOrEmpty(row, context.bioAssayNameIndex), "Unknown"),
-        });
-    }
-
     return PosteriorBioactivityAnalysisResult{
         .sourceFile = context.sourceFile,
-        .headers = std::move(context.headers),
-        .rows = std::move(retainedRows),
         .rowCounts =
             PosteriorBioactivityRowCounts{
                 .totalRows = context.totalRows,
@@ -2470,12 +2452,6 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
                         .family = "beta",
                         .alpha = priorAlpha,
                         .beta = priorBeta,
-                    },
-                .likelihood =
-                    PosteriorBioactivityLikelihood{
-                        .family = "binomial",
-                        .successLabel = "Active",
-                        .failureLabel = "Inactive",
                     },
                 .posteriorDistribution =
                     PosteriorBioactivityDistribution{
@@ -2502,34 +2478,6 @@ buildPosteriorBioactivityAnalysis(const std::filesystem::path& csvPath,
                         .observedActiveFractionInRetainedRows =
                             static_cast<double>(context.activeRows) /
                             static_cast<double>(context.activeRows + context.inactiveRows),
-                    },
-            },
-        .analysis =
-            PosteriorBioactivityAnalysis{
-                .targetQuantity = "P(Active | CID=4)",
-                .model = "Beta-Binomial conjugate update",
-                .updateEquations =
-                    PosteriorBioactivityUpdateEquations{
-                        .posteriorAlpha = "alphaPost = alphaPrior + activeCount",
-                        .posteriorBeta = "betaPost = betaPrior + inactiveCount",
-                        .posteriorMean = "E[p | data] = alphaPost / (alphaPost + betaPost)",
-                    },
-                .binaryEvidenceDefinition =
-                    PosteriorBioactivityBinaryEvidenceDefinition{
-                        .retainedLabels = {"Active", "Inactive"},
-                        .excludedLabels = {"Unspecified"},
-                        .interpretation = "Unspecified rows are excluded from the binary posterior "
-                                          "update and reported only in row counts.",
-                    },
-                .representativeRows = std::move(representativeRows),
-                .notes =
-                    {
-                        "This posterior is an aggregate CID 4 activity probability across retained "
-                        "binary bioassay outcomes.",
-                        "The update uses a Beta(1,1) prior and treats Active/Inactive outcomes as "
-                        "exchangeable Bernoulli evidence.",
-                        "Rows labeled Unspecified are kept out of the posterior update so they do "
-                        "not contribute artificial failures.",
                     },
             },
     };
@@ -2635,22 +2583,6 @@ buildBinomialActivityDistributionAnalysis(const std::filesystem::path& csvPath)
             ? 1.0
             : 1.0 - cdf(distribution, static_cast<double>(activeAssayTrials - 1U));
 
-    std::vector<BinomialActivityRepresentativeAssay> representativeAssays;
-    for (const std::size_t position : representativeRowPositions(assayRows.size())) {
-        const auto& assay = assayRows[position];
-        representativeAssays.push_back(BinomialActivityRepresentativeAssay{
-            .bioAssayAid = assay.bioAssayAid,
-            .assayActivity = assay.assayActivity,
-            .retainedBinaryRows = assay.retainedBinaryRows,
-            .activeRows = assay.activeRows,
-            .inactiveRows = assay.inactiveRows,
-            .mixedEvidence = assay.mixedEvidence,
-            .activityType = assay.activityType,
-            .targetName = assay.targetName,
-            .bioAssayName = assay.bioAssayName,
-        });
-    }
-
     return BinomialActivityDistributionAnalysisResult{
         .sourceFile = context.sourceFile,
         .headers = headers,
@@ -2675,14 +2607,6 @@ buildBinomialActivityDistributionAnalysis(const std::filesystem::path& csvPath)
             },
         .binomial =
             BinomialActivityDistributionSection{
-                .trialDefinition =
-                    BinomialActivityTrialDefinition{
-                        .unit = "unique_BioAssay_AID",
-                        .successLabel = "Active assay",
-                        .failureLabel = "Inactive assay",
-                        .assayResolutionRule = "Active wins if any retained row for the assay is "
-                                               "Active; otherwise the assay is Inactive.",
-                    },
                 .parameters =
                     BinomialActivityParameters{
                         .nAssays = assayTrials,
@@ -2700,24 +2624,6 @@ buildBinomialActivityDistributionAnalysis(const std::filesystem::path& csvPath)
                                                         successProbability *
                                                         (1.0 - successProbability),
                         .pmfProbabilitySum = pmfProbabilitySum,
-                    },
-            },
-        .analysis =
-            BinomialActivityAnalysis{
-                .targetQuantity = "P(K = k active assays in n assays)",
-                .model = "Binomial distribution with plug-in success probability",
-                .equation = "P(K = k) = C(n, k) p^k (1-p)^(n-k)",
-                .parameterEstimation = "p is estimated as the observed active assay fraction "
-                                       "active_assays / n_assays.",
-                .representativeAssays = std::move(representativeAssays),
-                .notes =
-                    {
-                        "The binomial model operates at the assay level rather than the raw "
-                        "retained-row level.",
-                        "Rows with Activity = Unspecified are excluded before assay-level "
-                        "collapsing, consistent with the posterior analysis.",
-                        "This is a frequentist plug-in binomial model using the observed "
-                        "assay-level active fraction, not a posterior-predictive distribution.",
                     },
             },
     };
@@ -2823,67 +2729,9 @@ buildChiSquareActivityAidTypeAnalysis(const std::filesystem::path& csvPath,
             static_cast<double>(sparseCount) /
             static_cast<double>(activityLevels.size() * aidTypeLevels.size());
     }
-    else {
-        reasonNotComputed = "Chi-square test requires at least two observed Activity levels and "
-                            "two Aid_Type levels after binary filtering.";
-        for (const auto& activity : activityLevels) {
-            for (const auto& aidType : aidTypeLevels) {
-                expectedCounts[activity][aidType] = std::nullopt;
-            }
-        }
-    }
-
-    const std::vector<std::string> headers = {
-        "Activity",
-        "Aid_Type",
-        "observed_count",
-        "expected_count",
-    };
-    std::vector<std::vector<std::string>> rows;
-    rows.reserve(activityLevels.size() * aidTypeLevels.size());
-    for (const auto& activity : activityLevels) {
-        for (const auto& aidType : aidTypeLevels) {
-            rows.push_back({activity,
-                            aidType,
-                            std::to_string(observedCounts.at(activity).at(aidType)),
-                            expectedCounts.at(activity).at(aidType).has_value()
-                                ? formatDouble(*expectedCounts.at(activity).at(aidType))
-                                : std::string()});
-        }
-    }
-
-    std::vector<ChiSquareRepresentativeCell> representativeCells;
-    representativeCells.reserve(activityLevels.size() * aidTypeLevels.size());
-    for (const auto& activity : activityLevels) {
-        for (const auto& aidType : aidTypeLevels) {
-            representativeCells.push_back(ChiSquareRepresentativeCell{
-                .activity = activity,
-                .aidType = aidType,
-                .observedCount = observedCounts.at(activity).at(aidType),
-                .expectedCount = expectedCounts.at(activity).at(aidType),
-            });
-        }
-    }
-    std::stable_sort(
-        representativeCells.begin(),
-        representativeCells.end(),
-        [](const ChiSquareRepresentativeCell& left, const ChiSquareRepresentativeCell& right) {
-            if (left.observedCount != right.observedCount) {
-                return left.observedCount > right.observedCount;
-            }
-            if (left.activity != right.activity) {
-                return left.activity < right.activity;
-            }
-            return left.aidType < right.aidType;
-        });
-    if (representativeCells.size() > 3U) {
-        representativeCells.resize(3U);
-    }
 
     return ChiSquareActivityAidTypeAnalysisResult{
         .sourceFile = context.sourceFile,
-        .headers = headers,
-        .rows = std::move(rows),
         .rowCounts =
             ChiSquareActivityAidTypeRowCounts{
                 .totalRows = context.totalRows,
@@ -2908,46 +2756,12 @@ buildChiSquareActivityAidTypeAnalysis(const std::filesystem::path& csvPath,
             },
         .chiSquareTest =
             ChiSquareTestMetrics{
-                .variables =
-                    ChiSquareVariables{
-                        .row = "Activity",
-                        .column = "Aid_Type",
-                    },
-                .nullHypothesis = "Activity and Aid_Type are statistically independent within the "
-                                  "retained binary bioactivity rows.",
-                .alternativeHypothesis = "Activity and Aid_Type are statistically associated "
-                                         "within the retained binary bioactivity rows.",
-                .computed = hasMinimumShape,
-                .reasonNotComputed = std::move(reasonNotComputed),
                 .chi2Statistic = chi2Statistic,
                 .pValue = pValue,
                 .degreesOfFreedom = degreesOfFreedom,
                 .minimumExpectedCountThreshold = expectedCountThreshold,
                 .sparseExpectedCellCount = sparseExpectedCellCount,
                 .sparseExpectedCellFraction = sparseExpectedCellFraction,
-            },
-        .analysis =
-            ChiSquareActivityAidTypeAnalysis{
-                .targetQuantity = "Activity independent of Aid_Type",
-                .model = "Pearson chi-square test of independence",
-                .binaryEvidenceDefinition =
-                    ChiSquareBinaryEvidenceDefinition{
-                        .retainedLabels = {"Active", "Inactive"},
-                        .excludedLabels = {"Unspecified"},
-                        .interpretation = "The chi-square table is built from the same binary "
-                                          "Activity evidence used by the posterior analysis.",
-                    },
-                .representativeCells = std::move(representativeCells),
-                .notes =
-                    {
-                        "Rows with Activity = Unspecified and other non-binary Activity labels are "
-                        "excluded before the contingency table is built.",
-                        "Aid_Type values are used as observed in the CSV after trimming whitespace "
-                        "and filling blanks with Unknown.",
-                        "If fewer than two observed Activity levels or fewer than two Aid_Type "
-                        "levels remain after filtering, the summary records that the chi-square "
-                        "test is not statistically identifiable on this dataset slice.",
-                    },
             },
     };
 }
@@ -3225,49 +3039,16 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
         .activityTypeCounts = std::move(activityTypeCountRows),
         .analysis =
             HillDoseResponseSummary{
-                .model = "normalized Hill equation",
-                .equation = "f(c) = c^n / (K^n + c^n)",
-                .firstDerivative = "f'(c) = n K^n c^(n-1) / (K^n + c^n)^2",
-                .secondDerivative =
-                    "f''(c) = n K^n c^(n-2) * ((n - 1)K^n - (n + 1)c^n) / (K^n + c^n)^3",
                 .referenceHillCoefficientN = hillCoefficient,
-                .parameterInterpretation =
-                    "Activity_Value is treated as an inferred K parameter because this dataset "
-                    "provides potency-style summary values rather than raw concentration-response "
-                    "observations for CID 4.",
-                .midpointInLogConcentrationSpace =
-                    HillDoseResponseMidpointSummary{
-                        .condition = "c = K",
-                        .response = 0.5,
-                        .interpretation =
-                            "The Hill curve is centered at c = K in log-concentration space.",
-                    },
                 .aucTrapezoidReferenceCurve =
                     HillDoseResponseAucSummary{
-                        .integrationMethod = "trapezoidal_rule",
-                        .curveBasis = "reference_curve_inferred_from_activity_value",
                         .concentrationBoundsDefinition =
                             "[" + formatCompactDouble(kHillAucLowerBoundScale) + " * K, " +
                             formatCompactDouble(kHillAucUpperBoundScale) + " * K]",
                         .gridSize = kHillAucGridSize,
-                        .concentrationUnits = "same units as Activity_Value",
-                        .interpretation =
-                            "AUC is approximated numerically over an inferred Hill reference "
-                            "curve rather than over raw experimental dose-response points.",
                     },
                 .linearConcentrationInflection = linearInflectionSummary,
-                .fitStatus = "reference_curve_inferred_from_activity_value",
                 .representativeRows = std::move(representativeRows),
-                .notes =
-                    {
-                        "No nonlinear dose-response fitting was performed because the CSV does not "
-                        "contain raw per-concentration response series for CID 4.",
-                        "Rows with positive numeric Activity_Value are modeled as reference Hill "
-                        "curves using Activity_Value as the inferred half-maximal scale K.",
-                        "The trapezoidal-rule AUC is computed on those inferred reference curves "
-                        "across a concentration grid scaled relative to each row's inferred K "
-                        "value.",
-                    },
             },
     };
 }
@@ -3530,19 +3311,6 @@ buildActivityValueStatisticsAnalysis(const std::filesystem::path& csvPath,
     const double variance = computeSampleVariance(sortedValues, mean);
     const std::optional<double> skewness = computeBiasCorrectedSampleSkewness(sortedValues, mean);
 
-    std::vector<ActivityValueRepresentativeRow> representativeRows;
-    for (const std::size_t position : representativeRowPositions(retainedRows.size())) {
-        const auto& row = retainedRows[position];
-        representativeRows.push_back(ActivityValueRepresentativeRow{
-            .bioactivityId = std::stoll(row[0]),
-            .bioAssayAid = std::stoll(row[1]),
-            .activity = row[2],
-            .aidType = row[3],
-            .activityType = row[4],
-            .activityValue = std::stod(row[5]),
-        });
-    }
-
     const bool hasEnoughRowsForShapiro = sortedValues.size() >= 3U;
     const std::optional<std::string> reasonNotComputed =
         hasEnoughRowsForShapiro
@@ -3557,8 +3325,6 @@ buildActivityValueStatisticsAnalysis(const std::filesystem::path& csvPath,
 
     return ActivityValueStatisticsAnalysisResult{
         .sourceFile = csvPath.filename().string(),
-        .headers = retainedHeaders,
-        .rows = std::move(retainedRows),
         .rowCounts =
             ActivityValueStatisticsRowCounts{
                 .totalRows = records.size(),
@@ -3596,184 +3362,7 @@ buildActivityValueStatisticsAnalysis(const std::filesystem::path& csvPath,
                 .rejectNormality = std::nullopt,
                 .interpretation = interpretation,
             },
-        .analysis =
-            ActivityValueAnalysis{
-                .targetQuantity = "Positive numeric Activity_Value distribution",
-                .retainedRowDefinition =
-                    ActivityValueRetainedRowDefinition{
-                        .predicate = "Activity_Value is numeric and strictly greater than 0",
-                        .excludedRows = {"missing Activity_Value",
-                                         "non-numeric Activity_Value",
-                                         "Activity_Value = 0",
-                                         "Activity_Value < 0"},
-                    },
-                .representativeRows = std::move(representativeRows),
-                .notes = {"The retained distribution aggregates all positive numeric "
-                          "Activity_Value rows regardless of Activity_Type.",
-                          "Variance is reported as the sample variance with ddof = 1 to match the "
-                          "Python and Scala implementations.",
-                          "The SVG plot shows a log-scale histogram and a diagnostic status panel "
-                          "for Shapiro-Wilk availability."},
-            },
     };
-}
-
-void writeActivityValueStatisticsPlotSvg(const ActivityValueStatisticsAnalysisResult& result,
-                                         const std::filesystem::path& outputPath)
-{
-    if (result.rows.empty()) {
-        throw BioactivityAnalysisError("Activity_Value statistics plot requires retained rows");
-    }
-
-    std::ofstream output(outputPath);
-    if (!output) {
-        throw BioactivityAnalysisError(
-            "Could not open Activity_Value statistics plot output path: " + outputPath.string());
-    }
-
-    std::vector<double> logValues;
-    logValues.reserve(result.rows.size());
-    for (const auto& row : result.rows) {
-        logValues.push_back(std::log10(std::stod(row.back())));
-    }
-
-    const std::size_t binCount =
-        logValues.size() == 1U ? 1U : std::min<std::size_t>(6U, logValues.size());
-    double minLogValue = *std::min_element(logValues.begin(), logValues.end());
-    double maxLogValue = *std::max_element(logValues.begin(), logValues.end());
-    if (std::abs(maxLogValue - minLogValue) < 1.0e-12) {
-        minLogValue -= 0.5;
-        maxLogValue += 0.5;
-    }
-
-    std::vector<std::size_t> histogramCounts(binCount, 0U);
-    for (const double value : logValues) {
-        const double normalized = (value - minLogValue) / (maxLogValue - minLogValue);
-        const std::size_t binIndex = std::min<std::size_t>(
-            binCount - 1U,
-            static_cast<std::size_t>(std::floor(normalized * static_cast<double>(binCount))));
-        histogramCounts[binIndex] += 1U;
-    }
-
-    const std::size_t maxCount = *std::max_element(histogramCounts.begin(), histogramCounts.end());
-
-    constexpr double width = 1280.0;
-    constexpr double height = 720.0;
-    constexpr double outerLeft = 60.0;
-    constexpr double outerTop = 85.0;
-    constexpr double panelWidth = 540.0;
-    constexpr double panelHeight = 520.0;
-    constexpr double panelGap = 70.0;
-    constexpr double innerLeftPad = 55.0;
-    constexpr double innerRightPad = 25.0;
-    constexpr double innerTopPad = 25.0;
-    constexpr double innerBottomPad = 60.0;
-
-    const double leftPanelX = outerLeft;
-    const double rightPanelX = outerLeft + panelWidth + panelGap;
-    const double panelY = outerTop;
-    const double leftPlotWidth = panelWidth - innerLeftPad - innerRightPad;
-    const double leftPlotHeight = panelHeight - innerTopPad - innerBottomPad;
-    const double binWidth = leftPlotWidth / static_cast<double>(binCount);
-
-    output << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width << "\" height=\""
-           << height << "\" viewBox=\"0 0 " << width << ' ' << height << "\">\n";
-    output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
-    output << svgText(width / 2.0 - 260.0,
-                      42.0,
-                      "Positive Numeric Activity_Value Diagnostics",
-                      "font-size=\"20\" font-weight=\"700\"")
-           << '\n';
-
-    output << "<rect x=\"" << leftPanelX << "\" y=\"" << panelY << "\" width=\"" << panelWidth
-           << "\" height=\"" << panelHeight << "\" fill=\"#f8fafc\" stroke=\"#cbd5e1\"/>\n";
-    output << "<rect x=\"" << rightPanelX << "\" y=\"" << panelY << "\" width=\"" << panelWidth
-           << "\" height=\"" << panelHeight << "\" fill=\"#f8fafc\" stroke=\"#cbd5e1\"/>\n";
-
-    output << svgText(leftPanelX + 100.0,
-                      panelY - 14.0,
-                      "Positive Numeric Activity_Value Histogram",
-                      "font-size=\"16\" font-weight=\"600\"")
-           << '\n';
-    output << svgText(rightPanelX + 150.0,
-                      panelY - 14.0,
-                      "Normality / Q-Q Diagnostics",
-                      "font-size=\"16\" font-weight=\"600\"")
-           << '\n';
-
-    for (std::size_t tick = 0U; tick <= maxCount; ++tick) {
-        const double y = panelY + innerTopPad +
-                         (1.0 - static_cast<double>(tick) /
-                                    static_cast<double>(std::max<std::size_t>(1U, maxCount))) *
-                             leftPlotHeight;
-        output << "<line x1=\"" << leftPanelX + innerLeftPad << "\" y1=\"" << y << "\" x2=\""
-               << leftPanelX + innerLeftPad + leftPlotWidth << "\" y2=\"" << y
-               << "\" stroke=\"#e2e8f0\" stroke-dasharray=\"4 6\"/>\n";
-        output << svgText(leftPanelX + 18.0, y + 5.0, std::to_string(tick)) << '\n';
-    }
-
-    for (std::size_t binIndex = 0U; binIndex < binCount; ++binIndex) {
-        const double barHeight =
-            maxCount == 0U ? 0.0
-                           : leftPlotHeight * static_cast<double>(histogramCounts[binIndex]) /
-                                 static_cast<double>(maxCount);
-        const double x = leftPanelX + innerLeftPad + static_cast<double>(binIndex) * binWidth + 6.0;
-        const double y = panelY + innerTopPad + leftPlotHeight - barHeight;
-        output << "<rect x=\"" << x << "\" y=\"" << y << "\" width=\""
-               << std::max(1.0, binWidth - 12.0) << "\" height=\"" << barHeight
-               << "\" fill=\"#4f83b6\" fill-opacity=\"0.85\" stroke=\"#1f2937\"/>\n";
-
-        const double lowerLog = minLogValue + static_cast<double>(binIndex) /
-                                                  static_cast<double>(binCount) *
-                                                  (maxLogValue - minLogValue);
-        const double xLabel = x + std::max(1.0, binWidth - 12.0) / 2.0 - 16.0;
-        output << svgText(xLabel,
-                          panelY + innerTopPad + leftPlotHeight + 28.0,
-                          formatCompactDouble(std::pow(10.0, lowerLog)))
-               << '\n';
-    }
-
-    output << svgText(leftPanelX + panelWidth / 2.0 - 85.0,
-                      panelY + panelHeight - 12.0,
-                      "Activity_Value (log10 scale)")
-           << '\n';
-    output << svgText(leftPanelX + 8.0,
-                      panelY + panelHeight / 2.0,
-                      "Frequency",
-                      "transform=\"rotate(-90 68 345)\"")
-           << '\n';
-
-    output << svgText(rightPanelX + 130.0,
-                      panelY + 72.0,
-                      result.normalityTest.computed ? "Shapiro-Wilk computed"
-                                                    : "Shapiro-Wilk not computed",
-                      "font-size=\"18\" font-weight=\"600\"")
-           << '\n';
-    output << svgText(rightPanelX + 60.0,
-                      panelY + 140.0,
-                      "sample size = " + std::to_string(result.normalityTest.sampleSize),
-                      "font-size=\"16\"")
-           << '\n';
-    output << svgText(rightPanelX + 60.0,
-                      panelY + 200.0,
-                      "alpha = " + formatCompactDouble(result.normalityTest.alpha),
-                      "font-size=\"16\"")
-           << '\n';
-    if (result.normalityTest.reasonNotComputed.has_value()) {
-        output << svgText(rightPanelX + 60.0,
-                          panelY + 280.0,
-                          *result.normalityTest.reasonNotComputed,
-                          "font-size=\"16\"")
-               << '\n';
-    }
-    output << svgText(rightPanelX + 60.0,
-                      panelY + 350.0,
-                      result.normalityTest.interpretation,
-                      "font-size=\"16\"")
-           << '\n';
-
-    output << "</svg>\n";
 }
 
 GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<AtomRecord>& atoms,

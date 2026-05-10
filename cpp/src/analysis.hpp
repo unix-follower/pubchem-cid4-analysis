@@ -405,17 +405,9 @@ struct HillDoseResponseRepresentativeRow {
 };
 
 struct HillDoseResponseAucSummary {
-    std::string integrationMethod;
-    std::string curveBasis;
     std::string concentrationBoundsDefinition;
     std::size_t gridSize;
     std::string concentrationUnits;
-    std::string interpretation;
-};
-
-struct HillDoseResponseMidpointSummary {
-    std::string condition;
-    double response;
     std::string interpretation;
 };
 
@@ -433,12 +425,9 @@ struct HillDoseResponseSummary {
     std::string secondDerivative;
     double referenceHillCoefficientN;
     std::string parameterInterpretation;
-    HillDoseResponseMidpointSummary midpointInLogConcentrationSpace;
     HillDoseResponseAucSummary aucTrapezoidReferenceCurve;
     std::optional<HillDoseResponseLinearInflectionSummary> linearConcentrationInflection;
-    std::string fitStatus;
     std::vector<HillDoseResponseRepresentativeRow> representativeRows;
-    std::vector<std::string> notes;
 };
 
 struct HillDoseResponseAnalysisResult {
@@ -488,27 +477,6 @@ struct ActivityValueNormalityTest {
     std::string interpretation;
 };
 
-struct ActivityValueRepresentativeRow {
-    long long bioactivityId;
-    long long bioAssayAid;
-    std::string activity;
-    std::string aidType;
-    std::string activityType;
-    double activityValue;
-};
-
-struct ActivityValueRetainedRowDefinition {
-    std::string predicate;
-    std::vector<std::string> excludedRows;
-};
-
-struct ActivityValueAnalysis {
-    std::string targetQuantity;
-    ActivityValueRetainedRowDefinition retainedRowDefinition;
-    std::vector<ActivityValueRepresentativeRow> representativeRows;
-    std::vector<std::string> notes;
-};
-
 struct ActivityValueStatisticsAnalysisResult {
     std::string sourceFile;
     std::vector<std::string> headers;
@@ -516,7 +484,6 @@ struct ActivityValueStatisticsAnalysisResult {
     ActivityValueStatisticsRowCounts rowCounts;
     ActivityValueDescriptiveStatistics statistics;
     ActivityValueNormalityTest normalityTest;
-    ActivityValueAnalysis analysis;
 };
 
 struct PosteriorBioactivityRowCounts {
@@ -534,12 +501,6 @@ struct PosteriorBioactivityPrior {
     std::string family;
     double alpha;
     double beta;
-};
-
-struct PosteriorBioactivityLikelihood {
-    std::string family;
-    std::string successLabel;
-    std::string failureLabel;
 };
 
 struct PosteriorBioactivityDistribution {
@@ -566,21 +527,8 @@ struct PosteriorBioactivitySummaryStatistics {
 
 struct PosteriorBioactivityPosteriorSection {
     PosteriorBioactivityPrior prior;
-    PosteriorBioactivityLikelihood likelihood;
     PosteriorBioactivityDistribution posteriorDistribution;
     PosteriorBioactivitySummaryStatistics summary;
-};
-
-struct PosteriorBioactivityUpdateEquations {
-    std::string posteriorAlpha;
-    std::string posteriorBeta;
-    std::string posteriorMean;
-};
-
-struct PosteriorBioactivityBinaryEvidenceDefinition {
-    std::vector<std::string> retainedLabels;
-    std::vector<std::string> excludedLabels;
-    std::string interpretation;
 };
 
 struct PosteriorBioactivityRepresentativeRow {
@@ -592,22 +540,12 @@ struct PosteriorBioactivityRepresentativeRow {
     std::string bioAssayName;
 };
 
-struct PosteriorBioactivityAnalysis {
-    std::string targetQuantity;
-    std::string model;
-    PosteriorBioactivityUpdateEquations updateEquations;
-    PosteriorBioactivityBinaryEvidenceDefinition binaryEvidenceDefinition;
-    std::vector<PosteriorBioactivityRepresentativeRow> representativeRows;
-    std::vector<std::string> notes;
-};
-
 struct PosteriorBioactivityAnalysisResult {
     std::string sourceFile;
     std::vector<std::string> headers;
     std::vector<std::vector<std::string>> rows;
     PosteriorBioactivityRowCounts rowCounts;
     PosteriorBioactivityPosteriorSection posterior;
-    PosteriorBioactivityAnalysis analysis;
 };
 
 struct BinomialActivityRowCounts {
@@ -625,13 +563,6 @@ struct BinomialActivityRowCounts {
     std::size_t mixedEvidenceAssayTrials;
     std::size_t unanimousActiveAssayTrials;
     std::size_t unanimousInactiveAssayTrials;
-};
-
-struct BinomialActivityTrialDefinition {
-    std::string unit;
-    std::string successLabel;
-    std::string failureLabel;
-    std::string assayResolutionRule;
 };
 
 struct BinomialActivityParameters {
@@ -662,18 +593,8 @@ struct BinomialActivityRepresentativeAssay {
 };
 
 struct BinomialActivityDistributionSection {
-    BinomialActivityTrialDefinition trialDefinition;
     BinomialActivityParameters parameters;
     BinomialActivitySummaryStatistics summary;
-};
-
-struct BinomialActivityAnalysis {
-    std::string targetQuantity;
-    std::string model;
-    std::string equation;
-    std::string parameterEstimation;
-    std::vector<BinomialActivityRepresentativeAssay> representativeAssays;
-    std::vector<std::string> notes;
 };
 
 struct BinomialActivityDistributionAnalysisResult {
@@ -682,7 +603,6 @@ struct BinomialActivityDistributionAnalysisResult {
     std::vector<std::vector<std::string>> rows;
     BinomialActivityRowCounts rowCounts;
     BinomialActivityDistributionSection binomial;
-    BinomialActivityAnalysis analysis;
 };
 
 struct ChiSquareActivityAidTypeRowCounts {
@@ -706,17 +626,7 @@ struct ChiSquareContingencyTable {
     std::map<std::string, std::map<std::string, std::optional<double>>> expectedCounts;
 };
 
-struct ChiSquareVariables {
-    std::string row;
-    std::string column;
-};
-
 struct ChiSquareTestMetrics {
-    ChiSquareVariables variables;
-    std::string nullHypothesis;
-    std::string alternativeHypothesis;
-    bool computed;
-    std::optional<std::string> reasonNotComputed;
     std::optional<double> chi2Statistic;
     std::optional<double> pValue;
     std::optional<std::size_t> degreesOfFreedom;
@@ -732,28 +642,11 @@ struct ChiSquareRepresentativeCell {
     std::optional<double> expectedCount;
 };
 
-struct ChiSquareBinaryEvidenceDefinition {
-    std::vector<std::string> retainedLabels;
-    std::vector<std::string> excludedLabels;
-    std::string interpretation;
-};
-
-struct ChiSquareActivityAidTypeAnalysis {
-    std::string targetQuantity;
-    std::string model;
-    ChiSquareBinaryEvidenceDefinition binaryEvidenceDefinition;
-    std::vector<ChiSquareRepresentativeCell> representativeCells;
-    std::vector<std::string> notes;
-};
-
 struct ChiSquareActivityAidTypeAnalysisResult {
     std::string sourceFile;
-    std::vector<std::string> headers;
-    std::vector<std::vector<std::string>> rows;
     ChiSquareActivityAidTypeRowCounts rowCounts;
     ChiSquareContingencyTable contingencyTable;
     ChiSquareTestMetrics chiSquareTest;
-    ChiSquareActivityAidTypeAnalysis analysis;
 };
 
 struct GradientDescentAtomRow {
@@ -947,8 +840,6 @@ void writeHillDoseResponsePlotSvg(const HillDoseResponseAnalysisResult& result,
 ActivityValueStatisticsAnalysisResult
 buildActivityValueStatisticsAnalysis(const std::filesystem::path& csvPath,
                                      double shapiroAlpha = 0.05);
-void writeActivityValueStatisticsPlotSvg(const ActivityValueStatisticsAnalysisResult& result,
-                                         const std::filesystem::path& outputPath);
 GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<AtomRecord>& atoms,
                                                            std::string_view sourceFile,
                                                            double learningRate = 5.0e-5,

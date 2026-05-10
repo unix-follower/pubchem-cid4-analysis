@@ -1,7 +1,6 @@
 import {
   BinarySearchTraceResult,
   BinarySearchTraceStep,
-  DeduplicationResult,
   SortTraceResult,
   SortTraceStep,
 } from "./types"
@@ -163,35 +162,6 @@ export function buildThresholdBinarySearchTrace(
     index: answer,
     value: answer >= 0 ? sortedValues[answer] : null,
     steps,
-  }
-}
-
-export function deduplicateByKey<T>(
-  items: T[],
-  getKey: (item: T) => string,
-): DeduplicationResult<T> {
-  const uniqueItems: T[] = []
-  const duplicates: T[] = []
-  const duplicateKeys = new Set<string>()
-  const seen = new Set<string>()
-
-  for (const item of items) {
-    const key = getKey(item)
-
-    if (seen.has(key)) {
-      duplicates.push(item)
-      duplicateKeys.add(key)
-      continue
-    }
-
-    seen.add(key)
-    uniqueItems.push(item)
-  }
-
-  return {
-    uniqueItems,
-    duplicates,
-    duplicateKeys: [...duplicateKeys],
   }
 }
 
