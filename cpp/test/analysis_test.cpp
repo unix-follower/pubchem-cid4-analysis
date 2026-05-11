@@ -1053,7 +1053,6 @@ TEST(GradientDescentStrategiesTest, AnalysisConvergesTowardClosedFormWeight)
     EXPECT_NEAR(result.summary.optimization.gradientChecks.finalWeight.analytic,
                 result.summary.optimization.gradientChecks.finalWeight.finiteDifference,
                 1.0e-5);
-    EXPECT_EQ(result.summary.dataset.featureMatrixShape, (std::vector<int>{3, 1}));
 }
 
 TEST(GradientDescentStrategiesTest, WritersEmitCsvAndSvgArtifacts)
@@ -1066,31 +1065,23 @@ TEST(GradientDescentStrategiesTest, WritersEmitCsvAndSvgArtifacts)
 
     const auto csvPath = outputDirectory / "gradient.csv";
     const auto lossSvgPath = outputDirectory / "gradient.loss.svg";
-    const auto fitSvgPath = outputDirectory / "gradient.fit.svg";
 
     cid4::writeGradientDescentCsv(result, csvPath);
     cid4::writeGradientDescentLossPlotSvg(result, lossSvgPath);
-    cid4::writeGradientDescentFitPlotSvg(result, fitSvgPath);
 
     std::ifstream csvInput(csvPath);
     std::ifstream lossSvgInput(lossSvgPath);
-    std::ifstream fitSvgInput(fitSvgPath);
     ASSERT_TRUE(csvInput.good());
     ASSERT_TRUE(lossSvgInput.good());
-    ASSERT_TRUE(fitSvgInput.good());
 
     const std::string csvContents((std::istreambuf_iterator<char>(csvInput)),
                                   std::istreambuf_iterator<char>());
     const std::string lossSvgContents((std::istreambuf_iterator<char>(lossSvgInput)),
                                       std::istreambuf_iterator<char>());
-    const std::string fitSvgContents((std::istreambuf_iterator<char>(fitSvgInput)),
-                                     std::istreambuf_iterator<char>());
 
     EXPECT_NE(csvContents.find("sum_squared_error"), std::string::npos);
     EXPECT_NE(csvContents.find("mse"), std::string::npos);
     EXPECT_NE(lossSvgContents.find("Manual Gradient Descent MSE Trace"), std::string::npos);
-    EXPECT_NE(fitSvgContents.find("Mass to Atomic Number"), std::string::npos);
-    EXPECT_NE(fitSvgContents.find("y_hat ="), std::string::npos);
 }
 
 TEST(BioactivityStrategiesTest, AnalysisFiltersIc50RowsAndComputesPic50)

@@ -679,26 +679,6 @@ struct GradientDescentLossTraceSummary {
     std::size_t bestEpoch;
 };
 
-struct GradientDescentDatasetSummary {
-    std::size_t rowCount;
-    std::string feature;
-    std::string target;
-    std::vector<int> featureMatrixShape;
-    std::vector<double> massRange;
-    std::vector<int> atomicNumberRange;
-    std::vector<GradientDescentAtomRow> atomRows;
-};
-
-struct GradientDescentModelSummary {
-    std::string predictionEquation;
-    std::string objectiveName;
-    std::string objectiveEquation;
-    std::string meanSquaredErrorEquation;
-    std::string gradientEquation;
-    std::string featureName;
-    std::string targetName;
-};
-
 struct GradientDescentOptimizationSummary {
     double initialWeight;
     double finalWeight;
@@ -715,8 +695,6 @@ struct GradientDescentOptimizationSummary {
 };
 
 struct GradientDescentSummary {
-    GradientDescentDatasetSummary dataset;
-    GradientDescentModelSummary model;
     GradientDescentOptimizationSummary optimization;
 };
 
@@ -737,8 +715,6 @@ struct AtomElementEntropyRowCounts {
 };
 
 struct AtomElementEntropyMetrics {
-    std::string formula;
-    std::string logBase;
     double value;
     double maximumEntropyForObservedSupport;
     double normalizedEntropy;
@@ -758,12 +734,10 @@ struct AtomElementDominantElement {
 };
 
 struct AtomElementEntropyAnalysis {
-    std::string targetQuantity;
     std::vector<std::string> requiredElements;
     std::size_t uniqueRetainedElements;
     AtomElementDominantElement dominantElement;
     std::map<std::string, std::size_t> unexpectedElements;
-    std::vector<std::string> notes;
 };
 
 struct AtomElementEntropyAnalysisResult {
