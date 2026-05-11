@@ -703,33 +703,9 @@ nlohmann::json toJson(const cid4::ChiSquareActivityAidTypeAnalysisResult& chiSqu
 
 nlohmann::json toJson(const cid4::GradientDescentAnalysisResult& gradientDescent)
 {
-    nlohmann::json atomRows = nlohmann::json::array();
-    for (const auto& atomRow : gradientDescent.summary.dataset.atomRows) {
-        atomRows.push_back({{"index", atomRow.index},
-                            {"symbol", atomRow.symbol},
-                            {"mass", atomRow.mass},
-                            {"atomicNumber", atomRow.atomicNumber}});
-    }
-
     const auto& optimization = gradientDescent.summary.optimization;
     return {
         {"sourceFile", gradientDescent.sourceFile},
-        {"dataset",
-         {{"rowCount", gradientDescent.summary.dataset.rowCount},
-          {"feature", gradientDescent.summary.dataset.feature},
-          {"target", gradientDescent.summary.dataset.target},
-          {"featureMatrixShape", gradientDescent.summary.dataset.featureMatrixShape},
-          {"massRange", gradientDescent.summary.dataset.massRange},
-          {"atomicNumberRange", gradientDescent.summary.dataset.atomicNumberRange},
-          {"atomRows", atomRows}}},
-        {"model",
-         {{"predictionEquation", gradientDescent.summary.model.predictionEquation},
-          {"objectiveName", gradientDescent.summary.model.objectiveName},
-          {"objectiveEquation", gradientDescent.summary.model.objectiveEquation},
-          {"mseEquation", gradientDescent.summary.model.meanSquaredErrorEquation},
-          {"gradientEquation", gradientDescent.summary.model.gradientEquation},
-          {"featureName", gradientDescent.summary.model.featureName},
-          {"targetName", gradientDescent.summary.model.targetName}}},
         {"optimization",
          {{"initialWeight", optimization.initialWeight},
           {"finalWeight", optimization.finalWeight},
@@ -837,23 +813,18 @@ nlohmann::json toJson(const cid4::AtomElementEntropyAnalysisResult& atomEntropy)
           {"unexpectedElementRows", atomEntropy.rowCounts.unexpectedElementRows},
           {"unexpectedElementCategories", atomEntropy.rowCounts.unexpectedElementCategories}}},
         {"entropy",
-         {{"formula", atomEntropy.entropy.formula},
-          {"logBase", atomEntropy.entropy.logBase},
-          {"value", atomEntropy.entropy.value},
+          {{"value", atomEntropy.entropy.value},
           {"maximumEntropyForObservedSupport",
            atomEntropy.entropy.maximumEntropyForObservedSupport},
           {"normalizedEntropy", atomEntropy.entropy.normalizedEntropy}}},
         {"distribution", distribution},
         {"analysis",
-         {{"targetQuantity", atomEntropy.analysis.targetQuantity},
-          {"requiredElements", atomEntropy.analysis.requiredElements},
-          {"uniqueRetainedElements", atomEntropy.analysis.uniqueRetainedElements},
+          {{"uniqueRetainedElements", atomEntropy.analysis.uniqueRetainedElements},
           {"dominantElement",
            {{"element", atomEntropy.analysis.dominantElement.element},
             {"count", atomEntropy.analysis.dominantElement.count},
             {"proportion", atomEntropy.analysis.dominantElement.proportion}}},
-          {"unexpectedElements", unexpectedElements},
-          {"notes", atomEntropy.analysis.notes}}},
+          {"unexpectedElements", unexpectedElements}}},
     };
 } // namespace
 
@@ -1087,28 +1058,14 @@ void makeGradientDescent(const CommandLineOptions& options)
     const std::filesystem::path gradientDescentSummaryOutputPath =
         outputDir /
         (options.sdfFile.stem().string() + ".mass_to_atomic_number_gradient_descent.summary.json");
-    const std::filesystem::path gradientDescentLossPlotOutputPath =
-        outputDir /
-        (options.sdfFile.stem().string() + ".mass_to_atomic_number_gradient_descent.loss.svg");
-    const std::filesystem::path gradientDescentFitPlotOutputPath =
-        outputDir /
-        (options.sdfFile.stem().string() + ".mass_to_atomic_number_gradient_descent.fit.svg");
 
     cid4::writeGradientDescentCsv(gradientDescentAnalysis, gradientDescentCsvOutputPath);
 
     std::ofstream gradientDescentSummaryOutput(gradientDescentSummaryOutputPath);
     gradientDescentSummaryOutput << std::setw(2) << toJson(gradientDescentAnalysis) << '\n';
 
-    cid4::writeGradientDescentLossPlotSvg(gradientDescentAnalysis,
-                                          gradientDescentLossPlotOutputPath);
-    cid4::writeGradientDescentFitPlotSvg(gradientDescentAnalysis, gradientDescentFitPlotOutputPath);
-
     std::cout << "Gradient descent trace written to: " << gradientDescentCsvOutputPath << '\n';
     std::cout << "Gradient descent summary written to: " << gradientDescentSummaryOutputPath
-              << '\n';
-    std::cout << "Gradient descent loss plot written to: " << gradientDescentLossPlotOutputPath
-              << '\n';
-    std::cout << "Gradient descent fit plot written to: " << gradientDescentFitPlotOutputPath
               << '\n';
 }
 

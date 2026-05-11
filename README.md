@@ -50,6 +50,7 @@ The 13 bond lines are:
 ```
 
 ## Posterior bioactivity analysis
+
 P(Active | CID=4)
 model = Beta-Binomial conjugate
 Likelihood:
@@ -74,7 +75,6 @@ Bioactivity_ID
 
 Target: positive numeric Activity_Value distribution.
 Activity_Value is numeric and strictly greater than 0.
-
 
 Active
 ```csv
@@ -103,9 +103,25 @@ Midpoint:
 - response = 0.5
 
 ## Chi-square test
+
 Model: Pearson chi-square test of independence
 Null hypothesis: Activity and Aid_Type are statistically independent within the retained binary bioactivity rows.
 Alternative hypothesis: Activity and Aid_Type are statistically associated within the retained binary bioactivity rows.
+
+## Gradient
+
+Prediction equation: y_hat = w * x
+Objective Name = "sum_squared_error
+Objective Equation = "L(w) = sum_i (y_i - w x_i)^2
+MSE(w) = (1 / n) * sum_i (y_i - w x_i)^2
+Gradient equation: dL/dw = sum_i -2 x_i (y_i - w x_i) = 2 sum_i x_i (w x_i - y_i)
+Feature name: atom mass
+Target name: atomic number
+
+## Atom element entropy analysis
+
+Target: atom element entropy over O/N/C/H proportions.
+H = -sum(p_i * log(p_i))
 
 ## Scala JDK Concurrent API
 

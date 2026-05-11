@@ -3436,33 +3436,8 @@ GradientDescentAnalysisResult buildGradientDescentAnalysis(const std::vector<Ato
         traceRows.begin(), traceRows.end(), [](const auto& left, const auto& right) {
             return left.meanSquaredError < right.meanSquaredError;
         });
-    const auto [minMass, maxMass] = std::minmax_element(xValues.begin(), xValues.end());
-    const auto [minAtomicNumber, maxAtomicNumber] =
-        std::minmax_element(yValues.begin(), yValues.end());
 
     GradientDescentSummary summary{
-        .dataset =
-            GradientDescentDatasetSummary{
-                .rowCount = atomRows.size(),
-                .feature = "mass",
-                .target = "atomicNumber",
-                .featureMatrixShape = {static_cast<int>(atomRows.size()), 1},
-                .massRange = {*minMass, *maxMass},
-                .atomicNumberRange = {static_cast<int>(*minAtomicNumber),
-                                      static_cast<int>(*maxAtomicNumber)},
-                .atomRows = std::move(atomRows),
-            },
-        .model =
-            GradientDescentModelSummary{
-                .predictionEquation = "y_hat = w * x",
-                .objectiveName = "sum_squared_error",
-                .objectiveEquation = "L(w) = sum_i (y_i - w x_i)^2",
-                .meanSquaredErrorEquation = "MSE(w) = (1 / n) * sum_i (y_i - w x_i)^2",
-                .gradientEquation =
-                    "dL/dw = sum_i -2 x_i (y_i - w x_i) = 2 sum_i x_i (w x_i - y_i)",
-                .featureName = "atom mass",
-                .targetName = "atomic number",
-            },
         .optimization =
             GradientDescentOptimizationSummary{
                 .initialWeight = initialWeight,
@@ -3617,85 +3592,6 @@ void writeGradientDescentLossPlotSvg(const GradientDescentAnalysisResult& result
     output << "</svg>\n";
 }
 
-void writeGradientDescentFitPlotSvg(const GradientDescentAnalysisResult& result,
-                                    const std::filesystem::path& outputPath)
-{
-    if (result.summary.dataset.atomRows.empty()) {
-        throw GradientDescentAnalysisError(
-            "Gradient descent fit plot requires at least one atom feature row");
-    }
-
-    std::ofstream output(outputPath);
-    if (!output) {
-        throw GradientDescentAnalysisError(
-            "Could not open gradient descent fit plot output path: " + outputPath.string());
-    }
-
-    constexpr double width = 1280.0;
-    constexpr double height = 720.0;
-    constexpr double left = 100.0;
-    constexpr double right = 80.0;
-    constexpr double top = 70.0;
-    constexpr double bottom = 90.0;
-    const double plotWidth = width - left - right;
-    const double plotHeight = height - top - bottom;
-    const double maxMass = result.summary.dataset.massRange[1] * 1.05;
-    const double maxAtomicNumber =
-        static_cast<double>(result.summary.dataset.atomicNumberRange[1]) * 1.05;
-    const double finalWeight = result.summary.optimization.finalWeight;
-
-    auto xToSvg = [&](const double mass) { return left + (mass / maxMass) * plotWidth; };
-    auto yToSvg = [&](const double atomicNumber) {
-        return top + (maxAtomicNumber - atomicNumber) / maxAtomicNumber * plotHeight;
-    };
-
-    output << "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" << width << "\" height=\""
-           << height << "\" viewBox=\"0 0 " << width << ' ' << height << "\">\n";
-    output << "<rect width=\"100%\" height=\"100%\" fill=\"#ffffff\"/>\n";
-    output << svgText(left,
-                      40.0,
-                      "Manual Gradient Descent Fit: Mass to Atomic Number",
-                      "font-size=\"24\" font-weight=\"700\"")
-           << '\n';
-    output << "<line x1=\"" << left << "\" y1=\"" << top + plotHeight << "\" x2=\""
-           << left + plotWidth << "\" y2=\"" << top + plotHeight
-           << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
-    output << "<line x1=\"" << left << "\" y1=\"" << top << "\" x2=\"" << left << "\" y2=\""
-           << top + plotHeight << "\" stroke=\"#111827\" stroke-width=\"2\"/>\n";
-
-    const double lineX1 = 0.0;
-    const double lineY1 = 0.0;
-    const double lineX2 = maxMass;
-    const double lineY2 = finalWeight * maxMass;
-    output << "<line x1=\"" << xToSvg(lineX1) << "\" y1=\"" << yToSvg(lineY1) << "\" x2=\""
-           << xToSvg(lineX2) << "\" y2=\"" << yToSvg(lineY2)
-           << "\" stroke=\"#b91c1c\" stroke-width=\"3\"/>\n";
-
-    for (const auto& atomRow : result.summary.dataset.atomRows) {
-        output << "<circle cx=\"" << xToSvg(atomRow.mass) << "\" cy=\""
-               << yToSvg(static_cast<double>(atomRow.atomicNumber))
-               << "\" r=\"6\" fill=\"#4f46e5\" stroke=\"#111827\" stroke-width=\"1\"/>\n";
-    }
-
-    output << svgText(width / 2.0 - 40.0,
-                      height - 25.0,
-                      "Atom mass",
-                      "font-size=\"18\" font-weight=\"600\"")
-           << '\n';
-    output << svgText(20.0,
-                      height / 2.0,
-                      "Atomic number",
-                      "font-size=\"18\" font-weight=\"600\" transform=\"rotate(-90 20 " +
-                          formatCompactDouble(height / 2.0) + ")\"")
-           << '\n';
-    output << svgText(left + plotWidth - 220.0,
-                      top + 30.0,
-                      "y_hat = " + formatCompactDouble(finalWeight) + "x",
-                      "font-size=\"18\" font-weight=\"600\"")
-           << '\n';
-    output << "</svg>\n";
-}
-
 AtomElementEntropyAnalysisResult
 buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms, std::string_view sourceFile)
 {
@@ -3794,8 +3690,6 @@ buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms, std::strin
             },
         .entropy =
             AtomElementEntropyMetrics{
-                .formula = "H = -sum(p_i * log(p_i))",
-                .logBase = "natural_log",
                 .value = entropyValue,
                 .maximumEntropyForObservedSupport = maximumEntropy,
                 .normalizedEntropy = normalizedEntropy,
@@ -3803,7 +3697,6 @@ buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms, std::strin
         .distribution = std::move(distribution),
         .analysis =
             AtomElementEntropyAnalysis{
-                .targetQuantity = "Atom element entropy over O/N/C/H proportions",
                 .requiredElements = kRequiredAtomEntropyElements,
                 .uniqueRetainedElements = observedRequiredElementCategories,
                 .dominantElement =
@@ -3813,12 +3706,6 @@ buildAtomElementEntropyAnalysis(const std::vector<AtomRecord>& atoms, std::strin
                         .proportion = dominantProportion,
                     },
                 .unexpectedElements = std::move(unexpectedCounts),
-                .notes = {"Entropy is computed only over the required O/N/C/H support requested in "
-                          "the README exercise.",
-                          "Unexpected atom symbols are excluded from the entropy sum and reported "
-                          "separately for transparency.",
-                          "Normalized entropy uses the maximum entropy over the observed "
-                          "required-element support rather than the fixed four-element support."},
             },
     };
 }
