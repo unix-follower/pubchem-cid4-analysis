@@ -12,66 +12,13 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cid4_api import resolve_server_config, route_api_request  # noqa: E402
+from src.cid4_api import resolve_server_config  # noqa: E402
 
 
 class Cid4ApiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.data_dir = PROJECT_ROOT.parent / "data"
-
-    def test_route_api_request_returns_health_payload(self) -> None:
-        response = route_api_request(
-            "GET", "/api/health", self.data_dir, "asyncio", "AsyncIO"
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('"source": "asyncio"', response.body)
-
-    def test_route_api_request_returns_error_mode_payload(self) -> None:
-        response = route_api_request(
-            "GET", "/api/health?mode=error", self.data_dir, "asyncio", "AsyncIO"
-        )
-
-        self.assertEqual(response.status_code, 503)
-        self.assertIn('"source": "asyncio"', response.body)
-
-    def test_route_api_request_validates_conformer_index(self) -> None:
-        response = route_api_request(
-            "GET", "/api/cid4/conformer/99", self.data_dir, "asyncio", "AsyncIO"
-        )
-
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.body, '{"message": "Unknown conformer 99"}')
-
-    def test_route_api_request_supports_options(self) -> None:
-        response = route_api_request(
-            "OPTIONS", "/api/health", self.data_dir, "asyncio", "AsyncIO"
-        )
-
-        self.assertEqual(response.status_code, 204)
-        self.assertEqual(response.body, "")
-
-    def test_route_api_request_rejects_unsupported_methods(self) -> None:
-        response = route_api_request(
-            "POST", "/api/health", self.data_dir, "asyncio", "AsyncIO"
-        )
-
-        self.assertEqual(response.status_code, 405)
-        self.assertIn("not allowed", response.body)
-
-    def test_route_api_request_returns_reaction_network_payload(self) -> None:
-        response = route_api_request(
-            "GET",
-            "/api/algorithms/reaction-network",
-            self.data_dir,
-            "asyncio",
-            "AsyncIO",
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('"id": "cid4-reaction-network"', response.body)
-        self.assertIn('"pathwayCount": 4', response.body)
 
     def test_asyncio_server_config_honors_asyncio_env_overrides(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

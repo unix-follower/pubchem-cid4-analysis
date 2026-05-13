@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src import env_utils
+from src.utils import env_utils
 
 LITERATURE_FILENAME = "pubchem_cid_4_literature.csv"
 PATENT_FILENAME = "pubchem_cid_4_patent.csv"

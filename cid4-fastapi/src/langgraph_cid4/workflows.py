@@ -3,10 +3,11 @@ from __future__ import annotations
 import json
 from collections.abc import Callable
 from functools import lru_cache
-from importlib import import_module
+from pathlib import Path
 from typing import Any
+from langgraph.graph import StateGraph, START, END
 
-from src import cid4_analysis
+from src.utils import env_utils
 from src.langchain_cid4.workflows import retrieve_domain_hits, route_question
 from src.langgraph_cid4.state import (
     GraphState,
@@ -15,23 +16,6 @@ from src.langgraph_cid4.state import (
     empty_supporting_ids,
     merge_supporting_ids,
 )
-
-
-def import_langgraph_stack() -> dict[str, Any]:
-    try:
-        graph_module = import_module("langgraph.graph")
-
-        return {
-            "available": True,
-            "StateGraph": graph_module.StateGraph,
-            "START": graph_module.START,
-            "END": graph_module.END,
-        }
-    except (ImportError, ModuleNotFoundError) as exc:
-        return {
-            "available": False,
-            "reason": f"LangGraph dependencies are not installed in the current environment: {exc}",
-        }
 
 
 def run_router_workflow() -> dict[str, Any]:
@@ -46,10 +30,9 @@ def run_router_workflow() -> dict[str, Any]:
     runtime = (
         question_outputs[0]["langgraph_runtime"]
         if question_outputs
-        else build_langgraph_runtime(import_langgraph_stack())
+        else build_langgraph_runtime()
     )
     return {
-        "status": "ok",
         "workflow": "router-graph",
         "langgraph_runtime": runtime,
         "question_count": len(question_outputs),
@@ -128,37 +111,25 @@ def execute_graph(
     initial_state: GraphState,
     steps: list[tuple[str, Callable[[GraphState], dict[str, Any]]]],
 ) -> GraphState:
-    stack = import_langgraph_stack()
-    runtime = build_langgraph_runtime(stack)
+    runtime = build_langgraph_runtime()
 
-    if stack["available"]:
-        builder = stack["StateGraph"](GraphState)
-        previous = stack["START"]
-        for name, node in steps:
-            builder.add_node(name, node)
-            builder.add_edge(previous, name)
-            previous = name
-        builder.add_edge(previous, stack["END"])
-        state = dict(builder.compile().invoke(initial_state))
-    else:
-        state = dict(initial_state)
-        for _, node in steps:
-            state.update(node(state))
+    builder = StateGraph(GraphState)
+    previous = START
+    for name, node in steps:
+        builder.add_node(name, node)
+        builder.add_edge(previous, name)
+        previous = name
+    builder.add_edge(previous, END)
+    state = dict(builder.compile().invoke(initial_state))
 
     state["langgraph_runtime"] = runtime
     return state
 
 
-def build_langgraph_runtime(stack: dict[str, Any]) -> dict[str, Any]:
-    if stack["available"]:
-        return {
-            "available": True,
-            "mode": "langgraph",
-        }
+def build_langgraph_runtime() -> dict[str, Any]:
     return {
-        "available": False,
-        "mode": "fallback",
-        "reason": stack["reason"],
+        "available": True,
+        "mode": "langgraph",
     }
 
 
@@ -423,7 +394,6 @@ def validation_update(state: GraphState, issues: list[str]) -> dict[str, Any]:
 
 def finalize_state(state: GraphState) -> dict[str, Any]:
     return {
-        "status": "ok",
         "workflow": state.get("workflow"),
         "question": state.get("question"),
         "question_type": state.get("question_type"),
@@ -444,11 +414,16 @@ def finalize_state(state: GraphState) -> dict[str, Any]:
     }
 
 
+def resolve_data_path(filename: str, data_dir: Path | None = None) -> Path:
+    base_dir = (
+        Path(data_dir) if data_dir is not None else Path(env_utils.get_data_dir())
+    )
+    return base_dir / filename
+
+
 @lru_cache(maxsize=1)
 def load_compound_context() -> dict[str, Any]:
-    with cid4_analysis.resolve_data_path("COMPOUND_CID_4.json").open(
-        encoding="utf-8"
-    ) as file:
+    with resolve_data_path("COMPOUND_CID_4.json").open(encoding="utf-8") as file:
         payload = json.load(file)
 
     record = payload["Record"]

@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from typing import Any
+from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnableLambda
 
 from src.langchain_cid4.documents import (
     chunk_documents,
-    import_langchain_stack,
     load_domain_documents,
 )
 from src.langchain_cid4.retrieval import (
@@ -111,11 +112,9 @@ def run_agent_workflow() -> dict[str, Any]:
             )
         )
 
-    stack = import_langchain_stack()
     return {
-        "status": "ok",
         "workflow": "multi-tool-agent",
-        "langchain_runtime": build_langchain_runtime(stack),
+        "langchain_runtime": build_langchain_runtime(),
         "question_count": len(outputs),
         "questions": outputs,
     }
@@ -131,7 +130,6 @@ def run_question_workflow(
 ) -> dict[str, Any]:
     effective_route = route or route_question(question)
     effective_domains = effective_route["domains"] if domains is None else domains
-    stack = import_langchain_stack()
 
     domain_results = [
         retrieve_domain_hits(question, domain, top_k=top_k)
@@ -146,14 +144,13 @@ def run_question_workflow(
         for result in domain_results
     ]
 
-    response = build_chain_response(question, effective_domains, flattened_hits, stack)
+    response = build_chain_response(question, effective_domains, flattened_hits)
 
     return {
-        "status": "ok",
         "workflow": workflow,
         "question": question,
         "route": effective_route,
-        "langchain_runtime": build_langchain_runtime(stack),
+        "langchain_runtime": build_langchain_runtime(),
         "retrieval": public_domain_results,
         "answer": response["answer"],
         "structured_output": response["structured_output"],
@@ -195,37 +192,29 @@ def build_chain_response(
     question: str,
     domains: list[str],
     hits: list[RetrievedPassage],
-    stack: dict[str, Any],
 ) -> dict[str, Any]:
     context_preview = format_hits_for_prompt(hits)
     structured_output = summarize_hits(domains, hits)
 
-    if stack["available"]:
-        prompt = stack["PromptTemplate"].from_template(
-            "Question: {question}\nDomains: {domains}\nContext:\n{context}\n"
-            "Return a grounded CID 4 answer that stays within the supplied evidence."
-        )
-        chain = prompt | stack["RunnableLambda"](
-            lambda rendered_prompt: {
-                "answer": build_grounded_answer(domains, hits),
-                "prompt_preview": str(rendered_prompt),
-            }
-        )
-        result = chain.invoke(
-            {
-                "question": question,
-                "domains": ", ".join(domains),
-                "context": context_preview,
-            }
-        )
-        return {
-            "answer": result["answer"],
-            "structured_output": structured_output,
-            "context_preview": context_preview,
+    prompt = PromptTemplate.from_template(
+        "Question: {question}\nDomains: {domains}\nContext:\n{context}\n"
+        "Return a grounded CID 4 answer that stays within the supplied evidence."
+    )
+    chain = prompt | RunnableLambda(
+        lambda rendered_prompt: {
+            "answer": build_grounded_answer(domains, hits),
+            "prompt_preview": str(rendered_prompt),
         }
-
+    )
+    result = chain.invoke(
+        {
+            "question": question,
+            "domains": ", ".join(domains),
+            "context": context_preview,
+        }
+    )
     return {
-        "answer": build_grounded_answer(domains, hits),
+        "answer": result["answer"],
         "structured_output": structured_output,
         "context_preview": context_preview,
     }
@@ -336,16 +325,10 @@ def truncate_text(text: str, limit: int) -> str:
     return f"{compact[: limit - 3].rstrip()}..."
 
 
-def build_langchain_runtime(stack: dict[str, Any]) -> dict[str, Any]:
-    if stack["available"]:
-        return {
-            "available": True,
-            "mode": "langchain-core",
-        }
+def build_langchain_runtime() -> dict[str, Any]:
     return {
-        "available": False,
-        "mode": "fallback",
-        "reason": stack["reason"],
+        "available": True,
+        "mode": "langchain-core",
     }
 
 

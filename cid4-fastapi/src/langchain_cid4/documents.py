@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from src.documents import (
     VectorDocument,
@@ -27,27 +29,6 @@ class ChunkRecord:
     metadata: dict[str, Any]
 
 
-def import_langchain_stack() -> dict[str, Any]:
-    try:
-        from langchain_core.documents import Document
-        from langchain_core.prompts import PromptTemplate
-        from langchain_core.runnables import RunnableLambda
-        from langchain_text_splitters import RecursiveCharacterTextSplitter
-
-        return {
-            "available": True,
-            "Document": Document,
-            "PromptTemplate": PromptTemplate,
-            "RunnableLambda": RunnableLambda,
-            "RecursiveCharacterTextSplitter": RecursiveCharacterTextSplitter,
-        }
-    except (ImportError, ModuleNotFoundError) as exc:
-        return {
-            "available": False,
-            "reason": f"LangChain dependencies are not installed in the current environment: {exc}",
-        }
-
-
 def load_domain_documents(domain: str) -> list[VectorDocument]:
     if domain == "literature":
         return build_literature_documents()
@@ -70,52 +51,30 @@ def chunk_documents(
     chunk_size: int = 700,
     chunk_overlap: int = 120,
 ) -> list[ChunkRecord]:
-    stack = import_langchain_stack()
-    if stack["available"]:
-        splitter = stack["RecursiveCharacterTextSplitter"](
-            chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap,
-            separators=["\n\n", "\n", ". ", " ", ""],
-        )
-        chunks: list[ChunkRecord] = []
-        for document in documents:
-            metadata = {
-                "doc_id": document.doc_id,
-                "doc_type": document.doc_type,
-                "source_file": document.source_file,
-                "source_row_id": document.source_row_id,
-                "title": document.title,
-                "cid": document.cid,
-                "sid": document.sid,
-                "aid": document.aid,
-                "pmid": document.pmid,
-                "doi": document.doi,
-                "taxonomy_id": document.taxonomy_id,
-                "pathway_accession": document.pathway_accession,
-                **({} if document.metadata is None else dict(document.metadata)),
-            }
-            for index, content in enumerate(
-                splitter.split_text(document.text_payload), start=1
-            ):
-                chunks.append(
-                    ChunkRecord(
-                        chunk_id=f"{document.doc_id}:chunk:{index}",
-                        doc_id=document.doc_id,
-                        doc_type=document.doc_type,
-                        source_file=document.source_file,
-                        source_row_id=document.source_row_id,
-                        title=document.title,
-                        content=content,
-                        metadata={**metadata, "chunk_index": index},
-                    )
-                )
-        return chunks
-
-    chunks = []
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        separators=["\n\n", "\n", ". ", " ", ""],
+    )
+    chunks: list[ChunkRecord] = []
     for document in documents:
+        metadata = {
+            "doc_id": document.doc_id,
+            "doc_type": document.doc_type,
+            "source_file": document.source_file,
+            "source_row_id": document.source_row_id,
+            "title": document.title,
+            "cid": document.cid,
+            "sid": document.sid,
+            "aid": document.aid,
+            "pmid": document.pmid,
+            "doi": document.doi,
+            "taxonomy_id": document.taxonomy_id,
+            "pathway_accession": document.pathway_accession,
+            **({} if document.metadata is None else dict(document.metadata)),
+        }
         for index, content in enumerate(
-            _fallback_split_text(document.text_payload, chunk_size, chunk_overlap),
-            start=1,
+            splitter.split_text(document.text_payload), start=1
         ):
             chunks.append(
                 ChunkRecord(
@@ -126,38 +85,17 @@ def chunk_documents(
                     source_row_id=document.source_row_id,
                     title=document.title,
                     content=content,
-                    metadata={
-                        "doc_id": document.doc_id,
-                        "doc_type": document.doc_type,
-                        "source_file": document.source_file,
-                        "source_row_id": document.source_row_id,
-                        "title": document.title,
-                        "cid": document.cid,
-                        "sid": document.sid,
-                        "aid": document.aid,
-                        "pmid": document.pmid,
-                        "doi": document.doi,
-                        "taxonomy_id": document.taxonomy_id,
-                        "pathway_accession": document.pathway_accession,
-                        "chunk_index": index,
-                        **(
-                            {} if document.metadata is None else dict(document.metadata)
-                        ),
-                    },
+                    metadata={**metadata, "chunk_index": index},
                 )
             )
     return chunks
 
 
 def build_langchain_documents(documents: list[VectorDocument]) -> list[Any]:
-    stack = import_langchain_stack()
-    if not stack["available"]:
-        return []
-
     langchain_documents = []
     for document in documents:
         langchain_documents.append(
-            stack["Document"](
+            Document(
                 page_content=document.text_payload,
                 metadata={
                     "doc_id": document.doc_id,
@@ -178,21 +116,3 @@ def build_langchain_documents(documents: list[VectorDocument]) -> list[Any]:
             )
         )
     return langchain_documents
-
-
-def _fallback_split_text(text: str, chunk_size: int, chunk_overlap: int) -> list[str]:
-    cleaned = " ".join(text.split())
-    if not cleaned:
-        return []
-
-    step = max(1, chunk_size - chunk_overlap)
-    chunks: list[str] = []
-    start = 0
-    while start < len(cleaned):
-        chunk = cleaned[start : start + chunk_size].strip()
-        if chunk:
-            chunks.append(chunk)
-        if start + chunk_size >= len(cleaned):
-            break
-        start += step
-    return chunks

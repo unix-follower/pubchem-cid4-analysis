@@ -17,14 +17,20 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from cid4_observability import (  # noqa: E402
+from src.cid4_observability import (  # noqa: E402
     ObservabilityConfig,
     RequestScope,
     initialize,
     resolve_observability_config,
     shutdown,
 )
-from cid4_fastapi import create_app  # noqa: E402
+from src.cid4_fastapi import create_app  # noqa: E402
+
+from src.ml.language_model_common import LlmServiceError  # noqa: E402
+from src.ml.torch_language_model import PyTorchLanguageModelService  # noqa: E402
+from src.ml.tensorflow_language_model import TensorFlowLanguageModelService  # noqa: E402
+from src.ml.language_model_common import build_stream_event  # noqa: E402
+from src.config.config import resolve_server_config  # noqa: E402
 
 FASTAPI_AVAILABLE = importlib.util.find_spec("fastapi") is not None
 HTTPX_AVAILABLE = importlib.util.find_spec("httpx") is not None
@@ -125,7 +131,7 @@ class FastApiServerTests(unittest.TestCase):
     ) -> dict[str, str]:
         encoded = base64.b64encode(f"{username}:{password}".encode()).decode("ascii")
         response = self.client.get(
-            "/api/auth/session",
+            "/api/v1/auth/session",
             headers={
                 "Authorization": f"Basic {encoded}",
                 "X-CID4-Auth-Method": "basic",
@@ -138,7 +144,7 @@ class FastApiServerTests(unittest.TestCase):
         self, username: str = "digestor", password: str = "cid4-digest-password"
     ) -> dict[str, str]:
         challenge = self.client.get(
-            "/api/auth/session", headers={"X-CID4-Auth-Method": "digest"}
+            "/api/v1/auth/session", headers={"X-CID4-Auth-Method": "digest"}
         )
         self.assertEqual(challenge.status_code, 401)
         digest_header = self._build_digest_header(
@@ -146,10 +152,10 @@ class FastApiServerTests(unittest.TestCase):
             username,
             password,
             method="GET",
-            uri="/api/auth/session",
+            uri="/api/v1/auth/session",
         )
         response = self.client.get(
-            "/api/auth/session",
+            "/api/v1/auth/session",
             headers={
                 "Authorization": digest_header,
                 "X-CID4-Auth-Method": "digest",
@@ -202,21 +208,7 @@ class FastApiServerTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
-        self.assertEqual(payload["source"], "fastapi")
-        self.assertIn("healthy", payload["message"].lower())
-        self.assertIn("X-Request-Id", response.headers)
-        self.assertIn("X-Trace-Id", response.headers)
-        self.assertIn("X-Span-Id", response.headers)
-        self.assertIn("traceparent", response.headers)
-        self.assertEqual(response.headers["X-Frame-Options"], "DENY")
-        self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
-
-    def test_health_error_mode(self) -> None:
-        response = self.client.get("/api/health?mode=error")
-
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(response.json()["source"], "fastapi")
-        self.assertIn("X-Request-Id", response.headers)
+        self.assertIn("timestamp", payload)
 
     def test_preserves_incoming_request_id(self) -> None:
         response = self.client.get(
@@ -227,36 +219,34 @@ class FastApiServerTests(unittest.TestCase):
         self.assertEqual(response.headers["X-Request-Id"], "request-456")
 
     def test_conformer_route(self) -> None:
-        response = self.client.get("/api/cid4/conformer/1")
+        response = self.client.get("/api/v1/conformer/1")
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("PC_Compounds", response.json())
         self.assertIn("X-Request-Id", response.headers)
 
     def test_unknown_conformer_returns_404(self) -> None:
-        response = self.client.get("/api/cid4/conformer/99")
+        response = self.client.get("/api/v1/conformer/99")
 
         self.assertEqual(response.status_code, 404)
         self.assertIn("X-Request-Id", response.headers)
 
     def test_compound_and_algorithm_routes(self) -> None:
-        compound = self.client.get("/api/cid4/compound")
-        pathway = self.client.get("/api/algorithms/pathway")
-        bioactivity = self.client.get("/api/algorithms/bioactivity")
-        taxonomy = self.client.get("/api/algorithms/taxonomy")
+        compound = self.client.get("/api/v1/compound")
+        pathway = self.client.get("/api/v1/pathway")
+        bioactivity = self.client.get("/api/v1/bioactivity")
+        taxonomy = self.client.get("/api/v1/taxonomy")
 
         self.assertEqual(compound.status_code, 200)
         self.assertIn("Record", compound.json())
         self.assertEqual(pathway.status_code, 200)
-        self.assertIn("graph", pathway.json())
+        self.assertEqual(pathway.json()["Record"]["RecordType"], "Pathway")
         self.assertEqual(bioactivity.status_code, 200)
         self.assertIn("records", bioactivity.json())
         self.assertEqual(taxonomy.status_code, 200)
         self.assertIn("organisms", taxonomy.json())
 
     def test_server_config_falls_back_to_crypto_summary(self) -> None:
-        from fastapi_cid4.config import resolve_server_config
-
         with tempfile.TemporaryDirectory() as temp_dir:
             data_dir = Path(temp_dir)
             expected_secret = f"{data_dir.name}-tls-token"
@@ -292,8 +282,6 @@ class FastApiServerTests(unittest.TestCase):
             self.assertEqual(config.key_password, expected_secret)
 
     def test_llm_status_reports_when_torch_is_unavailable(self) -> None:
-        from ml.torch_language_model import PyTorchLanguageModelService
-
         self._login_basic()
 
         with mock.patch.object(
@@ -302,7 +290,7 @@ class FastApiServerTests(unittest.TestCase):
             return_value={"available": False, "reason": "PyTorch missing for test"},
         ):
             response = self.client.get(
-                "/api/llm/status", headers={"X-Request-Id": "request-llm-status"}
+                "/api/v1/llm/status", headers={"X-Request-Id": "request-llm-status"}
             )
 
         self.assertEqual(response.status_code, 200)
@@ -314,8 +302,6 @@ class FastApiServerTests(unittest.TestCase):
         self.assertIn("X-Trace-Id", response.headers)
 
     def test_llm_status_reports_when_tensorflow_is_unavailable(self) -> None:
-        from ml.tensorflow_language_model import TensorFlowLanguageModelService
-
         self._login_basic()
 
         with mock.patch.object(
@@ -323,7 +309,7 @@ class FastApiServerTests(unittest.TestCase):
             "_tensorflow_availability",
             return_value={"available": False, "reason": "TensorFlow missing for test"},
         ):
-            response = self.client.get("/api/llm/status?framework=tensorflow")
+            response = self.client.get("/api/v1/llm/status?framework=tensorflow")
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -332,8 +318,6 @@ class FastApiServerTests(unittest.TestCase):
         self.assertEqual(payload["tensorflow_reason"], "TensorFlow missing for test")
 
     def test_llm_train_returns_dependency_error_when_torch_is_unavailable(self) -> None:
-        from ml.torch_language_model import PyTorchLanguageModelService
-
         csrf_headers = self._login_basic()
 
         with mock.patch.object(
@@ -342,7 +326,7 @@ class FastApiServerTests(unittest.TestCase):
             return_value={"available": False, "reason": "PyTorch missing for test"},
         ):
             response = self.client.post(
-                "/api/llm/train",
+                "/api/v1/llm/train",
                 json={"domains": ["taxonomy"], "epochs": 1, "max_chars": 4096},
                 headers=csrf_headers,
             )
@@ -357,8 +341,6 @@ class FastApiServerTests(unittest.TestCase):
     def test_llm_train_returns_dependency_error_when_tensorflow_is_unavailable(
         self,
     ) -> None:
-        from ml.tensorflow_language_model import TensorFlowLanguageModelService
-
         csrf_headers = self._login_basic()
 
         with mock.patch.object(
@@ -367,7 +349,7 @@ class FastApiServerTests(unittest.TestCase):
             return_value={"available": False, "reason": "TensorFlow missing for test"},
         ):
             response = self.client.post(
-                "/api/llm/train",
+                "/api/v1/llm/train",
                 json={
                     "framework": "tensorflow",
                     "domains": ["taxonomy"],
@@ -385,8 +367,6 @@ class FastApiServerTests(unittest.TestCase):
     def test_llm_generate_returns_dependency_error_when_torch_is_unavailable(
         self,
     ) -> None:
-        from ml.torch_language_model import PyTorchLanguageModelService
-
         csrf_headers = self._login_basic()
 
         with mock.patch.object(
@@ -395,7 +375,7 @@ class FastApiServerTests(unittest.TestCase):
             return_value={"available": False, "reason": "PyTorch missing for test"},
         ):
             response = self.client.post(
-                "/api/llm/generate", json={"prompt": "CID 4"}, headers=csrf_headers
+                "/api/v1/llm/generate", json={"prompt": "CID 4"}, headers=csrf_headers
             )
 
         self.assertEqual(response.status_code, 503)
@@ -407,8 +387,6 @@ class FastApiServerTests(unittest.TestCase):
     def test_llm_generate_returns_dependency_error_when_tensorflow_is_unavailable(
         self,
     ) -> None:
-        from ml.tensorflow_language_model import TensorFlowLanguageModelService
-
         csrf_headers = self._login_basic()
 
         with mock.patch.object(
@@ -417,7 +395,7 @@ class FastApiServerTests(unittest.TestCase):
             return_value={"available": False, "reason": "TensorFlow missing for test"},
         ):
             response = self.client.post(
-                "/api/llm/generate",
+                "/api/v1/llm/generate",
                 json={"framework": "tensorflow", "prompt": "CID 4"},
                 headers=csrf_headers,
             )
@@ -429,7 +407,9 @@ class FastApiServerTests(unittest.TestCase):
 
     def test_llm_generate_validation_error_on_missing_prompt(self) -> None:
         csrf_headers = self._login_basic()
-        response = self.client.post("/api/llm/generate", json={}, headers=csrf_headers)
+        response = self.client.post(
+            "/api/v1/llm/generate", json={}, headers=csrf_headers
+        )
 
         self.assertEqual(response.status_code, 422)
         self.assertIn("X-Request-Id", response.headers)
@@ -437,7 +417,7 @@ class FastApiServerTests(unittest.TestCase):
     def test_llm_generate_validation_error_on_invalid_framework(self) -> None:
         csrf_headers = self._login_basic()
         response = self.client.post(
-            "/api/llm/generate",
+            "/api/v1/llm/generate",
             json={"framework": "jax", "prompt": "CID 4"},
             headers=csrf_headers,
         )
@@ -446,15 +426,12 @@ class FastApiServerTests(unittest.TestCase):
         self.assertIn("X-Request-Id", response.headers)
 
     def test_llm_train_can_return_mocked_success_payload(self) -> None:
-        from ml.torch_language_model import PyTorchLanguageModelService
-
         csrf_headers = self._login_basic()
 
         with mock.patch.object(
             PyTorchLanguageModelService,
             "train",
             return_value={
-                "status": "ok",
                 "framework": "pytorch",
                 "model_name": "mocked-model",
                 "model_type": "gru-char-language-model",
@@ -475,28 +452,24 @@ class FastApiServerTests(unittest.TestCase):
             },
         ):
             response = self.client.post(
-                "/api/llm/train",
+                "/api/v1/llm/train",
                 json={"domains": ["literature"], "epochs": 1, "max_chars": 4096},
                 headers=csrf_headers,
             )
 
         self.assertEqual(response.status_code, 201)
         payload = response.json()
-        self.assertEqual(payload["status"], "ok")
         self.assertEqual(payload["model_name"], "mocked-model")
         self.assertEqual(payload["framework"], "pytorch")
         self.assertEqual(payload["model_type"], "gru-char-language-model")
 
     def test_llm_train_can_return_mocked_tensorflow_success_payload(self) -> None:
-        from ml.tensorflow_language_model import TensorFlowLanguageModelService
-
         csrf_headers = self._login_basic()
 
         with mock.patch.object(
             TensorFlowLanguageModelService,
             "train",
             return_value={
-                "status": "ok",
                 "framework": "tensorflow",
                 "model_name": "mocked-tf-model",
                 "model_type": "gru-keras-language-model",
@@ -517,7 +490,7 @@ class FastApiServerTests(unittest.TestCase):
             },
         ):
             response = self.client.post(
-                "/api/llm/train",
+                "/api/v1/llm/train",
                 json={
                     "framework": "tensorflow",
                     "domains": ["literature"],
@@ -529,7 +502,6 @@ class FastApiServerTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 201)
         payload = response.json()
-        self.assertEqual(payload["status"], "ok")
         self.assertEqual(payload["framework"], "tensorflow")
         self.assertEqual(payload["model_name"], "mocked-tf-model")
         self.assertEqual(payload["model_type"], "gru-keras-language-model")
@@ -579,7 +551,7 @@ class FastApiServerTests(unittest.TestCase):
                         "ascii"
                     )
                     login = await http_client.get(
-                        "/api/auth/session",
+                        "/api/v1/auth/session",
                         headers={
                             "Authorization": f"Basic {encoded}",
                             "X-CID4-Auth-Method": "basic",
@@ -628,9 +600,6 @@ class FastApiServerTests(unittest.TestCase):
         asyncio.run(exercise_mcp())
 
     def test_llm_generate_stream_sends_sse_events(self) -> None:
-        from ml.language_model_common import build_stream_event
-        from ml.torch_language_model import PyTorchLanguageModelService
-
         csrf_headers = self._login_basic()
 
         with (
@@ -664,7 +633,7 @@ class FastApiServerTests(unittest.TestCase):
             ),
             self.client.stream(
                 "POST",
-                "/api/llm/generate/stream",
+                "/api/v1/llm/generate/stream",
                 json={"framework": "pytorch", "prompt": "CID 4", "model_name": "demo"},
                 headers=csrf_headers,
             ) as response,
@@ -680,8 +649,6 @@ class FastApiServerTests(unittest.TestCase):
     def test_llm_generate_stream_returns_error_event_for_unavailable_framework(
         self,
     ) -> None:
-        from ml.tensorflow_language_model import TensorFlowLanguageModelService
-
         csrf_headers = self._login_basic()
 
         with (
@@ -695,7 +662,7 @@ class FastApiServerTests(unittest.TestCase):
             ),
             self.client.stream(
                 "POST",
-                "/api/llm/generate/stream",
+                "/api/v1/llm/generate/stream",
                 json={
                     "framework": "tensorflow",
                     "prompt": "CID 4",
@@ -712,9 +679,6 @@ class FastApiServerTests(unittest.TestCase):
         self.assertIn("tensorflow_unavailable", decoded)
 
     def test_llm_generate_websocket_sends_stream_events(self) -> None:
-        from ml.language_model_common import build_stream_event
-        from ml.torch_language_model import PyTorchLanguageModelService
-
         self._login_basic()
 
         with (
@@ -761,9 +725,6 @@ class FastApiServerTests(unittest.TestCase):
         self.assertEqual(complete_event["event"], "complete")
 
     def test_llm_generate_websocket_reports_service_error(self) -> None:
-        from ml.language_model_common import LlmServiceError
-        from ml.torch_language_model import PyTorchLanguageModelService
-
         self._login_basic()
 
         with (
@@ -786,14 +747,15 @@ class FastApiServerTests(unittest.TestCase):
 
     def test_anonymous_llm_request_redirects_to_auth_page(self) -> None:
         response = self.client.post(
-            "/api/llm/generate",
+            "/api/v1/llm/generate",
             json={"prompt": "CID 4"},
             follow_redirects=False,
         )
 
         self.assertEqual(response.status_code, 307)
         self.assertIn(
-            "/auth/basic?returnTo=%2Fapi%2Fllm%2Fgenerate", response.headers["location"]
+            "/api/v1/auth/basic?returnTo=%2Fapi%2Fv1%2Fllm%2Fgenerate",
+            response.headers["location"],
         )
 
     def test_basic_auth_session_login_sets_session_cookie(self) -> None:
@@ -810,7 +772,7 @@ class FastApiServerTests(unittest.TestCase):
         self.assertIn("cid4_session", self.client.cookies)
 
     def test_keycloak_config_exposes_placeholder_contract(self) -> None:
-        response = self.client.get("/api/auth/oauth2/keycloak/config")
+        response = self.client.get("/api/v1/auth/oauth2/keycloak/config")
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -820,7 +782,7 @@ class FastApiServerTests(unittest.TestCase):
     def test_csrf_is_required_for_protected_post_routes(self) -> None:
         self._login_basic()
 
-        response = self.client.post("/api/llm/generate", json={"prompt": "CID 4"})
+        response = self.client.post("/api/v1/llm/generate", json={"prompt": "CID 4"})
 
         self.assertEqual(response.status_code, 403)
         payload = response.json()

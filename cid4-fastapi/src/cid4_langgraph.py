@@ -4,16 +4,16 @@ import json
 import logging as log
 from pathlib import Path
 
-import env_utils
-import fs_utils
-import log_settings
-from langgraph_cid4.workflows import (
+from src.utils import env_utils
+from src.utils import fs_utils
+from src.config import log_settings
+from src.langgraph_cid4.workflows import (
     run_assay_literature_workflow,
     run_compound_context_workflow,
     run_pathway_taxonomy_workflow,
     run_router_workflow,
 )
-from ml.common import to_builtin
+from src.ml.common import to_builtin
 
 
 def resolve_output_directory() -> Path:

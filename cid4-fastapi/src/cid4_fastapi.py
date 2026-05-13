@@ -7,11 +7,11 @@ from pathlib import Path
 from fastapi import FastAPI
 
 from cid4_observability import Runtime
-from fastapi_cid4.routes import create_app as create_routes_app
+from src.api.routes import create_app as create_routes_app
 
-import log_settings
+from src.config import log_settings
 from cid4_observability import initialize, resolve_observability_config, shutdown
-from fastapi_cid4.config import resolve_data_dir, resolve_server_config
+from src.config.config import resolve_data_dir, resolve_server_config
 
 
 def build_argument_parser() -> argparse.ArgumentParser:

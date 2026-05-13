@@ -4,7 +4,7 @@ import os
 
 from mcp import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
-from src import env_utils
+from src.utils import env_utils
 
 
 async def main():

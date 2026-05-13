@@ -71,6 +71,20 @@ The current AGE slice covers the main graph families from the README:
 - pathway-reaction graph from `pubchem_cid_4_pathway.csv` and `pubchem_cid_4_pathwayreaction.csv`
 - assay-target graph from `pubchem_cid_4_bioactivity.csv`
 
+## Machine learning runner
+```sh
+export DATA_DIR="$(pwd)/../data"
+uv run python src/cid4_ml.py
+```
+
+The runner currently compares these tasks across libraries:
+- atom heavy-atom vs hydrogen classification
+- atom O/N/C/H element classification
+- filtered bioactivity Active vs Inactive classification
+- positive `Activity_Value` regression using molecular descriptors plus assay metadata
+
+The summaries are written to `data/out/cid4_ml.xgboost_suite.summary.json`. The boosted-tree features go beyond the constant molecular descriptors and basic assay encodings by adding missingness flags for `Protein_Accession`, `Gene_ID`, `PMID`, and `Activity_Value`, numeric taxonomy IDs, encoded `Bioassay_Data_Source`, and keyword flags derived from `BioAssay_Name`, `Target_Name`, and assay source text.
+
 ## NLTK runner
 It writes JSON summaries into `data/out` for:
 - literature corpus term and collocation analysis

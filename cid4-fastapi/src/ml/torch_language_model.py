@@ -7,8 +7,8 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-from fs_utils import create_dir_if_doesnt_exist
-from ml.language_model_common import (
+from src.utils.fs_utils import create_dir_if_doesnt_exist
+from src.ml.language_model_common import (
     DEFAULT_MODEL_NAME,
     SUPPORTED_LLM_DOMAINS,
     GenerationConfig,
@@ -37,7 +37,6 @@ class PyTorchLanguageModelService:
         metadata = self._load_metadata_if_available(resolved_name)
         availability = self._torch_availability()
         return {
-            "status": "ok",
             "framework": MODEL_FRAMEWORK,
             "framework_available": availability["available"],
             "torch_available": availability["available"],
@@ -163,7 +162,6 @@ class PyTorchLanguageModelService:
         self._loaded_bundle = None
 
         return {
-            "status": "ok",
             "framework": MODEL_FRAMEWORK,
             "model_name": config.output_name,
             "model_type": "gru-char-language-model",
@@ -190,7 +188,6 @@ class PyTorchLanguageModelService:
         metadata = bundle["metadata"]
         prompt = config.prompt.strip()
         return {
-            "status": "ok",
             "framework": MODEL_FRAMEWORK,
             "model_name": config.model_name,
             "prompt": prompt,
