@@ -13,7 +13,7 @@ from urllib.parse import urlencode
 from fastapi import Request, WebSocket
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 
-from src.fastapi_cid4.config import SecuritySettings
+from .config import SecuritySettings
 
 AuthMethod = Literal["basic", "digest", "oauth2"]
 
@@ -52,7 +52,7 @@ def build_auth_redirect_response(
         if not request.url.query
         else f"{request.url.path}?{request.url.query}"
     )
-    location = f"/auth/{method}?{urlencode({'returnTo': return_to})}"
+    location = f"/api/v1/auth/{method}?{urlencode({'returnTo': return_to})}"
     return RedirectResponse(url=location, status_code=307)
 
 
@@ -266,7 +266,6 @@ def keycloak_config_payload(settings: SecuritySettings) -> dict[str, object]:
     if settings.keycloak_base_url and settings.keycloak_realm:
         auth_url = f"{settings.keycloak_base_url.rstrip('/')}/realms/{settings.keycloak_realm}/protocol/openid-connect/auth"
     return {
-        "status": "ok",
         "provider": "keycloak",
         "configured": bool(
             settings.keycloak_base_url

@@ -16,8 +16,8 @@ from pydantic import BaseModel, Field
 from starlette.requests import Request
 from starlette.types import ASGIApp, Receive, Scope, Send
 
-from src.fastapi_cid4.config import SecuritySettings
-from src.fastapi_cid4.security import (
+from src.config.config import SecuritySettings
+from src.config.security import (
     UserPrincipal,
     authenticate_login_request,
     authenticate_request,

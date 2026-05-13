@@ -123,6 +123,5 @@ LIMIT %s
         for row in rows
     ]
     return {
-        "status": "ok",
         "hits": passages,
     }

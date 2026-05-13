@@ -3,7 +3,8 @@
 ./setup.sh
 export DATA_DIR="$(pwd)/../data"
 source .venv/bin/activate
-uv run python -m debugpy --listen 5678 --wait-for-client src/cid4_fastapi.py
+# uv run python -m debugpy --listen 5678 --wait-for-client src/cid4_fastapi.py
+uv run python -m debugpy --listen 5678 src/cid4_fastapi.py
 ```
 
 TLS configuration:
@@ -18,35 +19,31 @@ TLS configuration:
 
 If explicit TLS files are not set, the server falls back to the PEM certificate, encrypted private key, and demo password recorded in `data/out/crypto/cid4_crypto.summary.json`.
 
-Quick verification:
-
 ```sh
 curl -vk https://localhost:8443/api/health
-curl -vk https://localhost:8443/api/cid4/structure/2d
-curl -vk https://localhost:8443/api/cid4/conformer/1
-curl -vk https://localhost:8443/api/algorithms/pathway
-curl -vk "https://localhost:8443/api/health?mode=error"
-curl -isk https://localhost:8443/api/health
+curl -vk https://localhost:8443/api/v1/auth/me
+curl -vk https://localhost:8443/api/v1/auth/basic/login
+curl -vk -X POST https://localhost:8443/api/v1/auth/logout
+curl -vk https://localhost:8443/api/v1/auth/digest/login
+curl -vk https://localhost:8443/api/v1/auth/digest/challenge
+curl -vk https://localhost:8443/api/v1/auth/session
+curl -vk https://localhost:8443/api/v1/compound
+curl -vk https://localhost:8443/api/v1/structure/2d
+curl -vk https://localhost:8443/api/v1/conformer/1
+curl -vk https://localhost:8443/api/v1/pathway
+curl -vk https://localhost:8443/api/v1/bioactivity
+curl -vk https://localhost:8443/api/v1/taxonomy
+curl -vk https://localhost:8443/api/v1/reaction-network
 curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
 ```
 
-Successful and handled-error responses include `X-Request-Id`, `X-Trace-Id`, `X-Span-Id`, and `traceparent` headers. FastAPI request-completed log lines include the normalized route, status, duration, and correlation identifiers, and Prometheus metrics are exposed on the separate listener.
-
-FastAPI also includes a small custom LLM workflow behind three shared endpoints plus two streaming transports:
-- `GET /api/llm/status` reports backend availability, whether a trained artifact exists, and where the checkpoint and metadata files are expected for the selected framework.
-- `POST /api/llm/train` trains a small GRU-based character language model from the existing CID4 domain documents and writes artifacts under `data/out`.
-- `POST /api/llm/generate` loads the trained artifact and generates text continuations from a prompt.
-- `POST /api/llm/generate/stream` streams generation events over Server-Sent Events.
-- `WS /ws/llm/generate` streams generation events over WebSocket.
-
-The LLM feature reuses the existing CID4 text corpora from the literature, patent, assay, pathway, taxonomy, and product-use datasets. It is intentionally narrow: the current implementation is a small repo-local model, not a general-purpose foundation model. The same FastAPI routes support both `pytorch` and `tensorflow` backends through a `framework` selector, and requests default to `pytorch` when the field is omitted. The new streaming routes emit a shared event model with `start`, `token`, `complete`, and `error` messages.
 
 Example requests:
 
 ```sh
-curl -k https://localhost:8443/api/llm/status
-curl -k 'https://localhost:8443/api/llm/status?framework=tensorflow'
-curl -k -X POST https://localhost:8443/api/llm/train \
+curl -ik https://localhost:8443/api/v1/llm/status
+curl -ik 'https://localhost:8443/api/v1/llm/status?framework=tensorflow'
+curl -ik -X POST https://localhost:8443/api/v1/llm/train \
 	-H 'Content-Type: application/json' \
 	-d '{
 		"framework": "pytorch",
@@ -57,7 +54,7 @@ curl -k -X POST https://localhost:8443/api/llm/train \
 		"batch_size": 16,
 		"max_chars": 20000
 	}'
-curl -k -X POST https://localhost:8443/api/llm/train \
+curl -k -X POST https://localhost:8443/api/v1/llm/train \
 	-H 'Content-Type: application/json' \
 	-d '{
 		"framework": "tensorflow",
@@ -68,7 +65,7 @@ curl -k -X POST https://localhost:8443/api/llm/train \
 		"batch_size": 16,
 		"max_chars": 20000
 	}'
-curl -k -X POST https://localhost:8443/api/llm/generate \
+curl -k -X POST https://localhost:8443/api/v1/llm/generate \
 	-H 'Content-Type: application/json' \
 	-d '{
 		"framework": "pytorch",
@@ -78,7 +75,7 @@ curl -k -X POST https://localhost:8443/api/llm/generate \
 		"temperature": 0.8,
 		"top_k": 8
 	}'
-curl -N -k -X POST https://localhost:8443/api/llm/generate/stream \
+curl -N -k -X POST https://localhost:8443/api/v1/llm/generate/stream \
 	-H 'Content-Type: application/json' \
 	-d '{
 		"framework": "pytorch",
@@ -89,8 +86,6 @@ curl -N -k -X POST https://localhost:8443/api/llm/generate/stream \
 		"top_k": 8
 	}'
 ```
-
-Artifacts are written to `data/out` using framework-specific names so both backends can coexist. PyTorch uses `pytorch_llm_<model_name>.pt` plus metadata JSON, and TensorFlow uses `tensorflow_llm_<model_name>.keras` plus metadata JSON. The status route reports the exact artifact paths for the selected framework and model name.
 
 Streaming response contracts:
 - SSE emits `event: start`, repeated `event: token`, and a final `event: complete` frame, or `event: error` if generation cannot start.
@@ -225,32 +220,14 @@ curl -kv https://localhost:8443/mcp/ \
   }' | jq
 ```
 
-## Machine learning runner
-```sh
-export DATA_DIR="$(pwd)/../data"
-uv run python src/cid4_ml.py
-```
-
-The runner currently compares these tasks across libraries:
-- atom heavy-atom vs hydrogen classification
-- atom O/N/C/H element classification
-- filtered bioactivity Active vs Inactive classification
-- positive `Activity_Value` regression using molecular descriptors plus assay metadata
-
-The bioactivity tabular workflows now also include XGBoost summaries written to `data/out/cid4_ml.xgboost_suite.summary.json`. The boosted-tree features go beyond the earlier constant molecular descriptors and basic assay encodings by adding missingness flags for `Protein_Accession`, `Gene_ID`, `PMID`, and `Activity_Value`, numeric taxonomy IDs, encoded `Bioassay_Data_Source`, and keyword flags derived from `BioAssay_Name`, `Target_Name`, and assay source text.
-
-Notebook companion:
-- `src/cid4_ml_taxonomy_text_baseline.ipynb` reuses `ml.datasets.build_taxonomy_clustering_frame()` to build a small TF-IDF plus logistic-regression baseline over the taxonomy text, then saves notebook artifacts back into `data/out`
-
 ## LangChain runner
-The Python workspace now also includes a LangChain-oriented RAG and routing runner for CID 4. It sits on top of the existing document shaping and pgvector work, writes JSON summaries into `data/out`, and supports:
 - literature RAG over titles, abstracts, and citation metadata
 - assay QA over bioactivity rows with metadata-aware retrieval
 - pathway and reaction explanation
 - taxonomy lookup and explanation
 - a small rule-based multi-tool router for multi-source CID 4 questions
 
-```sh
+```bash
 export DATA_DIR="$(pwd)/../data"
 uv run python src/cid4_langchain.py
 ```
@@ -272,7 +249,7 @@ Adds:
 - a pathway-plus-taxonomy explainer with explicit validation
 - provenance-aware JSON summaries under `data/out`
 
-```sh
+```bash
 export DATA_DIR="$(pwd)/../data"
 uv run python src/cid4_langgraph.py
 ```

@@ -198,7 +198,6 @@ def ingest_documents(
             cursor.executemany(build_upsert_sql(config.table_name), rows)
 
     return {
-        "status": "ok",
         "ingested_row_count": int(len(rows)),
         "table_name": config.table_name,
     }
