@@ -1,37 +1,30 @@
 from __future__ import annotations
 
+import argparse
 import json
 import logging as log
 import os
-import secrets
-from pathlib import Path
 from typing import Any
 import numpy as np
 import pandas as pd
 
-import env_utils
 import fs_utils
 import log_settings
-from asymmetric import build_asymmetric_examples
-from certificates import build_certificate_examples
-from hashing import build_file_manifest, hmac_sha256
-from passwords import build_password_hash_examples
-from symmetric import build_symmetric_examples
-
-PAYLOAD_CANDIDATES = [
-    "COMPOUND_CID_4.json",
-    "Structure2D_COMPOUND_CID_4.json",
-    "Conformer3D_COMPOUND_CID_4(1).json",
-    "pubchem_cid_4_bioactivity.csv",
-    "pubchem_cid_4_literature.csv",
-]
-
-
-def resolve_output_directory() -> Path:
-    data_dir = Path(env_utils.get_data_dir())
-    output_directory = data_dir / "out" / "crypto"
-    fs_utils.create_dir_if_doesnt_exist(str(output_directory))
-    return output_directory
+from asymmetric import (
+    encrypt_ecdsa_p256,
+    encrypt_ed25519,
+    encrypt_rsa,
+    encrypt_x25519_hybrid,
+)
+from certificates import make_certificate
+from hashing import hash_file, hmac_sha256
+from passwords import (
+    make_argon2_hash,
+    make_bcrypt_hash,
+    make_scrypt_hash,
+    make_pbkdf2_hmac_sha256_hash,
+)
+from symmetric import encrypt_aes_256_gcm, encrypt_chacha20_poly1305
 
 
 def to_builtin(value: Any) -> Any:
@@ -54,104 +47,47 @@ def to_builtin(value: Any) -> Any:
     return value
 
 
-def write_json(path: Path, payload: dict[str, Any]) -> None:
-    with path.open("w", encoding="utf-8") as file:
+def make_cert(password: str) -> None:
+    output_directory = fs_utils.resolve_output_directory()
+    payload = {"x509_and_pkcs12": make_certificate(output_directory, password)}
+    output_path = output_directory / "cid4_crypto.summary.json"
+    with output_path.open("w", encoding="utf-8") as file:
         json.dump(to_builtin(payload), file, indent=2)
 
 
-def resolve_data_path(filename: str) -> Path:
-    return Path(env_utils.get_data_dir()) / filename
+def build_argument_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Cryptography")
+    parser.add_argument("--alg", help="Specify the cryptography algorithm to use.")
+    parser.add_argument("--in-file", help="Specify the input file for encryption.")
+    return parser
 
 
-def select_payload_files() -> list[Path]:
-    selected: list[Path] = []
-    for name in PAYLOAD_CANDIDATES:
-        path = resolve_data_path(name)
-        if path.exists():
-            selected.append(path)
-    return selected
-
-
-def build_crypto_summary(output_directory: Path) -> dict[str, Any]:
-    payload_paths = select_payload_files()
-    manifest = build_file_manifest(payload_paths)
-    manifest_bytes = json.dumps(manifest, indent=2, sort_keys=True).encode("utf-8")
-    manifest_path = output_directory / "cid4_crypto.manifest.json"
-    manifest_path.write_bytes(manifest_bytes)
-
-    demo_password = os.environ.get(
-        "CID4_CRYPTO_DEMO_PASSWORD"
-    ) or secrets.token_urlsafe(24)
-    hmac_key = b"cid4-demo-hmac-key"
-    hmac_value = hmac_sha256(hmac_key, manifest_bytes)
-    password_hashes = build_password_hash_examples(demo_password)
-    symmetric_examples = build_symmetric_examples(manifest_bytes)
-    asymmetric_examples = build_asymmetric_examples(manifest_bytes)
-    certificate_examples = build_certificate_examples(output_directory, demo_password)
-
-    return {
-        "status": "ok",
-        "manifest": {
-            "path": str(manifest_path),
-            "file_count": len(manifest),
-            "files": manifest,
-            "hmac_sha256": hmac_value,
-        },
-        "password_hashing": password_hashes,
-        "symmetric": symmetric_examples,
-        "asymmetric": asymmetric_examples,
-        "x509_and_pkcs12": certificate_examples,
-        "demo_password": demo_password,
-        "demo_password_source": "environment"
-        if "CID4_CRYPTO_DEMO_PASSWORD" in os.environ
-        else "generated",
-        "cli_examples": {
-            "checksums": [
-                f"sha256sum {payload_paths[0].name}"
-                if payload_paths
-                else "sha256sum COMPOUND_CID_4.json",
-                f"md5 {payload_paths[0].name}"
-                if payload_paths
-                else "md5 COMPOUND_CID_4.json",
-            ],
-            "openssl": [
-                "openssl dgst -sha256 -sign cid4_crypto.demo.key.pem -out cid4_crypto.manifest.sig "
-                "cid4_crypto.manifest.json",
-                "openssl x509 -pubkey -noout -in cid4_crypto.demo.cert.pem > cid4_crypto.demo.pubkey.pem",
-                "openssl dgst -sha256 -verify cid4_crypto.demo.pubkey.pem -signature cid4_crypto.manifest.sig "
-                "cid4_crypto.manifest.json",
-            ],
-            "gpg": [
-                "gpg --armor --detach-sign cid4_crypto.manifest.json",
-                "gpg --encrypt --recipient demo@example.invalid cid4_crypto.manifest.json",
-            ],
-            "age": [
-                "age-keygen -o cid4-demo.agekey",
-                "age -r <recipient> -o cid4_crypto.manifest.json.age cid4_crypto.manifest.json",
-            ],
-            "keytool": certificate_examples.get("keytool_examples", []),
-        },
-        "notes": [
-            "Prefer Argon2id, AES-GCM, ChaCha20-Poly1305, Ed25519, X25519, and SHA-256 for new designs.",
-            "MD5 is included for compatibility-only demonstrations and should not be used for security decisions.",
-            "If no demo password is supplied through CID4_CRYPTO_DEMO_PASSWORD, a one-time random password "
-            "is generated for local artifacts.",
-            "The demo password is recorded in this summary so the generated PKCS#12 bundle "
-            "can be inspected with keytool or OpenSSL.",
-            "PKCS#12 and keytool examples are included so Java and Scala components "
-            "can consume the same certificate material.",
-        ],
-    }
-
-
-def write_crypto_analysis() -> None:
-    output_directory = resolve_output_directory()
-    summary = build_crypto_summary(output_directory)
-    output_path = output_directory / "cid4_crypto.summary.json"
-    write_json(output_path, summary)
-    log.info("Cryptography summary written to %s", output_path)
+def main() -> None:
+    log_settings.configure_logging()
+    parser = build_argument_parser()
+    args = parser.parse_args()
+    if args.alg:
+        password = os.environ.get("CRYPTO_PASSWORD")
+        ops_map = {
+            "argon2": lambda: make_argon2_hash(password),
+            "bcrypt": lambda: make_bcrypt_hash(password),
+            "scrypt": lambda: make_scrypt_hash(password),
+            "pbkdf2_hmac_sha256": lambda: make_pbkdf2_hmac_sha256_hash(password),
+            "aes_256_gcm": lambda: encrypt_aes_256_gcm(args.in_file),
+            "chacha20_poly1305": lambda: encrypt_chacha20_poly1305(args.in_file),
+            "x25519_hybrid": lambda: encrypt_x25519_hybrid(args.in_file),
+            "ecdsa_p256": lambda: encrypt_ecdsa_p256(args.in_file),
+            "ed25519": lambda: encrypt_ed25519(args.in_file),
+            "rsa": lambda: encrypt_rsa(args.in_file),
+            "hash_file": lambda: hash_file(args.in_file),
+            "hmac_sha256": lambda: hmac_sha256(bytes(password, "utf-8"), args.in_file),
+            "x509": lambda: make_cert(password),
+        }
+        result = ops_map[args.alg]()
+        log.info("Result='%s'", result)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
-    log_settings.configure_logging()
-    write_crypto_analysis()
+    main()

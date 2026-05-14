@@ -2,28 +2,16 @@ from __future__ import annotations
 
 import base64
 import datetime as dt
-import importlib
 from pathlib import Path
 from typing import Any
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.serialization import pkcs12
+from cryptography.x509.oid import NameOID
 
 
-def certificate_dependencies_available() -> bool:
-    return importlib.util.find_spec("cryptography") is not None
-
-
-def build_certificate_examples(output_directory: Path, password: str) -> dict[str, Any]:
-    if not certificate_dependencies_available():
-        return {
-            "status": "skipped",
-            "reason": "Install the optional crypto extra to enable X.509 and PKCS#12 examples.",
-        }
-
-    from cryptography import x509  # type: ignore[import-not-found]
-    from cryptography.hazmat.primitives import hashes, serialization  # type: ignore[import-not-found]
-    from cryptography.hazmat.primitives.asymmetric import rsa  # type: ignore[import-not-found]
-    from cryptography.hazmat.primitives.serialization import pkcs12  # type: ignore[import-not-found]
-    from cryptography.x509.oid import NameOID  # type: ignore[import-not-found]
-
+def make_certificate(output_directory: Path, password: str) -> dict[str, Any]:
     private_key = rsa.generate_private_key(public_exponent=65537, key_size=3072)
     subject = issuer = x509.Name(
         [
@@ -82,7 +70,6 @@ def build_certificate_examples(output_directory: Path, password: str) -> dict[st
     )
 
     return {
-        "status": "ok",
         "subject_rfc4514": certificate.subject.rfc4514_string(),
         "issuer_rfc4514": certificate.issuer.rfc4514_string(),
         "serial_number": str(certificate.serial_number),
@@ -100,17 +87,6 @@ def build_certificate_examples(output_directory: Path, password: str) -> dict[st
             "loaded_chain_length": 0 if loaded_chain is None else len(loaded_chain),
             "password_hint": "Use the demo password recorded in the runner summary for local-only examples.",
         },
-        "keytool_examples": [
-            f"keytool -list -v -storetype PKCS12 -keystore {p12_path.name}",
-            f"keytool -importkeystore -srckeystore {p12_path.name} -srcstoretype PKCS12 "
-            f"-destkeystore cid4-demo.jks -deststoretype JKS",
-            f"keytool -importcert -alias cid4-demo-ca -file {cert_path.name} "
-            f"-keystore cid4-demo-truststore.p12 -storetype PKCS12",
-        ],
-        "openssl_examples": [
-            f"openssl pkcs12 -info -in {p12_path.name} -nokeys",
-            f"openssl x509 -in {cert_path.name} -text -noout",
-        ],
         "pkcs12_b64_prefix": base64.b64encode(pkcs12_bundle[:24]).decode("ascii"),
         "private_key_loaded": loaded_key is not None,
     }

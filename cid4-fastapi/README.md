@@ -229,7 +229,7 @@ curl -kv https://localhost:8443/mcp/ \
 
 ```bash
 export DATA_DIR="$(pwd)/../data"
-uv run python src/cid4_langchain.py
+uv run python -m src.cid4_langchain
 ```
 
 If LangChain is not installed or `PGVECTOR_DSN` is not set, the runner still completes. It falls back to an in-memory hashed-token retriever and writes explicit runtime metadata showing whether the full LangChain path was active.
