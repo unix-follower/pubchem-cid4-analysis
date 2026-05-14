@@ -47,36 +47,20 @@ final case class HillDoseResponseRepresentativeRow(
 )
 
 final case class HillDoseResponseAucSummary(
-    integrationMethod: String,
-    curveBasis: String,
     concentrationBoundsDefinition: String,
-    gridSize: Int,
-    concentrationUnits: String,
-    interpretation: String
+    gridSize: Int
 )
 
-final case class HillDoseResponseMidpointSummary(condition: String, response: Double, interpretation: String)
-
 final case class HillDoseResponseLinearInflectionSummary(
-    formula: String,
-    responseFormula: String,
     relativeToK: Double,
     normalizedResponse: Double
 )
 
 final case class HillDoseResponseSummary(
-    model: String,
-    equation: String,
-    firstDerivative: String,
-    secondDerivative: String,
     referenceHillCoefficientN: Double,
-    parameterInterpretation: String,
-    midpointInLogConcentrationSpace: HillDoseResponseMidpointSummary,
     aucTrapezoidReferenceCurve: HillDoseResponseAucSummary,
     linearConcentrationInflection: Option[HillDoseResponseLinearInflectionSummary],
-    fitStatus: String,
-    representativeRows: Vector[HillDoseResponseRepresentativeRow],
-    notes: Vector[String]
+    representativeRows: Vector[HillDoseResponseRepresentativeRow]
 )
 
 final case class HillDoseResponseSummaryResult(
@@ -141,7 +125,6 @@ object HillDoseResponseService:
             "midpoint_first_derivative" -> midpointFirstDerivative.toString,
             "auc_trapezoid_reference_curve" -> aucTrapezoidReferenceCurve.toString,
             "log10_midpoint_concentration" -> math.log10(midpointConcentration).toString,
-            "fit_status" -> "reference_curve_inferred_from_activity_value",
             "analysis_mode" -> "reference_curve"
           )
 
@@ -205,43 +188,19 @@ object HillDoseResponseService:
           .sortBy { case (activityType, count) => (-count, activityType) }
           .toMap,
         analysis = HillDoseResponseSummary(
-          model = "normalized Hill equation",
-          equation = "f(c) = c^n / (K^n + c^n)",
-          firstDerivative = "f'(c) = n K^n c^(n-1) / (K^n + c^n)^2",
-          secondDerivative = "f''(c) = n K^n c^(n-2) * ((n - 1)K^n - (n + 1)c^n) / (K^n + c^n)^3",
           referenceHillCoefficientN = hillCoefficient,
-          parameterInterpretation =
-            "Activity_Value is treated as an inferred K parameter because this dataset provides potency-style summary values rather than raw concentration-response observations for CID 4.",
-          midpointInLogConcentrationSpace = HillDoseResponseMidpointSummary(
-            condition = "c = K",
-            response = 0.5,
-            interpretation = "The Hill curve is centered at c = K in log-concentration space."
-          ),
           aucTrapezoidReferenceCurve = HillDoseResponseAucSummary(
-            integrationMethod = "trapezoidal_rule",
-            curveBasis = "reference_curve_inferred_from_activity_value",
             concentrationBoundsDefinition =
               s"[${formatCompact(DefaultAucLowerBoundScale)} * K, ${formatCompact(DefaultAucUpperBoundScale)} * K]",
-            gridSize = DefaultAucGridSize,
-            concentrationUnits = "same units as Activity_Value",
-            interpretation =
-              "AUC is approximated numerically over an inferred Hill reference curve rather than over raw experimental dose-response points."
+            gridSize = DefaultAucGridSize
           ),
           linearConcentrationInflection = linearInflectionScale.map { scale =>
             HillDoseResponseLinearInflectionSummary(
-              formula = "c* = K * ((n - 1)/(n + 1))^(1/n)",
-              responseFormula = "f(c*) = (n - 1)/(2n)",
               relativeToK = scale,
               normalizedResponse = (hillCoefficient - 1.0) / (2.0 * hillCoefficient)
             )
           },
-          fitStatus = "reference_curve_inferred_from_activity_value",
-          representativeRows = representativeRows.map(toRepresentativeRow),
-          notes = Vector(
-            "No nonlinear dose-response fitting was performed because the CSV does not contain raw per-concentration response series for CID 4.",
-            "Rows with positive numeric Activity_Value are modeled as reference Hill curves using Activity_Value as the inferred half-maximal scale K.",
-            "The trapezoidal-rule AUC is computed on those inferred reference curves across a concentration grid scaled relative to each row's inferred K value."
-          )
+          representativeRows = representativeRows.map(toRepresentativeRow)
         )
       )
 

@@ -35,8 +35,6 @@ final case class BioactivityMeasurement(
 )
 
 final case class BioactivityAnalysisSummary(
-    transform: String,
-    interpretation: String,
     observedIc50DomainUm: Vector[Double],
     strongestRetainedMeasurement: BioactivityMeasurement,
     weakestRetainedMeasurement: BioactivityMeasurement
@@ -113,8 +111,6 @@ object BioactivityService:
           )
         ),
         analysis = BioactivityAnalysisSummary(
-          transform = "pIC50 = -log10(IC50_uM)",
-          interpretation = "Lower IC50 values map to higher pIC50 values, so potency increases as the curve rises.",
           observedIc50DomainUm = Vector(ic50Values.min, ic50Values.max),
           strongestRetainedMeasurement = toMeasurement(filteredRows.maxBy(_("pIC50").toDouble)),
           weakestRetainedMeasurement = toMeasurement(filteredRows.minBy(_("pIC50").toDouble))

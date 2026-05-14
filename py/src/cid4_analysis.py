@@ -655,8 +655,6 @@ def summarize_atom_gradient_descent_analysis(
     return {
         "dataset": {
             "row_count": int(len(dataset_df)),
-            "feature": "mass",
-            "target": "atomicNumber",
             "feature_matrix_shape": [int(len(dataset_df)), 1],
             "mass_range": [float(dataset_df["mass"].min()), float(dataset_df["mass"].max())],
             "atomic_number_range": [
@@ -672,15 +670,6 @@ def summarize_atom_gradient_descent_analysis(
                 }
                 for _, row in dataset_df.iterrows()
             ],
-        },
-        "model": {
-            "prediction_equation": "y_hat = w * x",
-            "objective_name": "sum_squared_error",
-            "objective_equation": "L(w) = sum_i (y_i - w x_i)^2",
-            "mse_equation": "MSE(w) = (1 / n) * sum_i (y_i - w x_i)^2",
-            "gradient_equation": "dL/dw = sum_i -2 x_i (y_i - w x_i) = 2 sum_i x_i (w x_i - y_i)",
-            "feature_name": "atom mass",
-            "target_name": "atomic number",
         },
         "optimization": {
             **training_summary,
@@ -745,7 +734,6 @@ def build_hill_reference_dataframe(
     hill_df["log10_midpoint_concentration"] = np.log10(hill_df["midpoint_concentration"])
     hill_df["linear_inflection_concentration"] = np.nan
     hill_df["linear_inflection_response"] = np.nan
-    hill_df["fit_status"] = "reference_curve_inferred_from_activity_value"
     hill_df["analysis_mode"] = "reference_curve"
 
     if hill_coefficient > 1.0:
@@ -870,8 +858,6 @@ def summarize_hill_reference_analysis(
     if hill_coefficient > 1.0:
         response_at_inflection = float((hill_coefficient - 1.0) / (2.0 * hill_coefficient))
         linear_inflection = {
-            "formula": "c* = K * ((n - 1)/(n + 1))^(1/n)",
-            "response_formula": "f(c*) = (n - 1)/(2n)",
             "relative_to_K": float(((hill_coefficient - 1.0) / (hill_coefficient + 1.0)) ** (1.0 / hill_coefficient)),
             "normalized_response": response_at_inflection,
         }
@@ -897,33 +883,12 @@ def summarize_hill_reference_analysis(
         },
         "activity_type_counts": activity_type_counts,
         "analysis": {
-            "model": "normalized Hill equation",
-            "equation": "f(c) = c^n / (K^n + c^n)",
-            "first_derivative": "f'(c) = n K^n c^(n-1) / (K^n + c^n)^2",
-            "second_derivative": ("f''(c) = n K^n c^(n-2) * ((n - 1)K^n - (n + 1)c^n) / (K^n + c^n)^3"),
             "reference_hill_coefficient_n": float(hill_coefficient),
-            "parameter_interpretation": (
-                "Activity_Value is treated as an inferred K parameter because this dataset provides potency-style "
-                "summary values rather than raw concentration-response observations for CID 4."
-            ),
-            "midpoint_in_log_concentration_space": {
-                "condition": "c = K",
-                "response": 0.5,
-                "interpretation": "The Hill curve is centered at c = K in log-concentration space.",
-            },
             "auc_trapezoid_reference_curve": {
-                "integration_method": "trapezoidal_rule",
-                "curve_basis": "reference_curve_inferred_from_activity_value",
                 "concentration_bounds_definition": f"[{auc_lower_bound_scale:g} * K, {auc_upper_bound_scale:g} * K]",
                 "grid_size": int(auc_grid_size),
-                "concentration_units": "same units as Activity_Value",
-                "interpretation": (
-                    "AUC is approximated numerically over an inferred Hill reference curve rather than over raw "
-                    "experimental dose-response points."
-                ),
             },
             "linear_concentration_inflection": linear_inflection,
-            "fit_status": "reference_curve_inferred_from_activity_value",
             "representative_rows": [
                 {
                     "Bioactivity_ID": int(row["Bioactivity_ID"]),
@@ -936,14 +901,6 @@ def summarize_hill_reference_analysis(
                     "log10_midpoint_concentration": float(row["log10_midpoint_concentration"]),
                 }
                 for _, row in representative_rows.iterrows()
-            ],
-            "notes": [
-                "No nonlinear dose-response fitting was performed because "
-                "the CSV does not contain raw per-concentration response series for CID 4.",
-                "Rows with positive numeric Activity_Value are modeled as reference Hill curves "
-                "using Activity_Value as the inferred half-maximal scale K.",
-                "The trapezoidal-rule AUC is computed on those inferred reference curves across a concentration "
-                "grid scaled relative to each row's inferred K value.",
             ],
         },
     }
@@ -1065,19 +1022,6 @@ def summarize_bioactivity_posterior_analysis(
             },
         },
         "analysis": {
-            "target_quantity": "P(Active | CID=4)",
-            "model": "Beta-Binomial conjugate update",
-            "update_equations": {
-                "posterior_alpha": "alpha_post = alpha_prior + active_count",
-                "posterior_beta": "beta_post = beta_prior + inactive_count",
-                "posterior_mean": "E[p | data] = alpha_post / (alpha_post + beta_post)",
-            },
-            "binary_evidence_definition": {
-                "retained_labels": ["Active", "Inactive"],
-                "excluded_labels": ["Unspecified"],
-                "interpretation": "Unspecified rows are excluded from the binary posterior update "
-                "and reported only in row counts.",
-            },
             "representative_rows": [
                 {
                     "Bioactivity_ID": int(row["Bioactivity_ID"]),
@@ -1088,12 +1032,6 @@ def summarize_bioactivity_posterior_analysis(
                     "BioAssay_Name": str(row["BioAssay_Name"]),
                 }
                 for _, row in representative_rows.iterrows()
-            ],
-            "notes": [
-                "This posterior is an aggregate CID 4 activity probability across retained binary bioassay outcomes.",
-                "The update uses a Beta(1,1) prior and treats Active/Inactive outcomes as exchangeable "
-                "Bernoulli evidence. Rows labeled Unspecified are kept out of the posterior update so "
-                "they do not contribute artificial failures.",
             ],
         },
     }
@@ -1146,8 +1084,6 @@ def compute_activity_aid_type_chi_square(
         expected_df.loc[:, :] = np.nan
         return expected_df, {
             "computed": False,
-            "reason_not_computed": "Chi-square test requires at least two observed Activity levels "
-            "and two Aid_Type levels after binary filtering.",
             "chi2_statistic": None,
             "p_value": None,
             "degrees_of_freedom": None,
@@ -1204,15 +1140,6 @@ def summarize_activity_aid_type_chi_square_analysis(
             "expected_counts": expected_counts,
         },
         "chi_square_test": {
-            "variables": {
-                "row": "Activity",
-                "column": "Aid_Type",
-            },
-            "null_hypothesis": "Activity and Aid_Type are statistically independent within "
-            "the retained binary bioactivity rows.",
-            "alternative_hypothesis": "Activity and Aid_Type are statistically associated within "
-            "the retained binary bioactivity rows.",
-            "computed": bool(chi_square_metrics["computed"]),
             "reason_not_computed": chi_square_metrics["reason_not_computed"],
             "chi2_statistic": chi_square_metrics["chi2_statistic"],
             "p_value": chi_square_metrics["p_value"],
@@ -1222,14 +1149,6 @@ def summarize_activity_aid_type_chi_square_analysis(
             "sparse_expected_cell_fraction": chi_square_metrics["sparse_expected_cell_fraction"],
         },
         "analysis": {
-            "target_quantity": "Activity ⟂ Aid_Type",
-            "model": "Pearson chi-square test of independence",
-            "binary_evidence_definition": {
-                "retained_labels": ["Active", "Inactive"],
-                "excluded_labels": ["Unspecified"],
-                "interpretation": "The chi-square table is built from the same binary Activity evidence "
-                "used by the posterior analysis.",
-            },
             "representative_cells": [
                 {
                     "Activity": str(row["Activity"]),
@@ -1240,14 +1159,6 @@ def summarize_activity_aid_type_chi_square_analysis(
                     else float(expected_df.loc[row["Activity"], row["Aid_Type"]]),
                 }
                 for _, row in representative_cells.iterrows()
-            ],
-            "notes": [
-                "Rows with Activity = Unspecified and other non-binary Activity labels are excluded "
-                "before the contingency table is built.",
-                "Aid_Type values are used as observed in the CSV after trimming whitespace "
-                "and filling blanks with Unknown.",
-                "If fewer than two observed Activity levels or fewer than two Aid_Type levels remain after filtering, "
-                "the summary records that the chi-square test is not statistically identifiable on this dataset slice.",
             ],
         },
     }
@@ -1335,13 +1246,6 @@ def summarize_bioactivity_binomial_analysis(
     return {
         "row_counts": counts,
         "binomial": {
-            "trial_definition": {
-                "unit": "unique_BioAssay_AID",
-                "success_label": "Active assay",
-                "failure_label": "Inactive assay",
-                "assay_resolution_rule": "Active wins if any retained row for the assay is Active; "
-                "otherwise the assay is Inactive.",
-            },
             "parameters": {
                 "n_assays": assay_trials,
                 "observed_active_assays": active_assay_trials,
@@ -1363,10 +1267,6 @@ def summarize_bioactivity_binomial_analysis(
             },
         },
         "analysis": {
-            "target_quantity": "P(K = k active assays in n assays)",
-            "model": "Binomial distribution with plug-in success probability",
-            "equation": "P(K = k) = C(n, k) p^k (1-p)^(n-k)",
-            "parameter_estimation": "p is estimated as the observed active assay fraction active_assays / n_assays.",
             "representative_assays": [
                 {
                     "BioAssay_AID": int(row["BioAssay_AID"]),
@@ -1380,12 +1280,6 @@ def summarize_bioactivity_binomial_analysis(
                     "BioAssay_Name": str(row["sample_bioassay_name"]),
                 }
                 for _, row in representative_rows.iterrows()
-            ],
-            "notes": [
-                "The binomial model operates at the assay level rather than the raw retained-row level.",
-                "Rows with Activity = Unspecified are excluded before assay-level collapsing, consistent "
-                "with the posterior analysis. This is a frequentist plug-in binomial model using "
-                "the observed assay-level active fraction, not a posterior-predictive distribution.",
             ],
         },
     }
@@ -1490,8 +1384,6 @@ def summarize_pic50_analysis(pic50_df: pd.DataFrame, counts: dict[str, int]) -> 
             },
         },
         "analysis": {
-            "transform": "pIC50 = -log10(IC50_uM)",
-            "interpretation": "Lower IC50 values map to higher pIC50 values, so potency increases as the curve rises.",
             "observed_ic50_domain_uM": [float(ic50_values.min()), float(ic50_values.max())],
             "strongest_retained_measurement": {
                 "Bioactivity_ID": int(strongest_row["Bioactivity_ID"]),
@@ -1589,16 +1481,6 @@ def summarize_activity_value_statistics_analysis(
             **shapiro_summary,
         },
         "analysis": {
-            "target_quantity": "Positive numeric Activity_Value distribution",
-            "retained_row_definition": {
-                "predicate": "Activity_Value is numeric and strictly greater than 0",
-                "excluded_rows": [
-                    "missing Activity_Value",
-                    "non-numeric Activity_Value",
-                    "Activity_Value = 0",
-                    "Activity_Value < 0",
-                ],
-            },
             "representative_rows": [
                 {
                     "Bioactivity_ID": int(row["Bioactivity_ID"]),
@@ -1609,14 +1491,6 @@ def summarize_activity_value_statistics_analysis(
                     "Activity_Value": float(row["Activity_Value"]),
                 }
                 for _, row in representative_rows.iterrows()
-            ],
-            "notes": [
-                "The retained distribution aggregates all positive numeric "
-                "Activity_Value rows regardless of Activity_Type.",
-                "Variance is reported as the sample variance with ddof = 1 "
-                "to reflect descriptive statistics over the retained sample.",
-                "The diagnostic plot pairs a log-scale histogram with a normal "
-                "Q-Q panel when the retained sample supports it.",
             ],
         },
     }
@@ -1682,8 +1556,6 @@ def summarize_atom_element_entropy_analysis(
     return {
         "row_counts": counts,
         "entropy": {
-            "formula": "H = -sum(p_i * log(p_i))",
-            "log_base": "natural_log",
             "value": entropy_value,
             "maximum_entropy_for_observed_support": maximum_entropy,
             "normalized_entropy": normalized_entropy,
@@ -1698,7 +1570,6 @@ def summarize_atom_element_entropy_analysis(
             for _, row in entropy_df.iterrows()
         },
         "analysis": {
-            "target_quantity": "Atom element entropy over O/N/C/H proportions",
             "required_elements": list(REQUIRED_ATOM_ENTROPY_ELEMENTS),
             "unique_retained_elements": unique_retained_elements,
             "dominant_element": {
@@ -1707,12 +1578,6 @@ def summarize_atom_element_entropy_analysis(
                 "proportion": float(dominant_row["proportion"]),
             },
             "unexpected_elements": unexpected_counts,
-            "notes": [
-                "Entropy is computed only over the required O/N/C/H support requested in the README exercise.",
-                "Unexpected atom symbols are excluded from the entropy sum and reported separately for transparency.",
-                "Normalized entropy uses the maximum entropy over the observed required-element support rather than "
-                "the fixed four-element support.",
-            ],
         },
     }
 
@@ -1968,7 +1833,6 @@ def write_bonded_angle_analysis(sdf_filename: str, json_filename: str):
                     "source_sdf": sdf_filename,
                     "source_bond_json": json_filename,
                     "units": "degrees",
-                    "selection_rule": "angles A-B-C where A-B and B-C are bonded and B is the central atom",
                 },
             },
             file,
@@ -2013,15 +1877,6 @@ def write_spring_bond_potential_analysis(sdf_filename: str, json_filename: str):
                 "atom_gradient_records": atom_gradient_records,
                 "statistics": statistics,
                 "analysis": {
-                    "energy_equation": "E_ij = 0.5 * k_ij * (d_ij - d0_ij)^2",
-                    "distance_equation": "d_ij = ||r_i - r_j||",
-                    "distance_derivative_equation": "dE_ij/dd_ij = k_ij * (d_ij - d0_ij)",
-                    "cartesian_gradient_equation": "dE_ij/dr_i = k_ij * (d_ij - d0_ij) * (r_i - r_j) / d_ij",
-                    "reaction_gradient_equation": "dE_ij/dr_j = -dE_ij/dr_i",
-                    "reference_distance_policy": (
-                        "Chemistry-informed lookup keyed by atom symbols and bond order with a covalent-radius fallback"
-                    ),
-                    "spring_constant_policy": "Bond-order-specific constants for an educational harmonic bond model",
                     "bond_order_spring_constants": {
                         str(bond_order): float(value)
                         for bond_order, value in sorted(DEFAULT_BOND_ORDER_SPRING_CONSTANTS.items())
@@ -2032,11 +1887,6 @@ def write_spring_bond_potential_analysis(sdf_filename: str, json_filename: str):
                             DEFAULT_REFERENCE_BOND_LENGTHS_ANGSTROM.items()
                         )
                     },
-                    "interpretation": (
-                        "Positive and negative Cartesian partial derivatives quantify "
-                        "how the spring-bond energy changes under infinitesimal coordinate displacements of "
-                        "each bonded atom in the current CID 4 conformer."
-                    ),
                 },
                 "metadata": {
                     "atom_count": len(atom_ids),

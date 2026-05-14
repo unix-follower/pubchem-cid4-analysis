@@ -66,13 +66,8 @@ final case class ActivityValueRepresentativeRow(
     activityValue: Double
 )
 
-final case class ActivityValueRetainedRowDefinition(predicate: String, excludedRows: Vector[String])
-
 final case class ActivityValueAnalysis(
-    targetQuantity: String,
-    retainedRowDefinition: ActivityValueRetainedRowDefinition,
-    representativeRows: Vector[ActivityValueRepresentativeRow],
-    notes: Vector[String]
+    representativeRows: Vector[ActivityValueRepresentativeRow]
 )
 
 final case class ActivityValueStatisticsSummaryResult(
@@ -198,22 +193,7 @@ object ActivityValueStatisticsService:
           ),
           normalityTest = normalityTest,
           analysis = ActivityValueAnalysis(
-            targetQuantity = "Positive numeric Activity_Value distribution",
-            retainedRowDefinition = ActivityValueRetainedRowDefinition(
-              predicate = "Activity_Value is numeric and strictly greater than 0",
-              excludedRows = Vector(
-                "missing Activity_Value",
-                "non-numeric Activity_Value",
-                "Activity_Value = 0",
-                "Activity_Value < 0"
-              )
-            ),
-            representativeRows = representativeRows,
-            notes = Vector(
-              "The retained distribution aggregates all positive numeric Activity_Value rows regardless of Activity_Type.",
-              "Variance is reported as the sample variance with ddof = 1 to match the Python implementation.",
-              "The plot shows a log-scale histogram and a diagnostic status panel for Shapiro-Wilk / Q-Q availability."
-            )
+            representativeRows = representativeRows
           )
         )
       )

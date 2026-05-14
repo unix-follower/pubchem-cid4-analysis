@@ -31,8 +31,7 @@ final case class BondAngleMetadata(
     atomCount: Int,
     bondedAngleTripletCount: Int,
     sourceDistanceMethod: String,
-    units: String,
-    selectionRule: String
+    units: String
 )
 
 final case class BondAngleAnalysisResult(
@@ -62,8 +61,7 @@ object BondAngleAnalysisService:
         atomCount = distanceMatrix.atomIds.size,
         bondedAngleTripletCount = angleMeasurements.size,
         sourceDistanceMethod = distanceMatrix.sourceMethod,
-        units = "degrees",
-        selectionRule = "angles A-B-C where A-B and B-C are bonded and B is the central atom"
+        units = "degrees"
       )
     )
 

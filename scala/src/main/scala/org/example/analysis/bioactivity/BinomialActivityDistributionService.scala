@@ -27,13 +27,6 @@ final case class BinomialActivityRowCounts(
     unanimousInactiveAssayTrials: Int
 )
 
-final case class BinomialActivityTrialDefinition(
-    unit: String,
-    successLabel: String,
-    failureLabel: String,
-    assayResolutionRule: String
-)
-
 final case class BinomialActivityParameters(
     nAssays: Int,
     observedActiveAssays: Int,
@@ -62,18 +55,12 @@ final case class BinomialActivityRepresentativeAssay(
 )
 
 final case class BinomialActivityDistributionSection(
-    trialDefinition: BinomialActivityTrialDefinition,
     parameters: BinomialActivityParameters,
     summary: BinomialActivitySummary
 )
 
 final case class BinomialActivityAnalysis(
-    targetQuantity: String,
-    model: String,
-    equation: String,
-    parameterEstimation: String,
-    representativeAssays: Vector[BinomialActivityRepresentativeAssay],
-    notes: Vector[String]
+    representativeAssays: Vector[BinomialActivityRepresentativeAssay]
 )
 
 final case class BinomialActivityDistributionSummaryResult(
@@ -203,13 +190,6 @@ object BinomialActivityDistributionService:
           unanimousInactiveAssayTrials = inactiveAssayTrials
         ),
         binomial = BinomialActivityDistributionSection(
-          trialDefinition = BinomialActivityTrialDefinition(
-            unit = "unique_BioAssay_AID",
-            successLabel = "Active assay",
-            failureLabel = "Inactive assay",
-            assayResolutionRule =
-              "Active wins if any retained row for the assay is Active; otherwise the assay is Inactive."
-          ),
           parameters = BinomialActivityParameters(
             nAssays = assayTrials,
             observedActiveAssays = activeAssayTrials,
@@ -225,17 +205,7 @@ object BinomialActivityDistributionService:
           )
         ),
         analysis = BinomialActivityAnalysis(
-          targetQuantity = "P(K = k active assays in n assays)",
-          model = "Binomial distribution with plug-in success probability",
-          equation = "P(K = k) = C(n, k) p^k (1-p)^(n-k)",
-          parameterEstimation =
-            "p is estimated as the observed active assay fraction active_assays / n_assays.",
-          representativeAssays = representativeAssays,
-          notes = Vector(
-            "The binomial model operates at the assay level rather than the raw retained-row level.",
-            "Rows with Activity = Unspecified are excluded before assay-level collapsing, consistent with the posterior analysis.",
-            "This is a frequentist plug-in binomial model using the observed assay-level active fraction, not a posterior-predictive distribution."
-          )
+          representativeAssays = representativeAssays
         )
       )
 

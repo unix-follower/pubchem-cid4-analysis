@@ -90,16 +90,8 @@ final case class SpringBondPotentialStatistics(
 )
 
 final case class SpringBondPotentialAnalysisInfo(
-    energyEquation: String,
-    distanceEquation: String,
-    distanceDerivativeEquation: String,
-    cartesianGradientEquation: String,
-    reactionGradientEquation: String,
-    referenceDistancePolicy: String,
-    springConstantPolicy: String,
     bondOrderSpringConstants: Map[String, Double],
-    referenceDistanceLookupExamplesAngstrom: Map[String, Double],
-    interpretation: String
+    referenceDistanceLookupExamplesAngstrom: Map[String, Double]
 )
 
 final case class SpringBondPotentialMetadata(
@@ -254,14 +246,6 @@ object SpringBondPotentialAnalysisService:
       atomGradientRecords = atomGradientRecords,
       statistics = summarize(foldResult.bondRecords, atomGradientRecords, netGradientVector),
       analysis = SpringBondPotentialAnalysisInfo(
-        energyEquation = "E_ij = 0.5 * k_ij * (d_ij - d0_ij)^2",
-        distanceEquation = "d_ij = ||r_i - r_j||",
-        distanceDerivativeEquation = "dE_ij/dd_ij = k_ij * (d_ij - d0_ij)",
-        cartesianGradientEquation = "dE_ij/dr_i = k_ij * (d_ij - d0_ij) * (r_i - r_j) / d_ij",
-        reactionGradientEquation = "dE_ij/dr_j = -dE_ij/dr_i",
-        referenceDistancePolicy =
-          "Chemistry-informed lookup keyed by atom symbols and bond order with a covalent-radius fallback",
-        springConstantPolicy = "Bond-order-specific constants for an educational harmonic bond model",
         bondOrderSpringConstants = DefaultBondOrderSpringConstants.toVector.sortBy(_._1).map { (bondOrder, value) =>
           bondOrder.toString -> value
         }.toMap,
@@ -270,9 +254,7 @@ object SpringBondPotentialAnalysisService:
           .map { case ((symbol1, symbol2, bondOrder), value) =>
             s"$symbol1-$symbol2-order-$bondOrder" -> value
           }
-          .toMap,
-        interpretation =
-          "Positive and negative Cartesian partial derivatives quantify how the spring-bond energy changes under infinitesimal coordinate displacements of each bonded atom in the current CID 4 conformer."
+          .toMap
       ),
       metadata = SpringBondPotentialMetadata(
         atomCount = distanceMatrix.atomIds.size,
