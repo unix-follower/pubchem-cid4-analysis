@@ -102,11 +102,17 @@ Midpoint:
 - the Hill curve is centered at c = K in log-concentration space.
 - response = 0.5
 
+## Hill reference analysis
+
+linear inflection: c* = K * ((n - 1)/(n + 1))^(1/n)
+linear inflection response: f(c*) = (n - 1)/(2n)
+
 ## Chi-square test
 
 Model: Pearson chi-square test of independence
 Null hypothesis: Activity and Aid_Type are statistically independent within the retained binary bioactivity rows.
 Alternative hypothesis: Activity and Aid_Type are statistically associated within the retained binary bioactivity rows.
+Activity ⟂ Aid_Type, where ⟂ is independent of.
 
 ## Gradient
 
@@ -122,6 +128,19 @@ Target name: atomic number
 
 Target: atom element entropy over O/N/C/H proportions.
 H = -sum(p_i * log(p_i))
+
+## Bonded angle analysis
+Angles A-B-C where A-B and B-C are bonded and B is the central atom.
+
+## Spring bond potential analysis
+energy: E_ij = 0.5 * k_ij * (d_ij - d0_ij)^2
+distance: d_ij = ||r_i - r_j||
+distance derivative: dE_ij/dd_ij = k_ij * (d_ij - d0_ij)
+cartesian gradient: dE_ij/dr_i = k_ij * (d_ij - d0_ij) * (r_i - r_j) / d_ij
+reaction gradient: dE_ij/dr_j = -dE_ij/dr_i
+
+## pIC50 analysis
+pIC50 = -log10(IC50_uM)
 
 ## Scala JDK Concurrent API
 

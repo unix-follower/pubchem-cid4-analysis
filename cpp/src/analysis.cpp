@@ -1319,8 +1319,6 @@ BondAngleAnalysisResult makeBondAngleAnalysisResult(const AdjacencyMatrix& adjac
                 .atomCount = adjacencyMatrix.atomIds.size(),
                 .bondedAngleTripletCount = statistics.count,
                 .units = "degrees",
-                .selectionRule =
-                    "angles A-B-C where A-B and B-C are bonded and B is the central atom",
             },
     };
 }
@@ -2376,9 +2374,6 @@ BioactivityAnalysisResult buildBioactivityAnalysis(const std::filesystem::path& 
             },
         .analysis =
             BioactivitySummary{
-                .transform = "pIC50 = -log10(IC50_uM)",
-                .interpretation = "Lower IC50 values map to higher pIC50 values, so potency "
-                                  "increases as the curve rises.",
                 .observedIc50DomainUm = {*std::min_element(ic50Values.begin(), ic50Values.end()),
                                          *std::max_element(ic50Values.begin(), ic50Values.end())},
                 .strongestRetainedMeasurement = buildMeasurement(strongestRow, headerIndex),
@@ -2905,7 +2900,6 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
                 formatDouble(linearInflectionResponse);
         }
 
-        row[augmentedHeaderIndex.at("fit_status")] = "reference_curve_inferred_from_activity_value";
         row[augmentedHeaderIndex.at("analysis_mode")] = "reference_curve";
 
         const std::string activityTypeLabel = [&]() {
@@ -2990,8 +2984,6 @@ HillDoseResponseAnalysisResult buildHillDoseResponseAnalysis(const std::filesyst
     std::optional<HillDoseResponseLinearInflectionSummary> linearInflectionSummary;
     if (inflectionScale.has_value()) {
         linearInflectionSummary = HillDoseResponseLinearInflectionSummary{
-            .formula = "c* = K * ((n - 1)/(n + 1))^(1/n)",
-            .responseFormula = "f(c*) = (n - 1)/(2n)",
             .relativeToK = *inflectionScale,
             .normalizedResponse = (hillCoefficient - 1.0) / (2.0 * hillCoefficient),
         };
@@ -4136,23 +4128,9 @@ buildSpringBondPotentialAnalysis(const DistanceMatrixResult& distanceMatrix,
             },
         .analysis =
             SpringBondPotentialAnalysis{
-                .energyEquation = "E_ij = 0.5 * k_ij * (d_ij - d0_ij)^2",
-                .distanceEquation = "d_ij = ||r_i - r_j||",
-                .distanceDerivativeEquation = "dE_ij/dd_ij = k_ij * (d_ij - d0_ij)",
-                .cartesianGradientEquation =
-                    "dE_ij/dr_i = k_ij * (d_ij - d0_ij) * (r_i - r_j) / d_ij",
-                .reactionGradientEquation = "dE_ij/dr_j = -dE_ij/dr_i",
-                .referenceDistancePolicy = "Chemistry-informed lookup keyed by atom symbols and "
-                                           "bond order with a covalent-radius fallback",
-                .springConstantPolicy =
-                    "Bond-order-specific constants for an educational harmonic bond model",
                 .bondOrderSpringConstants = std::move(bondOrderSpringConstants),
                 .referenceDistanceLookupExamplesAngstrom =
                     std::move(referenceDistanceLookupExamples),
-                .interpretation =
-                    "Positive and negative Cartesian partial derivatives quantify how the "
-                    "spring-bond energy changes under infinitesimal coordinate displacements of "
-                    "each bonded atom in the current CID 4 conformer.",
             },
         .metadata = SpringBondPotentialMetadata{
             .atomCount = adjacencyMatrix.atomIds.size(),

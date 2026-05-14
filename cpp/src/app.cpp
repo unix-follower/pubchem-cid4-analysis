@@ -485,16 +485,8 @@ nlohmann::json toJson(const cid4::SpringBondPotentialAnalysisResult& springBondA
             {"dEDz", springBondAnalysis.statistics.gradientBalance.dEDz},
             {"gradientNorm", springBondAnalysis.statistics.gradientBalance.gradientNorm}}}}},
         {"analysis",
-         {{"energyEquation", springBondAnalysis.analysis.energyEquation},
-          {"distanceEquation", springBondAnalysis.analysis.distanceEquation},
-          {"distanceDerivativeEquation", springBondAnalysis.analysis.distanceDerivativeEquation},
-          {"cartesianGradientEquation", springBondAnalysis.analysis.cartesianGradientEquation},
-          {"reactionGradientEquation", springBondAnalysis.analysis.reactionGradientEquation},
-          {"referenceDistancePolicy", springBondAnalysis.analysis.referenceDistancePolicy},
-          {"springConstantPolicy", springBondAnalysis.analysis.springConstantPolicy},
-          {"bondOrderSpringConstants", bondOrderSpringConstants},
-          {"referenceDistanceLookupExamplesAngstrom", referenceDistanceLookupExamples},
-          {"interpretation", springBondAnalysis.analysis.interpretation}}},
+         {{"bondOrderSpringConstants", bondOrderSpringConstants},
+          {"referenceDistanceLookupExamplesAngstrom", referenceDistanceLookupExamples}}},
         {"metadata",
          {{"atomCount", springBondAnalysis.metadata.atomCount},
           {"bondedPairCount", springBondAnalysis.metadata.bondedPairCount},
@@ -530,9 +522,7 @@ nlohmann::json toJson(const cid4::BioactivityAnalysisResult& bioactivity)
             {"median", bioactivity.statistics.pIC50.median},
             {"max", bioactivity.statistics.pIC50.max}}}}},
         {"analysis",
-         {{"transform", bioactivity.analysis.transform},
-          {"interpretation", bioactivity.analysis.interpretation},
-          {"observedIc50DomainUm", bioactivity.analysis.observedIc50DomainUm},
+         {{"observedIc50DomainUm", bioactivity.analysis.observedIc50DomainUm},
           {"strongestRetainedMeasurement",
            {{"bioactivityId", bioactivity.analysis.strongestRetainedMeasurement.bioactivityId},
             {"bioAssayAid", bioactivity.analysis.strongestRetainedMeasurement.bioAssayAid},
@@ -853,8 +843,6 @@ nlohmann::json toJson(const cid4::HillDoseResponseAnalysisResult& hillAnalysis)
     if (hillAnalysis.analysis.linearConcentrationInflection.has_value()) {
         const auto& inflection = *hillAnalysis.analysis.linearConcentrationInflection;
         linearInflection = {
-            {"formula", inflection.formula},
-            {"responseFormula", inflection.responseFormula},
             {"relativeToK", inflection.relativeToK},
             {"normalizedResponse", inflection.normalizedResponse},
         };

@@ -46,18 +46,6 @@ final case class BayesianActivityPosteriorSection(
     summary: BayesianActivityPosteriorSummary
 )
 
-final case class BayesianActivityUpdateEquations(
-    posteriorAlpha: String,
-    posteriorBeta: String,
-    posteriorMean: String
-)
-
-final case class BayesianActivityBinaryEvidenceDefinition(
-    retainedLabels: Vector[String],
-    excludedLabels: Vector[String],
-    interpretation: String
-)
-
 final case class BayesianActivityRepresentativeRow(
     bioactivityId: Long,
     bioAssayAid: Long,
@@ -68,12 +56,7 @@ final case class BayesianActivityRepresentativeRow(
 )
 
 final case class BayesianActivityAnalysis(
-    targetQuantity: String,
-    model: String,
-    updateEquations: BayesianActivityUpdateEquations,
-    binaryEvidenceDefinition: BayesianActivityBinaryEvidenceDefinition,
-    representativeRows: Vector[BayesianActivityRepresentativeRow],
-    notes: Vector[String]
+    representativeRows: Vector[BayesianActivityRepresentativeRow]
 )
 
 final case class BayesianActivityPosteriorSummaryResult(
@@ -192,25 +175,7 @@ object BayesianActivityPosteriorService:
           )
         ),
         analysis = BayesianActivityAnalysis(
-          targetQuantity = "P(Active | CID=4)",
-          model = "Beta-Binomial conjugate update",
-          updateEquations = BayesianActivityUpdateEquations(
-            posteriorAlpha = "alphaPost = alphaPrior + activeCount",
-            posteriorBeta = "betaPost = betaPrior + inactiveCount",
-            posteriorMean = "E[p | data] = alphaPost / (alphaPost + betaPost)"
-          ),
-          binaryEvidenceDefinition = BayesianActivityBinaryEvidenceDefinition(
-            retainedLabels = Vector("Active", "Inactive"),
-            excludedLabels = Vector("Unspecified"),
-            interpretation =
-              "Unspecified rows are excluded from the binary posterior update and reported only in row counts."
-          ),
-          representativeRows = representativeRows.map(toRepresentativeRow),
-          notes = Vector(
-            "This posterior is an aggregate CID 4 activity probability across retained binary bioassay outcomes.",
-            "The update uses a Beta(1,1) prior and treats Active/Inactive outcomes as exchangeable Bernoulli evidence.",
-            "Rows labeled Unspecified are kept out of the posterior update so they do not contribute artificial failures."
-          )
+          representativeRows = representativeRows.map(toRepresentativeRow)
         )
       )
 

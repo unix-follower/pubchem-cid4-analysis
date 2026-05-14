@@ -289,16 +289,8 @@ struct SpringBondPotentialStatistics {
 };
 
 struct SpringBondPotentialAnalysis {
-    std::string energyEquation;
-    std::string distanceEquation;
-    std::string distanceDerivativeEquation;
-    std::string cartesianGradientEquation;
-    std::string reactionGradientEquation;
-    std::string referenceDistancePolicy;
-    std::string springConstantPolicy;
     std::vector<std::pair<std::string, double>> bondOrderSpringConstants;
     std::vector<std::pair<std::string, double>> referenceDistanceLookupExamplesAngstrom;
-    std::string interpretation;
 };
 
 struct SpringBondPotentialMetadata {
@@ -350,8 +342,6 @@ struct BioactivityMeasurement {
 };
 
 struct BioactivitySummary {
-    std::string transform;
-    std::string interpretation;
     std::vector<double> observedIc50DomainUm;
     BioactivityMeasurement strongestRetainedMeasurement;
     BioactivityMeasurement weakestRetainedMeasurement;
@@ -412,8 +402,6 @@ struct HillDoseResponseAucSummary {
 };
 
 struct HillDoseResponseLinearInflectionSummary {
-    std::string formula;
-    std::string responseFormula;
     double relativeToK;
     double normalizedResponse;
 };

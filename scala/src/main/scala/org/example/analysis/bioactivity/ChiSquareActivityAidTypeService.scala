@@ -31,14 +31,7 @@ final case class ChiSquareContingencyTable(
     expectedCounts: Map[String, Map[String, Option[Double]]]
 )
 
-final case class ChiSquareVariables(row: String, column: String)
-
 final case class ChiSquareTestMetrics(
-    variables: ChiSquareVariables,
-    nullHypothesis: String,
-    alternativeHypothesis: String,
-    computed: Boolean,
-    reasonNotComputed: Option[String],
     chi2Statistic: Option[Double],
     pValue: Option[Double],
     degreesOfFreedom: Option[Int],
@@ -54,18 +47,8 @@ final case class ChiSquareRepresentativeCell(
     expectedCount: Option[Double]
 )
 
-final case class ChiSquareBinaryEvidenceDefinition(
-    retainedLabels: Vector[String],
-    excludedLabels: Vector[String],
-    interpretation: String
-)
-
 final case class ChiSquareAnalysis(
-    targetQuantity: String,
-    model: String,
-    binaryEvidenceDefinition: ChiSquareBinaryEvidenceDefinition,
-    representativeCells: Vector[ChiSquareRepresentativeCell],
-    notes: Vector[String]
+    representativeCells: Vector[ChiSquareRepresentativeCell]
 )
 
 final case class ChiSquareSummaryResult(
@@ -86,8 +69,6 @@ object ChiSquareActivityAidTypeService:
   private val RequiredColumns = Vector("Bioactivity_ID", "BioAssay_AID", "Activity", "Aid_Type")
   private val ContingencyHeaders = Vector("Activity", "Aid_Type", "observed_count", "expected_count")
   private val DefaultChiSquareExpectedCountThreshold = 5.0
-  private val NotComputedReason =
-    "Chi-square test requires at least two observed Activity levels and two Aid_Type levels after binary filtering."
 
   def analyze(
       csvPath: Path,
@@ -175,13 +156,6 @@ object ChiSquareActivityAidTypeService:
           val sparseExpectedCellFraction = sparseExpectedCellCount.toDouble / flattenedExpected.size.toDouble
 
           ChiSquareTestMetrics(
-            variables = ChiSquareVariables(row = "Activity", column = "Aid_Type"),
-            nullHypothesis =
-              "Activity and Aid_Type are statistically independent within the retained binary bioactivity rows.",
-            alternativeHypothesis =
-              "Activity and Aid_Type are statistically associated within the retained binary bioactivity rows.",
-            computed = true,
-            reasonNotComputed = None,
             chi2Statistic = Some(chi2Statistic),
             pValue = Some(1.0 - distribution.cumulativeProbability(chi2Statistic)),
             degreesOfFreedom = Some(degreesOfFreedom),
@@ -191,13 +165,6 @@ object ChiSquareActivityAidTypeService:
           )
         else
           ChiSquareTestMetrics(
-            variables = ChiSquareVariables(row = "Activity", column = "Aid_Type"),
-            nullHypothesis =
-              "Activity and Aid_Type are statistically independent within the retained binary bioactivity rows.",
-            alternativeHypothesis =
-              "Activity and Aid_Type are statistically associated within the retained binary bioactivity rows.",
-            computed = false,
-            reasonNotComputed = Some(NotComputedReason),
             chi2Statistic = None,
             pValue = None,
             degreesOfFreedom = None,
@@ -238,20 +205,7 @@ object ChiSquareActivityAidTypeService:
         ),
         chiSquareTest = chiSquareMetrics,
         analysis = ChiSquareAnalysis(
-          targetQuantity = "Activity independent of Aid_Type",
-          model = "Pearson chi-square test of independence",
-          binaryEvidenceDefinition = ChiSquareBinaryEvidenceDefinition(
-            retainedLabels = Vector("Active", "Inactive"),
-            excludedLabels = Vector("Unspecified"),
-            interpretation =
-              "The chi-square table is built from the same binary Activity evidence used by the posterior analysis."
-          ),
-          representativeCells = representativeCells,
-          notes = Vector(
-            "Rows with Activity = Unspecified and other non-binary Activity labels are excluded before the contingency table is built.",
-            "Aid_Type values are used as observed in the CSV after trimming whitespace and filling blanks with Unknown.",
-            "If fewer than two observed Activity levels or fewer than two Aid_Type levels remain after filtering, the summary records that the chi-square test is not statistically identifiable on this dataset slice."
-          )
+          representativeCells = representativeCells
         )
       )
 

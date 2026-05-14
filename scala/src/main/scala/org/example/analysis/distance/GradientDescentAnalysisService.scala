@@ -47,22 +47,10 @@ final case class GradientLossTraceSummary(
 
 final case class GradientDescentDatasetSummary(
     rowCount: Int,
-    feature: String,
-    target: String,
     featureMatrixShape: Vector[Int],
     massRange: Vector[Double],
     atomicNumberRange: Vector[Int],
     atomRows: Vector[AtomFeatureRow]
-)
-
-final case class GradientDescentModelSummary(
-    predictionEquation: String,
-    objectiveName: String,
-    objectiveEquation: String,
-    mseEquation: String,
-    gradientEquation: String,
-    featureName: String,
-    targetName: String
 )
 
 final case class GradientDescentOptimizationSummary(
@@ -82,7 +70,6 @@ final case class GradientDescentOptimizationSummary(
 
 final case class GradientDescentSummary(
     dataset: GradientDescentDatasetSummary,
-    model: GradientDescentModelSummary,
     optimization: GradientDescentOptimizationSummary
 )
 
@@ -125,21 +112,10 @@ object GradientDescentAnalysisService:
       summary = GradientDescentSummary(
         dataset = GradientDescentDatasetSummary(
           rowCount = dataset.size,
-          feature = "mass",
-          target = "atomicNumber",
           featureMatrixShape = Vector(dataset.size, 1),
           massRange = Vector(dataset.map(_.mass).min, dataset.map(_.mass).max),
           atomicNumberRange = Vector(dataset.map(_.atomicNumber).min, dataset.map(_.atomicNumber).max),
           atomRows = dataset
-        ),
-        model = GradientDescentModelSummary(
-          predictionEquation = "y_hat = w * x",
-          objectiveName = "sum_squared_error",
-          objectiveEquation = "L(w) = sum_i (y_i - w x_i)^2",
-          mseEquation = "MSE(w) = (1 / n) * sum_i (y_i - w x_i)^2",
-          gradientEquation = "dL/dw = sum_i -2 x_i (y_i - w x_i) = 2 sum_i x_i (w x_i - y_i)",
-          featureName = "atom mass",
-          targetName = "atomic number"
         ),
         optimization = GradientDescentOptimizationSummary(
           initialWeight = initialWeight,

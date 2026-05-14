@@ -1371,8 +1371,6 @@ TEST(BioactivityStrategiesTest, HillCsvAndSvgWritersEmitArtifacts)
 
     EXPECT_NE(filteredContents.find("inferred_K_activity_value"), std::string::npos);
     EXPECT_NE(filteredContents.find("auc_trapezoid_reference_curve"), std::string::npos);
-    EXPECT_NE(filteredContents.find("reference_curve_inferred_from_activity_value"),
-              std::string::npos);
     EXPECT_NE(svgContents.find("Reference Hill Curves Inferred from Activity_Value"),
               std::string::npos);
     EXPECT_NE(svgContents.find("AID 743069"), std::string::npos);

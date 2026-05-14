@@ -23,8 +23,6 @@ final case class AtomElementEntropyRowCounts(
 )
 
 final case class AtomElementEntropyMetrics(
-    formula: String,
-    logBase: String,
     value: Double,
     maximumEntropyForObservedSupport: Double,
     normalizedEntropy: Double
@@ -40,12 +38,10 @@ final case class AtomElementDistributionEntry(
 final case class AtomElementDominantElement(element: String, count: Int, proportion: Double)
 
 final case class AtomElementEntropyAnalysis(
-    targetQuantity: String,
     requiredElements: Vector[String],
     uniqueRetainedElements: Int,
     dominantElement: AtomElementDominantElement,
-    unexpectedElements: Map[String, Int],
-    notes: Vector[String]
+    unexpectedElements: Map[String, Int]
 )
 
 final case class AtomElementEntropySummaryResult(
@@ -114,8 +110,6 @@ object AtomElementEntropyAnalysisService:
           unexpectedElementCategories = unexpectedCounts.size
         ),
         entropy = AtomElementEntropyMetrics(
-          formula = "H = -sum(p_i * log(p_i))",
-          logBase = "natural_log",
           value = entropyValue,
           maximumEntropyForObservedSupport = maximumEntropy,
           normalizedEntropy = normalizedEntropy
@@ -129,7 +123,6 @@ object AtomElementEntropyAnalysisService:
           )
         }.toMap,
         analysis = AtomElementEntropyAnalysis(
-          targetQuantity = "Atom element entropy over O/N/C/H proportions",
           requiredElements = RequiredElements,
           uniqueRetainedElements = observedRequiredElementCategories,
           dominantElement = AtomElementDominantElement(
@@ -137,12 +130,7 @@ object AtomElementEntropyAnalysisService:
             count = dominantRow("count").toInt,
             proportion = dominantRow("proportion").toDouble
           ),
-          unexpectedElements = unexpectedCounts.toVector.sortBy(_._1).toMap,
-          notes = Vector(
-            "Entropy is computed only over the required O/N/C/H support requested in the README exercise.",
-            "Unexpected atom symbols are excluded from the entropy sum and reported separately for transparency.",
-            "Normalized entropy uses the maximum entropy over the observed required-element support rather than the fixed four-element support."
-          )
+          unexpectedElements = unexpectedCounts.toVector.sortBy(_._1).toMap
         )
       )
     )
