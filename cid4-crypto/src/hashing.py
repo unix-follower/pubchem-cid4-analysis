@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import hashlib
 import hmac
-from pathlib import Path
 
 
-def hash_bytes(payload: bytes) -> dict[str, str]:
+def hash_file(input_file_path: str) -> dict[str, str]:
+    with open(input_file_path, "rb") as f:
+        payload = f.read()
+
     return {
         "sha256": hashlib.sha256(payload).hexdigest(),
         "sha512": hashlib.sha512(payload).hexdigest(),
@@ -14,21 +16,7 @@ def hash_bytes(payload: bytes) -> dict[str, str]:
     }
 
 
-def hmac_sha256(key: bytes, payload: bytes) -> str:
+def hmac_sha256(key: bytes, input_file_path: str) -> str:
+    with open(input_file_path, "rb") as f:
+        payload = f.read()
     return hmac.new(key, payload, hashlib.sha256).hexdigest()
-
-
-def build_file_manifest(paths: list[Path]) -> list[dict[str, str | int]]:
-    manifest: list[dict[str, str | int]] = []
-    for path in paths:
-        payload = path.read_bytes()
-        digests = hash_bytes(payload)
-        manifest.append(
-            {
-                "name": path.name,
-                "relative_path": str(path),
-                "size_bytes": len(payload),
-                **digests,
-            }
-        )
-    return manifest
