@@ -4,9 +4,6 @@ import argparse
 import json
 import logging as log
 import os
-from typing import Any
-import numpy as np
-import pandas as pd
 
 import fs_utils
 import log_settings
@@ -27,32 +24,13 @@ from passwords import (
 from symmetric import encrypt_aes_256_gcm, encrypt_chacha20_poly1305
 
 
-def to_builtin(value: Any) -> Any:
-    if isinstance(value, dict):
-        return {str(key): to_builtin(item) for key, item in value.items()}
-    if isinstance(value, list):
-        return [to_builtin(item) for item in value]
-    if isinstance(value, tuple):
-        return [to_builtin(item) for item in value]
-    if isinstance(value, np.ndarray):
-        return value.tolist()
-    if isinstance(value, np.integer):
-        return int(value)
-    if isinstance(value, np.floating):
-        return float(value)
-    if isinstance(value, np.bool_):
-        return bool(value)
-    if isinstance(value, pd.Series):
-        return value.to_list()
-    return value
-
-
 def make_cert(password: str) -> None:
     output_directory = fs_utils.resolve_output_directory()
-    payload = {"x509_and_pkcs12": make_certificate(output_directory, password)}
+    payload = {"x509_pkcs12": make_certificate(output_directory, password)}
     output_path = output_directory / "cid4_crypto.summary.json"
     with output_path.open("w", encoding="utf-8") as file:
-        json.dump(to_builtin(payload), file, indent=2)
+        json.dump(payload, file, indent=2)
+    return output_path
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
