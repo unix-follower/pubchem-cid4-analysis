@@ -1,39 +1,35 @@
 ## Run
-Try this on macOS with Intel CPU
-```bash
-micromamba create -c conda-forge -p ./.micromamba/cid4_age python=3.12 rdkit
-uv venv --python ./.micromamba/cid4_age/bin/python --system-site-packages .venv
-
-source ./.micromamba/cid4-analysis/bin/activate
-source .venv/bin/activate
-```
-Install psql
-```bash
-apt search postgresql-client
-sudo apt install -y postgresql-client-common postgresql-client
-```
 ```bash
 export DATA_DIR="$(pwd)/../data"
-export PG_DSN='host=localhost port=5432 dbname=cid4_analysis user=chemist password=chemist'
+export PG_URL='postgresql://chemist:chemist@192.168.64.2:5432/cid4_analysis?options=-csearch_path%3Dcid4,public'
 
 source .venv/bin/activate
 uv sync
 uv run python src/cid4_analysis.py
 ```
-### Docker Cheat sheet
 ```bash
-uv run jupyter lab
-
-docker run -it --rm pytorch/pytorch:2.11.0-cuda13.0-cudnn9-devel bash
-
-docker build -t cid4:latest .
-docker run --rm --name cid4 -p 8888:8888 --volume ./src:/opt/app/src cid4:latest
-nc -vz $(minikube ip) 8888
-
-docker image rm cid4:latest
+uv run jupyter lab --allow-root --ip=0.0.0.0 --NotebookApp.allow_origin='*'
 ```
 http://192.168.64.23:8888/lab?token=<token>
 
+### Ingest pgvector data
+```bash
+# pwd -> ...<git repo root>/py
+uv run python -m debugpy --listen 5678 --wait-for-client src.pgvector.main
+# or
+uv run python -m src.pgvector.main
+```
+
+## Install psql on macOS:
+```bash
+brew install libpq
+brew link --force libpq
+```
+## Install psql on Ubuntu:
+```bash
+apt search postgresql-client
+sudo apt install -y postgresql-client-common postgresql-client
+```
 ## Format code
 ```sh
 uv tool run ruff format
@@ -109,22 +105,4 @@ Expected outputs under `data/out`:
 uv run python -m debugpy --listen 5678 --wait-for-client src.nltk.main
 # or
 uv run python -m src.nltk.main
-```
-
-## pgvector runner
-It normalizes literature, patents, bioactivity rows, pathway records, taxonomy rows, and CPDat rows into a shared document shape, generates deterministic hashed-token embeddings, and writes a JSON summary into `data/out`.
-
-Environment variables:
-- `PGVECTOR_DSN` - PostgreSQL connection string for a database with the `vector` extension available
-- `PGVECTOR_TABLE` - optional target table name, default `cid4_documents`
-- `PGVECTOR_EMBED_DIM` - optional hashed embedding dimension, default `96`
-
-Expected output under `data/out`:
-- `cid4_pgvector.summary.json`
-
-```bash
-# pwd -> ...<git repo root>/py
-uv run python -m debugpy --listen 5678 --wait-for-client src.pgvector.main
-# or
-uv run python -m src.pgvector.main
 ```

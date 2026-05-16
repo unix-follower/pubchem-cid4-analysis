@@ -1,4 +1,4 @@
-name: Build Fastapi app
+name: Build cid4-fastapi app
 on:
   pull_request:
     paths:
@@ -33,24 +33,12 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Setup micromamba RDKit environment
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-name: fastapi-app
-          create-args: >-
-            -c conda-forge
-            rdkit tensorflow pytorch pytorch::torchvision
-          cache-environment: true
-          init-shell: bash
-
       - name: Install dependencies
         working-directory: cid4-fastapi
         shell: bash
         run: |
-          prefix=$(micromamba env list | awk '$1 == "fastapi-app" {print $NF}')
           pip install uv
-          uv pip install --python "$prefix/bin/python3" -e .
-          ln -s $prefix .venv      
+          uv sync --locked
 
       - name: Check code formatting
         working-directory: cid4-fastapi

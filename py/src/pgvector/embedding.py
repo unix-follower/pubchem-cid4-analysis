@@ -16,10 +16,6 @@ from src.nltk.text_processing import (
 class HashedTokenEmbeddingProvider:
     dimension: int = 96
 
-    @property
-    def name(self) -> str:
-        return "hashed-token"
-
     def embed(self, text: str) -> list[float]:
         if self.dimension <= 0:
             raise ValueError("Embedding dimension must be positive")

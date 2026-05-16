@@ -62,7 +62,7 @@ class VectorDocument:
         }
 
 
-def build_all_documents() -> list[VectorDocument]:
+def prepare_documents() -> list[VectorDocument]:
     documents: list[VectorDocument] = []
     documents.extend(build_literature_documents())
     documents.extend(build_patent_documents())
