@@ -2,6 +2,7 @@
 !.vscode/launch.json
 HELP.md
 build
+.env
 
 ### IntelliJ IDEA ###
 .idea

@@ -1,0 +1,39 @@
+volumes:
+  pgdata:
+
+networks:
+  local-bridge:
+    external: true
+
+services:
+  postgres:
+    image: custom-postgres:18.4
+    container_name: cid4_postgres
+    hostname: cid4_postgres
+    restart: "no"
+    networks:
+      local-bridge:
+        ipv4_address: 192.168.2.2
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/
+
+  app:
+    image: pytorch/pytorch:2.11.0-cuda13.0-cudnn9-devel
+    container_name: cid4_app
+    tty: true
+    stdin_open: true
+    networks:
+      local-bridge:
+        ipv4_address: 192.168.2.3
+    ports:
+      - "8888:8888" # Jupyter Lab
+      - "8000:8000" # FastAPI
+      - "18443:8443" # FastAPI TLS
+      - "9464:9464" # Prometheus Metrics
+      - "5678:5678" # Python Debugger
+    volumes:
+      - /Users/Artsem_Nikitsenka/pubchem-cid4-analysis/:/opt/pubchem-cid4-analysis

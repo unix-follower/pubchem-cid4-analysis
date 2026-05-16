@@ -1,16 +1,17 @@
 ## FastAPI server
-```sh
-./setup.sh
+```bash
 export DATA_DIR="$(pwd)/../data"
+export TLS_CERT_FILE=$DATA_DIR/out/crypto/cid4_crypto.demo.cert.pem
+export TLS_KEY_FILE=$DATA_DIR/out/crypto/cid4_crypto.demo.key.pem
+export TLS_KEY_PASSWORD=test
 source .venv/bin/activate
-# uv run python -m debugpy --listen 5678 --wait-for-client src/cid4_fastapi.py
+# --wait-for-client
 uv run python -m debugpy --listen 5678 src/cid4_fastapi.py
 ```
 
 TLS configuration:
 - `FASTAPI_HOST` or `SERVER_HOST` defaults to `0.0.0.0`
 - `FASTAPI_PORT`, `SERVER_PORT`, or `PORT` defaults to `8443`
-- `TLS_CERT_FILE`, `TLS_KEY_FILE`, and optional `TLS_KEY_PASSWORD` can be set explicitly
 - `FASTAPI_OBSERVABILITY_ENABLED` or `OBSERVABILITY_ENABLED` toggle the FastAPI observability runtime
 - `FASTAPI_LOGGING_ENABLED`, `FASTAPI_METRICS_ENABLED`, and `FASTAPI_TRACING_ENABLED` override the generic observability toggles for FastAPI
 - `FASTAPI_LOG_LEVEL` overrides the observability logger level
@@ -19,31 +20,31 @@ TLS configuration:
 
 If explicit TLS files are not set, the server falls back to the PEM certificate, encrypted private key, and demo password recorded in `data/out/crypto/cid4_crypto.summary.json`.
 
-```sh
-curl -vk https://localhost:8443/api/health
-curl -vk https://localhost:8443/api/v1/auth/me
-curl -vk https://localhost:8443/api/v1/auth/basic/login
-curl -vk -X POST https://localhost:8443/api/v1/auth/logout
-curl -vk https://localhost:8443/api/v1/auth/digest/login
-curl -vk https://localhost:8443/api/v1/auth/digest/challenge
-curl -vk https://localhost:8443/api/v1/auth/session
-curl -vk https://localhost:8443/api/v1/compound
-curl -vk https://localhost:8443/api/v1/structure/2d
-curl -vk https://localhost:8443/api/v1/conformer/1
-curl -vk https://localhost:8443/api/v1/pathway
-curl -vk https://localhost:8443/api/v1/bioactivity
-curl -vk https://localhost:8443/api/v1/taxonomy
-curl -vk https://localhost:8443/api/v1/reaction-network
+```bash
+curl -vk https://localhost:18443/api/health
+curl -vk https://localhost:18443/api/v1/auth/me
+curl -vk https://localhost:18443/api/v1/auth/basic/login
+curl -vk -X POST https://localhost:18443/api/v1/auth/logout
+curl -vk https://localhost:18443/api/v1/auth/digest/login
+curl -vk https://localhost:18443/api/v1/auth/digest/challenge
+curl -vk https://localhost:18443/api/v1/auth/session
+curl -vk https://localhost:18443/api/v1/compound
+curl -vk https://localhost:18443/api/v1/structure/2d
+curl -vk https://localhost:18443/api/v1/conformer/1
+curl -vk https://localhost:18443/api/v1/pathway
+curl -vk https://localhost:18443/api/v1/bioactivity
+curl -vk https://localhost:18443/api/v1/taxonomy
+curl -vk https://localhost:18443/api/v1/reaction-network
+```
 curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
 ```
 
-
 Example requests:
 
-```sh
-curl -ik https://localhost:8443/api/v1/llm/status
-curl -ik 'https://localhost:8443/api/v1/llm/status?framework=tensorflow'
-curl -ik -X POST https://localhost:8443/api/v1/llm/train \
+```bash
+curl -ik https://localhost:18443/api/v1/llm/status
+curl -ik 'https://localhost:18443/api/v1/llm/status?framework=tensorflow'
+curl -ik -X POST https://localhost:18443/api/v1/llm/train \
 	-H 'Content-Type: application/json' \
 	-d '{
 		"framework": "pytorch",
@@ -54,7 +55,7 @@ curl -ik -X POST https://localhost:8443/api/v1/llm/train \
 		"batch_size": 16,
 		"max_chars": 20000
 	}'
-curl -k -X POST https://localhost:8443/api/v1/llm/train \
+curl -k -X POST https://localhost:18443/api/v1/llm/train \
 	-H 'Content-Type: application/json' \
 	-d '{
 		"framework": "tensorflow",
@@ -65,7 +66,7 @@ curl -k -X POST https://localhost:8443/api/v1/llm/train \
 		"batch_size": 16,
 		"max_chars": 20000
 	}'
-curl -k -X POST https://localhost:8443/api/v1/llm/generate \
+curl -k -X POST https://localhost:18443/api/v1/llm/generate \
 	-H 'Content-Type: application/json' \
 	-d '{
 		"framework": "pytorch",
@@ -75,7 +76,7 @@ curl -k -X POST https://localhost:8443/api/v1/llm/generate \
 		"temperature": 0.8,
 		"top_k": 8
 	}'
-curl -N -k -X POST https://localhost:8443/api/v1/llm/generate/stream \
+curl -N -k -X POST https://localhost:18443/api/v1/llm/generate/stream \
 	-H 'Content-Type: application/json' \
 	-d '{
 		"framework": "pytorch",
@@ -95,7 +96,7 @@ Streaming response contracts:
 
 CID4 MCP server with two entry modes:
 
-- Embedded Streamable HTTP under the FastAPI app at `https://localhost:8443/mcp/`
+- Embedded Streamable HTTP under the FastAPI app at `https://localhost:18443/mcp/`
 - Local stdio mode via `python src/cid4_mcp.py`
 
 Run the local stdio server:
@@ -121,7 +122,7 @@ HTTP MCP access reuses the existing CID4 auth model. For browser or HTTP clients
 ### Request example
 #### Step 1. Initialize
 ```sh
-curl -kv https://localhost:8443/mcp/ \
+curl -kv https://localhost:18443/mcp/ \
   -X POST \
   -u 'analyst:cid4-basic-password' \
   -H 'X-CID4-Auth-Method: basic' \
@@ -146,7 +147,7 @@ curl -kv https://localhost:8443/mcp/ \
 #### Step 2. Send the initialized notification
 ```sh
 # mcpSessionId=xxx
-curl -kv https://localhost:8443/mcp/ \
+curl -kv https://localhost:18443/mcp/ \
   -X POST \
   -u 'analyst:cid4-basic-password' \
   -H 'X-CID4-Auth-Method: basic' \
@@ -163,7 +164,7 @@ curl -kv https://localhost:8443/mcp/ \
 
 #### List tools
 ```sh
-curl -kv https://localhost:8443/mcp/ \
+curl -kv https://localhost:18443/mcp/ \
   -X POST \
   -u 'analyst:cid4-basic-password' \
   -H 'X-CID4-Auth-Method: basic' \
@@ -181,7 +182,7 @@ curl -kv https://localhost:8443/mcp/ \
 
 #### Call get_compound_metadata
 ```sh
-curl -kv https://localhost:8443/mcp/ \
+curl -kv https://localhost:18443/mcp/ \
   -X POST \
   -u 'analyst:cid4-basic-password' \
   -H 'X-CID4-Auth-Method: basic' \
@@ -202,7 +203,7 @@ curl -kv https://localhost:8443/mcp/ \
 
 #### Read the cid4://compound/4 resource
 ```sh
-curl -kv https://localhost:8443/mcp/ \
+curl -kv https://localhost:18443/mcp/ \
   -X POST \
   -u 'analyst:cid4-basic-password' \
   -H 'X-CID4-Auth-Method: basic' \
