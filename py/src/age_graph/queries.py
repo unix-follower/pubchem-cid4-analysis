@@ -4,14 +4,6 @@ from typing import Any
 def build_query_catalog() -> list[dict[str, Any]]:
     return [
         {
-            "id": "oxygen_neighbors",
-            "title": "Neighbors of the oxygen atom",
-            "cypher": (
-                "MATCH (o:Atom {element: 'O'})-[:BOND]-(neighbor:Atom) "
-                "RETURN o.aid AS oxygen_aid, collect({aid: neighbor.aid, element: neighbor.element}) AS neighbors"
-            ),
-        },
-        {
             "id": "oxygen_to_nitrogen_shortest_path",
             "title": "Shortest path between oxygen and nitrogen",
             "cypher": ("MATCH p = shortestPath((o:Atom {element: 'O'})-[:BOND*]-(n:Atom {element: 'N'})) RETURN p"),

@@ -1,7 +1,7 @@
 ## Run
 ```bash
 export DATA_DIR="$(pwd)/../data"
-export PG_URL='postgresql://chemist:chemist@192.168.64.2:5432/cid4_analysis?options=-csearch_path%3Dcid4,public'
+export DB_URL='postgresql://chemist:chemist@192.168.64.2:5432/cid4_analysis?options=-csearch_path%3Dcid4,public'
 
 source .venv/bin/activate
 uv sync

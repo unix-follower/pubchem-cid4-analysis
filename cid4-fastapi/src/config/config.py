@@ -4,10 +4,19 @@ import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
+from pydantic_settings import BaseSettings
 
+from src import constants
 from src.cid4_api import ServerConfig
 from src.cid4_api import resolve_data_dir as shared_resolve_data_dir
 from src.cid4_api import resolve_server_config as shared_resolve_server_config
+
+
+class Settings(BaseSettings):
+    app_name: str = "cid4-fastapi"
+    version: str = "1.0"
+
+    db_url: str = os.environ.get(constants.DB_URL)
 
 
 @dataclass(frozen=True)
@@ -42,11 +51,11 @@ def resolve_security_settings(
         allowed_origins=_split_csv(
             env.get(
                 "FASTAPI_ALLOWED_ORIGINS",
-                "http://localhost:4200,http://127.0.0.1:4200,http://testserver",
+                "http://localhost:4200,http://127.0.0.1:4200,http://192.168.64.1",
             )
         ),
         trusted_hosts=_split_csv(
-            env.get("FASTAPI_TRUSTED_HOSTS", "localhost,127.0.0.1,testserver")
+            env.get("FASTAPI_TRUSTED_HOSTS", "localhost,127.0.0.1,192.168.64.1")
         ),
         default_auth_method=env.get("FASTAPI_DEFAULT_AUTH_METHOD", "basic"),
         basic_users=_load_user_map(

@@ -104,12 +104,12 @@ def ingest_documents(
     documents: list[VectorDocument],
     embedding_provider: HashedTokenEmbeddingProvider,
 ) -> dict[str, Any]:
-    pg_url = os.environ.get("PG_URL")
-    if not pg_url:
-        raise ValueError("PG_URL env variable is not set")
+    DB_URL = os.environ.get("DB_URL")
+    if not DB_URL:
+        raise ValueError("DB_URL env variable is not set")
 
     rows = prepare_upsert_rows(documents, embedding_provider)
-    with psycopg.connect(pg_url, autocommit=True) as connection:
+    with psycopg.connect(DB_URL, autocommit=True) as connection:
         register_vector(connection)
         with connection.cursor() as cursor:
             cursor.executemany(build_upsert_sql(), rows)

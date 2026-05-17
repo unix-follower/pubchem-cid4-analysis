@@ -10,13 +10,13 @@ from .graphs import GraphEdge, GraphNode, PropertyGraph
 
 
 def ingest_graph(graph: PropertyGraph) -> dict[str, Any]:
-    pg_url = os.environ.get("PG_URL")
-    if not pg_url:
-        raise ValueError("PG_URL env variable is not set")
+    DB_URL = os.environ.get("DB_URL")
+    if not DB_URL:
+        raise ValueError("DB_URL env variable is not set")
 
     statements = build_ingestion_statements(graph)
 
-    with psycopg.connect(pg_url, autocommit=True) as connection:
+    with psycopg.connect(DB_URL, autocommit=True) as connection:
         set_search_path(connection)
         for statement in statements:
             execute_cypher(connection, statement)

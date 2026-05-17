@@ -269,7 +269,164 @@ mₑ^mono is the monoisotopic mass of element e
 
 ---
 
-## 2. Data Structures, Algorithms, Graph Theory & Machine Learning
+## 2. Graph Theory & Machine Learning
+
+### With Apache AGE
+
+- traversing the molecular graph through atom and bond relationships
+- traversing compound-to-organism, compound-to-pathway, and compound-to-assay links
+- asking multi-hop graph questions with Cypher
+- storing graph structure and relational metadata together inside PostgreSQL
+- prototyping a chemistry knowledge graph around CID 4
+
+#### 1. Build the molecular graph explorer over the conformer JSON files
+
+`Conformer3D_COMPOUND_CID_4(1).json`
+
+A graph model is:
+
+- node label: `Atom`
+	- properties: `aid`, `element`, `x`, `y`, `z`
+- edge label: `BOND`
+	- properties: `order`
+- optional node label: `Compound`
+	- properties: `cid`, `name`
+- optional edge label: `HAS_ATOM`
+
+Then run queries:
+
+- neighbors of the oxygen atom
+- shortest path between oxygen and nitrogen
+- atom degree counts
+- cycle checks or connected-component sanity checks
+
+#### 2. Build the compound-to-organism graph
+
+`cid_4.dot`, `pubchem_cid_4_consolidatedcompoundtaxonomy.csv`
+
+A graph model is:
+
+- node label: `Compound`
+- node label: `Organism`
+	- properties: `source_organism`, `taxonomy_id`, `source`, `source_id`
+- edge label: `ASSOCIATED_WITH` or `FOUND_IN`
+
+Then run queries:
+
+- all organisms linked to CID 4
+- only bird or mammal nodes
+- all source systems contributing organism links
+- taxa shared across several source records
+
+#### 3. Build a pathway-reaction graph
+
+`pubchem_cid_4_pathway.csv`, `pubchem_cid_4_pathwayreaction.csv` are well suited to a small mechanistic graph.
+
+A graph model is:
+
+- node labels: `Compound`, `Pathway`, `Reaction`, `Taxon`, `Protein`, `Gene`, `Enzyme`
+- edge labels:
+	- `PARTICIPATES_IN`
+	- `IN_PATHWAY`
+	- `IN_TAXON`
+	- `CATALYZED_BY`
+	- `LINKED_TO_PROTEIN`
+	- `LINKED_TO_GENE`
+
+Then run queries:
+
+- all pathways linked to CID 4
+- all taxa associated with those pathways
+- all proteins or enzymes connected to a reaction involving CID 4
+- all reaction hops from compound to taxonomy
+
+#### 4. Build an assay knowledge graph
+
+`pubchem_cid_4_bioactivity.csv`. An assay-target graph for queryable bioactivity exploration.
+
+A model is:
+
+- node labels: `Assay`, `Target`, `Taxon`, `Source`, `Compound`
+- edge labels:
+	- `TESTED_IN`
+	- `TARGETS`
+	- `FROM_SOURCE`
+	- `ABOUT_COMPOUND`
+
+Properties can include:
+
+- `aid`
+- `aid_type`
+- `activity`
+- `activity_type`
+- `activity_value`
+- `taxonomy_id`
+
+Then run queries:
+
+- all confirmatory assays linked to a certain target taxonomy
+- all assays from Tox21 targeting estrogen receptor related nodes
+- all target nodes reachable from CID 4 through assay edges
+
+#### 5. Build a unified CID 4 knowledge graph
+
+A unified graph can include:
+
+- the compound node from `COMPOUND_CID_4.json`
+- atom and bond subgraph from the conformer JSON
+- organism edges from the taxonomy CSV and DOT file
+- pathway and reaction nodes from the pathway CSVs
+- assay nodes from the bioactivity CSV
+
+Then you can ask multi-hop questions such as:
+
+- which taxa are connected to CID 4 through both pathway and assay evidence?
+- which proteins are linked to reactions involving CID 4 in a specific organism?
+- which organism nodes appear in both taxonomy and literature-linked metadata workflows?
+
+### Cypher-style queries
+
+- molecular traversals
+	- shortest path between two atoms
+	- all neighbors of the stereocenter carbon
+- knowledge-graph traversals
+	- compound → assay → target → taxon
+	- compound → pathway → reaction → enzyme
+	- compound → organism → taxonomy
+- aggregation-style graph queries
+	- count organisms by source
+	- count assays by source or target taxon
+	- count pathway-linked proteins by taxonomy
+
+### Graph schema strategy
+
+Useful node labels:
+
+- `Compound`
+- `Atom`
+- `Organism`
+- `Taxon`
+- `Pathway`
+- `Reaction`
+- `Assay`
+- `Target`
+- `Protein`
+- `Gene`
+- `Enzyme`
+- `Source`
+
+Useful edge labels:
+
+- `HAS_ATOM`
+- `BOND`
+- `FOUND_IN`
+- `ASSOCIATED_WITH`
+- `PARTICIPATES_IN`
+- `IN_PATHWAY`
+- `IN_TAXON`
+- `TARGETS`
+- `FROM_SOURCE`
+- `CATALYZED_BY`
 
 ### Machine Learning
 
@@ -1408,16 +1565,15 @@ That makes CID 4 a good small dataset for building a robust ML pipeline, validat
 
 ## 10. Vector Similarity Search with pgvector
 
-pgvector is useful in this repository when you want semantic search or nearest-neighbor lookup over rows and documents derived from the files in `data/`.
-
-The important limitation is the same one that appears in the XGBoost section: this repository is centered on one compound, CID 4. That means pgvector is most useful here for:
+Semantic search or nearest-neighbor lookup over rows and documents.
 
 - document similarity across literature, patents, assays, pathways, and taxonomy rows
 - row-level retrieval over assay names, targets, reactions, and citations
-- building a semantic search backend for `cid4-ui/` or `cid4-angular-ui/`
-- prototyping a vector-database schema that can later scale to many compounds
-
-It is not primarily a compound-embedding benchmark, because the dataset does not contain many different compounds to compare against each other.
+- semantic literature search over titles and abstracts
+- similarity search across assay descriptions and target names
+- pathway and reaction retrieval based on meaning rather than exact keyword match
+- hybrid search combining metadata filters with vector similarity
+- storing embeddings next to PostgreSQL metadata, IDs, and links
 
 ### Best files to use with pgvector
 
@@ -1434,21 +1590,11 @@ It is not primarily a compound-embedding benchmark, because the dataset does not
 | `1-Amino-2-propanol.png` and `1-Amino-2-propanol_Conformer3D_large(1..6).png` | Optional if you generate image embeddings outside PostgreSQL and store them in pgvector |
 | `Structure2D_COMPOUND_CID_4.json` and `Conformer3D_COMPOUND_CID_4(1..6).json` | Optional if you derive numeric structure embeddings or descriptors and persist them as vectors |
 
-### What pgvector is good for here
-
-- semantic literature search over titles and abstracts
-- similarity search across assay descriptions and target names
-- pathway and reaction retrieval based on meaning rather than exact keyword match
-- hybrid search combining metadata filters with vector similarity
-- storing embeddings next to PostgreSQL metadata, IDs, and links
-
 ### Practical pgvector workflows for this dataset
 
 #### 1. Build a literature embedding table
 
-`pubchem_cid_4_literature.csv` is the strongest pgvector source in the repository.
-
-A practical record shape is one row per literature entry with:
+`pubchem_cid_4_literature.csv`
 
 - identifiers: `pclid`, `pmid`, `doi`, `publication_date`
 - metadata: `publication_type`, `publication_name`, `subject`, `pubchem_data_source`
@@ -1463,7 +1609,7 @@ This lets you ask questions such as:
 
 #### 2. Build an assay similarity index
 
-`pubchem_cid_4_bioactivity.csv` and `pubchem_cid_4_bioactivity.json` are a good fit for row-level semantic retrieval.
+`pubchem_cid_4_bioactivity.csv` is for row-level semantic retrieval.
 
 Good text to embed per row:
 
@@ -1488,11 +1634,9 @@ Then you can run hybrid queries such as:
 - nearest assays to `estrogen receptor antagonism` filtered to `Aid_Type = Confirmatory`
 - nearest assays to `malaria parasite inhibition` filtered to `Taxonomy_ID = 5833`
 
-This is one of the most practical pgvector uses in the current dataset.
-
 #### 3. Build a reaction and pathway retriever
 
-`pubchem_cid_4_pathway.csv` and `pubchem_cid_4_pathwayreaction.csv` are small, but they are structurally clean.
+`pubchem_cid_4_pathway.csv` and `pubchem_cid_4_pathwayreaction.csv`
 
 You can embed fields such as:
 
@@ -1535,8 +1679,6 @@ Two practical approaches are:
 - structure-derived numeric vectors
 	- derive descriptor vectors from `Structure2D_COMPOUND_CID_4.json` or `Conformer3D_COMPOUND_CID_4(1).json` and store them as pgvector values
 
-For this repository, those vectors are mainly useful for architecture and UI experiments because there is only one compound family represented.
-
 ### A practical PostgreSQL schema shape
 
 Use separate tables by record type, or one table with a `doc_type` column.
@@ -1557,8 +1699,6 @@ Useful metadata columns:
 - `text_payload`
 - `embedding vector(...)`
 
-This works well because pgvector gives you semantic similarity while PostgreSQL handles filtering, joins, and provenance.
-
 ### Query patterns that fit this repository
 
 - semantic literature search
@@ -1570,16 +1710,6 @@ This works well because pgvector gives you semantic similarity while PostgreSQL 
 - semantic grouping of CPDat rows
 	- nearest product-use descriptions by category meaning rather than exact phrasing
 
-### Important modeling cautions for this dataset
-
-Be careful not to overstate what vector search means here.
-
-- this is not a broad compound similarity database, because the repository is CID 4-centered
-- most value comes from document and row semantics, not from molecular novelty
-- very small tables such as pathway or pKa files are useful for demos but not for rigorous retrieval evaluation
-- patent and literature embeddings may behave very differently because patent language is much more formulaic and repetitive
-- text concatenation strategy matters; embedding an entire citation string may be less useful than embedding title and abstract separately
-
 ### Example pgvector projects you can build from these files
 
 - a semantic literature search backend for CID 4
@@ -1587,21 +1717,6 @@ Be careful not to overstate what vector search means here.
 - a reaction finder over pathway reaction text
 - a hybrid search endpoint that mixes exact filters and vector similarity
 - a PostgreSQL-backed RAG prototype over the CID 4 document set
-
-### Why pgvector is a good fit here
-
-pgvector fits this repository best as a semantic-retrieval layer on top of the text and row data already present in `data/`.
-
-The repository gives you:
-
-- rich literature and patent text
-- assay and target descriptions
-- reaction and pathway rows
-- taxonomy and product-use descriptions
-
-That is enough to build a useful vector-backed search system even though the dataset is centered on one compound. It is especially strong if you want PostgreSQL to remain the source of truth for metadata, filtering, and provenance while adding semantic search on top.
-
----
 
 ## 11. Atomistic Descriptors with DScribe
 
@@ -2482,15 +2597,6 @@ With WebGL you can:
 
 LangChain is useful in this repository when you want to build question-answering, retrieval-augmented generation, summarization, or agent workflows over the files in `data/`.
 
-Compared with the search-engine sections, LangChain is the better fit when you want:
-
-- an application pipeline rather than only an index
-- document loading, splitting, embedding, retrieval, and prompting in one stack
-- tool-using agents that can answer questions across multiple files
-- structured outputs and multi-step reasoning over the CID 4 dataset
-
-For this repository, LangChain is most useful for literature, patents, assay metadata, pathway reactions, taxonomy rows, and derived summaries about CID 4.
-
 ### Best files to use with LangChain
 
 | File | LangChain use |
@@ -2849,245 +2955,3 @@ LangGraph fits this repository because the `data/` directory naturally breaks in
 - compound metadata for grounding
 
 That makes CID 4 a good small but realistic dataset for building a stateful scientific assistant that can route, retrieve, validate, and synthesize across multiple source types.
-
----
-
-## 18. Property Graphs in PostgreSQL with Apache AGE
-
-Apache AGE is useful in this repository when you want to represent the CID 4 data as a labeled-property graph inside PostgreSQL and query it with Cypher.
-
-Compared with the search and RAG sections, Apache AGE is the better fit when you want:
-
-- explicit node and edge modeling
-- graph traversals rather than only text search or row filtering
-- property-graph storage inside PostgreSQL
-- a unified graph that links compound, atoms, organisms, pathways, reactions, assays, and identifiers
-
-For this repository, AGE is most useful for the molecular graph, the compound-to-organism graph, and a lightweight knowledge graph built from pathways, reactions, and assay metadata.
-
-### Best files to use with Apache AGE
-
-| File | Apache AGE use |
-|---|---|
-| `Conformer3D_COMPOUND_CID_4(1..6).json` | Best source for building the molecular graph: atom nodes, bond edges, coordinates, and stereo metadata |
-| `Structure2D_COMPOUND_CID_4.json` | Good source for a canonical 2D molecular graph or graph visualization fallback |
-| `cid_4.dot` | Ready-made small graph of compound-to-animal associations |
-| `pubchem_cid_4_consolidatedcompoundtaxonomy.csv` | Good source for compound-to-organism and organism-to-taxonomy property graphs |
-| `pubchem_cid_4_pathway.csv` | Good for building compound-to-pathway and pathway-to-taxonomy links |
-| `pubchem_cid_4_pathwayreaction.csv` | Good for reaction nodes and edges linking compounds, pathways, proteins, genes, enzymes, and taxa |
-| `pubchem_cid_4_bioactivity.csv` | Good for building assay nodes linked to targets, taxa, sources, and CID 4 |
-| `COMPOUND_CID_4.json` | Good grounding node for the main compound record and top-level metadata |
-
-### What Apache AGE is good for here
-
-- traversing the molecular graph through atom and bond relationships
-- traversing compound-to-organism, compound-to-pathway, and compound-to-assay links
-- asking multi-hop graph questions with Cypher
-- storing graph structure and relational metadata together inside PostgreSQL
-- prototyping a chemistry knowledge graph around CID 4
-
-### Practical Apache AGE workflows for this dataset
-
-#### 1. Build the molecular graph
-
-`Conformer3D_COMPOUND_CID_4(1).json` contains the cleanest graph source for the molecule.
-
-A natural graph model is:
-
-- node label: `Atom`
-	- properties: `aid`, `element`, `x`, `y`, `z`
-- edge label: `BOND`
-	- properties: `order`
-- optional node label: `Compound`
-	- properties: `cid`, `name`
-- optional edge label: `HAS_ATOM`
-
-With Apache AGE you can then run queries such as:
-
-- neighbors of the oxygen atom
-- shortest path between oxygen and nitrogen
-- atom degree counts
-- cycle checks or connected-component sanity checks
-
-This is one of the strongest AGE use cases in the repository because the graph is explicit in the source JSON.
-
-#### 2. Build the compound-to-organism graph
-
-`cid_4.dot` and `pubchem_cid_4_consolidatedcompoundtaxonomy.csv` make a good second graph family.
-
-A practical model is:
-
-- node label: `Compound`
-- node label: `Organism`
-	- properties: `source_organism`, `taxonomy_id`, `source`, `source_id`
-- edge label: `ASSOCIATED_WITH` or `FOUND_IN`
-
-You can then query:
-
-- all organisms linked to CID 4
-- only bird or mammal nodes
-- all source systems contributing organism links
-- taxa shared across several source records
-
-This is useful for turning a CSV plus DOT file into a queryable knowledge graph.
-
-#### 3. Build a pathway-reaction graph
-
-`pubchem_cid_4_pathway.csv` and `pubchem_cid_4_pathwayreaction.csv` are well suited to a small mechanistic graph.
-
-A natural graph model is:
-
-- node labels: `Compound`, `Pathway`, `Reaction`, `Taxon`, `Protein`, `Gene`, `Enzyme`
-- edge labels:
-	- `PARTICIPATES_IN`
-	- `IN_PATHWAY`
-	- `IN_TAXON`
-	- `CATALYZED_BY`
-	- `LINKED_TO_PROTEIN`
-	- `LINKED_TO_GENE`
-
-This lets you query things like:
-
-- all pathways linked to CID 4
-- all taxa associated with those pathways
-- all proteins or enzymes connected to a reaction involving CID 4
-- all reaction hops from compound to taxonomy
-
-This is a good fit for Cypher because the relationships are the main object of interest.
-
-#### 4. Build an assay knowledge graph
-
-`pubchem_cid_4_bioactivity.csv` can be turned into a property graph centered on assay records.
-
-A useful model is:
-
-- node labels: `Assay`, `Target`, `Taxon`, `Source`, `Compound`
-- edge labels:
-	- `TESTED_IN`
-	- `TARGETS`
-	- `FROM_SOURCE`
-	- `ABOUT_COMPOUND`
-
-Properties can include:
-
-- `aid`
-- `aid_type`
-- `activity`
-- `activity_type`
-- `activity_value`
-- `taxonomy_id`
-
-This allows queries such as:
-
-- all confirmatory assays linked to a certain target taxonomy
-- all assays from Tox21 targeting estrogen receptor related nodes
-- all target nodes reachable from CID 4 through assay edges
-
-#### 5. Build a unified CID 4 knowledge graph
-
-Apache AGE becomes especially useful when you combine the graph families above into one graph.
-
-A unified graph can include:
-
-- the compound node from `COMPOUND_CID_4.json`
-- atom and bond subgraph from the conformer JSON
-- organism edges from the taxonomy CSV and DOT file
-- pathway and reaction nodes from the pathway CSVs
-- assay nodes from the bioactivity CSV
-
-Then you can ask multi-hop questions such as:
-
-- which taxa are connected to CID 4 through both pathway and assay evidence?
-- which proteins are linked to reactions involving CID 4 in a specific organism?
-- which organism nodes appear in both taxonomy and literature-linked metadata workflows?
-
-This is where AGE adds value beyond plain relational joins.
-
-### Cypher-style queries that fit this repository
-
-Good graph questions for Apache AGE include:
-
-- molecular traversals
-	- shortest path between two atoms
-	- all neighbors of the stereocenter carbon
-- knowledge-graph traversals
-	- compound → assay → target → taxon
-	- compound → pathway → reaction → enzyme
-	- compound → organism → taxonomy
-- aggregation-style graph queries
-	- count organisms by source
-	- count assays by source or target taxon
-	- count pathway-linked proteins by taxonomy
-
-### A practical graph schema strategy
-
-Useful node labels:
-
-- `Compound`
-- `Atom`
-- `Organism`
-- `Taxon`
-- `Pathway`
-- `Reaction`
-- `Assay`
-- `Target`
-- `Protein`
-- `Gene`
-- `Enzyme`
-- `Source`
-
-Useful edge labels:
-
-- `HAS_ATOM`
-- `BOND`
-- `FOUND_IN`
-- `ASSOCIATED_WITH`
-- `PARTICIPATES_IN`
-- `IN_PATHWAY`
-- `IN_TAXON`
-- `TARGETS`
-- `FROM_SOURCE`
-- `CATALYZED_BY`
-
-This schema works well because AGE lets you keep graph structure in PostgreSQL while still joining back to ordinary relational tables when needed.
-
-### Important graph-modeling cautions for this dataset
-
-Be careful not to overbuild the graph.
-
-- the repository is still CID 4-centered, so some graph patterns will be shallow unless you add more compounds later
-- the molecular graph is small and is mainly useful for correctness, visualization, and graph-query prototyping
-- some relationships in CSV files are inferred from row structure and should be modeled explicitly and consistently
-- pathway, assay, and taxonomy edges should preserve source provenance so you can distinguish different evidence types
-
-### Example Apache AGE projects you can build from these files
-
-- a molecular graph explorer over the conformer JSON files
-- a compound-to-organism knowledge graph built from `cid_4.dot` and the taxonomy CSV
-- a pathway-reaction graph for CID 4 with proteins, genes, and taxa
-- an assay-target graph for queryable bioactivity exploration
-- a unified PostgreSQL property graph that supports Cypher queries across all of the above
-
-### Why Apache AGE is a good fit here
-
-Apache AGE fits this repository because the `data/` directory already contains several natural graph families:
-
-- atom-bond relationships in the conformer JSON
-- compound-to-organism links in the DOT file and taxonomy CSV
-- compound-to-pathway and reaction relationships in the pathway CSVs
-- compound-to-assay and target relationships in the bioactivity table
-
-That makes CID 4 a good small but graph-rich dataset for building and validating a property-graph model inside PostgreSQL before scaling to a larger multi-compound knowledge graph.
-
----
-
-## Practical Starting Points by File
-
-| File | Best entry point |
-|---|---|
-| cid4-sdf-extracted.json | Linear algebra (feature matrix), clustering, PCA, GNN node features |
-| Conformer3D_COMPOUND_CID_4.json | Graph construction (adjacency matrix/list), BFS/DFS, shortest path, Laplacian |
-| pubchem_cid_4_bioactivity.csv | Regression, classification (SVM/KNN/logistic), statistics, probability |
-| pubchem_cid_4_consolidatedcompoundtaxonomy.csv | Clustering (k-means/hierarchical), set theory, taxonomic tree |
-| cid_4.dot | Graph theory (directed graph, BFS, topological sort, spectral clustering) |
-| Conformer3D_COMPOUND_CID_4.sdf | 3D geometry (distance matrix, bond angles, MST), calculus (bond potential) |

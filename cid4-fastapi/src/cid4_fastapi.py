@@ -2,12 +2,8 @@ from __future__ import annotations
 
 import argparse
 import uvicorn
-from pathlib import Path
 
-from fastapi import FastAPI
-
-from cid4_observability import Runtime
-from src.api.routes import create_app as create_routes_app
+from src.api.routes import create_app
 
 from src.config import log_settings
 from cid4_observability import initialize, resolve_observability_config, shutdown
@@ -19,10 +15,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--host", help="Override the bind host.")
     parser.add_argument("--port", type=int, help="Override the bind port.")
     return parser
-
-
-def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
-    return create_routes_app(data_dir, observability)
 
 
 def main() -> None:

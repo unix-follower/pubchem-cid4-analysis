@@ -4,9 +4,12 @@ export DATA_DIR="$(pwd)/../data"
 export TLS_CERT_FILE=$DATA_DIR/out/crypto/cid4_crypto.demo.cert.pem
 export TLS_KEY_FILE=$DATA_DIR/out/crypto/cid4_crypto.demo.key.pem
 export TLS_KEY_PASSWORD=test
+export DB_URL='postgresql+psycopg_async://chemist:chemist@192.168.64.2:5432/cid4_analysis?options=-csearch_path%3Dcid4,public,ag_catalog'
 source .venv/bin/activate
 # --wait-for-client
-uv run python -m debugpy --listen 5678 src/cid4_fastapi.py
+uv run python -Xfrozen_modules=off -m debugpy --listen 0.0.0.0:5678 src/cid4_fastapi.py
+
+export SERVER_URL=https://localhost:18443
 ```
 
 TLS configuration:
@@ -21,7 +24,9 @@ TLS configuration:
 If explicit TLS files are not set, the server falls back to the PEM certificate, encrypted private key, and demo password recorded in `data/out/crypto/cid4_crypto.summary.json`.
 
 ```bash
-curl -vk https://localhost:18443/api/health
+curl -vk $SERVER_URL/health/liveness
+curl -vk $SERVER_URL/health/readiness
+
 curl -vk https://localhost:18443/api/v1/auth/me
 curl -vk https://localhost:18443/api/v1/auth/basic/login
 curl -vk -X POST https://localhost:18443/api/v1/auth/logout
@@ -35,6 +40,7 @@ curl -vk https://localhost:18443/api/v1/pathway
 curl -vk https://localhost:18443/api/v1/bioactivity
 curl -vk https://localhost:18443/api/v1/taxonomy
 curl -vk https://localhost:18443/api/v1/reaction-network
+curl -vk $SERVER_URL/api/v1/graph/oxygen-neighbors
 ```
 curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
 ```

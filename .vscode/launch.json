@@ -6,10 +6,16 @@
       "type": "debugpy",
       "request": "attach",
       "connect": {
-        "host": "127.0.0.1",
+        "host": "192.168.64.2",
         "port": 5678
       },
-      "justMyCode": false
+      "justMyCode": false,
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/opt/pubchem-cid4-analysis"
+        }
+      ]
     }
   ]
 }
