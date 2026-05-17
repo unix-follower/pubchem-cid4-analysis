@@ -19,6 +19,30 @@
         "default"
       ],
       "level": "INFO"
+    },
+    "sqlalchemy.engine": {
+      "handlers": [
+        "default"
+      ],
+      "level": "ERROR"
+    },
+    "sqlalchemy.pool": {
+      "handlers": [
+        "default"
+      ],
+      "level": "ERROR"
+    },
+    "sqlalchemy.dialects": {
+      "handlers": [
+        "default"
+      ],
+      "level": "ERROR"
+    },
+    "sqlalchemy.orm": {
+      "handlers": [
+        "default"
+      ],
+      "level": "ERROR"
     }
   }
 }

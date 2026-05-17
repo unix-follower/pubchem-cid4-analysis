@@ -1,15 +1,16 @@
 from __future__ import annotations
+from contextlib import asynccontextmanager
 
-from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.middleware.trustedhost import TrustedHostMiddleware
+from fastapi_healthchecks.api.router import HealthcheckRouter, Probe
 
 from cid4_observability import RequestScope, Runtime
-from src.config.config import SecuritySettings, resolve_security_settings
+from src.config.config import Settings, SecuritySettings, resolve_security_settings
 from src.config.security import require_csrf
 from src.api.v1 import (
     auth,
@@ -21,13 +22,49 @@ from src.api.v1 import (
     taxonomy,
     structure,
     reaction_network,
+    graph,
 )
 from src.ml.tensorflow_language_model import TensorFlowLanguageModelService
 from src.ml.torch_language_model import PyTorchLanguageModelService
+from src.errors.app_exception import AppException
+from src.errors.error_code import ErrorCode, to_http_status_code
+from src.db.db import AppAsyncDatabaseConnection
+
+
+def configure_healthcheck(fastapi_app: FastAPI):
+    fastapi_app.include_router(
+        HealthcheckRouter(
+            Probe(
+                name="readiness",
+                checks=[],
+            ),
+            Probe(
+                name="liveness",
+                checks=[],
+            ),
+        ),
+        prefix="/health",
+    )
+
+
+@asynccontextmanager
+async def run_lifespan(fastapi_app: FastAPI):
+    settings = fastapi_app.state["settings"]
+    connection = AppAsyncDatabaseConnection.get_instance(settings)
+    async_engine = await connection.create_engine()
+    fastapi_app.state["db_async_engine"] = async_engine
+    await connection.get_db_version()
+
+    yield
+
+    if connection:
+        await connection.close()
 
 
 def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
-    app = FastAPI(title="CID4 FastAPI", docs_url=None, redoc_url=None)
+    settings = Settings()
+    app = FastAPI(title="CID4 FastAPI", lifespan=run_lifespan)
+    app.state["settings"] = settings
     app.state["data_dir"] = data_dir
     security_settings = resolve_security_settings()
     app.state["security_settings"] = security_settings
@@ -61,10 +98,18 @@ def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
     _register_observability(app, observability)
     _register_mcp_routes(app, data_dir, security_settings)
 
-    @app.get("/api/health", response_model=None)
-    def health(_: Request) -> Response:
-        return JSONResponse({"timestamp": datetime.now(UTC).isoformat()})
+    @app.exception_handler(Exception)
+    async def handle_exception(_: Request, e: Exception):
+        error_code = ErrorCode.UNKNOWN
+        if isinstance(e, AppException):
+            error_code = e.error_code
 
+        return JSONResponse(
+            content={"errorCode": error_code.value},
+            status_code=to_http_status_code(error_code),
+        )
+
+    configure_healthcheck(app)
     app.include_router(auth.router)
 
     app.include_router(conformer.router)
@@ -75,6 +120,7 @@ def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
     app.include_router(taxonomy.router)
     app.include_router(structure.router)
     app.include_router(reaction_network.router)
+    app.include_router(graph.router)
 
     return app
 

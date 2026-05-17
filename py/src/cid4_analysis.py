@@ -12,7 +12,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem, Descriptors, Draw, ValenceType
 from scipy import linalg, stats
 
-from src import cid4_quantum, log_settings
+from src import log_settings
 from src.constants import ARR_1ST_IDX as IDX1
 from src.constants import UTF_8
 from src.matplotlib_utils import (
@@ -2224,9 +2224,11 @@ def write_atom_element_entropy_analysis(
 
 
 def write_quantum_conformer_ranking(
-    max_conformer_index: int = cid4_quantum.DEFAULT_MAX_CONFORMER_INDEX,
-    settings: cid4_quantum.QuantumCalculationSettings | None = None,
+    max_conformer_index: int,
+    settings=None,
 ):
+    from src import cid4_quantum
+
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
     summary_output_path = Path(out_dir) / "cid4.quantum_conformer_ranking.json"
@@ -2274,7 +2276,11 @@ def main():
     write_bioactivity_binomial_analysis(bioactivity_filename)
 
     if quantum_analysis_enabled():
-        write_quantum_conformer_ranking()
+        from src import cid4_quantum
+
+        write_quantum_conformer_ranking(
+            cid4_quantum.DEFAULT_MAX_CONFORMER_INDEX, cid4_quantum.QuantumCalculationSettings
+        )
     else:
         log.info(
             "Skipping quantum conformer ranking because %s is not set to 1",
