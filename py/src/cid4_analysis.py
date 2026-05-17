@@ -2225,8 +2225,10 @@ def write_atom_element_entropy_analysis(
 
 def write_quantum_conformer_ranking(
     max_conformer_index: int,
-    settings = None,
+    settings=None,
 ):
+    from src import cid4_quantum
+
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
     summary_output_path = Path(out_dir) / "cid4.quantum_conformer_ranking.json"
@@ -2276,7 +2278,9 @@ def main():
     if quantum_analysis_enabled():
         from src import cid4_quantum
 
-        write_quantum_conformer_ranking(cid4_quantum.DEFAULT_MAX_CONFORMER_INDEX, cid4_quantum.QuantumCalculationSettings)
+        write_quantum_conformer_ranking(
+            cid4_quantum.DEFAULT_MAX_CONFORMER_INDEX, cid4_quantum.QuantumCalculationSettings
+        )
     else:
         log.info(
             "Skipping quantum conformer ranking because %s is not set to 1",

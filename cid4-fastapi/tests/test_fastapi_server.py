@@ -17,6 +17,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
+from src import constants  # noqa: E402
 from src.cid4_observability import (  # noqa: E402
     ObservabilityConfig,
     RequestScope,
@@ -85,8 +86,8 @@ class FastApiObservabilityConfigTests(unittest.TestCase):
         scope = RequestScope(
             runtime,
             "GET",
-            "/api/health",
-            "/api/health",
+            "/health/liveness",
+            "/health/liveness",
             incoming_request_id="request-123",
         )
 
@@ -117,7 +118,8 @@ class FastApiServerTests(unittest.TestCase):
                 service_name="cid4-fastapi-test",
             )
         )
-        cls.client = TestClient(create_app(cls.data_dir, cls.observability))
+        with mock.patch.dict(os.environ, {constants.DB_URL: "postgresql+psycopg_async://user:password@localhost:5432/cid4_analysis?options=-csearch_path%3Dcid4,public,ag_catalog"}):
+            cls.client = TestClient(create_app(cls.data_dir, cls.observability))
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -204,7 +206,7 @@ class FastApiServerTests(unittest.TestCase):
         )
 
     def test_health_endpoint(self) -> None:
-        response = self.client.get("/api/health")
+        response = self.client.get("/health/liveness")
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -212,7 +214,7 @@ class FastApiServerTests(unittest.TestCase):
 
     def test_preserves_incoming_request_id(self) -> None:
         response = self.client.get(
-            "/api/health", headers={"X-Request-Id": "request-456"}
+            "/health/liveness", headers={"X-Request-Id": "request-456"}
         )
 
         self.assertEqual(response.status_code, 200)
