@@ -5,6 +5,14 @@ from collections.abc import Iterable
 from math import log2
 from typing import Any
 
+from src.pgvector.datasets import (
+    load_bioactivity_frame,
+    load_literature_frame,
+    load_patent_frame,
+    load_pathway_reaction_frame,
+    load_taxonomy_frame,
+)
+
 from .datasets import (
     load_toxicology_frame,
 )
@@ -17,13 +25,6 @@ from .text_processing import (
     normalize_text,
     stable_top_items,
     tokenize_preserving_chemistry,
-)
-from src.pgvector.datasets import (
-    load_literature_frame,
-    load_patent_frame,
-    load_bioactivity_frame,
-    load_pathway_reaction_frame,
-    load_taxonomy_frame,
 )
 
 TOP_TERM_LIMIT = 20
