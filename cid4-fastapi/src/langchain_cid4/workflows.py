@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
+from sqlalchemy.ext.asyncio import AsyncEngine
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableLambda
 
@@ -9,7 +10,6 @@ from src.langchain_cid4.documents import (
     load_domain_documents,
 )
 from src.langchain_cid4.retrieval import (
-    InMemoryRetriever,
     RetrievedPassage,
     retrieve_with_pgvector,
 )
@@ -67,13 +67,6 @@ def route_question(question: str) -> dict[str, Any]:
     }
 
 
-def run_literature_workflow() -> dict[str, Any]:
-    question = "What does the literature say about isopropanolamine fungicide activity?"
-    return run_question_workflow(
-        question, domains=["literature"], workflow="literature-rag"
-    )
-
-
 def run_assay_workflow() -> dict[str, Any]:
     question = "Which CID 4 assays involve estrogen receptor signaling?"
     return run_question_workflow(question, domains=["assay"], workflow="assay-qa")
@@ -114,25 +107,25 @@ def run_agent_workflow() -> dict[str, Any]:
 
     return {
         "workflow": "multi-tool-agent",
-        "langchain_runtime": build_langchain_runtime(),
         "question_count": len(outputs),
         "questions": outputs,
     }
 
 
-def run_question_workflow(
+async def run_question_workflow(
     question: str,
     *,
     domains: list[str] | None = None,
     workflow: str,
     route: dict[str, Any] | None = None,
     top_k: int = 4,
+    engine: AsyncEngine | None = None,
 ) -> dict[str, Any]:
     effective_route = route or route_question(question)
     effective_domains = effective_route["domains"] if domains is None else domains
 
     domain_results = [
-        retrieve_domain_hits(question, domain, top_k=top_k)
+        await retrieve_domain_hits(question, domain, top_k=top_k, engine=engine)
         for domain in effective_domains
     ]
     flattened_hits = [hit for result in domain_results for hit in result["_hits"]]
@@ -150,7 +143,6 @@ def run_question_workflow(
         "workflow": workflow,
         "question": question,
         "route": effective_route,
-        "langchain_runtime": build_langchain_runtime(),
         "retrieval": public_domain_results,
         "answer": response["answer"],
         "structured_output": response["structured_output"],
@@ -158,31 +150,20 @@ def run_question_workflow(
     }
 
 
-def retrieve_domain_hits(
-    question: str, domain: str, *, top_k: int = 4
+async def retrieve_domain_hits(
+    question: str, domain: str, *, top_k: int = 4, engine: AsyncEngine = None
 ) -> dict[str, Any]:
     documents = load_domain_documents(domain)
     chunks = chunk_documents(documents)
 
-    pgvector_result = retrieve_with_pgvector(
-        question, doc_type=map_domain_to_doc_type(domain), top_k=top_k
+    hits = await retrieve_with_pgvector(
+        question, doc_type=map_domain_to_doc_type(domain), top_k=top_k, engine=engine
     )
-    if pgvector_result.get("status") == "ok":
-        hits = pgvector_result["hits"]
-        backend = "pgvector"
-        reason = None
-    else:
-        retriever = InMemoryRetriever(chunks)
-        hits = retriever.retrieve(question, top_k=top_k)
-        backend = "in_memory"
-        reason = pgvector_result.get("reason")
 
     return {
         "domain": domain,
         "doc_count": len(documents),
         "chunk_count": len(chunks),
-        "backend": backend,
-        "fallback_reason": reason,
         "hits": [serialize_hit(hit) for hit in hits],
         "_hits": hits,
     }
@@ -312,7 +293,7 @@ def format_hits_for_prompt(hits: list[RetrievedPassage]) -> str:
     lines = []
     for index, hit in enumerate(hits[:4], start=1):
         lines.append(
-            f"[{index}] ({hit.doc_type}, {hit.backend}, score={hit.score:.4f}) {hit.title}"
+            f"[{index}] ({hit.doc_type}, score={hit.score:.4f}) {hit.title}"
             f"\n{truncate_text(hit.content, 280)}"
         )
     return "\n\n".join(lines)
@@ -323,13 +304,6 @@ def truncate_text(text: str, limit: int) -> str:
     if len(compact) <= limit:
         return compact
     return f"{compact[: limit - 3].rstrip()}..."
-
-
-def build_langchain_runtime() -> dict[str, Any]:
-    return {
-        "available": True,
-        "mode": "langchain-core",
-    }
 
 
 def map_domain_to_doc_type(domain: str) -> str:
@@ -346,7 +320,6 @@ def serialize_hit(hit: RetrievedPassage) -> dict[str, Any]:
         "doc_type": hit.doc_type,
         "title": hit.title,
         "score": round(hit.score, 4),
-        "backend": hit.backend,
         "metadata": dict(hit.metadata),
         "content_preview": truncate_text(hit.content, 220),
     }
