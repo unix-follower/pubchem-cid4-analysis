@@ -1,13 +1,14 @@
 import logging
 from asyncio import Lock
 
-from sqlalchemy import text
+from sqlalchemy import text, event
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
     AsyncSessionTransaction,
     create_async_engine,
 )
+from pgvector.psycopg import register_vector_async
 
 from src import constants
 from src.config.config import Settings
@@ -30,6 +31,10 @@ class AsyncDatabaseConnection:
                     self._engine = create_async_engine(
                         self._settings.db_url,
                     )
+
+            @event.listens_for(self._engine.sync_engine, "connect")
+            def connect(dbapi_connection, connection_record):
+                dbapi_connection.run_async(register_vector_async)
 
             return self._engine
         except Exception as e:

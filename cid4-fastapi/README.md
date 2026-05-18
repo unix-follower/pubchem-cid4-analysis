@@ -41,7 +41,12 @@ curl -vk https://localhost:18443/api/v1/bioactivity
 curl -vk https://localhost:18443/api/v1/taxonomy
 curl -vk https://localhost:18443/api/v1/reaction-network
 curl -vk $SERVER_URL/api/v1/graph/oxygen-neighbors
-```
+curl -vk $SERVER_URL/api/v1/graph/oxygen-to-nitrogen-shortest-path
+curl -vk $SERVER_URL/api/v1/graph/compound-assay-target-taxon-relation
+curl -vk $SERVER_URL/api/v1/graph/compound-pathway-reaction-enzyme
+curl -vk $SERVER_URL/api/v1/graph/count-organisms-by-source
+curl -vk $SERVER_URL/api/v1/lang/ask
+
 curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
 ```
 

@@ -118,7 +118,12 @@ class FastApiServerTests(unittest.TestCase):
                 service_name="cid4-fastapi-test",
             )
         )
-        with mock.patch.dict(os.environ, {constants.DB_URL: "postgresql+psycopg_async://user:password@localhost:5432/cid4_analysis?options=-csearch_path%3Dcid4,public,ag_catalog"}):
+        with mock.patch.dict(
+            os.environ,
+            {
+                constants.DB_URL: "postgresql+psycopg_async://user:password@localhost:5432/cid4_analysis?options=-csearch_path%3Dcid4,public,ag_catalog"
+            },
+        ):
             cls.client = TestClient(create_app(cls.data_dir, cls.observability))
 
     @classmethod

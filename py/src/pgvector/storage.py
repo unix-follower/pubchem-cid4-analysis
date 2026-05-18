@@ -64,29 +64,6 @@ ON CONFLICT (doc_id) DO UPDATE SET
 """.strip()
 
 
-def build_similarity_query_sql(metadata_filters: dict[str, str] | None = None) -> str:
-    where_clauses = ["TRUE"]
-    if metadata_filters:
-        for _ in metadata_filters:
-            where_clauses.append("metadata ->> %s = %s")
-
-    where_sql = " AND ".join(where_clauses)
-    return f"""
-SELECT
-    doc_id,
-    doc_type,
-    title,
-    source_file,
-    source_row_id,
-    metadata,
-    1 - (embedding <=> %s) AS similarity
-FROM documents
-WHERE {where_sql}
-ORDER BY embedding <=> %s
-LIMIT %s
-""".strip()
-
-
 def prepare_upsert_rows(
     documents: list[VectorDocument],
     embedding_provider: HashedTokenEmbeddingProvider,

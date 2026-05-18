@@ -10,7 +10,6 @@ from src.config import log_settings
 from src.langchain_cid4.workflows import (
     run_agent_workflow,
     run_assay_workflow,
-    run_literature_workflow,
     run_pathway_workflow,
     run_taxonomy_workflow,
 )
@@ -32,7 +31,6 @@ def write_json(path: Path, payload: dict) -> None:
 def write_langchain_analysis() -> None:
     output_directory = resolve_output_directory()
     outputs = {
-        "cid4_langchain.literature.summary.json": run_literature_workflow(),
         "cid4_langchain.assay.summary.json": run_assay_workflow(),
         "cid4_langchain.pathway.summary.json": run_pathway_workflow(),
         "cid4_langchain.taxonomy.summary.json": run_taxonomy_workflow(),

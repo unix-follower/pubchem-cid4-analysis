@@ -15,7 +15,6 @@ from .graphs import (
     build_organism_graph,
     build_pathway_reaction_graph,
 )
-from .queries import build_query_catalog
 from .storage import ingest_graph
 
 
@@ -50,7 +49,6 @@ def build_age_summary() -> dict:
     organism_graph = build_organism_graph("cid_4.dot", "pubchem_cid_4_consolidatedcompoundtaxonomy.csv")
     pathway_graph = build_pathway_reaction_graph("pubchem_cid_4_pathway.csv", "pubchem_cid_4_pathwayreaction.csv")
     assay_graph = build_assay_graph("pubchem_cid_4_bioactivity.csv")
-    query_catalog = build_query_catalog()
     ingestion_result = ingest_graph(molecular_graph)
 
     return {
@@ -62,7 +60,6 @@ def build_age_summary() -> dict:
             "assay": assay_graph.to_summary(),
         },
         "database": ingestion_result,
-        "query_catalog": query_catalog,
         "recommended_workflows": [
             "molecular graph traversal over atoms and bonds",
             "compound-to-organism graph exploration from cid_4.dot and taxonomy CSV",

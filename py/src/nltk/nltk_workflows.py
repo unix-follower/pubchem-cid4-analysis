@@ -5,12 +5,15 @@ from collections.abc import Iterable
 from math import log2
 from typing import Any
 
-from .datasets import (
+from src.pgvector.datasets import (
     load_bioactivity_frame,
     load_literature_frame,
     load_patent_frame,
     load_pathway_reaction_frame,
     load_taxonomy_frame,
+)
+
+from .datasets import (
     load_toxicology_frame,
 )
 from .text_processing import (
