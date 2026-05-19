@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import argparse
 import uvicorn
 
@@ -7,7 +5,7 @@ from src.api.routes import create_app
 
 from src.config import log_settings
 from cid4_observability import initialize, resolve_observability_config, shutdown
-from src.config.config import resolve_data_dir, resolve_server_config
+from src.cid4_api import resolve_data_dir, resolve_server_config
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
@@ -22,7 +20,7 @@ def main() -> None:
     args = build_argument_parser().parse_args()
 
     data_dir = resolve_data_dir()
-    server_config = resolve_server_config(data_dir)
+    server_config = resolve_server_config()
     observability_config = resolve_observability_config(
         "FASTAPI", "pubchem-cid4-fastapi"
     )

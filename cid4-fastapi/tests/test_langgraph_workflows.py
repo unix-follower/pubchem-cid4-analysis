@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import sys
 import unittest
 from pathlib import Path
@@ -49,13 +50,15 @@ class LangGraphWorkflowTests(unittest.TestCase):
         self.assertIn("SMP0002032", ids["pathway_accession"])
 
     def test_router_question_routes_product_use_queries(self) -> None:
-        output = run_router_question("List likely product-use categories for CID 4")
+        output = asyncio.run(
+            run_router_question("List likely product-use categories for CID 4")
+        )
 
         self.assertIn("product_use", output["route"]["domains"])
         self.assertTrue(output["validation"]["passed"])
 
     def test_assay_literature_workflow_collects_both_evidence_families(self) -> None:
-        output = run_assay_literature_workflow()
+        output = asyncio.run(run_assay_literature_workflow())
 
         self.assertTrue(output["validation"]["passed"])
         self.assertTrue(output["assay_hits"])
@@ -66,7 +69,7 @@ class LangGraphWorkflowTests(unittest.TestCase):
         )
 
     def test_pathway_taxonomy_workflow_collects_accessions_and_taxonomy(self) -> None:
-        output = run_pathway_taxonomy_workflow()
+        output = asyncio.run(run_pathway_taxonomy_workflow())
 
         self.assertTrue(output["validation"]["passed"])
         self.assertTrue(output["pathway_hits"])
