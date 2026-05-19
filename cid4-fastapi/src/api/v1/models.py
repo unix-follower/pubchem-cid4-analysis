@@ -1,13 +1,14 @@
 from typing import Literal
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 from src.ml.language_model_common import (
     DEFAULT_MODEL_NAME,
     SUPPORTED_LLM_DOMAINS,
 )
+from src.api.common import CamelCaseDtoModel
 
 
-class TrainLanguageModelRequest(BaseModel):
+class TrainLanguageModelRequest(CamelCaseDtoModel):
     framework: Literal["pytorch", "tensorflow"] = Field(default="pytorch")
     domains: list[str] = Field(default_factory=lambda: list(SUPPORTED_LLM_DOMAINS))
     output_name: str = Field(
@@ -27,7 +28,7 @@ class TrainLanguageModelRequest(BaseModel):
     seed: int = Field(default=17, ge=0, le=2_147_483_647)
 
 
-class GenerateLanguageModelRequest(BaseModel):
+class GenerateLanguageModelRequest(CamelCaseDtoModel):
     framework: Literal["pytorch", "tensorflow"] = Field(default="pytorch")
     prompt: str = Field(min_length=1, max_length=4000)
     model_name: str = Field(
@@ -40,3 +41,9 @@ class GenerateLanguageModelRequest(BaseModel):
     temperature: float = Field(default=0.8, ge=0.0, le=5.0)
     top_k: int = Field(default=8, ge=0, le=128)
     seed: int | None = Field(default=None, ge=0, le=2_147_483_647)
+
+
+class NLPRequest(CamelCaseDtoModel):
+    question: str
+    domains: list = Field(default=[])
+    workflow: str

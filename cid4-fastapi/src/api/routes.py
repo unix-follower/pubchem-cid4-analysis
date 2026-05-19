@@ -23,7 +23,7 @@ from src.api.v1 import (
     structure,
     reaction_network,
     graph,
-    langchain,
+    nlp,
 )
 from src.ml.tensorflow_language_model import TensorFlowLanguageModelService
 from src.ml.torch_language_model import PyTorchLanguageModelService
@@ -122,7 +122,7 @@ def create_app(data_dir: Path, observability: Runtime | None = None) -> FastAPI:
     app.include_router(structure.router)
     app.include_router(reaction_network.router)
     app.include_router(graph.router)
-    app.include_router(langchain.router)
+    app.include_router(nlp.router)
 
     return app
 

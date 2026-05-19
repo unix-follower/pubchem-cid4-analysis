@@ -1,6 +1,5 @@
-from __future__ import annotations
-
 from typing import Any, TypedDict
+from sqlalchemy.ext.asyncio import AsyncEngine
 
 
 class GraphState(TypedDict, total=False):
@@ -23,6 +22,7 @@ class GraphState(TypedDict, total=False):
     validation: dict[str, Any]
     trace: list[str]
     langgraph_runtime: dict[str, Any]
+    engine: AsyncEngine
 
 
 SUPPORTING_ID_KEYS = (
@@ -57,7 +57,6 @@ def build_initial_state(
         "validated_answer": "",
         "validation": {"passed": False, "issues": []},
         "trace": [],
-        "langgraph_runtime": {},
     }
 
 

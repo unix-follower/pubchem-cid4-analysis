@@ -67,51 +67,6 @@ def route_question(question: str) -> dict[str, Any]:
     }
 
 
-def run_assay_workflow() -> dict[str, Any]:
-    question = "Which CID 4 assays involve estrogen receptor signaling?"
-    return run_question_workflow(question, domains=["assay"], workflow="assay-qa")
-
-
-def run_pathway_workflow() -> dict[str, Any]:
-    question = "Which pathways involving CID 4 are linked to Trypanosoma brucei?"
-    return run_question_workflow(
-        question, domains=["pathway"], workflow="pathway-explainer"
-    )
-
-
-def run_taxonomy_workflow() -> dict[str, Any]:
-    question = "Which organisms in the dataset are birds?"
-    return run_question_workflow(
-        question, domains=["taxonomy"], workflow="taxonomy-assistant"
-    )
-
-
-def run_agent_workflow() -> dict[str, Any]:
-    sample_questions = [
-        "Find literature and assays related to Plasmodium falciparum",
-        "Summarize pathway evidence for CID 4 in Trypanosoma brucei",
-        "List likely product-use categories and supporting descriptions",
-    ]
-    outputs = []
-    for question in sample_questions:
-        route = route_question(question)
-        outputs.append(
-            run_question_workflow(
-                question,
-                domains=route["domains"],
-                workflow="multi-tool-agent",
-                route=route,
-                top_k=2,
-            )
-        )
-
-    return {
-        "workflow": "multi-tool-agent",
-        "question_count": len(outputs),
-        "questions": outputs,
-    }
-
-
 async def run_question_workflow(
     question: str,
     *,

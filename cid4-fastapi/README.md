@@ -1,5 +1,7 @@
 ## FastAPI server
 ```bash
+# export SERVER_HOST='0.0.0.0'
+# export SERVER_PORT=8443
 export DATA_DIR="$(pwd)/../data"
 export TLS_CERT_FILE=$DATA_DIR/out/crypto/cid4_crypto.demo.cert.pem
 export TLS_KEY_FILE=$DATA_DIR/out/crypto/cid4_crypto.demo.key.pem
@@ -12,9 +14,6 @@ uv run python -Xfrozen_modules=off -m debugpy --listen 0.0.0.0:5678 src/cid4_fas
 export SERVER_URL=https://localhost:18443
 ```
 
-TLS configuration:
-- `FASTAPI_HOST` or `SERVER_HOST` defaults to `0.0.0.0`
-- `FASTAPI_PORT`, `SERVER_PORT`, or `PORT` defaults to `8443`
 - `FASTAPI_OBSERVABILITY_ENABLED` or `OBSERVABILITY_ENABLED` toggle the FastAPI observability runtime
 - `FASTAPI_LOGGING_ENABLED`, `FASTAPI_METRICS_ENABLED`, and `FASTAPI_TRACING_ENABLED` override the generic observability toggles for FastAPI
 - `FASTAPI_LOG_LEVEL` overrides the observability logger level
@@ -26,6 +25,7 @@ If explicit TLS files are not set, the server falls back to the PEM certificate,
 ```bash
 curl -vk $SERVER_URL/health/liveness
 curl -vk $SERVER_URL/health/readiness
+curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
 
 curl -vk https://localhost:18443/api/v1/auth/me
 curl -vk https://localhost:18443/api/v1/auth/basic/login
@@ -45,9 +45,68 @@ curl -vk $SERVER_URL/api/v1/graph/oxygen-to-nitrogen-shortest-path
 curl -vk $SERVER_URL/api/v1/graph/compound-assay-target-taxon-relation
 curl -vk $SERVER_URL/api/v1/graph/compound-pathway-reaction-enzyme
 curl -vk $SERVER_URL/api/v1/graph/count-organisms-by-source
-curl -vk $SERVER_URL/api/v1/lang/ask
-
-curl -s http://localhost:9464/metrics | grep -E 'cid4_http_requests_total|cid4_http_request_errors_total|cid4_http_request_duration_milliseconds|cid4_process_up'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/ask -H 'Content-Type: application/json' \
+  -d '{
+    "question": "What does the literature say about isopropanolamine fungicide activity?",
+    "domains": ["literature"],
+    "workflow": "literature-rag"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/ask -H 'Content-Type: application/json' \
+  -d '{
+    "question": "Which CID 4 assays involve estrogen receptor signaling?",
+    "domains": ["assay"],
+    "workflow": "assay-qa"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/ask -H 'Content-Type: application/json' \
+  -d '{
+    "question": "Which pathways involving CID 4 are linked to Trypanosoma brucei?",
+    "domains": ["pathway"],
+    "workflow": "pathway-explainer"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/ask -H 'Content-Type: application/json' \
+  -d '{
+    "question": "Which organisms in the dataset are birds?",
+    "domains": ["taxonomy"],
+    "workflow": "taxonomy-assistant"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/ask -H 'Content-Type: application/json' \
+  -d '{
+    "question": "Find literature and assays related to Plasmodium falciparum",
+    "domains": ["literature", "assay"],
+    "workflow": "multi-tool-agent"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/ask -H 'Content-Type: application/json' \
+  -d '{
+    "question": "Summarize pathway evidence for CID 4 in Trypanosoma brucei",
+    "domains": ["pathway"],
+    "workflow": "multi-tool-agent"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/ask -H 'Content-Type: application/json' \
+  -d '{
+    "question": "List likely product-use categories and supporting descriptions",
+    "domains": [],
+    "workflow": "multi-tool-agent"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/execute-graph -H 'Content-Type: application/json' \
+  -d '{
+    "question": "Find assays related to Plasmodium falciparum and summarize supporting literature",
+    "workflow": "assay-plus-literature"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/execute-graph -H 'Content-Type: application/json' \
+  -d '{
+    "question": "What pathway evidence links CID 4 to Trypanosoma brucei?",
+    "workflow": "pathway-plus-taxonomy"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/execute-graph -H 'Content-Type: application/json' \
+  -d '{
+    "question": "List likely product-use categories for CID 4 while keeping the answer grounded in the compound record",
+    "workflow": "compound-context-assistant"
+    }'
+curl -vk -X POST $SERVER_URL/api/v1/nlp/execute-graph -H 'Content-Type: application/json' \
+  -d '{
+    "question": "",
+    "workflow": "router-graph"
+    }'
 ```
 
 Example requests:
@@ -231,27 +290,6 @@ curl -kv https://localhost:18443/mcp/ \
     }
   }' | jq
 ```
-
-## LangChain runner
-- literature RAG over titles, abstracts, and citation metadata
-- assay QA over bioactivity rows with metadata-aware retrieval
-- pathway and reaction explanation
-- taxonomy lookup and explanation
-- a small rule-based multi-tool router for multi-source CID 4 questions
-
-```bash
-export DATA_DIR="$(pwd)/../data"
-uv run python -m src.cid4_langchain
-```
-
-If LangChain is not installed or `PGVECTOR_DSN` is not set, the runner still completes. It falls back to an in-memory hashed-token retriever and writes explicit runtime metadata showing whether the full LangChain path was active.
-
-Expected outputs under `data/out`:
-- `cid4_langchain.literature.summary.json`
-- `cid4_langchain.assay.summary.json`
-- `cid4_langchain.pathway.summary.json`
-- `cid4_langchain.taxonomy.summary.json`
-- `cid4_langchain.agent.summary.json`
 
 ## LangGraph runner
 Adds:

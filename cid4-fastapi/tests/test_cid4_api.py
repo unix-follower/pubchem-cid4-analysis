@@ -40,11 +40,7 @@ class Cid4ApiTests(unittest.TestCase):
                 },
                 clear=False,
             ):
-                config = resolve_server_config(
-                    data_dir,
-                    preferred_host_env_names=("ASYNCIO_HOST",),
-                    preferred_port_env_names=("ASYNCIO_PORT",),
-                )
+                config = resolve_server_config()
 
             self.assertEqual(config.host, "127.0.0.1")
             self.assertEqual(config.port, 9559)

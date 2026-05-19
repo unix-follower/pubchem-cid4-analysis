@@ -1,13 +1,13 @@
-from __future__ import annotations
-
 import json
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+from sqlalchemy.ext.asyncio import AsyncEngine
 from langgraph.graph import StateGraph, START, END
 
 from src.utils import env_utils
+from src.api.v1.models import NLPRequest
 from src.langchain_cid4.workflows import retrieve_domain_hits, route_question
 from src.langgraph_cid4.state import (
     GraphState,
@@ -18,7 +18,15 @@ from src.langgraph_cid4.state import (
 )
 
 
-def run_router_workflow() -> dict[str, Any]:
+DEFAULT_COMPOUND_TITLE = "CID 4"
+
+
+GraphNode = Callable[[GraphState], dict[str, Any] | Awaitable[dict[str, Any]]]
+
+
+async def run_router_workflow(
+    nlp_request: NLPRequest, engine: AsyncEngine
+) -> dict[str, Any]:
     questions = [
         "Find literature about isopropanolamine and fungicide activity",
         "Which CID 4 assays involve estrogen receptor signaling?",
@@ -26,23 +34,23 @@ def run_router_workflow() -> dict[str, Any]:
         "Which organisms in the dataset are birds?",
         "List likely product-use categories for CID 4",
     ]
-    question_outputs = [run_router_question(question) for question in questions]
-    runtime = (
-        question_outputs[0]["langgraph_runtime"]
-        if question_outputs
-        else build_langgraph_runtime()
-    )
+    question_outputs = [
+        await run_router_question(question, engine) for question in questions
+    ]
     return {
-        "workflow": "router-graph",
-        "langgraph_runtime": runtime,
+        "workflow": nlp_request.workflow,
         "question_count": len(question_outputs),
         "questions": question_outputs,
     }
 
 
-def run_router_question(question: str) -> dict[str, Any]:
-    state = execute_graph(
-        build_initial_state(question, "router-graph", question_type="router"),
+async def run_router_question(question: str, engine: AsyncEngine) -> dict[str, Any]:
+    initial_state = build_initial_state(
+        question, "router-graph", question_type="router"
+    )
+    initial_state["engine"] = engine
+    state = await execute_graph(
+        initial_state,
         [
             ("compound_context", compound_context_node),
             ("router", router_node),
@@ -54,12 +62,17 @@ def run_router_question(question: str) -> dict[str, Any]:
     return finalize_state(state)
 
 
-def run_assay_literature_workflow() -> dict[str, Any]:
-    question = "Find assays related to Plasmodium falciparum and summarize supporting literature"
-    state = execute_graph(
-        build_initial_state(
-            question, "assay-plus-literature", question_type="assay_plus_literature"
-        ),
+async def run_assay_literature_workflow(
+    nlp_request: NLPRequest, engine: AsyncEngine
+) -> dict[str, Any]:
+    initial_state = build_initial_state(
+        nlp_request.question,
+        nlp_request.workflow,
+        question_type="assay_plus_literature",
+    )
+    initial_state["engine"] = engine
+    state = await execute_graph(
+        initial_state,
         [
             ("compound_context", compound_context_node),
             ("router", router_node),
@@ -72,11 +85,12 @@ def run_assay_literature_workflow() -> dict[str, Any]:
     return finalize_state(state)
 
 
-def run_pathway_taxonomy_workflow() -> dict[str, Any]:
-    question = "What pathway evidence links CID 4 to Trypanosoma brucei?"
-    state = execute_graph(
+async def run_pathway_taxonomy_workflow(nlp_request: NLPRequest) -> dict[str, Any]:
+    state = await execute_graph(
         build_initial_state(
-            question, "pathway-plus-taxonomy", question_type="pathway_plus_taxonomy"
+            nlp_request.question,
+            nlp_request.workflow,
+            question_type="pathway_plus_taxonomy",
         ),
         [
             ("compound_context", compound_context_node),
@@ -90,12 +104,15 @@ def run_pathway_taxonomy_workflow() -> dict[str, Any]:
     return finalize_state(state)
 
 
-def run_compound_context_workflow() -> dict[str, Any]:
-    question = "List likely product-use categories for CID 4 while keeping the answer grounded in the compound record"
-    state = execute_graph(
-        build_initial_state(
-            question, "compound-context-assistant", question_type="compound_context"
-        ),
+async def run_compound_context_workflow(
+    nlp_request: NLPRequest, engine: AsyncEngine
+) -> dict[str, Any]:
+    initial_state = build_initial_state(
+        nlp_request.question, nlp_request.workflow, question_type="compound_context"
+    )
+    initial_state["engine"] = engine
+    state = await execute_graph(
+        initial_state,
         [
             ("compound_context", compound_context_node),
             ("router", router_node),
@@ -107,12 +124,10 @@ def run_compound_context_workflow() -> dict[str, Any]:
     return finalize_state(state)
 
 
-def execute_graph(
+async def execute_graph(
     initial_state: GraphState,
-    steps: list[tuple[str, Callable[[GraphState], dict[str, Any]]]],
+    steps: list[tuple[str, GraphNode]],
 ) -> GraphState:
-    runtime = build_langgraph_runtime()
-
     builder = StateGraph(GraphState)
     previous = START
     for name, node in steps:
@@ -120,17 +135,7 @@ def execute_graph(
         builder.add_edge(previous, name)
         previous = name
     builder.add_edge(previous, END)
-    state = dict(builder.compile().invoke(initial_state))
-
-    state["langgraph_runtime"] = runtime
-    return state
-
-
-def build_langgraph_runtime() -> dict[str, Any]:
-    return {
-        "available": True,
-        "mode": "langgraph",
-    }
+    return dict(await builder.compile().ainvoke(initial_state))
 
 
 def compound_context_node(state: GraphState) -> dict[str, Any]:
@@ -156,28 +161,30 @@ def router_node(state: GraphState) -> dict[str, Any]:
     }
 
 
-def routed_retrieval_node(state: GraphState) -> dict[str, Any]:
+async def routed_retrieval_node(state: GraphState) -> dict[str, Any]:
     updates: dict[str, Any] = {
         "retrieved_rows": list(state.get("retrieved_rows", [])),
         "supporting_ids": dict(state.get("supporting_ids", empty_supporting_ids())),
         "trace": list(state.get("trace", [])),
     }
     for domain in state.get("domains", []):
-        result = retrieve_domain_hits(state["question"], domain, top_k=3)
+        result = await retrieve_domain_hits(
+            state["question"], domain, top_k=3, engine=state["engine"]
+        )
         hits = list(result["hits"])
         updates[get_hits_key(domain)] = hits
         updates["retrieved_rows"].extend(flatten_hits(domain, hits))
         updates["supporting_ids"] = merge_supporting_ids(
             updates["supporting_ids"], collect_supporting_ids(hits)
         )
-        updates["trace"].append(
-            f"retrieved {len(hits)} {domain} hits via {result['backend']}"
-        )
+        updates["trace"].append(f"retrieved {len(hits)} {domain} hits")
     return updates
 
 
-def assay_retrieval_node(state: GraphState) -> dict[str, Any]:
-    result = retrieve_domain_hits(state["question"], "assay", top_k=4)
+async def assay_retrieval_node(state: GraphState) -> dict[str, Any]:
+    result = await retrieve_domain_hits(
+        state["question"], "assay", top_k=4, engine=state["engine"]
+    )
     hits = list(result["hits"])
     return {
         "domains": ["assay", "literature"],
@@ -190,19 +197,19 @@ def assay_retrieval_node(state: GraphState) -> dict[str, Any]:
             state.get("supporting_ids", empty_supporting_ids()),
             collect_supporting_ids(hits),
         ),
-        "trace": append_trace(
-            state, f"retrieved {len(hits)} assay hits via {result['backend']}"
-        ),
+        "trace": append_trace(state, f"retrieved {len(hits)} assay hits"),
     }
 
 
-def literature_followup_node(state: GraphState) -> dict[str, Any]:
+async def literature_followup_node(state: GraphState) -> dict[str, Any]:
     query = build_followup_query(
         state["question"],
         state.get("assay_hits", []),
         keys=["target_name", "taxonomy_id", "aid"],
     )
-    result = retrieve_domain_hits(query, "literature", top_k=4)
+    result = await retrieve_domain_hits(
+        query, "literature", top_k=4, engine=state["engine"]
+    )
     hits = list(result["hits"])
     return {
         "literature_hits": hits,
@@ -216,13 +223,13 @@ def literature_followup_node(state: GraphState) -> dict[str, Any]:
         ),
         "trace": append_trace(
             state,
-            f"retrieved {len(hits)} literature hits via {result['backend']} for follow-up query",
+            f"retrieved {len(hits)} literature hits for follow-up query",
         ),
     }
 
 
-def pathway_retrieval_node(state: GraphState) -> dict[str, Any]:
-    result = retrieve_domain_hits(state["question"], "pathway", top_k=4)
+async def pathway_retrieval_node(state: GraphState) -> dict[str, Any]:
+    result = await retrieve_domain_hits(state["question"], "pathway", top_k=4)
     hits = list(result["hits"])
     return {
         "domains": ["pathway", "taxonomy"],
@@ -235,19 +242,17 @@ def pathway_retrieval_node(state: GraphState) -> dict[str, Any]:
             state.get("supporting_ids", empty_supporting_ids()),
             collect_supporting_ids(hits),
         ),
-        "trace": append_trace(
-            state, f"retrieved {len(hits)} pathway hits via {result['backend']}"
-        ),
+        "trace": append_trace(state, f"retrieved {len(hits)} pathway hits"),
     }
 
 
-def taxonomy_followup_node(state: GraphState) -> dict[str, Any]:
+async def taxonomy_followup_node(state: GraphState) -> dict[str, Any]:
     query = build_followup_query(
         state["question"],
         state.get("pathway_hits", []),
         keys=["taxonomy_id", "pathway_accession", "taxonomy_name", "source_pathway"],
     )
-    result = retrieve_domain_hits(query, "taxonomy", top_k=4)
+    result = await retrieve_domain_hits(query, "taxonomy", top_k=4)
     hits = list(result["hits"])
     return {
         "taxonomy_hits": hits,
@@ -261,7 +266,7 @@ def taxonomy_followup_node(state: GraphState) -> dict[str, Any]:
         ),
         "trace": append_trace(
             state,
-            f"retrieved {len(hits)} taxonomy hits via {result['backend']} for follow-up query",
+            f"retrieved {len(hits)} taxonomy hits for follow-up query",
         ),
     }
 
@@ -269,7 +274,9 @@ def taxonomy_followup_node(state: GraphState) -> dict[str, Any]:
 def generic_synthesis_node(state: GraphState) -> dict[str, Any]:
     titles = collect_top_titles(state)
     route = state.get("route", {})
-    compound_title = state.get("compound_context", {}).get("title", "CID 4")
+    compound_title = state.get("compound_context", {}).get(
+        "title", DEFAULT_COMPOUND_TITLE
+    )
     answer = (
         f"{compound_title} was routed to {', '.join(route.get('domains', [])) or 'literature'} evidence. "
         f"Top grounded records: {titles or 'no hits retrieved'}."
@@ -288,7 +295,9 @@ def assay_literature_synthesis_node(state: GraphState) -> dict[str, Any]:
         *state.get("supporting_ids", {}).get("pmid", [])[:2],
         *state.get("supporting_ids", {}).get("doi", [])[:1],
     ]
-    compound_title = state.get("compound_context", {}).get("title", "CID 4")
+    compound_title = state.get("compound_context", {}).get(
+        "title", DEFAULT_COMPOUND_TITLE
+    )
     answer = (
         f"{compound_title} assay evidence is led by {assay_titles or 'no assay hits'}, "
         f"and the linked literature evidence is led by {literature_titles or 'no literature hits'}. "
@@ -306,7 +315,9 @@ def pathway_taxonomy_synthesis_node(state: GraphState) -> dict[str, Any]:
     taxonomy_titles = join_titles(state.get("taxonomy_hits", []))
     accessions = state.get("supporting_ids", {}).get("pathway_accession", [])[:3]
     taxonomy_ids = state.get("supporting_ids", {}).get("taxonomy_id", [])[:3]
-    compound_title = state.get("compound_context", {}).get("title", "CID 4")
+    compound_title = state.get("compound_context", {}).get(
+        "title", DEFAULT_COMPOUND_TITLE
+    )
     answer = (
         f"{compound_title} pathway evidence is led by {pathway_titles or 'no pathway hits'} and is checked against "
         f"taxonomy evidence from {taxonomy_titles or 'no taxonomy hits'}. "
@@ -324,7 +335,7 @@ def compound_context_synthesis_node(state: GraphState) -> dict[str, Any]:
     product_hits = state.get("product_use_hits", [])
     titles = join_titles(product_hits)
     answer = (
-        f"{context.get('title', 'CID 4')} (CID {context.get('cid', '4')}) is grounded by the compound record summary: "
+        f"{context.get('title', DEFAULT_COMPOUND_TITLE)} (CID {context.get('cid', '4')}) is grounded by the compound record summary: "
         f"{context.get('summary', 'no summary extracted')}. "
         f"Product-use evidence highlights {titles or 'no product-use hits'}."
     )
@@ -398,7 +409,6 @@ def finalize_state(state: GraphState) -> dict[str, Any]:
         "question": state.get("question"),
         "question_type": state.get("question_type"),
         "route": state.get("route", {}),
-        "langgraph_runtime": state.get("langgraph_runtime", {}),
         "compound_context": state.get("compound_context", {}),
         "literature_hits": state.get("literature_hits", []),
         "assay_hits": state.get("assay_hits", []),
@@ -490,7 +500,6 @@ def flatten_hits(domain: str, hits: list[dict[str, Any]]) -> list[dict[str, Any]
                 "doc_type": hit.get("doc_type"),
                 "title": hit.get("title"),
                 "score": hit.get("score"),
-                "backend": hit.get("backend"),
                 "metadata": dict(hit.get("metadata", {})),
             }
         )

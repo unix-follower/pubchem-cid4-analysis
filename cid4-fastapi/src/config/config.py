@@ -3,13 +3,9 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import dataclass
-from pathlib import Path
 from pydantic_settings import BaseSettings
 
 from src import constants
-from src.cid4_api import ServerConfig
-from src.cid4_api import resolve_data_dir as shared_resolve_data_dir
-from src.cid4_api import resolve_server_config as shared_resolve_server_config
 
 
 class Settings(BaseSettings):
@@ -89,18 +85,6 @@ def resolve_security_settings(
         keycloak_realm=env.get("FASTAPI_KEYCLOAK_REALM") or None,
         keycloak_client_id=env.get("FASTAPI_KEYCLOAK_CLIENT_ID") or None,
         keycloak_redirect_uri=env.get("FASTAPI_KEYCLOAK_REDIRECT_URI") or None,
-    )
-
-
-def resolve_data_dir() -> Path:
-    return shared_resolve_data_dir()
-
-
-def resolve_server_config(data_dir: Path) -> ServerConfig:
-    return shared_resolve_server_config(
-        data_dir,
-        preferred_host_env_names=("FASTAPI_HOST",),
-        preferred_port_env_names=("FASTAPI_PORT",),
     )
 
 

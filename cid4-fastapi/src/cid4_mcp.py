@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from src.config import log_settings
 from src.cid4_api import resolve_data_dir
 from src.mcp_cid4.server import create_cid4_mcp_server
