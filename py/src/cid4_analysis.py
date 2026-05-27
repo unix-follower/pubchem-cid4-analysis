@@ -36,7 +36,6 @@ DEFAULT_HILL_AUC_GRID_SIZE = 400
 DEFAULT_POSTERIOR_PRIOR_ALPHA = 1.0
 DEFAULT_POSTERIOR_PRIOR_BETA = 1.0
 DEFAULT_POSTERIOR_CREDIBLE_INTERVAL = 0.95
-DEFAULT_BINOMIAL_TAIL_THRESHOLD = 0.0
 DEFAULT_CHI_SQUARE_EXPECTED_COUNT_THRESHOLD = 5.0
 DEFAULT_SHAPIRO_ALPHA = 0.05
 DEFAULT_SHAPIRO_MAX_SAMPLE_SIZE = 5000
@@ -1164,127 +1163,6 @@ def summarize_activity_aid_type_chi_square_analysis(
     }
 
 
-def build_assay_activity_binomial_dataframe(
-    posterior_df: pd.DataFrame,
-    counts: dict[str, int],
-) -> tuple[pd.DataFrame, dict[str, int]]:
-    assay_df = (
-        posterior_df.groupby("BioAssay_AID", dropna=False)
-        .agg(
-            retained_binary_rows=("Activity", "size"),
-            active_rows=("Activity", lambda values: int(values.eq("Active").sum())),
-            inactive_rows=("Activity", lambda values: int(values.eq("Inactive").sum())),
-            sample_activity_type=("Activity_Type", "first"),
-            sample_target_name=("Target_Name", "first"),
-            sample_bioassay_name=("BioAssay_Name", "first"),
-        )
-        .reset_index()
-    )
-    assay_df["mixed_evidence"] = assay_df["active_rows"].gt(0) & assay_df["inactive_rows"].gt(0)
-    assay_df["assay_activity"] = np.where(assay_df["active_rows"].gt(0), "Active", "Inactive")
-    assay_df = assay_df.sort_values(by=["assay_activity", "BioAssay_AID"]).reset_index(drop=True)
-
-    assay_counts = {
-        **counts,
-        "assay_trials": int(len(assay_df)),
-        "active_assay_trials": int(assay_df["assay_activity"].eq("Active").sum()),
-        "inactive_assay_trials": int(assay_df["assay_activity"].eq("Inactive").sum()),
-        "mixed_evidence_assay_trials": int(assay_df["mixed_evidence"].sum()),
-        "unanimous_active_assay_trials": int((assay_df["active_rows"] > 0).sum() - assay_df["mixed_evidence"].sum()),
-        "unanimous_inactive_assay_trials": int(
-            (assay_df["inactive_rows"] > 0).sum() - assay_df["mixed_evidence"].sum()
-        ),
-    }
-
-    if assay_df.empty:
-        raise ValueError("No assay-level Active/Inactive trials were found in the bioactivity dataset")
-
-    return assay_df, assay_counts
-
-
-def build_bioactivity_binomial_pmf_dataframe(assay_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, float | int]]:
-    assay_trials = int(len(assay_df))
-    active_assay_trials = int(assay_df["assay_activity"].eq("Active").sum())
-    success_probability = active_assay_trials / assay_trials
-    k_values = np.arange(assay_trials + 1, dtype=np.int64)
-    pmf_values = stats.binom.pmf(k_values, assay_trials, success_probability)
-    cumulative_leq_values = stats.binom.cdf(k_values, assay_trials, success_probability)
-    cumulative_geq_values = stats.binom.sf(
-        np.maximum(k_values - 1, DEFAULT_BINOMIAL_TAIL_THRESHOLD), assay_trials, success_probability
-    )
-    pmf_df = pd.DataFrame(
-        {
-            "k_active": k_values,
-            "probability": pmf_values,
-            "cumulative_probability_leq_k": cumulative_leq_values,
-            "cumulative_probability_geq_k": cumulative_geq_values,
-        }
-    )
-
-    return pmf_df, {
-        "assay_trials": assay_trials,
-        "active_assay_trials": active_assay_trials,
-        "success_probability_active_assay": float(success_probability),
-        "observed_pmf_at_active_assay_count": float(pmf_values[active_assay_trials]),
-        "observed_cumulative_probability_leq_active_assay_count": float(cumulative_leq_values[active_assay_trials]),
-        "observed_cumulative_probability_geq_active_assay_count": float(cumulative_geq_values[active_assay_trials]),
-    }
-
-
-def summarize_bioactivity_binomial_analysis(
-    assay_df: pd.DataFrame,
-    pmf_df: pd.DataFrame,
-    counts: dict[str, int],
-    binomial_metrics: dict[str, float | int],
-) -> dict:
-    assay_trials = int(binomial_metrics["assay_trials"])
-    active_assay_trials = int(binomial_metrics["active_assay_trials"])
-    success_probability = float(binomial_metrics["success_probability_active_assay"])
-    representative_positions = sorted({0, len(assay_df) // 2, len(assay_df) - 1})
-    representative_rows = assay_df.iloc[representative_positions]
-
-    return {
-        "row_counts": counts,
-        "binomial": {
-            "parameters": {
-                "n_assays": assay_trials,
-                "observed_active_assays": active_assay_trials,
-                "success_probability_active_assay": success_probability,
-            },
-            "summary": {
-                "pmf_at_observed_active_assay_count": float(binomial_metrics["observed_pmf_at_active_assay_count"]),
-                "cumulative_probability_leq_observed_active_assay_count": float(
-                    binomial_metrics["observed_cumulative_probability_leq_active_assay_count"]
-                ),
-                "cumulative_probability_geq_observed_active_assay_count": float(
-                    binomial_metrics["observed_cumulative_probability_geq_active_assay_count"]
-                ),
-                "binomial_mean_active_assays": float(assay_trials * success_probability),
-                "binomial_variance_active_assays": float(
-                    assay_trials * success_probability * (1.0 - success_probability)
-                ),
-                "pmf_probability_sum": float(pmf_df["probability"].sum()),
-            },
-        },
-        "analysis": {
-            "representative_assays": [
-                {
-                    "BioAssay_AID": int(row["BioAssay_AID"]),
-                    "assay_activity": str(row["assay_activity"]),
-                    "retained_binary_rows": int(row["retained_binary_rows"]),
-                    "active_rows": int(row["active_rows"]),
-                    "inactive_rows": int(row["inactive_rows"]),
-                    "mixed_evidence": bool(row["mixed_evidence"]),
-                    "Activity_Type": str(row["sample_activity_type"]),
-                    "Target_Name": str(row["sample_target_name"]),
-                    "BioAssay_Name": str(row["sample_bioassay_name"]),
-                }
-                for _, row in representative_rows.iterrows()
-            ],
-        },
-    }
-
-
 def build_pic50_dataframe(bioactivity_df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, int]]:
     activity_type = bioactivity_df["Activity_Type"].astype("string").str.strip().str.upper()
     activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
@@ -2056,27 +1934,6 @@ def write_activity_aid_type_chi_square_analysis(filename: str):
     log.info("Activity vs Aid_Type chi-square summary written to %s", summary_output_path)
 
 
-def write_bioactivity_binomial_analysis(filename: str):
-    work_directory = env_utils.get_data_dir()
-    out_dir = get_output_directory(work_directory)
-    bioactivity_df = load_bioactivity_dataframe(filename)
-    posterior_df, posterior_counts = build_activity_posterior_dataframe(bioactivity_df)
-    assay_df, assay_counts = build_assay_activity_binomial_dataframe(posterior_df, posterior_counts)
-    pmf_df, binomial_metrics = build_bioactivity_binomial_pmf_dataframe(assay_df)
-    summary = summarize_bioactivity_binomial_analysis(assay_df, pmf_df, assay_counts, binomial_metrics)
-    output_stem = Path(filename).stem
-    records_output_path = Path(out_dir) / f"{output_stem}.activity_binomial_pmf.csv"
-    summary_output_path = Path(out_dir) / f"{output_stem}.activity_binomial.summary.json"
-
-    pmf_df.to_csv(records_output_path, index=False)
-
-    with summary_output_path.open("w", encoding=UTF_8) as file:
-        json.dump(summary, file, indent=2)
-
-    log.info("Bioactivity binomial PMF rows written to %s", records_output_path)
-    log.info("Bioactivity binomial summary written to %s", summary_output_path)
-
-
 def write_adjacency_matrix(filename: str) -> pd.DataFrame:
     work_directory = env_utils.get_data_dir()
     out_dir = get_output_directory(work_directory)
@@ -2273,7 +2130,6 @@ def main():
     write_activity_value_statistics_analysis(bioactivity_filename)
     write_bioactivity_posterior_analysis(bioactivity_filename)
     write_activity_aid_type_chi_square_analysis(bioactivity_filename)
-    write_bioactivity_binomial_analysis(bioactivity_filename)
 
     if quantum_analysis_enabled():
         from src import cid4_quantum

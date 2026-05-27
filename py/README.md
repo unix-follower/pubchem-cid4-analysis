@@ -10,7 +10,7 @@ uv run python src/cid4_analysis.py
 ```bash
 uv run jupyter lab --allow-root --ip=0.0.0.0 --NotebookApp.allow_origin='*'
 ```
-http://192.168.64.23:8888/lab?token=<token>
+http://192.168.64.2:8888/lab?token=<token>
 
 ### Ingest pgvector data
 ```bash
@@ -52,7 +52,7 @@ uv run python src/cid4_analysis.py
 ## Apache AGE runner
 ```bash
 # pwd -> ...<git repo root>/py
-uv run python -m debugpy --listen 5678 --wait-for-client src.age_graph.main
+uv run python -m debugpy --listen 5678 src.age_graph.main
 # or
 uv run python -m src.age_graph.main
 ```
@@ -82,27 +82,9 @@ The runner currently compares these tasks across libraries:
 The summaries are written to `data/out/cid4_ml.xgboost_suite.summary.json`. The boosted-tree features go beyond the constant molecular descriptors and basic assay encodings by adding missingness flags for `Protein_Accession`, `Gene_ID`, `PMID`, and `Activity_Value`, numeric taxonomy IDs, encoded `Bioassay_Data_Source`, and keyword flags derived from `BioAssay_Name`, `Target_Name`, and assay source text.
 
 ## NLTK runner
-It writes JSON summaries into `data/out` for:
-- literature corpus term and collocation analysis
-- literature-versus-patent vocabulary comparison
-- bioactivity assay and target vocabulary extraction
-- taxonomy name normalization and vocabulary cleanup
-- toxicology short-text phrase extraction
-- pathway and reaction wording analysis
-
-The runner is chemistry-aware at the token-normalization level. It preserves tokens such as `1-amino-2-propanol`, `NADH`, `IC50`, `ER-alpha`, `PMID`, `DOI`, `AID`, `CID`, and `SID` instead of over-cleaning them as generic English text.
-
-Expected outputs under `data/out`:
-- `cid4_nltk.literature.summary.json`
-- `cid4_nltk.literature_vs_patent.summary.json`
-- `cid4_nltk.bioactivity.summary.json`
-- `cid4_nltk.taxonomy.summary.json`
-- `cid4_nltk.toxicology.summary.json`
-- `cid4_nltk.pathway.summary.json`
-
 ```bash
 # pwd -> ...<git repo root>/py
-uv run python -m debugpy --listen 5678 --wait-for-client src.nltk.main
+uv run python -m debugpy --listen 5678 src.nltk.main
 # or
 uv run python -m src.nltk.main
 ```

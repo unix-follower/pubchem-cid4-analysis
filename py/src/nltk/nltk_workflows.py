@@ -5,6 +5,12 @@ from collections.abc import Iterable
 from math import log2
 from typing import Any
 
+from nltk.metrics.association import BigramAssocMeasures
+from nltk.probability import FreqDist
+from nltk.stem import PorterStemmer
+
+import nltk
+from nltk import collocations
 from src.pgvector.datasets import (
     load_bioactivity_frame,
     load_literature_frame,
@@ -33,21 +39,14 @@ TOP_DISTINCTIVE_LIMIT = 12
 
 
 def run_literature_workflow() -> dict[str, Any]:
-    nltk_module = import_nltk()
-    if isinstance(nltk_module, dict):
-        skipped = dict(nltk_module)
-        skipped["workflow"] = "literature"
-        return skipped
-
     frame = load_literature_frame()
     documents = build_document_text(
         frame,
         ["Title", "Abstract", "Keywords", "Citation", "Subject", "Publication_Name"],
     )
-    analysis = analyze_documents(nltk_module, documents)
+    analysis = analyze_documents(documents)
     analysis.update(
         {
-            "status": "ok",
             "workflow": "literature",
             "row_count": int(len(frame)),
             "document_count": int(len(documents)),
@@ -62,22 +61,15 @@ def run_literature_workflow() -> dict[str, Any]:
 
 
 def run_literature_vs_patent_workflow() -> dict[str, Any]:
-    nltk_module = import_nltk()
-    if isinstance(nltk_module, dict):
-        skipped = dict(nltk_module)
-        skipped["workflow"] = "literature-vs-patent"
-        return skipped
-
     literature_documents = build_document_text(load_literature_frame(), ["Title", "Abstract", "Keywords", "Citation"])
     patent_documents = build_document_text(load_patent_frame(), ["title", "abstract"])
 
-    literature_analysis = analyze_documents(nltk_module, literature_documents)
-    patent_analysis = analyze_documents(nltk_module, patent_documents)
+    literature_analysis = analyze_documents(literature_documents)
+    patent_analysis = analyze_documents(patent_documents)
 
     literature_counter = Counter(literature_analysis["tokens"])
     patent_counter = Counter(patent_analysis["tokens"])
     return {
-        "status": "ok",
         "workflow": "literature-vs-patent",
         "literature_document_count": int(len(literature_documents)),
         "patent_document_count": int(len(patent_documents)),
@@ -91,21 +83,14 @@ def run_literature_vs_patent_workflow() -> dict[str, Any]:
 
 
 def run_bioactivity_workflow() -> dict[str, Any]:
-    nltk_module = import_nltk()
-    if isinstance(nltk_module, dict):
-        skipped = dict(nltk_module)
-        skipped["workflow"] = "bioactivity"
-        return skipped
-
     frame = load_bioactivity_frame()
     documents = build_document_text(
         frame,
         ["BioAssay_Name", "Target_Name", "Activity", "Activity_Type", "citations"],
     )
-    analysis = analyze_documents(nltk_module, documents)
+    analysis = analyze_documents(documents)
     analysis.update(
         {
-            "status": "ok",
             "workflow": "bioactivity",
             "row_count": int(len(frame)),
             "notable_term_counts": count_specific_terms(
@@ -119,19 +104,13 @@ def run_bioactivity_workflow() -> dict[str, Any]:
 
 
 def run_taxonomy_workflow() -> dict[str, Any]:
-    nltk_module = import_nltk()
-    if isinstance(nltk_module, dict):
-        skipped = dict(nltk_module)
-        skipped["workflow"] = "taxonomy"
-        return skipped
-
     frame = load_taxonomy_frame()
     source_tokens: list[str] = []
     normalized_pairs: list[dict[str, str | int]] = []
     for _, row in frame.iterrows():
         organism = normalize_text(row.get("Source_Organism", ""))
         taxonomy = normalize_text(row.get("Taxonomy", ""))
-        tokens = prepare_tokens(nltk_module, f"{organism} {taxonomy}")
+        tokens = prepare_tokens(f"{organism} {taxonomy}")
         source_tokens.extend(tokens)
         taxonomy_id = row.get("Taxonomy_ID", -1)
         if str(taxonomy_id).strip() == "":
@@ -146,7 +125,6 @@ def run_taxonomy_workflow() -> dict[str, Any]:
         )
 
     return {
-        "status": "ok",
         "workflow": "taxonomy",
         "row_count": int(len(frame)),
         "top_terms": stable_top_items(dict(Counter(source_tokens)), TOP_TERM_LIMIT),
@@ -155,18 +133,11 @@ def run_taxonomy_workflow() -> dict[str, Any]:
 
 
 def run_toxicology_workflow() -> dict[str, Any]:
-    nltk_module = import_nltk()
-    if isinstance(nltk_module, dict):
-        skipped = dict(nltk_module)
-        skipped["workflow"] = "toxicology"
-        return skipped
-
     frame = load_toxicology_frame()
     documents = build_document_text(frame, ["Effect", "Route", "Reference"])
-    analysis = analyze_documents(nltk_module, documents)
+    analysis = analyze_documents(documents)
     analysis.update(
         {
-            "status": "ok",
             "workflow": "toxicology",
             "row_count": int(len(frame)),
             "route_counts": normalize_value_counts(frame["Route"]),
@@ -181,18 +152,11 @@ def run_toxicology_workflow() -> dict[str, Any]:
 
 
 def run_pathway_workflow() -> dict[str, Any]:
-    nltk_module = import_nltk()
-    if isinstance(nltk_module, dict):
-        skipped = dict(nltk_module)
-        skipped["workflow"] = "pathway"
-        return skipped
-
     frame = load_pathway_reaction_frame()
     documents = build_document_text(frame, ["Equation", "Reaction", "Control", "Taxonomy"])
-    analysis = analyze_documents(nltk_module, documents)
+    analysis = analyze_documents(documents)
     analysis.update(
         {
-            "status": "ok",
             "workflow": "pathway",
             "row_count": int(len(frame)),
             "notable_term_counts": count_specific_terms(
@@ -205,18 +169,18 @@ def run_pathway_workflow() -> dict[str, Any]:
     return analysis
 
 
-def analyze_documents(nltk_module: Any, documents: Iterable[str]) -> dict[str, Any]:
+def analyze_documents(documents: Iterable[str]) -> dict[str, Any]:
     all_tokens: list[str] = []
     all_stems: list[str] = []
 
     for document in documents:
-        tokens = prepare_tokens(nltk_module, document)
+        tokens = prepare_tokens(document)
         all_tokens.extend(tokens)
-        all_stems.extend(stem_tokens(nltk_module, tokens))
+        all_stems.extend(stem_tokens(tokens))
 
-    frequency = nltk_module.FreqDist(all_tokens)
+    frequency = FreqDist(all_tokens)
     top_terms = [{"term": term, "count": int(count)} for term, count in frequency.most_common(TOP_TERM_LIMIT)]
-    top_bigrams = extract_top_bigrams(nltk_module, all_tokens)
+    top_bigrams = extract_top_bigrams(all_tokens)
 
     return {
         "token_count": int(len(all_tokens)),
@@ -228,16 +192,16 @@ def analyze_documents(nltk_module: Any, documents: Iterable[str]) -> dict[str, A
     }
 
 
-def prepare_tokens(nltk_module: Any, text: str) -> list[str]:
+def prepare_tokens(text: str) -> list[str]:
     raw_tokens = tokenize_preserving_chemistry(text)
     lowered = lowercase_tokens(raw_tokens)
-    stopwords = nltk_stopwords(nltk_module)
+    stopwords = nltk_stopwords()
     filtered = filter_stopwords(lowered, stopwords)
     return [token for token in filtered if token and not token.isdigit()]
 
 
-def stem_tokens(nltk_module: Any, tokens: Iterable[str]) -> list[str]:
-    stemmer = nltk_module.PorterStemmer()
+def stem_tokens(tokens: Iterable[str]) -> list[str]:
+    stemmer = PorterStemmer()
     stems: list[str] = []
     for token in tokens:
         if token in CHEMISTRY_ALLOWLIST or any(character.isdigit() for character in token):
@@ -247,12 +211,12 @@ def stem_tokens(nltk_module: Any, tokens: Iterable[str]) -> list[str]:
     return stems
 
 
-def extract_top_bigrams(nltk_module: Any, tokens: list[str]) -> list[dict[str, int | str | float]]:
+def extract_top_bigrams(tokens: list[str]) -> list[dict[str, int | str | float]]:
     if len(tokens) < 2:
         return []
-    finder = nltk_module.collocations.BigramCollocationFinder.from_words(tokens)
+    finder = collocations.BigramCollocationFinder.from_words(tokens)
     finder.apply_freq_filter(2)
-    scored = finder.score_ngrams(nltk_module.BigramAssocMeasures().pmi)
+    scored = finder.score_ngrams(BigramAssocMeasures().pmi)
     ranked = sorted(scored, key=lambda item: (-float(item[1]), item[0]))[:TOP_BIGRAM_LIMIT]
     return [
         {
@@ -295,36 +259,19 @@ def normalize_value_counts(series: Any) -> dict[str, int]:
     return {str(key): int(value) for key, value in counts.items()}
 
 
-def nltk_stopwords(nltk_module: Any) -> set[str]:
+def nltk_stopwords() -> set[str]:
     try:
-        return set(nltk_module.corpus.stopwords.words("english"))
+        return set(nltk.corpus.stopwords.words("english"))
     except LookupError:
-        download_nltk_resource(nltk_module, "corpora/stopwords", "stopwords")
+        download_nltk_resource("corpora/stopwords", "stopwords")
         try:
-            return set(nltk_module.corpus.stopwords.words("english"))
+            return set(nltk.corpus.stopwords.words("english"))
         except LookupError:
             return set(BASE_STOPWORDS)
 
 
-def import_nltk() -> Any:
+def download_nltk_resource(locator: str, resource_name: str) -> None:
     try:
-        import importlib
-
-        nltk = importlib.import_module("nltk")
-        nltk.FreqDist = importlib.import_module("nltk.probability").FreqDist
-        nltk.PorterStemmer = importlib.import_module("nltk.stem").PorterStemmer
-        nltk.BigramAssocMeasures = importlib.import_module("nltk.metrics.association").BigramAssocMeasures
-        nltk.collocations = importlib.import_module("nltk.collocations")
-        return nltk
-    except (ImportError, ModuleNotFoundError) as exc:
-        return {
-            "status": "skipped",
-            "reason": f"NLTK is not installed in the current environment: {exc}",
-        }
-
-
-def download_nltk_resource(nltk_module: Any, locator: str, resource_name: str) -> None:
-    try:
-        nltk_module.data.find(locator)
+        nltk.data.find(locator)
     except LookupError:
-        nltk_module.download(resource_name, quiet=True)
+        nltk.download(resource_name, quiet=True)
