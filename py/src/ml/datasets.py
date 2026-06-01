@@ -3,8 +3,8 @@ from typing import Any
 import pandas as pd
 from rdkit import Chem
 
-import cid4_analysis
-from ml.common import PreparedDataset
+from src import cid4_analysis
+from .common import PreparedDataset
 
 ATOM_SDF_FILENAME = "Conformer3D_COMPOUND_CID_4(1).sdf"
 BIOACTIVITY_FILENAME = "pubchem_cid_4_bioactivity.csv"
@@ -81,31 +81,6 @@ def encode_categories(series: pd.Series) -> pd.Series:
     category_order = sorted(values.unique().tolist())
     mapping = {value: index for index, value in enumerate(category_order)}
     return values.map(mapping).astype(int)
-
-
-def build_activity_value_regression_dataset(
-    bioactivity_filename: str = BIOACTIVITY_FILENAME,
-    atom_filename: str = ATOM_SDF_FILENAME,
-) -> PreparedDataset:
-    bioactivity_df = cid4_analysis.load_bioactivity_dataframe(bioactivity_filename)
-    activity_value = pd.to_numeric(bioactivity_df["Activity_Value"], errors="coerce")
-    retained_mask = activity_value.notna() & activity_value.gt(0)
-    filtered_df = bioactivity_df.loc[retained_mask].copy()
-    filtered_df["Activity_Value"] = activity_value.loc[retained_mask]
-    atom_feature_df, molecule = build_atom_feature_frame(atom_filename)
-    descriptor_map = build_molecular_descriptors(atom_feature_df, molecule)
-    frame, feature_columns = build_bioactivity_model_frame(filtered_df, descriptor_map)
-
-    return PreparedDataset(
-        name="bioactivity-activity-value-regression",
-        task_type="regression",
-        frame=frame,
-        feature_columns=feature_columns,
-        target_column="Activity_Value",
-        class_names=None,
-        description="Positive numeric Activity_Value regression dataset using "
-        "molecular descriptors and assay metadata.",
-    )
 
 
 def build_molecular_descriptors(atom_feature_df: pd.DataFrame, molecule: Chem.Mol) -> dict[str, Any]:
