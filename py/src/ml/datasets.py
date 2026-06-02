@@ -4,6 +4,7 @@ import pandas as pd
 from rdkit import Chem
 
 from src import cid4_analysis
+
 from .common import PreparedDataset
 
 ATOM_SDF_FILENAME = "Conformer3D_COMPOUND_CID_4(1).sdf"
