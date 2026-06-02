@@ -68,11 +68,6 @@ The current AGE slice covers the main graph families from the README:
 - assay-target graph from `pubchem_cid_4_bioactivity.csv`
 
 ## Machine learning runner
-```sh
-export DATA_DIR="$(pwd)/../data"
-uv run python src/cid4_ml.py
-```
-
 The runner currently compares these tasks across libraries:
 - atom heavy-atom vs hydrogen classification
 - atom O/N/C/H element classification

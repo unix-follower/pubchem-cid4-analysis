@@ -2202,7 +2202,6 @@ requires-dist = [
     { name = "pgvector", specifier = ">=0.4.2" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.3" },
     { name = "rdkit", specifier = ">=2026.3.1" },
-    { name = "scikit-learn", specifier = ">=1.7.1" },
     { name = "scikit-learn", specifier = ">=1.8.0" },
     { name = "scipy", specifier = ">=1.17.1" },
     { name = "seaborn", specifier = ">=0.13.2" },

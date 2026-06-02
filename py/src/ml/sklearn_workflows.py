@@ -7,7 +7,7 @@ from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
-from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import silhouette_score
 from sklearn.naive_bayes import CategoricalNB
 from sklearn.neighbors import KNeighborsClassifier, NearestNeighbors
@@ -19,36 +19,8 @@ from ml.common import (
     PreparedDataset,
     build_supervised_split,
     classification_metrics,
-    regression_metrics,
 )
 from ml.datasets import build_taxonomy_clustering_frame
-
-
-def run_linear_regression(dataset: PreparedDataset) -> dict[str, Any]:
-    split = build_supervised_split(dataset, scale_features=False)
-    x_train = split.x_train
-    y_train = split.y_train.astype(np.float64)
-    design_matrix = np.column_stack([np.ones(len(x_train)), x_train])
-    manual_coefficients = np.linalg.pinv(design_matrix.T @ design_matrix) @ design_matrix.T @ y_train
-
-    model = LinearRegression()
-    model.fit(x_train, y_train)
-    predictions = model.predict(split.x_test)
-
-    return {
-        "dataset": dataset.summary(),
-        "evaluation_note": split.evaluation_note,
-        "manual_normal_equation": {
-            "equation": "w = (X^T X)^+ X^T y",
-            "intercept": float(manual_coefficients[0]),
-            "coefficients": manual_coefficients[1:].astype(float).tolist(),
-        },
-        "sklearn_linear_regression": {
-            "intercept": float(model.intercept_),
-            "coefficients": model.coef_.astype(float).tolist(),
-        },
-        "metrics": regression_metrics(split.y_test.astype(np.float64), predictions.astype(np.float64)),
-    }
 
 
 def run_logistic_regression(dataset: PreparedDataset) -> dict[str, Any]:

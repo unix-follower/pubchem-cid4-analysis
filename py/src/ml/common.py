@@ -19,12 +19,12 @@ RANDOM_SEED = 42
 
 @dataclass(frozen=True)
 class PreparedDataset:
-    name: str
-    task_type: str
     frame: pd.DataFrame
     feature_columns: list[str]
     target_column: str | None
-    description: str
+    description: str | None = None
+    name: str | None = None
+    task_type: str | None = None
     class_names: list[str] | None = None
 
     def feature_matrix(self) -> np.ndarray:
