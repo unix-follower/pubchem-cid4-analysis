@@ -24,11 +24,13 @@ jobs:
       - ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        # https://github.com/marketplace/actions/checkout
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Install python
+        # https://github.com/marketplace/actions/setup-python
         uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}

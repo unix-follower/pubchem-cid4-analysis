@@ -30,9 +30,11 @@ brew link --force libpq
 apt search postgresql-client
 sudo apt install -y postgresql-client-common postgresql-client
 ```
-## Format code
+## Format/Lint code
+
 ```sh
 uv tool run ruff format
+uv tool run ruff check --fix
 ```
 
 ## Quantum conformer ranking
